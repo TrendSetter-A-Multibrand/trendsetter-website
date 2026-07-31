@@ -19,7 +19,7 @@ export function Hero({
   imageSrc = "/images/home/hero.jpg",
 }: HeroProps) {
   return (
-    <section className="relative flex h-screen flex-col justify-end overflow-hidden bg-neutral-800">
+    <section className="relative flex h-[calc(100svh-var(--header-h,0px))] flex-col justify-end overflow-hidden bg-neutral-800">
       {imageSrc ? (
         <Image
           src={imageSrc}
@@ -34,7 +34,7 @@ export function Hero({
       )}
 
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6 text-center lg:px-10">
-        <p className="max-w-2xl text-lg uppercase tracking-[0.2em] text-white">
+        <p className="max-w-4xl text-xl uppercase tracking-[0.2em] text-white sm:text-2xl lg:text-3xl">
           {tagline}
         </p>
 
@@ -54,7 +54,7 @@ export function Hero({
         </div>
       </div>
 
-      <h1 className="relative -mb-6 w-full px-6 pb-16 lg:px-10">
+      <h1 className="relative w-full px-6 pb-10 lg:px-10">
         <FitText
           widthRatio={0.9}
           className="select-none font-black leading-none tracking-tight text-brand"

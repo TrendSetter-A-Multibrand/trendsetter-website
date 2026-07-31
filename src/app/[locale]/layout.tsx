@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { isLocale, locales } from "@/lib/i18n/locales";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { TopBar } from "@/components/layout/TopBar";
 import { PromoTicker } from "@/components/blocks/PromoTicker";
 
 export function generateStaticParams() {
@@ -20,8 +21,10 @@ export default async function LocaleLayout({
 
   return (
     <>
-      <PromoTicker />
-      <Header locale={locale} />
+      <TopBar>
+        <PromoTicker />
+        <Header locale={locale} />
+      </TopBar>
       <main className="flex flex-1 flex-col">{children}</main>
       <Footer locale={locale} />
     </>
