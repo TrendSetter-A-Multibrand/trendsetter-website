@@ -1,17 +1,14 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
-
-const NAV_ITEMS = [
-  { label: "Журнал", slug: "journal" },
-  { label: "Новости", slug: "news" },
-  { label: "Магазины", slug: "stores" },
-  { label: "Бренды", slug: "brands" },
-  { label: "Компания", slug: "company" },
-  { label: "Система лояльности", slug: "loyalty" },
-  { label: "Подарочные карты", slug: "gift-cards" },
-];
+import { NAV_ITEMS } from "@/lib/navigation";
+import { SideMenu } from "@/components/layout/SideMenu";
 
 export function Header({ locale }: { locale: Locale }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <header className="flex items-center justify-between gap-6 border-b border-black/10 px-6 py-4 lg:px-10">
       <Link
@@ -30,13 +27,15 @@ export function Header({ locale }: { locale: Locale }) {
       </nav>
 
       <div className="flex items-center gap-4">
-        <button type="button" aria-label="Поиск">
+        <button type="button" aria-label="Поиск" onClick={() => setMenuOpen(true)}>
           <SearchIcon />
         </button>
-        <button type="button" aria-label="Меню">
+        <button type="button" aria-label="Меню" onClick={() => setMenuOpen(true)}>
           <MenuIcon />
         </button>
       </div>
+
+      <SideMenu locale={locale} open={menuOpen} onClose={() => setMenuOpen(false)} />
     </header>
   );
 }
