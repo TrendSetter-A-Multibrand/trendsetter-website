@@ -58,8 +58,8 @@ export function StoreLocator({
         [{heading}]
       </h2>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_1fr_1fr]">
-        <div className="flex flex-col gap-3 lg:col-span-1">
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="flex flex-col gap-3">
           {stores.map((store, i) => (
             <button
               key={i}
@@ -93,27 +93,29 @@ export function StoreLocator({
           ))}
         </div>
 
-        <div className="flex flex-col gap-4 p-6">
-          <p className="text-lg font-semibold">{active.address}</p>
-          <p className="text-sm text-foreground/70">Часы работы: {active.hours}</p>
-          <p className="text-sm text-foreground/70">Телефон: {active.phone}</p>
-          <div className="mt-auto flex gap-3">
-            <a
-              href={active.findHref ?? "#"}
-              className="border border-black/20 px-6 py-3 text-sm font-medium uppercase tracking-wide"
-            >
-              Найти магазин
-            </a>
-            <a
-              href={active.directionsHref ?? "#"}
-              className="border border-black/20 px-6 py-3 text-sm font-medium uppercase tracking-wide"
-            >
-              Как пройти
-            </a>
+        <div className="grid sm:grid-cols-2">
+          <div className="flex flex-col gap-4 bg-neutral-100 p-6">
+            <p className="font-semibold">{active.address}</p>
+            <p className="text-sm text-foreground/70">Часы работы: {active.hours}</p>
+            <p className="text-sm text-foreground/70">Телефон: {active.phone}</p>
+            <div className="mt-auto flex flex-wrap gap-3 pt-6">
+              <a
+                href={active.findHref ?? "#"}
+                className="border border-neutral-900 bg-white px-5 py-2.5 text-xs font-medium uppercase tracking-wider"
+              >
+                Найти магазин
+              </a>
+              <a
+                href={active.directionsHref ?? "#"}
+                className="border border-neutral-900 bg-white px-5 py-2.5 text-xs font-medium uppercase tracking-wider"
+              >
+                Как пройти
+              </a>
+            </div>
           </div>
-        </div>
 
-        <div className="min-h-64 bg-neutral-200" />
+          <div className="min-h-64 bg-neutral-200" />
+        </div>
       </div>
     </section>
   );

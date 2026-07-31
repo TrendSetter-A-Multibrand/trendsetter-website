@@ -11,6 +11,26 @@ type NewsletterSignupProps = {
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+function Checkbox({ label }: { label: string }) {
+  return (
+    <label className="flex cursor-pointer items-center gap-2">
+      <input type="checkbox" defaultChecked className="peer sr-only" />
+      <span className="flex h-5 w-5 items-center justify-center border-2 border-white peer-checked:[&>svg]:opacity-100">
+        <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 opacity-0">
+          <path
+            d="m5 13 4 4L19 7"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+      {label}
+    </label>
+  );
+}
+
 export function NewsletterSignup({
   heading = "Подпишитесь на наши новости",
   description = "Будьте в числе первых, кто узнает о новинках, распродажах и интересных новостях TRENDSETTER!",
@@ -62,32 +82,19 @@ export function NewsletterSignup({
           </form>
 
           <div className="flex gap-6 text-sm">
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                defaultChecked
-                className="h-4 w-4 rounded-none border-2 border-white bg-transparent accent-white"
-              />
-              Для мужчин
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                defaultChecked
-                className="h-4 w-4 rounded-none border-2 border-white bg-transparent accent-white"
-              />
-              Для девушек
-            </label>
+            <Checkbox label="Для мужчин" />
+            <Checkbox label="Для девушек" />
           </div>
         </div>
 
-        <div className="flex justify-center lg:justify-end lg:pr-16">
+        <div className="flex justify-center">
           <div
             className={`relative h-48 w-48 overflow-hidden rounded-full transition-transform duration-700 ease-in lg:h-64 lg:w-64 ${
-              submitted ? "translate-x-[100vw]" : "translate-x-0"
+              submitted ? "translate-x-[100vw] rotate-[900deg]" : "translate-x-0 rotate-0"
             }`}
           >
-            <Image src={imageSrc} alt="" fill className="object-cover" />
+            {/* the artwork sits on a white square, so scale it up to crop the corners inside the circle */}
+            <Image src={imageSrc} alt="" fill className="scale-[1.3] object-cover" />
           </div>
         </div>
       </div>
