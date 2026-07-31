@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 
 type EventItem = {
   day: string;
@@ -115,20 +116,20 @@ export function EventsCarousel({
             className="group relative aspect-[4/5] w-72 shrink-0 overflow-hidden bg-neutral-800"
           >
             {item.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={item.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
+              <Image src={item.image} alt="" fill className="object-cover" />
             ) : (
               <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
             )}
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
-            <div className="absolute left-3 top-3 rounded bg-black/60 px-2 py-1 text-center text-xs leading-tight text-white">
+            <div className="absolute left-3 top-3 rounded bg-white/80 px-2 py-1 text-center text-xs leading-tight text-neutral-900">
               <div className="font-semibold">{item.day}</div>
               <div className="uppercase">{item.month}</div>
             </div>
-            <div className="absolute right-3 top-3 rounded bg-black/60 px-2 py-1 text-xs font-semibold text-white">
-              {item.time}
+            <div className="absolute right-3 top-3 rounded bg-white/80 px-2 py-1 text-center text-xs leading-tight text-neutral-900">
+              <div className="font-semibold">{item.time.split(":")[0]}</div>
+              <div>{item.time.split(":")[1]}</div>
             </div>
 
             <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 p-4 text-white">

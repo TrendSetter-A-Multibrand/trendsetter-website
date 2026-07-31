@@ -54,7 +54,10 @@ export function Hero({
         </div>
 
         <h1 className="-mb-6 w-full">
-          <FitText className="select-none font-black leading-none tracking-tight text-brand">
+          <FitText
+            widthRatio={0.9}
+            className="select-none font-black leading-none tracking-tight text-brand"
+          >
             TRENDSETTER
           </FitText>
         </h1>

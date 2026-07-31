@@ -58,15 +58,15 @@ export function StoreLocator({
         [{heading}]
       </h2>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_1fr_1fr]">
-        <div className="flex flex-col gap-2 lg:col-span-1">
+      <div className="grid bg-neutral-100 lg:grid-cols-[1fr_1fr_1fr]">
+        <div className="flex flex-col divide-y divide-white lg:col-span-1">
           {stores.map((store, i) => (
             <button
               key={i}
               type="button"
               onClick={() => setSelected(i)}
               className={`flex items-center gap-4 p-4 text-left ${
-                i === selected ? "bg-neutral-100" : "bg-neutral-50"
+                i === selected ? "bg-white" : ""
               }`}
             >
               <div className="h-16 w-16 shrink-0 overflow-hidden bg-neutral-300">
@@ -93,20 +93,20 @@ export function StoreLocator({
           ))}
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 p-6">
           <p className="text-lg font-semibold">{active.address}</p>
           <p className="text-sm text-foreground/70">Часы работы: {active.hours}</p>
           <p className="text-sm text-foreground/70">Телефон: {active.phone}</p>
           <div className="mt-auto flex gap-3">
             <a
               href={active.findHref ?? "#"}
-              className="rounded-full border border-black/20 px-6 py-3 text-sm font-medium uppercase tracking-wide"
+              className="border border-black/20 px-6 py-3 text-sm font-medium uppercase tracking-wide"
             >
               Найти магазин
             </a>
             <a
               href={active.directionsHref ?? "#"}
-              className="rounded-full border border-black/20 px-6 py-3 text-sm font-medium uppercase tracking-wide"
+              className="border border-black/20 px-6 py-3 text-sm font-medium uppercase tracking-wide"
             >
               Как пройти
             </a>

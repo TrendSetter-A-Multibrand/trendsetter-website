@@ -2,13 +2,16 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 
-/** Scales its text so it always spans the full width of its container, edge to edge. */
+/** Scales its text to span its container's width, edge to edge. */
 export function FitText({
   children,
   className,
+  widthRatio = 1,
 }: {
   children: string;
   className?: string;
+  /** Fraction of the container width to fill (e.g. 0.92 leaves a safety margin so rounding never clips the last letter). */
+  widthRatio?: number;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
@@ -21,7 +24,7 @@ export function FitText({
 
     function fit() {
       const currentSize = parseFloat(getComputedStyle(text!).fontSize);
-      const scale = container!.clientWidth / text!.scrollWidth;
+      const scale = (container!.clientWidth * widthRatio) / text!.scrollWidth;
       setFontSize(currentSize * scale);
     }
 
@@ -29,7 +32,7 @@ export function FitText({
     const observer = new ResizeObserver(fit);
     observer.observe(container);
     return () => observer.disconnect();
-  }, [children]);
+  }, [children, widthRatio]);
 
   return (
     <div ref={containerRef} className="w-full overflow-hidden">

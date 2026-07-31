@@ -18,7 +18,7 @@ export function PromoTicker({
   );
 
   return (
-    <div className="flex overflow-hidden bg-black py-2">
+    <div className="flex overflow-hidden bg-brand py-2">
       <div className="flex shrink-0 animate-marquee">
         {Array.from({ length: 8 }, (_, i) => item(i))}
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 
 type JournalItem = {
   tags: string[];
@@ -90,11 +91,10 @@ export function JournalCarousel({
           <a
             key={i}
             href={item.href ?? "#"}
-            className="group relative aspect-[2/1] w-[85%] shrink-0 overflow-hidden bg-neutral-800 sm:w-[calc(50%-12px)]"
+            className="group relative aspect-[4/3] w-[85%] shrink-0 overflow-hidden bg-neutral-800 sm:aspect-[2/1] sm:w-[calc(50%-12px)]"
           >
             {item.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={item.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
+              <Image src={item.image} alt="" fill className="object-cover" />
             ) : (
               <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
             )}
@@ -105,14 +105,16 @@ export function JournalCarousel({
               {item.tags.map((tag) => `[${tag}]`).join(" ")}
             </p>
 
-            <div className="absolute inset-x-0 bottom-0 flex flex-col">
-              <div className="flex flex-col gap-1 p-4 text-white">
-                <p className="text-lg font-semibold leading-snug">{item.title}</p>
+            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-4 text-white">
+              <div className="flex flex-col gap-1">
+                <p className="text-base font-semibold leading-snug sm:text-lg">
+                  {item.title}
+                </p>
                 {item.excerpt && (
-                  <p className="text-sm text-white/80">{item.excerpt}</p>
+                  <p className="hidden text-sm text-white/80 sm:block">{item.excerpt}</p>
                 )}
               </div>
-              <span className="translate-y-full bg-black/40 py-3 text-center text-xs font-medium uppercase tracking-wide text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+              <span className="w-fit -translate-y-2 rounded-full bg-white/20 px-4 py-2 text-xs font-medium uppercase tracking-wide text-white opacity-0 backdrop-blur-sm transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
                 Читать
               </span>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Image from "next/image";
 
 type NewsletterSignupProps = {
@@ -25,6 +25,13 @@ export function NewsletterSignup({
     if (!isValid) return;
     setSubmitted(true);
   }
+
+  useEffect(() => {
+    if (!submitted) return;
+    // demo timing only - real UX for the returning smiley will be decided later
+    const timeout = setTimeout(() => setSubmitted(false), 10000);
+    return () => clearTimeout(timeout);
+  }, [submitted]);
 
   return (
     <section className="relative overflow-hidden bg-brand px-6 py-16 text-white lg:px-10">
@@ -55,11 +62,19 @@ export function NewsletterSignup({
 
           <div className="flex gap-6 text-sm">
             <label className="flex items-center gap-2">
-              <input type="checkbox" defaultChecked className="h-4 w-4" />
+              <input
+                type="checkbox"
+                defaultChecked
+                className="h-4 w-4 rounded-none border-2 border-white bg-transparent accent-white"
+              />
               Для мужчин
             </label>
             <label className="flex items-center gap-2">
-              <input type="checkbox" defaultChecked className="h-4 w-4" />
+              <input
+                type="checkbox"
+                defaultChecked
+                className="h-4 w-4 rounded-none border-2 border-white bg-transparent accent-white"
+              />
               Для девушек
             </label>
           </div>
