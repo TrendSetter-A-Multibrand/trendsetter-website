@@ -113,7 +113,7 @@ export function NewsGrid({
           <div
             ref={thumbRef}
             style={{ width: THUMB_WIDTH }}
-            className="absolute left-0 h-2 cursor-grab bg-brand active:cursor-grabbing"
+            className="absolute left-0 h-4 cursor-grab bg-brand active:cursor-grabbing"
           />
         </div>
       </div>

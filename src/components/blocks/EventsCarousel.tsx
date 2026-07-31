@@ -68,6 +68,16 @@ const DEFAULT_ITEMS: EventItem[] = Array.from(
   (_, i) => BASE_ITEMS[i % BASE_ITEMS.length]
 );
 
+/** Rendered twice: at the bottom at rest, at the top between the badges on hover. */
+function EventTitle({ item }: { item: EventItem }) {
+  return (
+    <>
+      <p className="text-sm font-semibold uppercase tracking-wide">{item.title}</p>
+      <p className="text-xs uppercase tracking-wide text-white/80">{item.location}</p>
+    </>
+  );
+}
+
 export function EventsCarousel({
   heading = "Ближайшие события",
   items = DEFAULT_ITEMS,
@@ -113,7 +123,7 @@ export function EventsCarousel({
         {items.map((item, i) => (
           <div
             key={i}
-            className="group relative aspect-[4/5] w-64 shrink-0 overflow-hidden bg-neutral-800"
+            className="group relative aspect-[4/3] w-80 shrink-0 overflow-hidden bg-neutral-800"
           >
             {item.image ? (
               <Image src={item.image} alt="" fill className="object-cover" />
@@ -123,29 +133,31 @@ export function EventsCarousel({
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
-            <div className="absolute left-3 top-3 bg-white/80 px-2 py-1 text-center text-xs leading-tight text-neutral-900">
-              <div className="font-semibold">{item.day}</div>
-              <div className="uppercase">{item.month}</div>
-            </div>
-            <div className="absolute right-3 top-3 bg-white/80 px-2 py-1 text-center text-xs leading-tight text-neutral-900">
-              <div className="font-semibold">{item.time.split(":")[0]}</div>
-              <div className="border-t border-neutral-900/20 pt-0.5">
-                {item.time.split(":")[1]}
+            <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-3">
+              <div className="w-14 shrink-0 bg-white/80 px-2 py-1 text-center text-xs leading-tight text-neutral-900">
+                <div className="text-base font-semibold">{item.day}</div>
+                <div className="uppercase">{item.month}</div>
+              </div>
+
+              <div className="flex-1 pt-1 text-center text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                <EventTitle item={item} />
+              </div>
+
+              <div className="w-14 shrink-0 bg-white/80 px-2 py-1 text-center text-xs leading-tight text-neutral-900">
+                <div className="text-base font-semibold">{item.time.split(":")[0]}</div>
+                <div className="border-t border-neutral-900/20 pt-0.5">
+                  {item.time.split(":")[1]}
+                </div>
               </div>
             </div>
 
-            <div className="absolute inset-x-0 top-14 flex translate-y-1 flex-col gap-1 px-4 text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
-              <p className="text-sm font-semibold uppercase tracking-wide">
-                {item.title}
-              </p>
-              <p className="text-xs uppercase tracking-wide text-white/80">
-                {item.location}
-              </p>
+            <div className="absolute inset-x-0 bottom-0 p-4 text-center text-white transition-opacity duration-200 group-hover:opacity-0">
+              <EventTitle item={item} />
             </div>
 
-            <div className="absolute inset-x-0 bottom-0 flex translate-y-1 flex-col gap-2 p-4 text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-4 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               {item.description && (
-                <p className="text-xs leading-snug text-white/80">{item.description}</p>
+                <p className="text-center text-xs leading-snug">{item.description}</p>
               )}
               {item.ctaLabel && (
                 <a
