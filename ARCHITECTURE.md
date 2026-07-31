@@ -7,47 +7,52 @@
 ## 1. Структура папок
 
 ```
-/app
-  /(site)
-    layout.tsx              # общий layout: Header, Footer, шрифты
-    page.tsx                # Главная
-    /o-kompanii/page.tsx
-    /brendy/page.tsx
-    /magaziny/page.tsx
-    /novosti/page.tsx
-    /zhurnal/page.tsx
-    /loyalnost/page.tsx
-  /api
-    /revalidate/route.ts    # webhook от Storyblok на обновление контента
+/src
+  proxy.ts                  # определяет локаль по URL, редиректит "/" -> "/<defaultLocale>" (в Next.js 16 это "proxy", не "middleware")
+  /app
+    layout.tsx               # корневой layout: только <html>/<body>, шрифты
+    /[locale]
+      layout.tsx              # Header + обёртка страницы для конкретной локали
+      page.tsx                # Главная
+      /kompaniya/page.tsx
+      /brendy/page.tsx
+      /magaziny/page.tsx
+      /novosti/page.tsx
+      /journal/page.tsx
+      /loyalty/page.tsx
+    /api
+      /revalidate/route.ts    # webhook от Storyblok на обновление контента
 
-/components
-  /blocks                   # 1 файл = 1 Storyblok-компонент (blok)
-    Hero.tsx
-    TextWithImage.tsx
-    CardsGrid.tsx
-    ...
-    index.ts                # РЕЕСТР блоков для Storyblok resolver (единственный разрешённый "большой" файл-реестр)
-  /ui                        # переиспользуемые примитивы дизайн-системы, не привязаны к CMS
-    Button.tsx
-    Container.tsx
-    Section.tsx
-  /layout
-    Header.tsx
-    Footer.tsx
-    Nav.tsx
+  /components
+    /blocks                   # 1 файл = 1 Storyblok-компонент (blok)
+      Hero.tsx
+      TextWithImage.tsx
+      CardsGrid.tsx
+      ...
+      index.ts                # РЕЕСТР блоков для Storyblok resolver (единственный разрешённый "большой" файл-реестр)
+    /ui                        # переиспользуемые примитивы дизайн-системы, не привязаны к CMS
+      Button.tsx
+      Container.tsx
+      Section.tsx
+    /layout
+      Header.tsx
+      Footer.tsx
+      Nav.tsx
 
-/lib
-  /storyblok
-    client.ts               # инициализация Storyblok SDK
-    fetchStory.ts            # функции получения контента по slug
-  /db                         # (появится позже, под DigitalOcean БД)
-    client.ts
-    queries/                 # по одному файлу на сущность: products.ts, news.ts...
-  format.ts                  # хелперы форматирования (даты, цены и т.д.)
-  validation.ts               # хелперы валидации форм
+  /lib
+    /i18n
+      locales.ts               # список локалей (ru_ru, ru_am, ...) + defaultLocale
+    /storyblok
+      client.ts               # инициализация Storyblok SDK
+      fetchStory.ts            # функции получения контента по slug, с учётом locale/market
+    /db                         # (появится позже, под DigitalOcean БД)
+      client.ts
+      queries/                 # по одному файлу на сущность: products.ts, news.ts...
+    format.ts                  # хелперы форматирования (даты, цены и т.д.)
+    validation.ts               # хелперы валидации форм
 
-/types
-  storyblok.ts                # TS-типы под схемы Storyblok-компонентов
+  /types
+    storyblok.ts                # TS-типы под схемы Storyblok-компонентов
 
 /tests
   # тесты лежат рядом с файлом: Hero.tsx + Hero.test.tsx
@@ -72,20 +77,31 @@
 10. **Состояние — по умолчанию локальное.** Не тащить Redux/Zustand заранее "про запас". Глобальный стейт-менеджер добавляем только когда появится конкретный кейс, который не решается локальным `useState`/URL-параметрами.
 11. **Секреты — только через `.env`.** Storyblok-токен, позже — креды БД. Никогда не хардкодить.
 
-## 3. Тесты
+## 3. Локализация и рынки (i18n)
+
+Сайт мультиязычный и мультирегиональный: URL вида `trendsetter.com/ru_ru/...`, `trendsetter.com/ru_am/...` (по образцу H&M — `<язык>_<страна>`, всё в нижнем регистре).
+
+- **Список локалей** — единственный источник правды: `lib/i18n/locales.ts`. Добавить новый рынок = дописать строку в массив `locales`, больше нигде хардкодить локаль нельзя.
+- **Роутинг** — весь сайт живёт под `app/[locale]/...`. `src/proxy.ts` редиректит `/` на `/<defaultLocale>` и признаёт только локали из `lib/i18n/locales.ts`.
+- **`app/[locale]/layout.tsx`** проверяет, что `locale` из URL входит в список известных — если нет, `notFound()`.
+- **Разделение контента по рынкам (акции, новости, магазины).** Это не про перевод текста, а про то, кому вообще показывать конкретную запись: акция на джинсы в Ереване не должна попадать посетителю из Москвы. В Storyblok у таких контент-типов должно быть поле `markets` (мультиселект по датасорсу со списком рынков). Любой запрос списка (`fetchStory`/`fetchStories`) обязан фильтровать по `markets` = текущая локаль — фильтрация делается на уровне запроса к CMS, а не постфактум во фронтенде.
+- **Перевод общих текстов** (шапка, футер, статичные страницы) — через встроенный `language`-параметр Storyblok API. Локаль из URL пробрасывается в каждый вызов `fetchStory`.
+- Компонент никогда сам не определяет локаль/рынок — она приходит пропом сверху (`page.tsx` → компонент), как и любые другие данные (см. правило 4 выше).
+
+## 4. Тесты
 
 - Тест лежит рядом с файлом: `Hero.tsx` → `Hero.test.tsx`.
 - Стек: Vitest + React Testing Library (юнит/компонентные), Playwright — позже, для сквозных сценариев по ключевым страницам.
 - Тестируем логику и условный рендеринг (например: блок с CTA-кнопкой рендерит кнопку только если в Storyblok заполнено поле `buttonText`). Чисто презентационные обёртки без логики — тестами не покрываем, это не окупается.
 
-## 4. Рецепт: добавить новую страницу
+## 5. Рецепт: добавить новую страницу
 
-1. Создать папку `app/<slug>/page.tsx`.
-2. Получить story через `lib/storyblok/fetchStory.ts`.
+1. Создать папку `app/[locale]/<slug>/page.tsx` (внутри `[locale]`, не рядом с ним).
+2. Получить `locale` из `params`, получить story через `lib/storyblok/fetchStory.ts` (передав туда locale/market).
 3. Отрендерить `<StoryblokComponent blok={story.content} />` — рендер конкретных блоков Storyblok сам решит, что показывать.
 4. Не писать вёрстку внутри `page.tsx` — если нужен специфичный для страницы блок, он всё равно оформляется как обычный blok в `components/blocks`.
 
-## 5. Рецепт: добавить новый блок (Storyblok component)
+## 6. Рецепт: добавить новый блок (Storyblok component)
 
 1. Завести компонент в Storyblok schema, задать technical name (например `cards_grid`).
 2. Создать файл `components/blocks/CardsGrid.tsx` — имя в PascalCase от technical name.
