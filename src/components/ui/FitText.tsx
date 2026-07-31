@@ -35,7 +35,7 @@ export function FitText({
   }, [children, widthRatio]);
 
   return (
-    <div ref={containerRef} className="w-full overflow-hidden">
+    <div ref={containerRef} className="w-full overflow-hidden text-center">
       <span
         ref={textRef}
         style={{

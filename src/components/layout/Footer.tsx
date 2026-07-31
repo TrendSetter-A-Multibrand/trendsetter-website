@@ -91,7 +91,7 @@ export function Footer({ locale }: { locale: Locale }) {
         </div>
       </div>
 
-      <div className="border-t border-white/10 px-6 pb-2 pt-6 lg:px-10">
+      <div className="px-6 pb-2 pt-6 lg:px-10">
         <FitText
           widthRatio={0.9}
           className="select-none font-black leading-none tracking-tight text-white/10"

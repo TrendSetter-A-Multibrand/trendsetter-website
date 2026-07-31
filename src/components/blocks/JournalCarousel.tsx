@@ -105,16 +105,18 @@ export function JournalCarousel({
               {item.tags.map((tag) => `[${tag}]`).join(" ")}
             </p>
 
-            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-4 text-white">
+            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-4 text-white transition-transform duration-200 group-hover:-translate-y-2">
               <div className="flex flex-col gap-1">
                 <p className="text-base font-semibold leading-snug sm:text-lg">
                   {item.title}
                 </p>
                 {item.excerpt && (
-                  <p className="hidden text-sm text-white/80 sm:block">{item.excerpt}</p>
+                  <p className="hidden text-sm text-white/80 opacity-0 transition-opacity duration-200 sm:block sm:group-hover:opacity-100">
+                    {item.excerpt}
+                  </p>
                 )}
               </div>
-              <span className="w-fit -translate-y-2 rounded-full bg-white/20 px-4 py-2 text-xs font-medium uppercase tracking-wide text-white opacity-0 backdrop-blur-sm transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+              <span className="w-full translate-y-2 bg-white/20 py-3 text-center text-sm font-medium uppercase tracking-wide text-white opacity-0 backdrop-blur-sm transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
                 Читать
               </span>
             </div>

@@ -102,10 +102,10 @@ export function NewsGrid({
         <div
           ref={barRef}
           onPointerDown={handleDragStart}
-          className="relative h-1 flex-1 cursor-pointer bg-black/15"
+          className="relative h-px flex-1 cursor-pointer bg-black/20"
         >
           <div
-            className="absolute top-0 h-1 cursor-grab bg-brand active:cursor-grabbing"
+            className="absolute top-1/2 h-2 min-w-10 -translate-y-1/2 cursor-grab bg-brand active:cursor-grabbing"
             style={{ left: `${thumb.left}%`, width: `${thumb.width}%` }}
           />
         </div>

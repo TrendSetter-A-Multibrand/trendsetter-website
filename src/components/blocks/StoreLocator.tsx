@@ -58,15 +58,15 @@ export function StoreLocator({
         [{heading}]
       </h2>
 
-      <div className="grid bg-neutral-100 lg:grid-cols-[1fr_1fr_1fr]">
-        <div className="flex flex-col divide-y divide-white lg:col-span-1">
+      <div className="grid gap-6 lg:grid-cols-[1fr_1fr_1fr]">
+        <div className="flex flex-col gap-3 lg:col-span-1">
           {stores.map((store, i) => (
             <button
               key={i}
               type="button"
               onClick={() => setSelected(i)}
               className={`flex items-center gap-4 p-4 text-left ${
-                i === selected ? "bg-white" : ""
+                i === selected ? "bg-neutral-200" : "bg-neutral-100"
               }`}
             >
               <div className="h-16 w-16 shrink-0 overflow-hidden bg-neutral-300">

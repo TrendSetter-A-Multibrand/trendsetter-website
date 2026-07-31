@@ -19,7 +19,7 @@ export function Hero({
   imageSrc = "/images/home/hero.jpg",
 }: HeroProps) {
   return (
-    <section className="relative flex min-h-screen flex-col justify-end overflow-hidden bg-neutral-800">
+    <section className="relative flex h-screen flex-col justify-end overflow-hidden bg-neutral-800">
       {imageSrc ? (
         <Image
           src={imageSrc}
@@ -33,7 +33,7 @@ export function Hero({
         <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
       )}
 
-      <div className="relative flex flex-col items-center gap-6 px-6 pb-16 text-center lg:px-10">
+      <div className="relative flex w-full flex-col items-center gap-6 px-6 pb-16 text-center lg:px-10">
         <p className="max-w-2xl text-lg uppercase tracking-[0.2em] text-white">
           {tagline}
         </p>
@@ -41,13 +41,13 @@ export function Hero({
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={primaryCta.href}
-            className="rounded-full border border-white bg-white/10 px-6 py-3 text-sm font-medium uppercase tracking-wide text-white"
+            className="bg-white/10 px-6 py-3 text-sm font-medium uppercase tracking-wide text-white"
           >
             {primaryCta.label}
           </Link>
           <Link
             href={secondaryCta.href}
-            className="rounded-full bg-brand px-6 py-3 text-sm font-medium uppercase tracking-wide text-white"
+            className="bg-brand px-6 py-3 text-sm font-medium uppercase tracking-wide text-white"
           >
             {secondaryCta.label}
           </Link>

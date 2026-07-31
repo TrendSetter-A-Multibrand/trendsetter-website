@@ -24,6 +24,7 @@ export function NewsletterSignup({
     e.preventDefault();
     if (!isValid) return;
     setSubmitted(true);
+    setEmail("");
   }
 
   useEffect(() => {
@@ -79,14 +80,16 @@ export function NewsletterSignup({
             </label>
           </div>
         </div>
-      </div>
 
-      <div
-        className={`absolute right-6 top-1/2 h-48 w-48 -translate-y-1/2 overflow-hidden rounded-full transition-transform duration-700 ease-in lg:right-10 lg:h-64 lg:w-64 ${
-          submitted ? "translate-x-[100vw]" : "translate-x-0"
-        }`}
-      >
-        <Image src={imageSrc} alt="" fill className="object-cover" />
+        <div className="flex justify-center lg:justify-end lg:pr-16">
+          <div
+            className={`relative h-48 w-48 overflow-hidden rounded-full transition-transform duration-700 ease-in lg:h-64 lg:w-64 ${
+              submitted ? "translate-x-[100vw]" : "translate-x-0"
+            }`}
+          >
+            <Image src={imageSrc} alt="" fill className="object-cover" />
+          </div>
+        </div>
       </div>
     </section>
   );
