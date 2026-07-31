@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
 import { FitText } from "@/components/ui/FitText";
@@ -15,16 +16,18 @@ export function Hero({
   tagline = "Доверьте поиск нам, а выбор — себе",
   primaryCta = { label: "Читать журнал", href: `/${locale}/journal` },
   secondaryCta = { label: "Найти магазин", href: `/${locale}/stores` },
-  imageSrc,
+  imageSrc = "/images/home/hero.jpg",
 }: HeroProps) {
   return (
     <section className="relative flex min-h-screen flex-col justify-end overflow-hidden bg-neutral-800">
       {imageSrc ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={imageSrc}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
         />
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
