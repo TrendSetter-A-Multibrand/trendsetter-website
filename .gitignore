@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# design mockups (PDFs from the designer) - kept locally, not in git history
+/design
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
