@@ -1,12 +1,9 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  useState,
-  type PointerEvent as ReactPointerEvent,
-} from "react";
+import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from "react";
 import Image from "next/image";
+
+const THUMB_WIDTH = 40;
 
 type NewsItem = {
   tags: string[];
@@ -53,44 +50,51 @@ export function NewsGrid({
 }: NewsGridProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
-  const [thumb, setThumb] = useState({ left: 0, width: 100 });
+  const thumbRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    updateThumb();
-  }, [items.length]);
-
-  function updateThumb() {
+  /** Written straight to the DOM: running this through state would re-render every card on every scroll frame. */
+  function syncThumb() {
     const track = trackRef.current;
-    if (!track) return;
-    const widthPct = Math.min(100, (track.clientWidth / track.scrollWidth) * 100);
+    const bar = barRef.current;
+    const thumb = thumbRef.current;
+    if (!track || !bar || !thumb) return;
+
     const maxScroll = track.scrollWidth - track.clientWidth;
-    const leftPct =
-      maxScroll > 0 ? (track.scrollLeft / maxScroll) * (100 - widthPct) : 0;
-    setThumb({ left: leftPct, width: widthPct });
+    const progress = maxScroll > 0 ? track.scrollLeft / maxScroll : 0;
+    thumb.style.transform = `translateX(${
+      progress * (bar.clientWidth - THUMB_WIDTH)
+    }px)`;
   }
 
-  function handleDragStart(e: ReactPointerEvent) {
-    const bar = barRef.current;
+  useEffect(() => {
     const track = trackRef.current;
-    if (!bar || !track) return;
-    const barRect = bar.getBoundingClientRect();
-    const maxScroll = track.scrollWidth - track.clientWidth;
+    if (!track) return;
+    syncThumb();
+    const observer = new ResizeObserver(syncThumb);
+    observer.observe(track);
+    return () => observer.disconnect();
+  }, []);
 
-    function moveTo(clientX: number) {
-      const ratio = Math.min(1, Math.max(0, (clientX - barRect.left) / barRect.width));
-      track!.scrollLeft = ratio * maxScroll;
-    }
-    moveTo(e.clientX);
+  function scrollToPointer(clientX: number) {
+    const track = trackRef.current;
+    const bar = barRef.current;
+    if (!track || !bar) return;
 
-    function onMove(ev: PointerEvent) {
-      moveTo(ev.clientX);
-    }
-    function onUp() {
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerup", onUp);
-    }
-    window.addEventListener("pointermove", onMove);
-    window.addEventListener("pointerup", onUp);
+    const rect = bar.getBoundingClientRect();
+    const usable = rect.width - THUMB_WIDTH;
+    const offset = clientX - rect.left - THUMB_WIDTH / 2;
+    const progress = usable > 0 ? Math.min(1, Math.max(0, offset / usable)) : 0;
+    track.scrollLeft = progress * (track.scrollWidth - track.clientWidth);
+  }
+
+  function handlePointerDown(e: ReactPointerEvent<HTMLDivElement>) {
+    barRef.current?.setPointerCapture(e.pointerId);
+    scrollToPointer(e.clientX);
+  }
+
+  function handlePointerMove(e: ReactPointerEvent<HTMLDivElement>) {
+    if (!barRef.current?.hasPointerCapture(e.pointerId)) return;
+    scrollToPointer(e.clientX);
   }
 
   return (
@@ -101,20 +105,23 @@ export function NewsGrid({
         </h2>
         <div
           ref={barRef}
-          onPointerDown={handleDragStart}
-          className="relative h-px flex-1 cursor-pointer bg-black/20"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          className="relative flex h-4 flex-1 cursor-pointer touch-none select-none items-center"
         >
+          <div className="h-px w-full bg-black/20" />
           <div
-            className="absolute top-1/2 h-2 min-w-10 -translate-y-1/2 cursor-grab bg-brand active:cursor-grabbing"
-            style={{ left: `${thumb.left}%`, width: `${thumb.width}%` }}
+            ref={thumbRef}
+            style={{ width: THUMB_WIDTH }}
+            className="absolute left-0 h-2 cursor-grab bg-brand active:cursor-grabbing"
           />
         </div>
       </div>
 
       <div
         ref={trackRef}
-        onScroll={updateThumb}
-        className="flex gap-6 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        onScroll={syncThumb}
+        className="flex gap-6 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
           <a
