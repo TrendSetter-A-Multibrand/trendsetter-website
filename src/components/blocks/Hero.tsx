@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
+import { FitText } from "@/components/ui/FitText";
 
 type HeroProps = {
   locale: Locale;
@@ -49,8 +50,10 @@ export function Hero({
           </Link>
         </div>
 
-        <h1 className="-mb-6 -ml-1 select-none text-[18vw] font-black leading-none tracking-tight text-brand lg:text-[14vw]">
-          TRENDSETTER
+        <h1 className="-mb-6">
+          <FitText className="select-none font-black leading-none tracking-tight text-brand">
+            TRENDSETTER
+          </FitText>
         </h1>
       </div>
     </section>
