@@ -33,7 +33,7 @@ export function Hero({
         <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
       )}
 
-      <div className="relative flex w-full flex-col items-center gap-6 px-6 pb-16 text-center lg:px-10">
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6 text-center lg:px-10">
         <p className="max-w-2xl text-lg uppercase tracking-[0.2em] text-white">
           {tagline}
         </p>
@@ -52,16 +52,16 @@ export function Hero({
             {secondaryCta.label}
           </Link>
         </div>
-
-        <h1 className="-mb-6 w-full">
-          <FitText
-            widthRatio={0.9}
-            className="select-none font-black leading-none tracking-tight text-brand"
-          >
-            TRENDSETTER
-          </FitText>
-        </h1>
       </div>
+
+      <h1 className="relative -mb-6 w-full px-6 pb-16 lg:px-10">
+        <FitText
+          widthRatio={0.9}
+          className="select-none font-black leading-none tracking-tight text-brand"
+        >
+          TRENDSETTER
+        </FitText>
+      </h1>
     </section>
   );
 }
