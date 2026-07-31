@@ -19,40 +19,53 @@ type EventsCarouselProps = {
   items?: EventItem[];
 };
 
-const DEFAULT_ITEMS: EventItem[] = [
+const BASE_ITEMS: EventItem[] = [
   {
     day: "27",
     month: "июля",
     time: "18:00",
     title: "Мастер-класс",
     location: 'ТЦ "Атриум"',
-    description:
-      "Мастер-класс по лепке от известного керамиста Юрия Базанова.",
+    description: "Мастер-класс по лепке от известного керамиста Юрия Базанова.",
     ctaLabel: "Подробнее",
     ctaHref: "#",
   },
   {
-    day: "27",
-    month: "июля",
-    time: "18:00",
-    title: "Мастер-класс по лепке",
-    location: 'ТЦ "Атриум"',
+    day: "3",
+    month: "августа",
+    time: "19:00",
+    title: "Встреча книжного клуба",
+    location: "Дубровка",
+    description: "Обсуждаем новинки нон-фикшна вместе с гостями магазина.",
+    ctaLabel: "Подробнее",
+    ctaHref: "#",
   },
   {
-    day: "27",
-    month: "июля",
-    time: "18:00",
-    title: "Мастер-класс по лепке",
+    day: "10",
+    month: "августа",
+    time: "17:30",
+    title: "Показ капсульной коллекции",
     location: 'ТЦ "Атриум"',
+    description: "Первыми увидите новую капсулу до старта продаж.",
+    ctaLabel: "Подробнее",
+    ctaHref: "#",
   },
   {
-    day: "27",
-    month: "июля",
-    time: "18:00",
-    title: "Мастер-класс по лепке",
-    location: 'ТЦ "Атриум"',
+    day: "16",
+    month: "августа",
+    time: "12:00",
+    title: "Воркшоп по стайлингу",
+    location: "Хлебозавод №9",
+    description: "Разбираем базовый гардероб с личным стилистом.",
+    ctaLabel: "Подробнее",
+    ctaHref: "#",
   },
 ];
+
+const DEFAULT_ITEMS: EventItem[] = Array.from(
+  { length: 16 },
+  (_, i) => BASE_ITEMS[i % BASE_ITEMS.length]
+);
 
 export function EventsCarousel({
   heading = "Ближайшие события",
@@ -99,7 +112,7 @@ export function EventsCarousel({
         {items.map((item, i) => (
           <div
             key={i}
-            className="relative aspect-[4/5] w-72 shrink-0 overflow-hidden bg-neutral-800"
+            className="group relative aspect-[4/5] w-72 shrink-0 overflow-hidden bg-neutral-800"
           >
             {item.image ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -131,7 +144,7 @@ export function EventsCarousel({
               {item.ctaLabel && (
                 <a
                   href={item.ctaHref ?? "#"}
-                  className="mt-2 rounded bg-brand px-4 py-2 text-center text-xs font-medium uppercase tracking-wide"
+                  className="mt-2 translate-y-2 rounded bg-brand px-4 py-2 text-center text-xs font-medium uppercase tracking-wide opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100"
                 >
                   {item.ctaLabel}
                 </a>

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Hero } from "@/components/blocks/Hero";
 import { NewsGrid } from "@/components/blocks/NewsGrid";
 import { EventsCarousel } from "@/components/blocks/EventsCarousel";
+import { JournalCarousel } from "@/components/blocks/JournalCarousel";
 
 export default async function HomePage({
   params,
@@ -17,6 +18,7 @@ export default async function HomePage({
       <Hero locale={locale} />
       <NewsGrid />
       <EventsCarousel />
+      <JournalCarousel />
     </>
   );
 }
