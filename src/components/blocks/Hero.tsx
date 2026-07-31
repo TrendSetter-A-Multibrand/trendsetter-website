@@ -30,27 +30,27 @@ export function Hero({
         <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
       )}
 
-      <div className="relative flex flex-col gap-6 px-6 pb-16 lg:px-10">
-        <p className="max-w-xl text-lg uppercase tracking-[0.2em] text-white">
+      <div className="relative flex flex-col items-center gap-6 px-6 pb-16 text-center lg:px-10">
+        <p className="max-w-2xl text-lg uppercase tracking-[0.2em] text-white">
           {tagline}
         </p>
 
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap justify-center gap-4">
+          <Link
+            href={primaryCta.href}
+            className="rounded-full border border-white bg-white/10 px-6 py-3 text-sm font-medium uppercase tracking-wide text-white"
+          >
+            {primaryCta.label}
+          </Link>
           <Link
             href={secondaryCta.href}
             className="rounded-full bg-brand px-6 py-3 text-sm font-medium uppercase tracking-wide text-white"
           >
             {secondaryCta.label}
           </Link>
-          <Link
-            href={primaryCta.href}
-            className="rounded-full border border-white px-6 py-3 text-sm font-medium uppercase tracking-wide text-white"
-          >
-            {primaryCta.label}
-          </Link>
         </div>
 
-        <h1 className="-mb-6">
+        <h1 className="-mb-6 w-full">
           <FitText className="select-none font-black leading-none tracking-tight text-brand">
             TRENDSETTER
           </FitText>

@@ -35,7 +35,12 @@ export function FitText({
     <div ref={containerRef} className="w-full overflow-hidden">
       <span
         ref={textRef}
-        style={{ fontSize, whiteSpace: "nowrap", visibility: fontSize ? "visible" : "hidden" }}
+        style={{
+          fontSize,
+          display: "inline-block",
+          whiteSpace: "nowrap",
+          visibility: fontSize ? "visible" : "hidden",
+        }}
         className={className}
       >
         {children}
