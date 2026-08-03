@@ -40,7 +40,7 @@ function FooterColumn({
   return (
     <div>
       <FooterHeading>{title}</FooterHeading>
-      <ul className="flex flex-col gap-2 text-sm text-white/70">
+      <ul className="flex flex-col gap-2 text-sm text-white/40">
         {links.map((link) => (
           <li key={link.href}>
             <Link href={link.href}>{link.label}</Link>
@@ -83,7 +83,7 @@ export function Footer({ locale }: { locale: Locale }) {
 
         <div>
           <FooterHeading>Сотрудничество</FooterHeading>
-          <a href={`mailto:${CONTACT_EMAIL}`} className="text-sm text-white/70">
+          <a href={`mailto:${CONTACT_EMAIL}`} className="text-sm text-white/40">
             {CONTACT_EMAIL.toUpperCase()}
           </a>
         </div>
@@ -93,7 +93,7 @@ export function Footer({ locale }: { locale: Locale }) {
 
       {/* SOFT_LIGHT in the mockup - the mark sinks into the dark background */}
       <div className="px-6 pb-2 pt-6 mix-blend-soft-light lg:px-10">
-        <Wordmark className="text-white" />
+        <Wordmark className="text-brand" />
       </div>
     </footer>
   );
