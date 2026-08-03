@@ -150,8 +150,10 @@ export function EventsCarousel({
               <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
             )}
 
-            {/* Only 93px tall at the bottom, and gone on hover */}
-            <div className="absolute inset-x-0 bottom-0 h-[93px] bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-200 group-hover:opacity-0" />
+            {/* At rest: 93px of #252120 fading up. On hover it gives way to a
+                wash over the whole card, so the description stays readable. */}
+            <div className="absolute inset-x-0 bottom-0 h-[93px] bg-gradient-to-t from-ink to-transparent transition-opacity duration-200 group-hover:opacity-0" />
+            <div className="absolute inset-0 bg-ink/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
             <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-6">
               <Badge>
@@ -176,7 +178,7 @@ export function EventsCarousel({
 
             <div className="absolute inset-x-0 bottom-0 flex flex-col gap-6 p-6 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               {item.description && (
-                <p className="text-center text-xl leading-[27px]">{item.description}</p>
+                <p className="text-center text-sm leading-5">{item.description}</p>
               )}
               {item.ctaLabel && (
                 <a
