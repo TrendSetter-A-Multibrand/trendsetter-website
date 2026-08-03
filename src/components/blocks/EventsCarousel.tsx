@@ -23,7 +23,7 @@ type EventsCarouselProps = {
 const BASE_ITEMS: EventItem[] = [
   {
     day: "27",
-    month: "июля",
+    month: "июл",
     time: "18:00",
     title: "Мастер-класс",
     location: 'ТЦ "Атриум"',
@@ -34,7 +34,7 @@ const BASE_ITEMS: EventItem[] = [
   },
   {
     day: "3",
-    month: "августа",
+    month: "авг",
     time: "19:00",
     title: "Встреча книжного клуба",
     location: "Дубровка",
@@ -45,7 +45,7 @@ const BASE_ITEMS: EventItem[] = [
   },
   {
     day: "10",
-    month: "августа",
+    month: "авг",
     time: "17:30",
     title: "Показ капсульной коллекции",
     location: 'ТЦ "Атриум"',
@@ -56,7 +56,7 @@ const BASE_ITEMS: EventItem[] = [
   },
   {
     day: "16",
-    month: "августа",
+    month: "авг",
     time: "12:00",
     title: "Воркшоп по стайлингу",
     location: "Хлебозавод №9",
@@ -158,8 +158,12 @@ export function EventsCarousel({
 
             <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-6">
               <Badge>
-                <span className="text-xl">{item.day}</span>
-                <span className="mt-1 text-[10px] uppercase">{item.month}</span>
+                {/* leading-none has to sit here, not on the Badge: text-xl sets
+                    its own 28px line-height, which would overflow the 56px plate */}
+                <span className="text-xl leading-none">{item.day}</span>
+                <span className="mt-1 text-[10px] uppercase tracking-[3px]">
+                  {item.month}
+                </span>
               </Badge>
 
               <div className="flex-1 text-center text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
@@ -167,9 +171,9 @@ export function EventsCarousel({
               </div>
 
               <Badge>
-                <span className="text-xl">{item.time.split(":")[0]}</span>
+                <span className="text-xl leading-none">{item.time.split(":")[0]}</span>
                 <span className="my-1 h-px w-full bg-white" />
-                <span className="text-xl">{item.time.split(":")[1]}</span>
+                <span className="text-xl leading-none">{item.time.split(":")[1]}</span>
               </Badge>
             </div>
 
