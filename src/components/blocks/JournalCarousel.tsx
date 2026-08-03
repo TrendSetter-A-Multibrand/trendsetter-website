@@ -64,15 +64,15 @@ export function JournalCarousel({
   return (
     <section className="px-6 py-16 lg:px-10">
       <div className="mb-8 flex items-center justify-between">
-        <h2 className="whitespace-nowrap font-mono text-sm uppercase tracking-[0.2em]">
+        <h2 className="whitespace-nowrap font-mono text-xl uppercase tracking-[5px] lg:text-[30px]">
           [{heading}]
         </h2>
-        <div className="flex gap-2">
+        <div className="flex gap-[44px]">
           <button
             type="button"
             aria-label="Назад"
             onClick={() => scroll(-1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-black/20"
+            className="flex h-[22px] w-[22px] items-center justify-center text-[22px] leading-none"
           >
             ←
           </button>
@@ -80,7 +80,7 @@ export function JournalCarousel({
             type="button"
             aria-label="Вперёд"
             onClick={() => scroll(1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-black/20"
+            className="flex h-[22px] w-[22px] items-center justify-center text-[22px] leading-none"
           >
             →
           </button>
@@ -89,13 +89,13 @@ export function JournalCarousel({
 
       <div
         ref={trackRef}
-        className="flex gap-6 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-6 overflow-x-auto scroll-smooth lg:gap-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
           <a
             key={i}
             href={item.href ?? "#"}
-            className="group relative aspect-[4/3] w-[85%] shrink-0 overflow-hidden bg-neutral-800 sm:aspect-[2/1] sm:w-[calc(50%-12px)]"
+            className="group relative aspect-[4/3] w-[85%] shrink-0 overflow-hidden bg-neutral-800 sm:aspect-[900/444] sm:w-[calc(50%-20px)]"
           >
             {item.image ? (
               <Image src={item.image} alt="" fill className="object-cover" />
@@ -103,26 +103,33 @@ export function JournalCarousel({
               <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
             )}
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            {/* Both cards carry this in the mockup: #252120 at 80%, darkest at
+                the top and bottom edges and clear through the middle */}
+            <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink opacity-80" />
 
-            <p className="absolute left-4 top-4 font-mono text-xs font-medium uppercase tracking-wide text-white">
+            <p className="absolute left-6 top-6 font-mono text-sm font-medium uppercase text-white">
               {item.tags.map((tag) => `[${tag}]`).join(" ")}
             </p>
 
-            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-4 text-white transition-transform duration-200 group-hover:-translate-y-2">
-              <div className="flex flex-col gap-1">
-                <p className="text-base font-semibold leading-snug sm:text-lg">
-                  {item.title}
-                </p>
-                {item.excerpt && (
-                  <p className="hidden text-sm text-white/80 opacity-0 transition-opacity duration-200 sm:block sm:group-hover:opacity-100">
-                    {item.excerpt}
-                  </p>
-                )}
+            <div className="absolute inset-x-0 bottom-0 flex flex-col p-6 text-white">
+              <p className="text-xl font-semibold leading-tight sm:text-4xl/11">
+                {item.title}
+              </p>
+
+              {/* Collapsed to zero height at rest so the title lands in the same
+                  place on every card, whether or not there is an excerpt */}
+              <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-200 group-hover:grid-rows-[1fr]">
+                <div className="overflow-hidden">
+                  <div className="flex flex-col gap-6 pt-6">
+                    {item.excerpt && (
+                      <p className="text-xl/[30px]">{item.excerpt}</p>
+                    )}
+                    <span className="flex h-[49px] items-center justify-center bg-white/40 text-sm font-medium uppercase tracking-[0.15em] text-white backdrop-blur-[2px]">
+                      Читать
+                    </span>
+                  </div>
+                </div>
               </div>
-              <span className="w-full translate-y-2 bg-white/20 py-3 text-center text-sm font-medium uppercase tracking-wide text-white opacity-0 backdrop-blur-sm transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
-                Читать
-              </span>
             </div>
           </a>
         ))}
