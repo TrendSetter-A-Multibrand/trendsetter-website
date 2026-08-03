@@ -76,9 +76,22 @@ const DEFAULT_ITEMS: EventItem[] = Array.from(
 function EventTitle({ item }: { item: EventItem }) {
   return (
     <>
-      <p className="text-sm font-semibold uppercase tracking-wide">{item.title}</p>
-      <p className="text-xs uppercase tracking-wide text-white/80">{item.location}</p>
+      <p className="text-xl font-semibold uppercase leading-[27px]">{item.title}</p>
+      <p className="text-xl leading-[27px]">{item.location}</p>
     </>
+  );
+}
+
+/**
+ * 56x56, white at 40% with white content. The two badges are built differently
+ * in the mockup: the date is a big day over a small month, the time is two
+ * equal rows split by a 32px rule.
+ */
+function Badge({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center bg-white/40 font-mono leading-none text-white">
+      {children}
+    </div>
   );
 }
 
@@ -97,15 +110,16 @@ export function EventsCarousel({
   return (
     <section className="px-6 py-16 lg:px-10">
       <div className="mb-8 flex items-center justify-between">
-        <h2 className="whitespace-nowrap font-mono text-sm uppercase tracking-[0.2em]">
+        <h2 className="whitespace-nowrap font-mono text-xl uppercase tracking-[5px] lg:text-[30px]">
           [{heading}]
         </h2>
-        <div className="flex gap-2">
+        {/* Bare 22px glyphs 44px apart in the mockup - no round border */}
+        <div className="flex gap-[44px]">
           <button
             type="button"
             aria-label="Назад"
             onClick={() => scroll(-1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-black/20"
+            className="flex h-[22px] w-[22px] items-center justify-center text-[22px] leading-none"
           >
             ←
           </button>
@@ -113,7 +127,7 @@ export function EventsCarousel({
             type="button"
             aria-label="Вперёд"
             onClick={() => scroll(1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-black/20"
+            className="flex h-[22px] w-[22px] items-center justify-center text-[22px] leading-none"
           >
             →
           </button>
@@ -122,12 +136,13 @@ export function EventsCarousel({
 
       <div
         ref={trackRef}
-        className="flex gap-6 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-6 overflow-x-auto scroll-smooth lg:gap-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
+          // 430x312, four across with 40px gaps
           <div
             key={i}
-            className="group relative aspect-[4/3] w-80 shrink-0 overflow-hidden bg-neutral-800"
+            className="group relative aspect-[430/312] w-[85%] shrink-0 overflow-hidden bg-neutral-800 sm:w-[calc(50%-20px)] lg:w-[calc(25%-30px)]"
           >
             {item.image ? (
               <Image src={item.image} alt="" fill className="object-cover" />
@@ -135,38 +150,38 @@ export function EventsCarousel({
               <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
             )}
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+            {/* Only 93px tall at the bottom, and gone on hover */}
+            <div className="absolute inset-x-0 bottom-0 h-[93px] bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-200 group-hover:opacity-0" />
 
-            <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-3">
-              <div className="w-14 shrink-0 bg-white/80 px-2 py-1 text-center font-mono text-xs leading-tight text-ink">
-                <div className="text-base font-semibold">{item.day}</div>
-                <div className="uppercase">{item.month}</div>
-              </div>
+            <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-6">
+              <Badge>
+                <span className="text-xl">{item.day}</span>
+                <span className="mt-1 text-[10px] uppercase">{item.month}</span>
+              </Badge>
 
-              <div className="flex-1 pt-1 text-center text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+              <div className="flex-1 text-center text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                 <EventTitle item={item} />
               </div>
 
-              <div className="w-14 shrink-0 bg-white/80 px-2 py-1 text-center font-mono text-xs leading-tight text-ink">
-                <div className="text-base font-semibold">{item.time.split(":")[0]}</div>
-                <div className="border-t border-neutral-900/20 pt-0.5">
-                  {item.time.split(":")[1]}
-                </div>
-              </div>
+              <Badge>
+                <span className="text-xl">{item.time.split(":")[0]}</span>
+                <span className="my-1 h-px w-8 bg-white" />
+                <span className="text-xl">{item.time.split(":")[1]}</span>
+              </Badge>
             </div>
 
-            <div className="absolute inset-x-0 bottom-0 p-4 text-center text-white transition-opacity duration-200 group-hover:opacity-0">
+            <div className="absolute inset-x-0 bottom-0 p-6 text-center text-white transition-opacity duration-200 group-hover:opacity-0">
               <EventTitle item={item} />
             </div>
 
-            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-4 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-6 p-6 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               {item.description && (
-                <p className="text-center text-xs leading-snug">{item.description}</p>
+                <p className="text-center text-xl leading-[27px]">{item.description}</p>
               )}
               {item.ctaLabel && (
                 <a
                   href={item.ctaHref ?? "#"}
-                  className="bg-brand px-4 py-2 text-center text-xs font-medium uppercase tracking-wide"
+                  className="flex h-[49px] items-center justify-center bg-brand text-sm font-medium uppercase tracking-[0.15em]"
                 >
                   {item.ctaLabel}
                 </a>
