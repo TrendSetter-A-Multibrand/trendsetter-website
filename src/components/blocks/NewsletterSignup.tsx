@@ -70,12 +70,12 @@ export function NewsletterSignup({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Ваш E-mail адрес здесь"
-              className="w-full border border-white/40 bg-transparent px-4 py-3 text-sm placeholder:text-white/60 focus:outline-none"
+              className="w-full border-2 border-white bg-white/10 px-4 py-3 font-mono text-sm placeholder:text-center placeholder:text-white/40 focus:outline-none"
             />
             <button
               type="submit"
               disabled={!isValid}
-              className="shrink-0 whitespace-nowrap bg-white px-6 py-3 text-sm font-medium uppercase tracking-wide text-brand disabled:cursor-not-allowed disabled:opacity-50"
+              className="shrink-0 whitespace-nowrap border-2 border-white bg-white px-6 py-3 font-mono text-sm uppercase tracking-wide text-ink disabled:cursor-not-allowed disabled:opacity-50"
             >
               Подписаться
             </button>
@@ -87,13 +87,16 @@ export function NewsletterSignup({
           </div>
         </div>
 
-        <div className="flex justify-center">
-          <div
-            className={`relative h-48 w-48 transition-transform duration-700 ease-in lg:h-64 lg:w-64 ${
-              submitted ? "translate-x-[100vw] rotate-[900deg]" : "translate-x-0 rotate-0"
-            }`}
-          >
-            <Image src={imageSrc} alt="" fill className="object-contain" />
+        {/* In the mockup the smiley is taller than the block and gets clipped by it */}
+        <div className="relative min-h-64 lg:min-h-72">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <div
+              className={`relative h-64 w-64 transition-transform duration-700 ease-in sm:h-80 sm:w-80 lg:h-[420px] lg:w-[420px] ${
+                submitted ? "translate-x-[100vw] rotate-[900deg]" : "translate-x-0 rotate-0"
+              }`}
+            >
+              <Image src={imageSrc} alt="" fill className="object-contain" />
+            </div>
           </div>
         </div>
       </div>

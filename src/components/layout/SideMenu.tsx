@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
-import { NAV_ITEMS, SOCIAL_LINKS } from "@/lib/navigation";
+import { NAV_ITEMS } from "@/lib/navigation";
+import { SocialLinks } from "@/components/ui/SocialLinks";
 
 export function SideMenu({
   locale,
@@ -74,18 +75,7 @@ export function SideMenu({
           ))}
         </nav>
 
-        <div className="flex gap-3 pt-6">
-          {SOCIAL_LINKS.map((social) => (
-            <a
-              key={social.label}
-              href={social.href}
-              aria-label={social.label}
-              className="flex h-9 w-9 items-center justify-center rounded bg-brand text-xs font-semibold uppercase text-white"
-            >
-              {social.label.slice(0, 2)}
-            </a>
-          ))}
-        </div>
+        <SocialLinks className="pt-6" />
       </div>
     </div>
   );

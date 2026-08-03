@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
-import { NAV_ITEMS, SOCIAL_LINKS } from "@/lib/navigation";
+import { NAV_ITEMS } from "@/lib/navigation";
 import { Wordmark } from "@/components/ui/Wordmark";
+import { SocialLinks } from "@/components/ui/SocialLinks";
 
 const MENU_LINKS = [
   { label: "Журнал", slug: "journal" },
@@ -87,18 +88,7 @@ export function Footer({ locale }: { locale: Locale }) {
           </a>
         </div>
 
-        <div className="flex h-fit gap-3">
-          {SOCIAL_LINKS.map((social) => (
-            <a
-              key={social.label}
-              href={social.href}
-              aria-label={social.label}
-              className="flex h-9 w-9 items-center justify-center rounded bg-brand text-xs font-semibold uppercase"
-            >
-              {social.label.slice(0, 2)}
-            </a>
-          ))}
-        </div>
+        <SocialLinks className="h-fit" />
       </div>
 
       {/* SOFT_LIGHT in the mockup - the mark sinks into the dark background */}

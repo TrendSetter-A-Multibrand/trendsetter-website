@@ -42,8 +42,8 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const SOCIAL_LINKS = [
-  { label: "Telegram", href: "#" },
-  { label: "VK", href: "#" },
-  { label: "Одноклассники", href: "#" },
-  { label: "Дзен", href: "#" },
+  { label: "Telegram", href: "#", icon: "/images/social/telegram.svg" },
+  { label: "VK", href: "#", icon: "/images/social/vk.svg" },
+  { label: "Одноклассники", href: "#", icon: "/images/social/ok.svg" },
+  { label: "Дзен", href: "#", icon: "/images/social/zen.svg" },
 ];
