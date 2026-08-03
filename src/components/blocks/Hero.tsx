@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
-import { FitText } from "@/components/ui/FitText";
+import { Wordmark } from "@/components/ui/Wordmark";
 
 type HeroProps = {
   locale: Locale;
@@ -54,13 +54,9 @@ export function Hero({
         </div>
       </div>
 
-      <h1 className="relative w-full px-6 pb-10 lg:px-10">
-        <FitText
-          widthRatio={0.9}
-          className="select-none font-black leading-none tracking-tight text-brand"
-        >
-          TRENDSETTER
-        </FitText>
+      {/* LINEAR_DODGE in the mockup - lets the photo read through the letters */}
+      <h1 className="relative w-full px-6 pb-10 mix-blend-plus-lighter lg:px-10">
+        <Wordmark className="text-brand" />
       </h1>
     </section>
   );

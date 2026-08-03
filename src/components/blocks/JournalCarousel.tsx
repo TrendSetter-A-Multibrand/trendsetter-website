@@ -19,6 +19,7 @@ type JournalCarouselProps = {
 const BASE_ITEMS: JournalItem[] = [
   {
     tags: ["Мода", "Тренды"],
+    image: "/images/home/journal/1.jpg",
     title:
       "Неделя моды весна-лето 2026 . Чего (не) ждать от предстоящих показов нового сезона",
     excerpt:
@@ -26,15 +27,18 @@ const BASE_ITEMS: JournalItem[] = [
   },
   {
     tags: ["Впечатления", "Дом"],
+    image: "/images/home/journal/2.jpg",
     title:
       "Не только Dolce&Gabbana: home-коллекции модных брендов, о которых мы могли не знать",
   },
   {
     tags: ["Красота", "Косметика"],
+    image: "/images/home/journal/1.jpg",
     title: "Что положить в косметичку: 8 уходовых средств на все случаи жизни",
   },
   {
     tags: ["Комьюнити", "Общество"],
+    image: "/images/home/journal/2.jpg",
     title:
       "Карабин, плёнка и Тарковский: как «нишевость» и стремление быть «не как все» превратились в мем",
   },

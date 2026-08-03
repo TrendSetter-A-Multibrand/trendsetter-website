@@ -26,6 +26,7 @@ const DEFAULT_STORES: Store[] = [
     phone: "8 926 794 97 42",
     findHref: "#",
     directionsHref: "#",
+    image: "/images/home/stores/1.jpg",
   },
   {
     name: "Дубровка",
@@ -34,6 +35,7 @@ const DEFAULT_STORES: Store[] = [
     phone: "8 926 794 97 42",
     findHref: "#",
     directionsHref: "#",
+    image: "/images/home/stores/2.jpg",
   },
   {
     name: "Дубровка",
@@ -42,6 +44,7 @@ const DEFAULT_STORES: Store[] = [
     phone: "8 926 794 97 42",
     findHref: "#",
     directionsHref: "#",
+    image: "/images/home/stores/3.jpg",
   },
 ];
 

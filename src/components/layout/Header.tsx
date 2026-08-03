@@ -5,17 +5,15 @@ import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
 import { NAV_ITEMS } from "@/lib/navigation";
 import { SideMenu } from "@/components/layout/SideMenu";
+import { Wordmark } from "@/components/ui/Wordmark";
 
 export function Header({ locale }: { locale: Locale }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <header className="flex items-center justify-between gap-6 border-b border-black/10 px-6 py-4 lg:px-10">
-      <Link
-        href={`/${locale}`}
-        className="text-2xl font-bold tracking-tight text-brand"
-      >
-        TRENDSETTER
+      <Link href={`/${locale}`} className="w-40 shrink-0 text-brand sm:w-52">
+        <Wordmark />
       </Link>
 
       <nav className="hidden items-center gap-6 text-sm font-medium uppercase tracking-wide lg:flex">

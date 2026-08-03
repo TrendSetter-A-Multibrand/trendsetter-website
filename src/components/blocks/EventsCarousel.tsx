@@ -30,6 +30,7 @@ const BASE_ITEMS: EventItem[] = [
     description: "Мастер-класс по лепке от известного керамиста Юрия Базанова.",
     ctaLabel: "Подробнее",
     ctaHref: "#",
+    image: "/images/home/events/1.jpg",
   },
   {
     day: "3",
@@ -40,6 +41,7 @@ const BASE_ITEMS: EventItem[] = [
     description: "Обсуждаем новинки нон-фикшна вместе с гостями магазина.",
     ctaLabel: "Подробнее",
     ctaHref: "#",
+    image: "/images/home/events/2.jpg",
   },
   {
     day: "10",
@@ -50,6 +52,7 @@ const BASE_ITEMS: EventItem[] = [
     description: "Первыми увидите новую капсулу до старта продаж.",
     ctaLabel: "Подробнее",
     ctaHref: "#",
+    image: "/images/home/events/3.jpg",
   },
   {
     day: "16",
@@ -60,6 +63,7 @@ const BASE_ITEMS: EventItem[] = [
     description: "Разбираем базовый гардероб с личным стилистом.",
     ctaLabel: "Подробнее",
     ctaHref: "#",
+    image: "/images/home/events/4.jpg",
   },
 ];
 

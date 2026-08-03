@@ -34,7 +34,7 @@ function Checkbox({ label }: { label: string }) {
 export function NewsletterSignup({
   heading = "Подпишитесь на наши новости",
   description = "Будьте в числе первых, кто узнает о новинках, распродажах и интересных новостях TRENDSETTER!",
-  imageSrc = "/images/home/smile.jpg",
+  imageSrc = "/images/home/smile.svg",
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -89,12 +89,11 @@ export function NewsletterSignup({
 
         <div className="flex justify-center">
           <div
-            className={`relative h-48 w-48 overflow-hidden rounded-full transition-transform duration-700 ease-in lg:h-64 lg:w-64 ${
+            className={`relative h-48 w-48 transition-transform duration-700 ease-in lg:h-64 lg:w-64 ${
               submitted ? "translate-x-[100vw] rotate-[900deg]" : "translate-x-0 rotate-0"
             }`}
           >
-            {/* the artwork sits on a white square, so scale it up to crop the corners inside the circle */}
-            <Image src={imageSrc} alt="" fill className="scale-[1.3] object-cover" />
+            <Image src={imageSrc} alt="" fill className="object-contain" />
           </div>
         </div>
       </div>

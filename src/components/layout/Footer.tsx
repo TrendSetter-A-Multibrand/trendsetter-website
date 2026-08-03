@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
 import { NAV_ITEMS, SOCIAL_LINKS } from "@/lib/navigation";
-import { FitText } from "@/components/ui/FitText";
+import { Wordmark } from "@/components/ui/Wordmark";
 
 const MENU_LINKS = [
   { label: "Журнал", slug: "journal" },
@@ -101,13 +101,9 @@ export function Footer({ locale }: { locale: Locale }) {
         </div>
       </div>
 
-      <div className="px-6 pb-2 pt-6 lg:px-10">
-        <FitText
-          widthRatio={0.9}
-          className="select-none font-black leading-none tracking-tight text-white/10"
-        >
-          TRENDSETTER
-        </FitText>
+      {/* SOFT_LIGHT in the mockup - the mark sinks into the dark background */}
+      <div className="px-6 pb-2 pt-6 mix-blend-soft-light lg:px-10">
+        <Wordmark className="text-white" />
       </div>
     </footer>
   );

@@ -1,15 +1,21 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Inter_Tight } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const interTight = Inter_Tight({
+// Variable fonts supplied by the designer; the italic files sit alongside them
+// unreferenced until something actually needs italics.
+const interTight = localFont({
+  src: "./fonts/InterTight-VariableFont_wght.ttf",
   variable: "--font-inter-tight",
-  subsets: ["latin", "cyrillic"],
+  weight: "100 900",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
+  src: "./fonts/GeistMono-VariableFont_wght.ttf",
   variable: "--font-geist-mono",
-  subsets: ["latin", "cyrillic"],
+  weight: "100 900",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
