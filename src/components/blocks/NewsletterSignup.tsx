@@ -13,7 +13,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function Checkbox({ label }: { label: string }) {
   return (
-    <label className="flex cursor-pointer items-center gap-3">
+    <label className="flex cursor-pointer items-center gap-6">
       <input type="checkbox" defaultChecked className="peer sr-only" />
       <span className="flex h-8 w-8 shrink-0 items-center justify-center border-2 border-white peer-checked:[&>svg]:opacity-100 lg:h-10 lg:w-10">
         <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 opacity-0 lg:h-6 lg:w-6">
@@ -56,30 +56,32 @@ export function NewsletterSignup({
 
   return (
     <section className="relative overflow-hidden bg-brand px-6 py-10 text-white lg:px-10">
-      <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+      {/* Text column is 995px wide in the mockup, the smiley takes the rest */}
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,995px)_1fr] lg:items-center">
         <div className="flex flex-col gap-6">
-          <h2 className="font-mono text-xl uppercase lg:text-3xl">[{heading}]</h2>
-          <p className="font-mono text-lg lg:text-2xl">{description}</p>
+          <h2 className="font-mono text-xl uppercase lg:text-3xl/9">[{heading}]</h2>
+          <p className="font-mono text-lg lg:text-2xl/9">{description}</p>
 
-          <form onSubmit={handleSubmit} className="flex w-full">
+          {/* 995x80 in the mockup: 701px input + 294px button, flush together */}
+          <form onSubmit={handleSubmit} className="flex h-14 w-full lg:h-20">
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Ваш E-mail адрес здесь"
-              className="w-full border border-white bg-transparent px-4 py-3 font-mono text-lg placeholder:text-center placeholder:text-white/40 focus:outline-none lg:text-2xl"
+              className="min-w-0 flex-1 border-2 border-white bg-transparent px-4 text-center font-mono text-lg placeholder:text-white/40 focus:outline-none lg:text-2xl"
             />
             <button
               type="submit"
               disabled={!isValid}
-              className="shrink-0 whitespace-nowrap border border-white bg-white px-6 py-3 text-sm font-medium uppercase tracking-[0.15em] text-ink disabled:cursor-not-allowed lg:text-xl"
+              className="shrink-0 whitespace-nowrap border border-white bg-white px-4 text-sm font-medium uppercase tracking-[3px] text-ink disabled:cursor-not-allowed lg:w-[294px] lg:text-xl"
             >
               Подписаться
             </button>
           </form>
 
-          <div className="flex flex-wrap gap-6 font-mono text-lg lg:text-xl">
+          <div className="flex flex-wrap gap-6 font-mono text-lg lg:text-2xl">
             <Checkbox label="Для мужчин" />
             <Checkbox label="Для девушек" />
           </div>
