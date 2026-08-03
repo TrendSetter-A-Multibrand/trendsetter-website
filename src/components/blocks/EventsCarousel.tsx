@@ -83,13 +83,14 @@ function EventTitle({ item }: { item: EventItem }) {
 }
 
 /**
- * 56x56, white at 40% with white content. The two badges are built differently
- * in the mockup: the date is a big day over a small month, the time is two
- * equal rows split by a 32px rule.
+ * 56x56, white at 40% over a 2px backdrop blur, with white content. The 12px
+ * side padding is what makes the time rule 32px wide. The two badges are built
+ * differently in the mockup: the date is a big day over a small month, the time
+ * is two equal rows split by that rule.
  */
 function Badge({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center bg-white/40 font-mono leading-none text-white">
+    <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center bg-white/40 px-3 font-mono leading-none text-white backdrop-blur-[2px]">
       {children}
     </div>
   );
@@ -153,7 +154,7 @@ export function EventsCarousel({
             {/* At rest: 93px of #252120 fading up. On hover it gives way to a
                 wash over the whole card, so the description stays readable. */}
             <div className="absolute inset-x-0 bottom-0 h-[93px] bg-gradient-to-t from-ink to-transparent transition-opacity duration-200 group-hover:opacity-0" />
-            <div className="absolute inset-0 bg-ink/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+            <div className="absolute inset-0 bg-ink/75 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
             <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-6">
               <Badge>
@@ -167,7 +168,7 @@ export function EventsCarousel({
 
               <Badge>
                 <span className="text-xl">{item.time.split(":")[0]}</span>
-                <span className="my-1 h-px w-8 bg-white" />
+                <span className="my-1 h-px w-full bg-white" />
                 <span className="text-xl">{item.time.split(":")[1]}</span>
               </Badge>
             </div>
