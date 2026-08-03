@@ -34,20 +34,22 @@ export function Hero({
       )}
 
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6 text-center lg:px-10">
-        <p className="max-w-4xl font-mono text-xl uppercase tracking-[0.2em] text-white sm:text-2xl lg:text-3xl">
+        {/* 36px with 5px tracking in the mockup, and mixed case - not uppercase */}
+        <p className="max-w-5xl font-mono text-xl text-white sm:text-2xl lg:text-[36px] lg:tracking-[5px]">
           {tagline}
         </p>
 
-        <div className="flex flex-wrap justify-center gap-4">
+        {/* 49px tall, 24px apart; the first one is white at 50% */}
+        <div className="flex flex-wrap justify-center gap-6">
           <Link
             href={primaryCta.href}
-            className="bg-white/10 px-6 py-3 text-sm font-medium uppercase tracking-wide text-white"
+            className="flex h-[49px] items-center bg-white/50 px-4 text-sm font-medium uppercase tracking-[0.15em] text-white"
           >
             {primaryCta.label}
           </Link>
           <Link
             href={secondaryCta.href}
-            className="bg-brand px-6 py-3 text-sm font-medium uppercase tracking-wide text-white"
+            className="flex h-[49px] items-center bg-brand px-4 text-sm font-medium uppercase tracking-[0.15em] text-white"
           >
             {secondaryCta.label}
           </Link>
