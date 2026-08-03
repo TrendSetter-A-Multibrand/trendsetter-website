@@ -73,7 +73,7 @@ export function NewsletterSignup({
             <button
               type="submit"
               disabled={!isValid}
-              className="shrink-0 whitespace-nowrap border border-white bg-white px-6 py-3 text-sm font-medium uppercase tracking-[0.15em] text-ink disabled:cursor-not-allowed disabled:opacity-50 lg:text-xl"
+              className="shrink-0 whitespace-nowrap border border-white bg-white px-6 py-3 text-sm font-medium uppercase tracking-[0.15em] text-ink disabled:cursor-not-allowed lg:text-xl"
             >
               Подписаться
             </button>
@@ -88,12 +88,12 @@ export function NewsletterSignup({
         {/* Taller than the block in the mockup, so it overflows and gets clipped */}
         <div className="relative min-h-56 lg:min-h-0">
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            {/* tilted ~10deg in the mockup; the roll keeps that as its resting angle */}
+            {/* tilted ~10deg counter-clockwise in the mockup; the roll keeps that as its resting angle */}
             <div
               className={`relative h-60 w-60 transition-transform duration-700 ease-in sm:h-80 sm:w-80 lg:h-[500px] lg:w-[500px] ${
                 submitted
-                  ? "translate-x-[100vw] rotate-[910deg]"
-                  : "translate-x-0 rotate-[10deg]"
+                  ? "translate-x-[100vw] rotate-[890deg]"
+                  : "-rotate-[10deg] translate-x-0"
               }`}
             >
               <Image src={imageSrc} alt="" fill className="object-contain" />

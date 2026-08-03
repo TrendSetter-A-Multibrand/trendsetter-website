@@ -22,9 +22,14 @@ const LEGAL_LINKS = [
 
 const CONTACT_EMAIL = "trader@calledagarment.com";
 
+/**
+ * 22px in the mockup. Deliberately its own size, not shared with the section
+ * headings in components/blocks - those are 30px and scaling them together
+ * would move the sliders above.
+ */
 function FooterHeading({ children }: { children: string }) {
   return (
-    <h2 className="mb-4 font-mono text-sm uppercase tracking-[0.2em]">
+    <h2 className="mb-4 font-mono text-[22px] uppercase tracking-[0.2em]">
       [{children}]
     </h2>
   );
@@ -91,9 +96,9 @@ export function Footer({ locale }: { locale: Locale }) {
         <SocialLinks className="h-fit" />
       </div>
 
-      {/* SOFT_LIGHT in the mockup - the mark sinks into the dark background */}
+      {/* White under SOFT_LIGHT in the mockup - the mark greys into the dark background */}
       <div className="px-6 pb-2 pt-6 mix-blend-soft-light lg:px-10">
-        <Wordmark className="text-brand" />
+        <Wordmark className="text-white" />
       </div>
     </footer>
   );
