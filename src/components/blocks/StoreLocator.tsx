@@ -54,7 +54,7 @@ export function StoreLocator({
 
   return (
     <section className="px-6 py-16 lg:px-10">
-      <h2 className="mb-8 whitespace-nowrap text-sm font-semibold uppercase tracking-[0.2em]">
+      <h2 className="mb-8 whitespace-nowrap font-mono text-sm uppercase tracking-[0.2em]">
         [{heading}]
       </h2>
 
@@ -66,7 +66,7 @@ export function StoreLocator({
               type="button"
               onClick={() => setSelected(i)}
               className={`flex items-center gap-4 p-4 text-left ${
-                i === selected ? "bg-neutral-200" : "bg-neutral-100"
+                i === selected ? "bg-surface-strong" : "bg-surface"
               }`}
             >
               <div className="h-16 w-16 shrink-0 overflow-hidden bg-neutral-300">
@@ -94,7 +94,7 @@ export function StoreLocator({
         </div>
 
         <div className="grid sm:grid-cols-2">
-          <div className="flex flex-col gap-4 bg-neutral-100 p-6">
+          <div className="flex flex-col gap-4 bg-surface p-6">
             <p className="font-semibold">{active.address}</p>
             <p className="text-sm text-foreground/70">Часы работы: {active.hours}</p>
             <p className="text-sm text-foreground/70">Телефон: {active.phone}</p>
@@ -114,7 +114,7 @@ export function StoreLocator({
             </div>
           </div>
 
-          <div className="min-h-64 bg-neutral-200" />
+          <div className="min-h-64 bg-surface-strong" />
         </div>
       </div>
     </section>

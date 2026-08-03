@@ -100,7 +100,7 @@ export function NewsGrid({
   return (
     <section className="px-6 py-16 lg:px-10">
       <div className="mb-8 flex items-center gap-6">
-        <h2 className="whitespace-nowrap text-sm font-semibold uppercase tracking-[0.2em]">
+        <h2 className="whitespace-nowrap font-mono text-sm uppercase tracking-[0.2em]">
           [{heading}]
         </h2>
         <div
@@ -129,7 +129,7 @@ export function NewsGrid({
             href={item.href ?? "#"}
             className="flex w-[70%] shrink-0 flex-col gap-3 sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
           >
-            <div className="aspect-[3/2] w-full overflow-hidden bg-neutral-200">
+            <div className="aspect-[3/2] w-full overflow-hidden bg-surface-strong">
               {item.image && (
                 <Image
                   src={item.image}
@@ -140,7 +140,7 @@ export function NewsGrid({
                 />
               )}
             </div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-brand">
+            <p className="font-mono text-xs font-medium uppercase tracking-wide text-brand">
               {item.tags.map((tag) => `[${tag}]`).join(" ")}
             </p>
             <p className="font-medium leading-snug">{item.title}</p>

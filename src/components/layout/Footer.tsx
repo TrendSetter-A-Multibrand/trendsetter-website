@@ -23,7 +23,7 @@ const CONTACT_EMAIL = "trader@calledagarment.com";
 
 function FooterHeading({ children }: { children: string }) {
   return (
-    <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.2em]">
+    <h2 className="mb-4 font-mono text-sm uppercase tracking-[0.2em]">
       [{children}]
     </h2>
   );
@@ -54,7 +54,7 @@ export function Footer({ locale }: { locale: Locale }) {
   const companyLinks = NAV_ITEMS.find((item) => item.slug === "company")?.children ?? [];
 
   return (
-    <footer className="bg-neutral-900 text-white">
+    <footer className="bg-ink text-white">
       <div className="flex flex-col gap-10 px-6 py-16 lg:flex-row lg:justify-between lg:px-10">
         <div className="flex flex-wrap gap-10 lg:gap-16">
           <FooterColumn

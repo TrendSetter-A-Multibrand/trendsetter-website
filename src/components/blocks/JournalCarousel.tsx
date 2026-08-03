@@ -60,7 +60,7 @@ export function JournalCarousel({
   return (
     <section className="px-6 py-16 lg:px-10">
       <div className="mb-8 flex items-center justify-between">
-        <h2 className="whitespace-nowrap text-sm font-semibold uppercase tracking-[0.2em]">
+        <h2 className="whitespace-nowrap font-mono text-sm uppercase tracking-[0.2em]">
           [{heading}]
         </h2>
         <div className="flex gap-2">
@@ -101,7 +101,7 @@ export function JournalCarousel({
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-            <p className="absolute left-4 top-4 text-xs font-semibold uppercase tracking-wide text-white">
+            <p className="absolute left-4 top-4 font-mono text-xs font-medium uppercase tracking-wide text-white">
               {item.tags.map((tag) => `[${tag}]`).join(" ")}
             </p>
 

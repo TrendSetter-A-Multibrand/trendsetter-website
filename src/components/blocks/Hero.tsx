@@ -34,7 +34,7 @@ export function Hero({
       )}
 
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6 text-center lg:px-10">
-        <p className="max-w-4xl text-xl uppercase tracking-[0.2em] text-white sm:text-2xl lg:text-3xl">
+        <p className="max-w-4xl font-mono text-xl uppercase tracking-[0.2em] text-white sm:text-2xl lg:text-3xl">
           {tagline}
         </p>
 

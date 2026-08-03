@@ -93,7 +93,7 @@ export function EventsCarousel({
   return (
     <section className="px-6 py-16 lg:px-10">
       <div className="mb-8 flex items-center justify-between">
-        <h2 className="whitespace-nowrap text-sm font-semibold uppercase tracking-[0.2em]">
+        <h2 className="whitespace-nowrap font-mono text-sm uppercase tracking-[0.2em]">
           [{heading}]
         </h2>
         <div className="flex gap-2">
@@ -134,7 +134,7 @@ export function EventsCarousel({
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
             <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-3">
-              <div className="w-14 shrink-0 bg-white/80 px-2 py-1 text-center text-xs leading-tight text-neutral-900">
+              <div className="w-14 shrink-0 bg-white/80 px-2 py-1 text-center font-mono text-xs leading-tight text-ink">
                 <div className="text-base font-semibold">{item.day}</div>
                 <div className="uppercase">{item.month}</div>
               </div>
@@ -143,7 +143,7 @@ export function EventsCarousel({
                 <EventTitle item={item} />
               </div>
 
-              <div className="w-14 shrink-0 bg-white/80 px-2 py-1 text-center text-xs leading-tight text-neutral-900">
+              <div className="w-14 shrink-0 bg-white/80 px-2 py-1 text-center font-mono text-xs leading-tight text-ink">
                 <div className="text-base font-semibold">{item.time.split(":")[0]}</div>
                 <div className="border-t border-neutral-900/20 pt-0.5">
                   {item.time.split(":")[1]}

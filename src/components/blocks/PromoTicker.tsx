@@ -11,7 +11,7 @@ export function PromoTicker({
     <a
       key={key}
       href={href}
-      className="mx-4 shrink-0 text-xs font-medium uppercase tracking-wide text-white"
+      className="mx-4 shrink-0 font-mono text-xs uppercase tracking-wide text-white"
     >
       {text} · Узнать подробнее
     </a>

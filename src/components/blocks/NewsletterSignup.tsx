@@ -58,10 +58,10 @@ export function NewsletterSignup({
     <section className="relative overflow-hidden bg-brand px-6 py-16 text-white lg:px-10">
       <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
         <div className="flex flex-col gap-6">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.2em]">
+          <h2 className="font-mono text-sm uppercase tracking-[0.2em]">
             [{heading}]
           </h2>
-          <p className="max-w-md">{description}</p>
+          <p className="max-w-md font-mono">{description}</p>
 
           <form onSubmit={handleSubmit} className="flex max-w-lg">
             <input
