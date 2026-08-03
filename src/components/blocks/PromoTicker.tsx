@@ -17,8 +17,9 @@ export function PromoTicker({
     </a>
   );
 
+  // 43px tall in the mockup
   return (
-    <div className="flex overflow-hidden bg-brand py-2">
+    <div className="flex h-[43px] items-center overflow-hidden bg-brand">
       <div className="flex shrink-0 animate-marquee">
         {Array.from({ length: 8 }, (_, i) => item(i))}
       </div>

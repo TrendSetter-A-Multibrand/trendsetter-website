@@ -10,9 +10,10 @@ import { Wordmark } from "@/components/ui/Wordmark";
 export function Header({ locale }: { locale: Locale }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // 90px tall in the mockup, with a 287px wordmark
   return (
-    <header className="flex items-center justify-between gap-6 border-b border-black/10 px-6 py-4 lg:px-10">
-      <Link href={`/${locale}`} className="w-40 shrink-0 text-brand sm:w-52">
+    <header className="flex h-16 items-center justify-between gap-6 border-b border-black/10 px-6 lg:h-[90px] lg:px-10">
+      <Link href={`/${locale}`} className="w-40 shrink-0 text-brand lg:w-[287px]">
         <Wordmark />
       </Link>
 
