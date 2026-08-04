@@ -3,14 +3,14 @@ import Link from "next/link";
 type Crumb = { label: string; href?: string };
 
 /**
- * Sits directly under the header - the mockup puts the type flush against it
- * and leaves the whole gap below, before the first block at y=192.
+ * Sits flush under the header in the mockups, with the whole gap left to the
+ * block that follows - which is why there is no padding below the type.
  */
 export function Breadcrumbs({ items }: { items: Crumb[] }) {
   return (
     <nav
       aria-label="Хлебные крошки"
-      className="px-6 pb-11 pt-px font-mono text-sm leading-none tracking-[1px] lg:px-10"
+      className="px-6 pt-px font-mono text-sm leading-none tracking-[1px] lg:px-10"
     >
       {items.map((item, i) => {
         const last = i === items.length - 1;

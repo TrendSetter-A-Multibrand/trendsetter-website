@@ -14,7 +14,9 @@ export default async function StoresPage({
       <Breadcrumbs
         items={[{ label: "Главная", href: `/${locale}` }, { label: "Магазины" }]}
       />
-      <StoreLocator rowGap={40} />
+      <div className="pt-11">
+        <StoreLocator rowGap={40} />
+      </div>
       <div className="mt-10">
         <HelpCards />
       </div>
