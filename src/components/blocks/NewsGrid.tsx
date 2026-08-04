@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from "react";
 import Image from "next/image";
+import { ReadOverlay } from "@/components/ui/ReadOverlay";
 
 const THUMB_WIDTH = 40;
 
@@ -131,9 +132,9 @@ export function NewsGrid({
           <a
             key={i}
             href={item.href ?? "#"}
-            className="flex w-[70%] shrink-0 flex-col gap-3 sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
+            className="group flex w-[70%] shrink-0 flex-col gap-3 sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
           >
-            <div className="aspect-[3/2] w-full overflow-hidden bg-surface-strong">
+            <div className="relative aspect-[3/2] w-full overflow-hidden bg-surface-strong">
               {item.image && (
                 <Image
                   src={item.image}
@@ -143,6 +144,7 @@ export function NewsGrid({
                   className="h-full w-full object-cover"
                 />
               )}
+              <ReadOverlay />
             </div>
             <p className="font-mono text-xs font-medium uppercase tracking-wide text-brand">
               {item.tags.map((tag) => `[${tag}]`).join(" ")}

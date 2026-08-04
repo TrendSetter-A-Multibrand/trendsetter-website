@@ -1,12 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ReadOverlay } from "@/components/ui/ReadOverlay";
 
-export type Article = {
-  tags: string[];
-  title: string;
-  href?: string;
-  image?: string;
-};
+import type { Article } from "@/lib/articles";
 
 type ArticleCardProps = {
   article: Article;
@@ -17,7 +13,7 @@ type ArticleCardProps = {
 
 export function ArticleCard({ article, onBrand, sizes }: ArticleCardProps) {
   return (
-    <Link href={article.href ?? "#"} className="flex flex-col">
+    <Link href={article.href ?? "#"} className="group flex flex-col">
       <div className="relative aspect-square overflow-hidden bg-surface-strong">
         {article.image && (
           <Image
@@ -28,6 +24,7 @@ export function ArticleCard({ article, onBrand, sizes }: ArticleCardProps) {
             className="object-cover"
           />
         )}
+        <ReadOverlay />
       </div>
 
       <p

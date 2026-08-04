@@ -1,4 +1,5 @@
-import { ArticleCard, type Article } from "@/components/blocks/ArticleCard";
+import { ArticleCard } from "@/components/blocks/ArticleCard";
+import type { Article } from "@/lib/articles";
 
 /**
  * The mockup does not use one uniform grid: it alternates a row of three square
