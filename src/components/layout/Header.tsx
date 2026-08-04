@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
 import { NAV_ITEMS, type NavItem } from "@/lib/navigation";
@@ -43,6 +43,12 @@ function NavEntry({ locale, item }: { locale: Locale; item: NavItem }) {
 
 export function Header({ locale }: { locale: Locale }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (searchOpen) searchRef.current?.focus();
+  }, [searchOpen]);
 
   // 90px tall in the mockup, with a 287px wordmark
   return (
@@ -57,8 +63,28 @@ export function Header({ locale }: { locale: Locale }) {
         ))}
       </nav>
 
-      <div className="flex items-center gap-4">
-        <button type="button" aria-label="Поиск" onClick={() => setMenuOpen(true)}>
+      <div className="flex shrink-0 items-center gap-4">
+        {/* Slides out of the magnifier; the rule and the type match the field
+            on the Бренды page */}
+        <div
+          className={`overflow-hidden transition-[width] duration-300 ${
+            searchOpen ? "w-[180px] xl:w-[280px]" : "w-0"
+          }`}
+        >
+          <input
+            ref={searchRef}
+            type="search"
+            placeholder="Поиск"
+            onKeyDown={(e) => e.key === "Escape" && setSearchOpen(false)}
+            className="w-full border-b-2 border-ink bg-transparent pb-2 font-mono text-sm uppercase tracking-[3px] text-ink outline-none placeholder:text-ink/50"
+          />
+        </div>
+        <button
+          type="button"
+          aria-label={searchOpen ? "Закрыть поиск" : "Поиск"}
+          aria-expanded={searchOpen}
+          onClick={() => setSearchOpen((open) => !open)}
+        >
           <SearchIcon />
         </button>
         {/* Below lg only: from lg up the same links are already in the nav bar */}
