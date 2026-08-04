@@ -29,7 +29,7 @@ export function BrandModal({
         type="button"
         aria-label="Закрыть"
         onClick={onClose}
-        className="absolute inset-0 bg-ink/40"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
       />
 
       {/* 819 is what the mockup draws; min rather than fixed so a longer write-up
