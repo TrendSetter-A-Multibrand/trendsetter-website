@@ -27,5 +27,11 @@ export function TopBar({ children }: { children: React.ReactNode }) {
     return () => observer.disconnect();
   }, []);
 
-  return <div ref={ref}>{children}</div>;
+  // Own stacking layer: the nav dropdown hangs below the header and would
+  // otherwise be painted over by the positioned sections that follow it.
+  return (
+    <div ref={ref} className="relative z-30">
+      {children}
+    </div>
+  );
 }
