@@ -33,7 +33,11 @@ export default function RootLayout({
       lang="ru"
       className={`${interTight.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      {/* The design is drawn at 1920: past that the page stays centred and the
+          gutters show through as white rather than stretching every band. */}
+      <body className="mx-auto flex min-h-full w-full max-w-[1920px] flex-col">
+        {children}
+      </body>
     </html>
   );
 }

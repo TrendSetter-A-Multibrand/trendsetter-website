@@ -31,6 +31,12 @@
   }
 }
 
+/* Painted separately from body: past 1920 the body no longer covers the
+   viewport, and without this the gutters would take the body's colour. */
+html {
+  background: var(--background);
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
