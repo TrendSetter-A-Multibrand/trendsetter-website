@@ -5,7 +5,7 @@ export type Article = {
   image?: string;
 };
 
-export const ARTICLE_FILTERS = [
+export const JOURNAL_FILTERS = [
   "Люди",
   "Обзоры",
   "Тренды",
@@ -16,6 +16,13 @@ export const ARTICLE_FILTERS = [
   "Детская",
   "Савеловский",
   "ТЦ Вегас",
+];
+
+export const NEWS_FILTERS = [
+  "Новости компании",
+  "Акции",
+  "Открытие точек",
+  "Мероприятия",
 ];
 
 const BASE_ARTICLES: Article[] = [
