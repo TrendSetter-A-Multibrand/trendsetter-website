@@ -21,6 +21,8 @@ export function SideMenu({
       }`}
       aria-hidden={!open}
     >
+      {/* The dimmer covers the whole viewport, but the panel is pinned to the
+          right edge of the 1920 column rather than of the monitor. */}
       <button
         type="button"
         aria-label="Закрыть меню"
@@ -28,11 +30,12 @@ export function SideMenu({
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
       />
 
-      <div
-        className={`absolute right-0 top-0 flex h-full w-full max-w-md flex-col overflow-y-auto bg-white p-6 shadow-xl transition-transform ${
-          open ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
+      <div className="pointer-events-none absolute inset-y-0 left-1/2 w-full max-w-[1920px] -translate-x-1/2">
+        <div
+          className={`pointer-events-auto absolute right-0 top-0 flex h-full w-full max-w-md flex-col overflow-y-auto bg-white p-6 shadow-xl transition-transform ${
+            open ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
         <div className="mb-6 flex items-center gap-3">
           <div className="flex flex-1 items-center gap-2 border-b border-black/20 pb-2">
             <SearchIcon />
@@ -75,7 +78,8 @@ export function SideMenu({
           ))}
         </nav>
 
-        <SocialLinks className="pt-6" />
+          <SocialLinks className="pt-6" />
+        </div>
       </div>
     </div>
   );

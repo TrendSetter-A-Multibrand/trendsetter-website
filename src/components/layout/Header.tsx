@@ -3,10 +3,43 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
-import { NAV_ITEMS } from "@/lib/navigation";
+import { NAV_ITEMS, type NavItem } from "@/lib/navigation";
 import { SideMenu } from "@/components/layout/SideMenu";
 import { NavDropdown } from "@/components/layout/NavDropdown";
 import { Wordmark } from "@/components/ui/Wordmark";
+
+/**
+ * The panel opens on hover through CSS. Following a link leaves the pointer
+ * sitting on the item, so `:hover` would still be true and the panel would hang
+ * around over the new page - hence the dismissed flag, cleared once the pointer
+ * leaves the item.
+ */
+function NavEntry({ locale, item }: { locale: Locale; item: NavItem }) {
+  const [dismissed, setDismissed] = useState(false);
+
+  return (
+    <div
+      className="group relative flex h-full items-center"
+      onMouseLeave={() => setDismissed(false)}
+    >
+      {/* Brackets are drawn outside the label so hovering never reflows the nav */}
+      <Link
+        href={`/${locale}/${item.slug}`}
+        onClick={() => setDismissed(true)}
+        className="relative transition-colors before:absolute before:-left-2.5 before:opacity-0 before:transition-opacity before:content-['['] after:absolute after:-right-2.5 after:opacity-0 after:transition-opacity after:content-[']'] group-hover:text-brand group-hover:before:opacity-100 group-hover:after:opacity-100"
+      >
+        {item.label}
+      </Link>
+      {item.children && !dismissed && (
+        <NavDropdown
+          locale={locale}
+          item={item}
+          onNavigate={() => setDismissed(true)}
+        />
+      )}
+    </div>
+  );
+}
 
 export function Header({ locale }: { locale: Locale }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -20,16 +53,7 @@ export function Header({ locale }: { locale: Locale }) {
 
       <nav className="hidden h-full items-center gap-6 text-sm font-medium uppercase tracking-wide lg:flex">
         {NAV_ITEMS.map((item) => (
-          <div key={item.slug} className="group relative flex h-full items-center">
-            {/* Brackets are drawn outside the label so hovering never reflows the nav */}
-            <Link
-              href={`/${locale}/${item.slug}`}
-              className="relative transition-colors before:absolute before:-left-2.5 before:opacity-0 before:transition-opacity before:content-['['] after:absolute after:-right-2.5 after:opacity-0 after:transition-opacity after:content-[']'] group-hover:text-brand group-hover:before:opacity-100 group-hover:after:opacity-100"
-            >
-              {item.label}
-            </Link>
-            {item.children && <NavDropdown locale={locale} item={item} />}
-          </div>
+          <NavEntry key={item.slug} locale={locale} item={item} />
         ))}
       </nav>
 
