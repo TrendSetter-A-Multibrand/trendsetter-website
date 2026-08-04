@@ -21,7 +21,11 @@ export default async function HomePage({
       <NewsGrid />
       <EventsCarousel />
       <JournalCarousel />
-      <StoreLocator />
+      {/* The block itself carries no vertical padding: the Магазины page needs
+          it flush under the breadcrumbs */}
+      <div className="py-16">
+        <StoreLocator heading="Магазины" />
+      </div>
       <NewsletterSignup />
     </>
   );
