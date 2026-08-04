@@ -45,9 +45,18 @@ export function Header({ locale }: { locale: Locale }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
+  const searchBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (searchOpen) searchRef.current?.focus();
+    if (!searchOpen) return;
+    searchRef.current?.focus();
+
+    // Anywhere outside the field and its toggle closes it again
+    const onPointerDown = (e: PointerEvent) => {
+      if (!searchBoxRef.current?.contains(e.target as Node)) setSearchOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
   }, [searchOpen]);
 
   // 90px tall in the mockup, with a 287px wordmark
@@ -63,7 +72,7 @@ export function Header({ locale }: { locale: Locale }) {
         ))}
       </nav>
 
-      <div className="flex shrink-0 items-center gap-4">
+      <div ref={searchBoxRef} className="flex shrink-0 items-center gap-4">
         {/* Slides out of the magnifier; the rule and the type match the field
             on the Бренды page */}
         <div

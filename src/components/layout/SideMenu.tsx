@@ -14,12 +14,16 @@ export function SideMenu({
   open: boolean;
   onClose: () => void;
 }) {
+  // inert, not just pointer-events-none: the panel re-enables pointer events on
+  // itself, so while closed it stayed clickable out in the white gutter the
+  // 1920 cap leaves beside the page.
   return (
     <div
       className={`fixed inset-0 z-50 transition-opacity ${
         open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
       }`}
       aria-hidden={!open}
+      inert={!open}
     >
       {/* The dimmer covers the whole viewport, but the panel is pinned to the
           right edge of the 1920 column rather than of the monitor. */}
