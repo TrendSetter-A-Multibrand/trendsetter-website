@@ -61,7 +61,13 @@ export function Header({ locale }: { locale: Locale }) {
         <button type="button" aria-label="Поиск" onClick={() => setMenuOpen(true)}>
           <SearchIcon />
         </button>
-        <button type="button" aria-label="Меню" onClick={() => setMenuOpen(true)}>
+        {/* Below lg only: from lg up the same links are already in the nav bar */}
+        <button
+          type="button"
+          aria-label="Меню"
+          onClick={() => setMenuOpen(true)}
+          className="lg:hidden"
+        >
           <MenuIcon />
         </button>
       </div>
