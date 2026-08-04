@@ -11,9 +11,9 @@ import { NEWS_FILTERS, PLACEHOLDER_ARTICLES } from "@/lib/articles";
 export default async function ArticlePage({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { locale } = await params;
+  const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
 
   const { meta, blocks } = PLACEHOLDER_ARTICLE;
@@ -37,7 +37,7 @@ export default async function ArticlePage({
         <ArticleBody blocks={blocks} />
       </div>
 
-      <ArticleReactions likes={12} />
+      <ArticleReactions articleId={slug} likes={12} dislikes={0} />
       <RelatedArticles articles={PLACEHOLDER_ARTICLES} />
     </>
   );
