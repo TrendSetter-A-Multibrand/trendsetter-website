@@ -18,8 +18,11 @@ export function Hero({
   secondaryCta = { label: "Найти магазин", href: `/${locale}/stores` },
   imageSrc = "/images/home/hero.jpg",
 }: HeroProps) {
+  // The section is pulled up behind the header, so that the photo - and not the
+  // page's own white - is what shows while the bar slides in and out. The copy
+  // is padded back down to stay centred in what is left below the bar.
   return (
-    <section className="relative flex h-[calc(100svh-var(--header-h,0px))] flex-col justify-end overflow-hidden bg-neutral-800">
+    <section className="relative mt-[calc(-1*var(--header-h,0px))] flex h-[100svh] flex-col justify-end overflow-hidden bg-neutral-800">
       {imageSrc ? (
         <Image
           src={imageSrc}
@@ -33,7 +36,7 @@ export function Hero({
         <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
       )}
 
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6 text-center lg:px-10">
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6 pt-[var(--header-h,0px)] text-center lg:px-10">
         {/* 36px with 5px tracking in the mockup, and mixed case - not uppercase */}
         <p className="max-w-5xl font-mono text-xl text-white sm:text-2xl lg:text-[36px] lg:tracking-[5px]">
           {tagline}

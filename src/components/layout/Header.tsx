@@ -55,8 +55,20 @@ export function Header({ locale }: { locale: Locale }) {
     const onPointerDown = (e: PointerEvent) => {
       if (!searchBoxRef.current?.contains(e.target as Node)) setSearchOpen(false);
     };
+
+    // Scrolling takes the whole bar away, so an empty field may as well fold
+    // back into the magnifier. A started query is not thrown away over a
+    // scroll: it rides out with the bar and is still there when it returns.
+    const onScroll = () => {
+      if (!searchRef.current?.value) setSearchOpen(false);
+    };
+
     document.addEventListener("pointerdown", onPointerDown);
-    return () => document.removeEventListener("pointerdown", onPointerDown);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, [searchOpen]);
 
   // 90px tall in the mockup, with a 287px wordmark. The fill is its own rather
