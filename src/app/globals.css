@@ -39,6 +39,16 @@
   }
 }
 
+/* Tailwind 4 dropped the pointer cursor buttons used to get; every button on
+   this site is something to click, so it comes back. Links already get it from
+   the browser, and fields keep their own text cursor. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+}
+
 /* Painted separately from body: past 1920 the body no longer covers the
    viewport, and without this the gutters would take the body's colour. */
 html {
