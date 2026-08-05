@@ -51,9 +51,9 @@ export function CookieNotice({ locale }: { locale: Locale }) {
         <p className="text-center font-mono text-xs uppercase leading-6 tracking-[2px] text-white sm:text-sm lg:text-xl lg:leading-[30px] lg:tracking-[4px]">
           Мы используем файлы{" "}
           <Link href={`/${locale}/cookies`} className="font-bold underline-offset-4 transition-colors hover:text-brand hover:underline">
-            cookie
+            cookies
           </Link>
-          , чтобы сайт работал удобнее и быстрее.
+          , чтобы сайт работал лучше и быстрее.
           <br />
           Надеемся, вы не против.
         </p>
