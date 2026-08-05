@@ -21,6 +21,7 @@
   --font-mono: var(--font-geist-mono);
   --animate-marquee: marquee 24s linear infinite;
   --animate-topbar-in: topbar-in 0.4s cubic-bezier(0, 0, 0.8, 1);
+  --animate-float: float 4s ease-in-out infinite alternate;
 }
 
 @keyframes marquee {
@@ -36,6 +37,14 @@
 @keyframes topbar-in {
   from {
     transform: translateY(-100%);
+  }
+}
+
+/* The balloons on the 404 page. `translate` rather than `transform`, so the tilt
+   the fours carry in `rotate` is left alone; each one sets its own rise. */
+@keyframes float {
+  to {
+    translate: 0 var(--float-y, -12px);
   }
 }
 

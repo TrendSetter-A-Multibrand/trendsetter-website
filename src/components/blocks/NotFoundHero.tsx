@@ -11,7 +11,13 @@ type NotFoundHeroProps = {
  * Laid out on the mockup's 1920x952 art board: every position is a percentage
  * of that board, so the whole composition scales as one piece. The two silver
  * fours are the same file at different tilts.
+ *
+ * All three drift up and down for good. The rise, the pace and the point each
+ * one starts at are deliberately mismatched - matched, they would read as one
+ * sheet moving rather than three balloons. The negative delays start them
+ * mid-drift, so nothing sits still waiting for its turn.
  */
+const FLOAT = "animate-float will-change-[translate]";
 export function NotFoundHero({
   heading = "Страница не найдена",
   ctaLabel = "Вернуться на главную",
@@ -24,7 +30,9 @@ export function NotFoundHero({
           [{heading}]
         </h1>
 
-        <div className="absolute left-[28.47%] top-[31.64%] w-[17.29%] origin-top-left -rotate-[12.6deg]">
+        <div
+          className={`absolute left-[28.47%] top-[31.64%] w-[17.29%] origin-top-left -rotate-[12.6deg] ${FLOAT} [--float-y:-10px] [animation-delay:-800ms] [animation-duration:3600ms]`}
+        >
           <Image
             src="/images/404/balloon-4.png"
             alt=""
@@ -34,7 +42,9 @@ export function NotFoundHero({
           />
         </div>
 
-        <div className="absolute left-[33.33%] top-[28.8%] w-[33.33%]">
+        <div
+          className={`absolute left-[33.33%] top-[28.8%] w-[33.33%] ${FLOAT} [--float-y:-16px] [animation-delay:-2100ms] [animation-duration:4600ms]`}
+        >
           <Image
             src="/images/404/balloon-smile.png"
             alt=""
@@ -45,7 +55,9 @@ export function NotFoundHero({
           />
         </div>
 
-        <div className="absolute left-[53.27%] top-[24.18%] w-[17.29%] origin-top-left rotate-[7.19deg]">
+        <div
+          className={`absolute left-[53.27%] top-[24.18%] w-[17.29%] origin-top-left rotate-[7.19deg] ${FLOAT} [--float-y:-13px] [animation-delay:-1400ms] [animation-duration:4100ms]`}
+        >
           <Image
             src="/images/404/balloon-4.png"
             alt=""
