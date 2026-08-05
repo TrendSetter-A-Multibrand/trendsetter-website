@@ -1,9 +1,14 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
 import { NAV_ITEMS } from "@/lib/navigation";
 import { SocialLinks } from "@/components/ui/SocialLinks";
+
+/** Never fires: the answer only ever changes from false to true, at hydration. */
+const noSubscribe = () => () => {};
 
 export function SideMenu({
   locale,
@@ -14,10 +19,22 @@ export function SideMenu({
   open: boolean;
   onClose: () => void;
 }) {
+  // Painted from the body rather than from where it sits in the tree: the
+  // header animates itself with a transform, which would otherwise become the
+  // containing block for everything fixed inside it. There is no body to
+  // portal into while rendering on the server, so nothing goes out until the
+  // client has taken over.
+  const hydrated = useSyncExternalStore(
+    noSubscribe,
+    () => true,
+    () => false
+  );
+  if (!hydrated) return null;
+
   // inert, not just pointer-events-none: the panel re-enables pointer events on
   // itself, so while closed it stayed clickable out in the white gutter the
   // 1920 cap leaves beside the page.
-  return (
+  return createPortal(
     <div
       className={`fixed inset-0 z-50 transition-opacity ${
         open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
@@ -85,7 +102,8 @@ export function SideMenu({
           <SocialLinks className="pt-6" />
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

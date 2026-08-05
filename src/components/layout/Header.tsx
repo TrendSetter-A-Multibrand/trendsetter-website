@@ -59,9 +59,10 @@ export function Header({ locale }: { locale: Locale }) {
     return () => document.removeEventListener("pointerdown", onPointerDown);
   }, [searchOpen]);
 
-  // 90px tall in the mockup, with a 287px wordmark
+  // 90px tall in the mockup, with a 287px wordmark. The fill is its own rather
+  // than the body's: stuck to the top of the page it now travels over content.
   return (
-    <header className="flex h-16 items-center justify-between gap-6 border-b border-black/10 px-6 lg:h-[90px] lg:px-10">
+    <header className="flex h-16 items-center justify-between gap-6 border-b border-black/10 bg-background px-6 lg:h-[90px] lg:px-10">
       <Link href={`/${locale}`} className="w-40 shrink-0 text-brand lg:w-[287px]">
         <Wordmark />
       </Link>

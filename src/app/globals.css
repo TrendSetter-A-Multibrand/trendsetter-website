@@ -20,6 +20,7 @@
   --font-sans: var(--font-inter-tight);
   --font-mono: var(--font-geist-mono);
   --animate-marquee: marquee 24s linear infinite;
+  --animate-topbar-in: topbar-in 0.4s cubic-bezier(0, 0, 0.8, 1);
 }
 
 @keyframes marquee {
@@ -28,6 +29,13 @@
   }
   to {
     transform: translateX(-100%);
+  }
+}
+
+/* Only a `from`: the bar drops in from above and settles on its own place */
+@keyframes topbar-in {
+  from {
+    transform: translateY(-100%);
   }
 }
 
