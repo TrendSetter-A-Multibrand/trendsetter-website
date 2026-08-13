@@ -36,10 +36,11 @@ export function Hero({
         <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
       )}
 
-      {/* The photo is knocked back in the new mockup: measured against the old
-          one it comes out at 0.825 of its brightness, evenly over the whole
-          frame - a flat black layer at 17.5%, not a gradient. */}
-      <div className="absolute inset-0 bg-black/[0.175]" />
+      {/* The mockup knocks the photo back hard. Measured against the file we
+          ship - which is the untouched export, no darkening of its own - the
+          closest single black layer is 49%; anything lighter and the white type
+          over it sits differently. */}
+      <div className="absolute inset-0 bg-black/[0.49]" />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6 pt-[var(--header-h,0px)] text-center lg:px-10">
         {/* 36px with 3px tracking in the mockup */}

@@ -15,7 +15,7 @@ export default async function StoresPage({
         items={[{ label: "Главная", href: `/${locale}` }, { label: "Магазины" }]}
       />
       <div className="pt-11">
-        <StoreLocator rowGap={40} />
+        <StoreLocator />
       </div>
       <div className="mt-10">
         <HelpCards />

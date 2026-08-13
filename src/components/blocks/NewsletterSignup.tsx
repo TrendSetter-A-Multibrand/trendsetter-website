@@ -2,8 +2,10 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 type NewsletterSignupProps = {
+  locale?: string;
   heading?: string;
   description?: string;
   imageSrc?: string;
@@ -11,12 +13,24 @@ type NewsletterSignupProps = {
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function Checkbox({ label }: { label: string }) {
+/** 23px square with a 1px rule, the tick inside it, label 16 to the right. */
+function Checkbox({
+  children,
+  name,
+}: {
+  children: React.ReactNode;
+  name: string;
+}) {
   return (
-    <label className="flex cursor-pointer items-center gap-6">
-      <input type="checkbox" defaultChecked className="peer sr-only" />
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center border-2 border-white peer-checked:[&>svg]:opacity-100 lg:h-10 lg:w-10">
-        <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 opacity-0 lg:h-6 lg:w-6">
+    <label className="flex cursor-pointer items-center gap-4">
+      <input
+        type="checkbox"
+        name={name}
+        defaultChecked
+        className="peer sr-only"
+      />
+      <span className="flex h-[23px] w-[23px] shrink-0 items-center justify-center border border-white peer-checked:[&>svg]:opacity-100">
+        <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 opacity-0">
           <path
             d="m5 13 4 4L19 7"
             stroke="currentColor"
@@ -26,14 +40,20 @@ function Checkbox({ label }: { label: string }) {
           />
         </svg>
       </span>
-      {label}
+      <span>{children}</span>
     </label>
   );
 }
 
+/**
+ * The red band under the shops, 303 tall: everything set 40 from the left in
+ * mono, the field and its button flush together at 700 + 180, and the smiley
+ * sitting to the right of them, taller than the band and clipped by it.
+ */
 export function NewsletterSignup({
+  locale = "ru_ru",
   heading = "Подпишитесь на наши новости",
-  description = "Будьте в числе первых, кто узнает о новинках, распродажах и интересных новостях TRENDSETTER!",
+  description = "Будьте в числе первых, кто узнает о новинках,\nраспрождажах и интересных новостях TRENDSETTER!",
   imageSrc = "/images/home/smile.svg",
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState("");
@@ -55,52 +75,59 @@ export function NewsletterSignup({
   }, [submitted]);
 
   return (
-    <section className="relative overflow-hidden bg-brand px-6 py-10 text-white lg:px-10">
-      {/* Text column is 995px wide in the mockup, the smiley takes the rest */}
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,995px)_1fr] lg:items-center">
-        <div className="flex flex-col gap-6">
-          <h2 className="font-mono text-xl uppercase lg:text-3xl/9">[{heading}]</h2>
-          <p className="font-mono text-lg lg:text-2xl/9">{description}</p>
+    <section className="relative overflow-hidden bg-brand px-6 py-5 font-mono text-white lg:px-10">
+      <div className="relative z-10 max-w-[880px]">
+        <h2 className="text-xl uppercase tracking-[5px] lg:text-2xl/[29px]">
+          [{heading}]
+        </h2>
 
-          {/* 995x80 in the mockup: 701px input + 294px button, flush together */}
-          <form onSubmit={handleSubmit} className="flex h-14 w-full lg:h-20">
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Ваш E-mail адрес здесь"
-              className="min-w-0 flex-1 border-2 border-white bg-transparent px-4 text-center font-mono text-lg placeholder:text-white/40 focus:outline-none lg:text-2xl"
-            />
-            <button
-              type="submit"
-              disabled={!isValid}
-              className="shrink-0 whitespace-nowrap border border-white bg-white px-4 text-sm font-medium uppercase tracking-[3px] text-ink disabled:cursor-not-allowed lg:w-[294px] lg:text-xl"
-            >
-              Подписаться
-            </button>
-          </form>
+        <p className="mt-6 whitespace-pre-line text-sm/[18px]">{description}</p>
 
-          <div className="flex flex-wrap gap-6 font-mono text-lg lg:text-2xl">
-            <Checkbox label="Для мужчин" />
-            <Checkbox label="Для девушек" />
-          </div>
+        {/* 880 across: a 700 field with its 180 button hard against it */}
+        <form onSubmit={handleSubmit} className="mt-6 flex h-12 w-full">
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Ваш E-mail адрес здесь"
+            className="min-w-0 flex-1 border border-white bg-transparent px-4 text-center text-sm placeholder:text-white/60 focus:outline-none"
+          />
+          <button
+            type="submit"
+            disabled={!isValid}
+            className="h-[49px] shrink-0 self-start whitespace-nowrap bg-white text-sm uppercase tracking-[3px] text-ink disabled:cursor-not-allowed lg:w-[180px]"
+          >
+            Подписаться
+          </button>
+        </form>
+
+        <div className="mt-6 flex flex-wrap gap-x-10 gap-y-6 text-sm">
+          <Checkbox name="men">Для мужчин</Checkbox>
+          <Checkbox name="women">Для девушек</Checkbox>
         </div>
 
-        {/* Taller than the block in the mockup, so it overflows and gets clipped */}
-        <div className="relative min-h-56 lg:min-h-0">
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            {/* tilted ~10deg counter-clockwise in the mockup; the roll keeps that as its resting angle */}
-            <div
-              className={`relative h-60 w-60 transition-transform duration-700 ease-in sm:h-80 sm:w-80 lg:h-[500px] lg:w-[500px] ${
-                submitted
-                  ? "translate-x-[100vw] rotate-[890deg]"
-                  : "-rotate-[10deg] translate-x-0"
-              }`}
-            >
-              <Image src={imageSrc} alt="" fill className="object-contain" />
-            </div>
-          </div>
+        <div className="mt-6 text-sm">
+          <Checkbox name="consent">
+            Я даю согласие на обработку персональных данных в соответствии с{" "}
+            <Link href={`/${locale}/privacy`} className="underline">
+              политикой конфиденциальности
+            </Link>
+          </Checkbox>
+        </div>
+      </div>
+
+      {/* Taller than the band in the mockup, so it overflows and gets clipped */}
+      <div className="pointer-events-none absolute inset-y-0 right-6 flex items-center lg:right-[289px]">
+        {/* tilted ~10deg counter-clockwise in the mockup; the roll keeps that as its resting angle */}
+        <div
+          className={`relative h-60 w-60 transition-transform duration-700 ease-in sm:h-80 sm:w-80 lg:h-[420px] lg:w-[420px] ${
+            submitted
+              ? "translate-x-[100vw] rotate-[890deg]"
+              : "-rotate-[10deg] translate-x-0"
+          }`}
+        >
+          <Image src={imageSrc} alt="" fill className="object-contain" />
         </div>
       </div>
     </section>

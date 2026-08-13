@@ -26,7 +26,7 @@ export default async function HomePage({
       <div className="py-16">
         <StoreLocator heading="Магазины" />
       </div>
-      <NewsletterSignup />
+      <NewsletterSignup locale={locale} />
     </>
   );
 }

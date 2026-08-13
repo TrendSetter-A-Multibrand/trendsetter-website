@@ -6,7 +6,9 @@
   --foreground: #252120;
   --brand: #a22325;
   --ink: #252120;
-  --surface: #f3f3f3;
+  --muted: #888888;
+  --surface: #f7f7f7;
+  --surface-active: #eeeeee;
   --surface-strong: #e8e8e8;
 }
 
@@ -15,7 +17,9 @@
   --color-foreground: var(--foreground);
   --color-brand: var(--brand);
   --color-ink: var(--ink);
+  --color-muted: var(--muted);
   --color-surface: var(--surface);
+  --color-surface-active: var(--surface-active);
   --color-surface-strong: var(--surface-strong);
   --font-sans: var(--font-inter-tight);
   --font-mono: var(--font-geist-mono);
