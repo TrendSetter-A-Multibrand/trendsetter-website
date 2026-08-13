@@ -42,7 +42,10 @@ export function PageCover({
       />
       <div className="absolute inset-0 bg-black/50" />
 
-      <h1 className="relative font-mono text-5xl uppercase tracking-[5px] text-brand lg:text-[96px]">
+      {/* Blended, not solid: the same LINEAR_DODGE the wordmark over the home
+          photo uses, so the picture reads through the letters. Every section
+          title in the file is drawn this way. */}
+      <h1 className="relative font-mono text-5xl uppercase tracking-[5px] text-brand mix-blend-plus-lighter lg:text-[96px]">
         [{title}]
       </h1>
 

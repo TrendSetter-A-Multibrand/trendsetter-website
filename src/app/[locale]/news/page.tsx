@@ -18,12 +18,10 @@ export default async function NewsPage({
 
   return (
     <>
-      {/* Its own cover photo has not been handed over yet - borrowing the
-          journal's until it is */}
       <PageCover
         title="Новости"
         subtitle="Главное в новостном потоке"
-        imageSrc="/images/covers/journal.jpg"
+        imageSrc="/images/covers/news.jpg"
       />
       <ArticleFilters filters={NEWS_FILTERS} />
       <ArticleGrid articles={articles} />
