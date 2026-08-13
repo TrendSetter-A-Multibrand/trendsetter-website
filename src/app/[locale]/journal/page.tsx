@@ -17,7 +17,11 @@ export default async function JournalPage({
 
   return (
     <>
-      <PageCover title="Журнал" imageSrc="/images/covers/articles.jpg" />
+      <PageCover
+        title="Журнал"
+        subtitle="Разбираемся, сравниваем, считаем"
+        imageSrc="/images/covers/journal.jpg"
+      />
       <ArticleFilters filters={JOURNAL_FILTERS} />
       <ArticleGrid articles={articles} />
       <Pagination page={1} pageCount={222} hrefFor={(p) => `?page=${p}`} />

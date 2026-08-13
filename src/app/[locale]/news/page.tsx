@@ -18,7 +18,13 @@ export default async function NewsPage({
 
   return (
     <>
-      <PageCover title="Новости" imageSrc="/images/covers/articles.jpg" />
+      {/* Its own cover photo has not been handed over yet - borrowing the
+          journal's until it is */}
+      <PageCover
+        title="Новости"
+        subtitle="Главное в новостном потоке"
+        imageSrc="/images/covers/journal.jpg"
+      />
       <ArticleFilters filters={NEWS_FILTERS} />
       <ArticleGrid articles={articles} />
       <Pagination page={1} pageCount={222} hrefFor={(p) => `?page=${p}`} />

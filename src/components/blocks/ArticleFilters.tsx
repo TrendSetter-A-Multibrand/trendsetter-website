@@ -12,7 +12,8 @@ export function ArticleFilters({
   searchPlaceholder = "Поиск статьи",
 }: ArticleFiltersProps) {
   return (
-    <section className="flex flex-wrap items-end justify-between gap-8 px-6 py-10 lg:px-10">
+    <section className="flex flex-wrap items-center justify-between gap-8 px-6 py-10 lg:px-10">
+      {/* Chips are 16 apart in the mockup, and the field lines up with them */}
       <div className="flex flex-wrap gap-4">
         {filters.map((filter) => (
           <FilterChip key={filter} label={filter} />
