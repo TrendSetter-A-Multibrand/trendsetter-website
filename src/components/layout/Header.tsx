@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
 import { NAV_ITEMS, type NavItem } from "@/lib/navigation";
+import { HeaderSearch } from "@/components/layout/HeaderSearch";
 import { SideMenu } from "@/components/layout/SideMenu";
 import { NavDropdown } from "@/components/layout/NavDropdown";
 import { Wordmark } from "@/components/ui/Wordmark";
@@ -43,33 +44,6 @@ function NavEntry({ locale, item }: { locale: Locale; item: NavItem }) {
 
 export function Header({ locale }: { locale: Locale }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const searchRef = useRef<HTMLInputElement>(null);
-  const searchBoxRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!searchOpen) return;
-    searchRef.current?.focus();
-
-    // Anywhere outside the field and its toggle closes it again
-    const onPointerDown = (e: PointerEvent) => {
-      if (!searchBoxRef.current?.contains(e.target as Node)) setSearchOpen(false);
-    };
-
-    // Scrolling takes the whole bar away, so an empty field may as well fold
-    // back into the magnifier. A started query is not thrown away over a
-    // scroll: it rides out with the bar and is still there when it returns.
-    const onScroll = () => {
-      if (!searchRef.current?.value) setSearchOpen(false);
-    };
-
-    document.addEventListener("pointerdown", onPointerDown);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, [searchOpen]);
 
   // 88px tall in the mockup, with a 273px wordmark. Nothing separates the three
   // groups but the space left over, which is what puts equal air either side of
@@ -87,34 +61,14 @@ export function Header({ locale }: { locale: Locale }) {
         ))}
       </nav>
 
-      {/* 88px across in the mockup: two 24px icons, 40 apart. The gap lives on
-          the burger rather than on the row, so the closed field - a flex item of
-          no width - does not add one of its own. */}
-      <div ref={searchBoxRef} className="flex shrink-0 items-center">
-        {/* Slides out of the magnifier; the rule and the type match the field
-            on the Бренды page. Closed, it takes no room at all - not even the
-            padding that separates it from the icon */}
-        <div
-          className={`box-border overflow-hidden transition-[width,padding] duration-300 ${
-            searchOpen ? "w-[196px] pr-4 xl:w-[296px]" : "w-0"
-          }`}
-        >
-          <input
-            ref={searchRef}
-            type="search"
-            placeholder="Поиск"
-            onKeyDown={(e) => e.key === "Escape" && setSearchOpen(false)}
-            className="w-full border-b-2 border-ink bg-transparent pb-2 font-mono text-sm uppercase tracking-[3px] text-ink outline-none placeholder:text-ink/50"
-          />
-        </div>
-        <button
-          type="button"
-          aria-label={searchOpen ? "Закрыть поиск" : "Поиск"}
-          aria-expanded={searchOpen}
-          onClick={() => setSearchOpen((open) => !open)}
-        >
-          <SearchIcon />
-        </button>
+      {/* 88px across closed, 384 with the field out: two 24px icons 40 apart,
+          and a 320 field whose rule runs under the magnifier as well. The gap
+          lives on the burger rather than on the row, so the closed field - a
+          flex item of no width - does not add one of its own. */}
+      <div className="flex shrink-0 items-center">
+        <Suspense fallback={<div className="h-12 w-6" />}>
+          <HeaderSearch locale={locale} />
+        </Suspense>
         {/* Kept at every width: the panel lays the whole site out at once, which
             the seven links in the bar do not */}
         <button
@@ -129,21 +83,6 @@ export function Header({ locale }: { locale: Locale }) {
 
       <SideMenu locale={locale} open={menuOpen} onClose={() => setMenuOpen(false)} />
     </header>
-  );
-}
-
-/** 24x24 in the mockup, the glass 20 across and the handle running to the corner. */
-function SearchIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="10.8" cy="10.8" r="9" stroke="currentColor" strokeWidth="1.8" />
-      <path
-        d="m17.5 17.5 5 5"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="square"
-      />
-    </svg>
   );
 }
 

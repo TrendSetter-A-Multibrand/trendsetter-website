@@ -9,9 +9,34 @@ type ArticleCardProps = {
   /** Cards on the red band carry white text instead of red tags on dark type. */
   onBrand?: boolean;
   sizes?: string;
+  /** Search results pick the matched word out of the title in red. */
+  highlight?: string;
 };
 
-export function ArticleCard({ article, onBrand, sizes }: ArticleCardProps) {
+/** Splits the title on the query so the part that matched can be coloured. */
+function mark(title: string, query: string) {
+  const needle = query.trim();
+  if (!needle) return title;
+  const parts = title.split(new RegExp(`(${escape(needle)})`, "gi"));
+  return parts.map((part, i) =>
+    part.toLowerCase() === needle.toLowerCase() ? (
+      <span key={i} className="text-brand">
+        {part}
+      </span>
+    ) : (
+      part
+    ),
+  );
+}
+
+const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+export function ArticleCard({
+  article,
+  onBrand,
+  sizes,
+  highlight,
+}: ArticleCardProps) {
   return (
     <Link href={article.href ?? "#"} className="group flex flex-col">
       <div className="relative aspect-square overflow-hidden bg-surface-strong">
@@ -35,8 +60,8 @@ export function ArticleCard({ article, onBrand, sizes }: ArticleCardProps) {
         {article.tags.map((tag) => `[${tag}]`).join(" ")}
       </p>
 
-      <p className={`mt-3 text-2xl/[30px] ${onBrand ? "text-white" : "text-ink"}`}>
-        {article.title}
+      <p className={`mt-4 text-2xl/[29px] ${onBrand ? "text-white" : "text-ink"}`}>
+        {highlight ? mark(article.title, highlight) : article.title}
       </p>
     </Link>
   );
