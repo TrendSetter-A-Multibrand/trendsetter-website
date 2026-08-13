@@ -71,26 +71,32 @@ export function Header({ locale }: { locale: Locale }) {
     };
   }, [searchOpen]);
 
-  // 90px tall in the mockup, with a 287px wordmark. The fill is its own rather
-  // than the body's: stuck to the top of the page it now travels over content.
+  // 88px tall in the mockup, with a 273px wordmark. Nothing separates the three
+  // groups but the space left over, which is what puts equal air either side of
+  // the nav. The fill is its own rather than the body's: stuck to the top of the
+  // page the bar now travels over content.
   return (
-    <header className="flex h-16 items-center justify-between gap-6 border-b border-black/10 bg-background px-6 lg:h-[90px] lg:px-10">
-      <Link href={`/${locale}`} className="w-40 shrink-0 text-brand lg:w-[287px]">
+    <header className="flex h-16 items-center justify-between gap-6 bg-background px-6 lg:h-[88px] lg:px-10">
+      <Link href={`/${locale}`} className="w-40 shrink-0 text-brand lg:w-[273px]">
         <Wordmark />
       </Link>
 
-      <nav className="hidden h-full items-center gap-6 text-sm font-medium uppercase tracking-wide lg:flex">
+      <nav className="hidden h-full items-center gap-10 font-mono text-sm uppercase tracking-[1px] lg:flex">
         {NAV_ITEMS.map((item) => (
           <NavEntry key={item.slug} locale={locale} item={item} />
         ))}
       </nav>
 
-      <div ref={searchBoxRef} className="flex shrink-0 items-center gap-4">
+      {/* 88px across in the mockup: two 24px icons, 40 apart. The gap lives on
+          the burger rather than on the row, so the closed field - a flex item of
+          no width - does not add one of its own. */}
+      <div ref={searchBoxRef} className="flex shrink-0 items-center">
         {/* Slides out of the magnifier; the rule and the type match the field
-            on the Бренды page */}
+            on the Бренды page. Closed, it takes no room at all - not even the
+            padding that separates it from the icon */}
         <div
-          className={`overflow-hidden transition-[width] duration-300 ${
-            searchOpen ? "w-[180px] xl:w-[280px]" : "w-0"
+          className={`box-border overflow-hidden transition-[width,padding] duration-300 ${
+            searchOpen ? "w-[196px] pr-4 xl:w-[296px]" : "w-0"
           }`}
         >
           <input
@@ -109,12 +115,13 @@ export function Header({ locale }: { locale: Locale }) {
         >
           <SearchIcon />
         </button>
-        {/* Below lg only: from lg up the same links are already in the nav bar */}
+        {/* Kept at every width: the panel lays the whole site out at once, which
+            the seven links in the bar do not */}
         <button
           type="button"
           aria-label="Меню"
           onClick={() => setMenuOpen(true)}
-          className="lg:hidden"
+          className="ml-6 lg:ml-10"
         >
           <MenuIcon />
         </button>
@@ -125,19 +132,30 @@ export function Header({ locale }: { locale: Locale }) {
   );
 }
 
+/** 24x24 in the mockup, the glass 20 across and the handle running to the corner. */
 function SearchIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
-      <path d="m20 20-3-3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="10.8" cy="10.8" r="9" stroke="currentColor" strokeWidth="1.8" />
+      <path
+        d="m17.5 17.5 5 5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="square"
+      />
     </svg>
   );
 }
 
+/** Three full-width 2px rules, 8px apart. */
 function MenuIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M0 4h24M0 12h24M0 20h24"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
     </svg>
   );
 }

@@ -36,23 +36,29 @@ export function Hero({
         <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
       )}
 
+      {/* The photo is knocked back in the new mockup: measured against the old
+          one it comes out at 0.825 of its brightness, evenly over the whole
+          frame - a flat black layer at 17.5%, not a gradient. */}
+      <div className="absolute inset-0 bg-black/[0.175]" />
+
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6 pt-[var(--header-h,0px)] text-center lg:px-10">
-        {/* 36px with 5px tracking in the mockup, and mixed case - not uppercase */}
-        <p className="max-w-5xl font-mono text-xl text-white sm:text-2xl lg:text-[36px] lg:tracking-[5px]">
+        {/* 36px with 3px tracking in the mockup */}
+        <p className="max-w-5xl font-mono text-xl uppercase text-white sm:text-2xl lg:text-[36px] lg:tracking-[3px]">
           {tagline}
         </p>
 
-        {/* 49px tall, 24px apart; the first one is white at 50% */}
+        {/* 49px tall, 24px apart, 17px of air either side of the label; the
+            first one is white at 40% */}
         <div className="flex flex-wrap justify-center gap-6">
           <Link
             href={primaryCta.href}
-            className="flex h-[49px] items-center bg-white/50 px-4 text-sm font-medium uppercase tracking-[0.15em] text-white"
+            className="flex h-[49px] items-center bg-white/40 px-[17px] font-mono text-sm uppercase tracking-[3px] text-white"
           >
             {primaryCta.label}
           </Link>
           <Link
             href={secondaryCta.href}
-            className="flex h-[49px] items-center bg-brand px-4 text-sm font-medium uppercase tracking-[0.15em] text-white"
+            className="flex h-[49px] items-center bg-brand px-[17px] font-mono text-sm uppercase tracking-[3px] text-white"
           >
             {secondaryCta.label}
           </Link>
