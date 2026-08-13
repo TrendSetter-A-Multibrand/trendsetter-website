@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { Locale } from "@/lib/i18n/locales";
 import { NAV_ITEMS, type NavItem } from "@/lib/navigation";
 import { HeaderSearch } from "@/components/layout/HeaderSearch";
@@ -17,6 +18,10 @@ import { Wordmark } from "@/components/ui/Wordmark";
  */
 function NavEntry({ locale, item }: { locale: Locale; item: NavItem }) {
   const [dismissed, setDismissed] = useState(false);
+  const pathname = usePathname();
+  const href = `/${locale}/${item.slug}`;
+  // The section you are in wears the brackets for good, as the mockup shows it
+  const current = pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <div
@@ -25,9 +30,14 @@ function NavEntry({ locale, item }: { locale: Locale; item: NavItem }) {
     >
       {/* Brackets are drawn outside the label so hovering never reflows the nav */}
       <Link
-        href={`/${locale}/${item.slug}`}
+        href={href}
+        aria-current={current ? "page" : undefined}
         onClick={() => setDismissed(true)}
-        className="relative transition-colors before:absolute before:-left-2.5 before:opacity-0 before:transition-opacity before:content-['['] after:absolute after:-right-2.5 after:opacity-0 after:transition-opacity after:content-[']'] group-hover:text-brand group-hover:before:opacity-100 group-hover:after:opacity-100"
+        className={`relative transition-colors before:absolute before:-left-2.5 before:transition-opacity before:content-['['] after:absolute after:-right-2.5 after:transition-opacity after:content-[']'] group-hover:text-brand group-hover:before:opacity-100 group-hover:after:opacity-100 ${
+          current
+            ? "text-brand before:opacity-100 after:opacity-100"
+            : "before:opacity-0 after:opacity-0"
+        }`}
       >
         {item.label}
       </Link>
