@@ -111,7 +111,7 @@ export function EventsCarousel({
   }
 
   return (
-    <section className="px-6 py-16 lg:px-10">
+    <section className="px-6 pt-10 lg:px-10">
       <div className="mb-10 flex items-center justify-between">
         <h2 className="whitespace-nowrap font-mono text-2xl/[29px] uppercase tracking-[3px]">
           [{heading}]

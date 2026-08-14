@@ -75,16 +75,18 @@ export function NewsletterSignup({
   }, [submitted]);
 
   return (
-    <section className="relative overflow-hidden bg-brand px-6 py-5 font-mono text-white lg:px-10">
+    <section className="relative overflow-hidden bg-brand px-6 py-[22px] font-mono text-white lg:px-10">
       <div className="relative z-10 max-w-[880px]">
         <h2 className="text-xl uppercase tracking-[5px] lg:text-2xl/[29px]">
           [{heading}]
         </h2>
 
-        <p className="mt-6 whitespace-pre-line text-sm/[18px]">{description}</p>
+        <p className="mt-[25px] whitespace-pre-line text-sm/[18px]">
+          {description}
+        </p>
 
         {/* 880 across: a 700 field with its 180 button hard against it */}
-        <form onSubmit={handleSubmit} className="mt-6 flex h-12 w-full">
+        <form onSubmit={handleSubmit} className="mt-[25px] flex h-12 w-full">
           <input
             type="email"
             required
@@ -102,12 +104,12 @@ export function NewsletterSignup({
           </button>
         </form>
 
-        <div className="mt-6 flex flex-wrap gap-x-10 gap-y-6 text-sm">
+        <div className="mt-[25px] flex flex-wrap gap-x-10 gap-y-[25px] text-sm">
           <Checkbox name="men">Для мужчин</Checkbox>
           <Checkbox name="women">Для девушек</Checkbox>
         </div>
 
-        <div className="mt-6 text-sm">
+        <div className="mt-[25px] text-sm">
           <Checkbox name="consent">
             Я даю согласие на обработку персональных данных в соответствии с{" "}
             <Link href={`/${locale}/privacy`} className="underline">

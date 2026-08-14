@@ -23,10 +23,13 @@ export default async function HomePage({
       <JournalCarousel />
       {/* The block itself carries no vertical padding: the Магазины page needs
           it flush under the breadcrumbs */}
-      <div className="py-16">
+      <div className="pt-10">
         <StoreLocator heading="Магазины" />
       </div>
-      <NewsletterSignup locale={locale} />
+      {/* The red band runs to the page edges, so the 40 has to sit outside it */}
+      <div className="mt-10">
+        <NewsletterSignup locale={locale} />
+      </div>
     </>
   );
 }

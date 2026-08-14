@@ -22,7 +22,7 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
   return (
     <section className="px-6 lg:px-10">
       {heading && (
-        <h2 className="mb-5 font-mono text-xl uppercase tracking-[3px] lg:text-2xl">
+        <h2 className="mb-10 font-mono text-xl uppercase tracking-[3px] lg:text-2xl/[29px]">
           [{heading}]
         </h2>
       )}
