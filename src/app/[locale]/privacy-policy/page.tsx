@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { LegalArticle } from "@/components/blocks/LegalArticle";
-import { NewsletterSignup } from "@/components/blocks/NewsletterSignup";
+import { ContactForm } from "@/components/blocks/ContactForm";
 import { findLegalPage } from "@/lib/legal";
 
 export default async function PrivacyPolicyPage({
@@ -15,7 +15,7 @@ export default async function PrivacyPolicyPage({
   return (
     <>
       <LegalArticle title={page.title} sections={page.sections} />
-      <NewsletterSignup locale={locale} />
+      <ContactForm locale={locale} />
     </>
   );
 }

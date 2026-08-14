@@ -1,6 +1,6 @@
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { FaqAccordion } from "@/components/blocks/FaqAccordion";
-import { NewsletterSignup } from "@/components/blocks/NewsletterSignup";
+import { ContactForm } from "@/components/blocks/ContactForm";
 import { FAQ_GROUPS } from "@/lib/legal";
 
 export default async function FaqPage({
@@ -23,7 +23,7 @@ export default async function FaqPage({
         <FaqAccordion groups={FAQ_GROUPS} />
       </div>
 
-      <NewsletterSignup locale={locale} />
+      <ContactForm locale={locale} />
     </>
   );
 }
