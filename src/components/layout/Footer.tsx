@@ -13,23 +13,24 @@ const MENU_LINKS = [
 ];
 
 const LEGAL_LINKS = [
+  { label: "Часто задаваемые вопросы", slug: "faq" },
   { label: "Пользовательское соглашение", slug: "user-agreement" },
-  { label: "Политика обработки персональных данных", slug: "privacy-policy" },
+  { label: "Политика обработки cookie", slug: "cookie" },
   { label: "Согласие на обработку персональных данных", slug: "personal-data-consent" },
-  { label: "Публичная оферта", slug: "public-offer" },
-  { label: "Доставка, оплата, возврат", slug: "delivery" },
+  { label: "Политика обработки персональных данных", slug: "privacy-policy" },
 ];
 
 const CONTACT_EMAIL = "trader@calledagarment.com";
 
 /**
  * 22px in the mockup. Deliberately its own size, not shared with the section
- * headings in components/blocks - those are 30px and scaling them together
- * would move the sliders above.
+ * headings in components/blocks - those are 24 and scaling them together
+ * would move the sliders above. The 34 of leading is what drops the brackets
+ * to where the file draws them, 8 below the top of the social tiles.
  */
 function FooterHeading({ children }: { children: string }) {
   return (
-    <h2 className="mb-4 font-mono text-[22px] uppercase tracking-[0.2em]">
+    <h2 className="mb-[25px] font-mono text-[22px]/[34px] uppercase tracking-[3px]">
       [{children}]
     </h2>
   );
@@ -45,10 +46,12 @@ function FooterColumn({
   return (
     <div>
       <FooterHeading>{title}</FooterHeading>
-      <ul className="flex flex-col gap-2 text-sm text-white/40">
+      <ul className="flex flex-col gap-[21px] font-mono text-sm/[18px] uppercase tracking-[1px] text-white/40">
         {links.map((link) => (
           <li key={link.href}>
-            <Link href={link.href}>{link.label}</Link>
+            <Link href={link.href} className="transition-colors hover:text-white">
+              {link.label}
+            </Link>
           </li>
         ))}
       </ul>
@@ -60,44 +63,47 @@ export function Footer({ locale }: { locale: Locale }) {
   const companyLinks = NAV_ITEMS.find((item) => item.slug === "company")?.children ?? [];
 
   return (
-    <footer className="bg-ink text-white">
-      <div className="flex flex-col gap-10 px-6 py-16 lg:flex-row lg:justify-between lg:px-10">
-        <div className="flex flex-wrap gap-10 lg:gap-16">
-          <FooterColumn
-            title="Меню"
-            links={MENU_LINKS.map((item) => ({
-              label: item.label,
-              href: `/${locale}/${item.slug}`,
-            }))}
-          />
-          <FooterColumn
-            title="Покупателям"
-            links={LEGAL_LINKS.map((item) => ({
-              label: item.label,
-              href: `/${locale}/${item.slug}`,
-            }))}
-          />
-          <FooterColumn
-            title="Компания"
-            links={companyLinks.map((item) => ({
-              label: item.label,
-              href: `/${locale}/company/${item.slug}`,
-            }))}
-          />
-        </div>
+    <footer className="bg-ink pb-10 pt-10 text-white">
+      {/* Columns sit at 40 / 221 / 670 / 1119 in the mockup, so their widths are
+          the file's, not a regular grid. The tiles close the row at 1880. */}
+      <div className="grid gap-x-10 gap-y-10 px-6 lg:grid-cols-[181px_449px_449px_1fr_auto] lg:gap-x-0 lg:px-10">
+        <FooterColumn
+          title="Меню"
+          links={MENU_LINKS.map((item) => ({
+            label: item.label,
+            href: `/${locale}/${item.slug}`,
+          }))}
+        />
+        <FooterColumn
+          title="Покупателям"
+          links={LEGAL_LINKS.map((item) => ({
+            label: item.label,
+            href: `/${locale}/${item.slug}`,
+          }))}
+        />
+        <FooterColumn
+          title="Компания"
+          links={companyLinks.map((item) => ({
+            label: item.label,
+            href: `/${locale}/company/${item.slug}`,
+          }))}
+        />
 
         <div>
           <FooterHeading>Сотрудничество</FooterHeading>
-          <a href={`mailto:${CONTACT_EMAIL}`} className="text-sm text-white/40">
-            {CONTACT_EMAIL.toUpperCase()}
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            className="font-mono text-sm/[18px] uppercase tracking-[1px] text-white/40 transition-colors hover:text-white"
+          >
+            {CONTACT_EMAIL}
           </a>
         </div>
 
-        <SocialLinks className="h-fit" />
+        <SocialLinks large className="h-fit" />
       </div>
 
       {/* White under SOFT_LIGHT in the mockup - the mark greys into the dark background */}
-      <div className="px-6 pb-2 pt-6 mix-blend-soft-light lg:px-10">
+      <div className="mt-[76px] px-6 mix-blend-soft-light lg:px-10">
         <Wordmark className="text-white" />
       </div>
     </footer>

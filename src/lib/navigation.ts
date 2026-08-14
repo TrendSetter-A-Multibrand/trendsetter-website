@@ -45,5 +45,6 @@ export const SOCIAL_LINKS = [
   { label: "Telegram", href: "#", icon: "/images/social/telegram.svg" },
   { label: "VK", href: "#", icon: "/images/social/vk.svg" },
   { label: "Одноклассники", href: "#", icon: "/images/social/ok.svg" },
-  { label: "Дзен", href: "#", icon: "/images/social/zen.svg" },
+  // The national messenger, not a placeholder for one. No link yet.
+  { label: "MAX", href: "#", icon: "/images/social/max.svg" },
 ];
