@@ -63,8 +63,8 @@ export function JournalCarousel({
 
   return (
     <section className="px-6 py-16 lg:px-10">
-      <div className="mb-8 flex items-center justify-between">
-        <h2 className="whitespace-nowrap font-mono text-xl uppercase tracking-[5px] lg:text-[30px]">
+      <div className="mb-10 flex items-center justify-between">
+        <h2 className="whitespace-nowrap font-mono text-2xl/[29px] uppercase tracking-[3px]">
           [{heading}]
         </h2>
         <div className="flex gap-[44px]">
@@ -89,7 +89,7 @@ export function JournalCarousel({
 
       <div
         ref={trackRef}
-        className="flex gap-6 overflow-x-auto scroll-smooth lg:gap-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-10 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
           <a
@@ -107,24 +107,22 @@ export function JournalCarousel({
                 the top and bottom edges and clear through the middle */}
             <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink opacity-80" />
 
-            <p className="absolute left-6 top-6 font-mono text-sm font-medium uppercase text-white">
+            <p className="absolute left-6 top-6 font-mono text-sm/[18px] uppercase tracking-[1px] text-white">
               {item.tags.map((tag) => `[${tag}]`).join(" ")}
             </p>
 
             <div className="absolute inset-x-0 bottom-0 flex flex-col p-6 text-white">
-              <p className="text-xl font-semibold leading-tight sm:text-4xl/11">
-                {item.title}
-              </p>
+              <p className="text-xl/[26px] sm:text-2xl/[29px]">{item.title}</p>
 
               {/* Collapsed to zero height at rest so the title lands in the same
                   place on every card, whether or not there is an excerpt */}
               <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-200 group-hover:grid-rows-[1fr]">
                 <div className="overflow-hidden">
-                  <div className="flex flex-col gap-6 pt-6">
+                  <div className="flex flex-col gap-4 pt-4">
                     {item.excerpt && (
-                      <p className="text-xl/[30px]">{item.excerpt}</p>
+                      <p className="text-sm/[17px]">{item.excerpt}</p>
                     )}
-                    <span className="flex h-[49px] items-center justify-center bg-white/40 text-sm font-medium uppercase tracking-[0.15em] text-white backdrop-blur-[2px]">
+                    <span className="flex h-[49px] items-center justify-center bg-white/40 font-mono text-sm uppercase tracking-[3px] text-white backdrop-blur-[2px]">
                       Читать
                     </span>
                   </div>

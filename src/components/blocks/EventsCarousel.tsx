@@ -76,8 +76,10 @@ const DEFAULT_ITEMS: EventItem[] = Array.from(
 function EventTitle({ item }: { item: EventItem }) {
   return (
     <>
-      <p className="text-xl font-semibold uppercase leading-[27px]">{item.title}</p>
-      <p className="text-xl leading-[27px]">{item.location}</p>
+      <p className="font-mono text-xl/[30px] uppercase tracking-[1px]">{item.title}</p>
+      <p className="font-mono text-xl/[30px] uppercase tracking-[1px]">
+        {item.location}
+      </p>
     </>
   );
 }
@@ -110,8 +112,8 @@ export function EventsCarousel({
 
   return (
     <section className="px-6 py-16 lg:px-10">
-      <div className="mb-8 flex items-center justify-between">
-        <h2 className="whitespace-nowrap font-mono text-xl uppercase tracking-[5px] lg:text-[30px]">
+      <div className="mb-10 flex items-center justify-between">
+        <h2 className="whitespace-nowrap font-mono text-2xl/[29px] uppercase tracking-[3px]">
           [{heading}]
         </h2>
         {/* Bare 22px glyphs 44px apart in the mockup - no round border */}
@@ -137,13 +139,13 @@ export function EventsCarousel({
 
       <div
         ref={trackRef}
-        className="flex gap-6 overflow-x-auto scroll-smooth lg:gap-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-10 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
-          // 430x312, four across with 40px gaps
+          // 586.7x312, three across with 40px gaps
           <div
             key={i}
-            className="group relative aspect-[430/312] w-[85%] shrink-0 overflow-hidden bg-neutral-800 sm:w-[calc(50%-20px)] lg:w-[calc(25%-30px)]"
+            className="group relative aspect-[220/117] w-[85%] shrink-0 overflow-hidden bg-neutral-800 sm:w-[calc(50%-20px)] lg:w-[calc(33.333%-26.667px)]"
           >
             {item.image ? (
               <Image src={item.image} alt="" fill className="object-cover" />
@@ -151,16 +153,20 @@ export function EventsCarousel({
               <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
             )}
 
-            {/* At rest: 93px of #252120 fading up. On hover it gives way to a
-                wash over the whole card, so the description stays readable. */}
-            <div className="absolute inset-x-0 bottom-0 h-[93px] bg-gradient-to-t from-ink to-transparent transition-opacity duration-200 group-hover:opacity-0" />
-            <div className="absolute inset-0 bg-ink/75 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+            {/* At rest the bottom half fades to #252120 at 60%. On hover that
+                gives way to the same 49% black the header photos carry - the
+                mockup ships the hovered card as a separately darkened copy of
+                the photo, and it measures at half the exposure. */}
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent transition-opacity duration-200 group-hover:opacity-0" />
+            <div className="absolute inset-0 bg-black/[0.49] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
             <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-6">
               <Badge>
                 {/* leading-none has to sit here, not on the Badge: text-xl sets
                     its own 28px line-height, which would overflow the 56px plate */}
-                <span className="text-xl leading-none">{item.day}</span>
+                <span className="text-xl leading-none tracking-[3px]">
+                  {item.day}
+                </span>
                 <span className="mt-1 text-[10px] uppercase tracking-[3px]">
                   {item.month}
                 </span>
@@ -171,9 +177,13 @@ export function EventsCarousel({
               </div>
 
               <Badge>
-                <span className="text-xl leading-none">{item.time.split(":")[0]}</span>
+                <span className="text-xl leading-none tracking-[3px]">
+                  {item.time.split(":")[0]}
+                </span>
                 <span className="my-1 h-px w-full bg-white" />
-                <span className="text-xl leading-none">{item.time.split(":")[1]}</span>
+                <span className="text-xl leading-none tracking-[3px]">
+                  {item.time.split(":")[1]}
+                </span>
               </Badge>
             </div>
 
@@ -181,14 +191,14 @@ export function EventsCarousel({
               <EventTitle item={item} />
             </div>
 
-            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-6 p-6 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-7 p-6 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               {item.description && (
-                <p className="text-center text-sm leading-5">{item.description}</p>
+                <p className="text-center text-sm/[17px]">{item.description}</p>
               )}
               {item.ctaLabel && (
                 <a
                   href={item.ctaHref ?? "#"}
-                  className="flex h-[49px] items-center justify-center bg-brand text-sm font-medium uppercase tracking-[0.15em]"
+                  className="flex h-[49px] items-center justify-center bg-brand font-mono text-sm uppercase tracking-[3px]"
                 >
                   {item.ctaLabel}
                 </a>

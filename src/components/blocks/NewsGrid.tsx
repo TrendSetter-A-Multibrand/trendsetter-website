@@ -4,7 +4,7 @@ import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from "react
 import Image from "next/image";
 import { ReadOverlay } from "@/components/ui/ReadOverlay";
 
-const THUMB_WIDTH = 40;
+const THUMB_WIDTH = 56;
 
 type NewsItem = {
   tags: string[];
@@ -104,21 +104,23 @@ export function NewsGrid({
 
   return (
     <section className="px-6 py-16 lg:px-10">
-      <div className="mb-8 flex items-center gap-6">
-        <h2 className="whitespace-nowrap font-mono text-sm uppercase tracking-[0.2em]">
+      <div className="mb-10 flex items-center gap-10">
+        <h2 className="whitespace-nowrap font-mono text-2xl/[29px] uppercase tracking-[3px]">
           [{heading}]
         </h2>
+        {/* The bar runs from the heading to the right margin: a 2px rule with a
+            56x24 red block riding it */}
         <div
           ref={barRef}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
-          className="relative flex h-4 flex-1 cursor-pointer touch-none select-none items-center"
+          className="relative flex h-6 flex-1 cursor-pointer touch-none select-none items-center"
         >
-          <div className="h-px w-full bg-black/20" />
+          <div className="h-0.5 w-full bg-ink" />
           <div
             ref={thumbRef}
             style={{ width: THUMB_WIDTH }}
-            className="absolute left-0 h-4 cursor-grab bg-brand active:cursor-grabbing"
+            className="absolute left-0 h-6 cursor-grab bg-brand active:cursor-grabbing"
           />
         </div>
       </div>
@@ -126,30 +128,31 @@ export function NewsGrid({
       <div
         ref={trackRef}
         onScroll={syncThumb}
-        className="flex gap-6 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-10 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
           <a
             key={i}
             href={item.href ?? "#"}
-            className="group flex w-[70%] shrink-0 flex-col gap-3 sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
+            className="group flex w-[70%] shrink-0 flex-col sm:w-[calc(50%-20px)] lg:w-[calc(25%-30px)]"
           >
-            <div className="relative aspect-[3/2] w-full overflow-hidden bg-surface-strong">
+            {/* Square now, 430x430 four across */}
+            <div className="relative aspect-square w-full overflow-hidden bg-surface-strong">
               {item.image && (
                 <Image
                   src={item.image}
                   alt=""
-                  width={400}
-                  height={267}
+                  width={430}
+                  height={430}
                   className="h-full w-full object-cover"
                 />
               )}
               <ReadOverlay />
             </div>
-            <p className="font-mono text-xs font-medium uppercase tracking-wide text-brand">
+            <p className="mt-6 font-mono text-sm/[18px] uppercase tracking-[1px] text-brand">
               {item.tags.map((tag) => `[${tag}]`).join(" ")}
             </p>
-            <p className="font-medium leading-snug">{item.title}</p>
+            <p className="mt-4 text-2xl/[29px]">{item.title}</p>
           </a>
         ))}
       </div>
