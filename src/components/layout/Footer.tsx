@@ -30,7 +30,7 @@ const CONTACT_EMAIL = "trader@calledagarment.com";
  */
 function FooterHeading({ children }: { children: string }) {
   return (
-    <h2 className="mb-[25px] font-mono text-[22px]/[34px] uppercase tracking-[3px]">
+    <h2 className="mb-6 font-mono text-[22px]/[34px] uppercase tracking-[3px]">
       [{children}]
     </h2>
   );
@@ -46,7 +46,9 @@ function FooterColumn({
   return (
     <div>
       <FooterHeading>{title}</FooterHeading>
-      <ul className="flex flex-col gap-[21px] font-mono text-sm/[18px] uppercase tracking-[1px] text-white/40">
+      {/* Inter Tight, not the mono the headings above them use - the tracking
+          reads like mono but the letterforms are proportional */}
+      <ul className="flex flex-col gap-5 text-sm/[19px] uppercase tracking-[1px] text-white/40">
         {links.map((link) => (
           <li key={link.href}>
             <Link href={link.href} className="transition-colors hover:text-white">
@@ -93,7 +95,7 @@ export function Footer({ locale }: { locale: Locale }) {
           <FooterHeading>Сотрудничество</FooterHeading>
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="font-mono text-sm/[18px] uppercase tracking-[1px] text-white/40 transition-colors hover:text-white"
+            className="text-sm/[19px] uppercase tracking-[1px] text-white/40 transition-colors hover:text-white"
           >
             {CONTACT_EMAIL}
           </a>
