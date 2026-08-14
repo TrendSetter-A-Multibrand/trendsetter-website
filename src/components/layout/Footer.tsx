@@ -15,7 +15,7 @@ const MENU_LINKS = [
 const LEGAL_LINKS = [
   { label: "Часто задаваемые вопросы", slug: "faq" },
   { label: "Пользовательское соглашение", slug: "user-agreement" },
-  { label: "Политика обработки cookie", slug: "cookie" },
+  { label: "Политика обработки cookie", slug: "cookies" },
   { label: "Согласие на обработку персональных данных", slug: "personal-data-consent" },
   { label: "Политика обработки персональных данных", slug: "privacy-policy" },
 ];

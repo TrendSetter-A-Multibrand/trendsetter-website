@@ -112,7 +112,7 @@ export function NewsletterSignup({
         <div className="mt-[25px] text-sm">
           <Checkbox name="consent">
             Я даю согласие на обработку персональных данных в соответствии с{" "}
-            <Link href={`/${locale}/privacy`} className="underline">
+            <Link href={`/${locale}/privacy-policy`} className="underline">
               политикой конфиденциальности
             </Link>
           </Checkbox>
