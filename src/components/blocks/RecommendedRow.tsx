@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { ArticleCard } from "@/components/blocks/ArticleCard";
 import type { Article } from "@/lib/articles";
+import { useCarousel } from "@/lib/useCarousel";
 
 /**
  * Four 430 cards under a heading, with the arrows the mockup puts at the right
@@ -17,6 +18,7 @@ export function RecommendedRow({
   articles: Article[];
 }) {
   const row = useRef<HTMLDivElement>(null);
+  useCarousel(row, { autoplay: true });
 
   const step = (direction: 1 | -1) => {
     const el = row.current;

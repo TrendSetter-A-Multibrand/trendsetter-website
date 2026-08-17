@@ -4,6 +4,7 @@ import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from "react
 import Image from "next/image";
 import { ReadOverlay } from "@/components/ui/ReadOverlay";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { useCarousel } from "@/lib/useCarousel";
 
 const THUMB_WIDTH = 56;
 
@@ -80,6 +81,10 @@ export function NewsGrid({
     observer.observe(track);
     return () => observer.disconnect();
   }, []);
+
+  // Dragging the row and the row walking on by itself both move the same scroll
+  // position the red block is already following, so it keeps up either way
+  useCarousel(trackRef, { autoplay: true });
 
   function scrollToPointer(clientX: number) {
     const track = trackRef.current;

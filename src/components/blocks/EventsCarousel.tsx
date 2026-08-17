@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { useCarousel } from "@/lib/useCarousel";
 
 type EventItem = {
   day: string;
@@ -109,6 +110,7 @@ export function EventsCarousel({
   items = DEFAULT_ITEMS,
 }: EventsCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
+  useCarousel(trackRef, { autoplay: true });
 
   function scroll(direction: 1 | -1) {
     const track = trackRef.current;
