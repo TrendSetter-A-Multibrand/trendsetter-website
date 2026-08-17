@@ -22,7 +22,7 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
   return (
     <section className="px-6 lg:px-10">
       {heading && (
-        <h2 className="mb-10 font-mono text-xl uppercase tracking-[3px] lg:text-2xl/[29px]">
+        <h2 className="mb-6 pb-5 font-mono text-xl uppercase tracking-[3px] lg:text-2xl/[31.2px]">
           [{heading}]
         </h2>
       )}
@@ -51,29 +51,30 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
               </div>
 
               <div className="flex min-w-0 flex-1 flex-col px-4 py-4 lg:px-6 lg:pt-[29px]">
-                <p className="text-base font-semibold lg:text-xl/6 lg:font-normal">
+                <p className="text-base font-semibold lg:text-xl/[24px]">
                   {store.name}
                 </p>
-                <dl className="mt-3 space-y-1 text-sm lg:mt-5 lg:space-y-[15px] lg:text-base/5">
+                {/* Nothing is greyed down here - only the panel does that */}
+                <dl className="mt-3 space-y-1 text-sm lg:mt-6 lg:space-y-4 lg:text-base/[19px]">
                   <Row label="Адрес" value={store.address} />
                   <Row label="Телефон" value={store.phone} />
                   <Row label="Часы работы" value={store.hours} />
                 </dl>
               </div>
 
-              <div className="flex shrink-0 items-center pr-4 lg:pr-[33px]">
+              <div className="flex shrink-0 items-center pr-4 lg:pr-6">
                 <Chevron />
               </div>
             </button>
           ))}
         </div>
 
-        <div className="grid bg-surface sm:grid-cols-[minmax(0,1fr)_240px] lg:grid-cols-[469px_minmax(0,1fr)]">
-          <div className="flex flex-col px-6 pb-6 pt-6 lg:pb-[25px] lg:pt-[27px]">
-            <p className="text-lg lg:text-xl/6">{active.name}</p>
+        <div className="grid bg-surface sm:grid-cols-[minmax(0,1fr)_240px] lg:grid-cols-[429px_minmax(0,1fr)] lg:gap-10">
+          <div className="flex flex-col p-6">
+            <p className="text-lg font-bold lg:text-xl/[30px]">{active.name}</p>
 
-            {/* 44 apart here against the card's 35 - the panel has the room */}
-            <dl className="mt-6 space-y-4 text-sm lg:space-y-6 lg:text-base/5">
+            {/* Rows are 36 tall and 8 apart, and only here is the label greyed */}
+            <dl className="mt-2 space-y-2 text-sm lg:text-base/9">
               <Row label="Адрес" value={active.address} muted />
               <Row label="Часы работы" value={active.hours} muted />
               <Row label="Телефон" value={active.phone} muted />
@@ -81,8 +82,10 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
               <Row label="Ассортимент" value={active.assortment} muted />
             </dl>
 
-            <p className="mt-4 text-lg lg:text-xl/6">Как пройти:</p>
-            <div className="mt-2 text-sm lg:text-base/[19px]">
+            <p className="mt-2 text-lg font-semibold lg:text-xl/[24px]">
+              Как пройти:
+            </p>
+            <div className="mt-2 text-sm font-medium lg:text-base/[19px]">
               {active.directions.map((line, i) => (
                 <p key={i}>{line}</p>
               ))}
@@ -90,7 +93,7 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
 
             <a
               href={active.directionsHref ?? "#"}
-              className="mt-10 flex h-[47px] w-full items-center justify-center border-2 border-ink font-mono text-sm uppercase tracking-[3px] lg:mt-auto lg:w-[379px]"
+              className="mt-10 flex h-[49px] w-full items-center justify-center border-2 border-ink text-sm uppercase tracking-[3px] lg:mt-auto"
             >
               Построить маршрут
             </a>
@@ -122,9 +125,11 @@ function Row({
   muted?: boolean;
 }) {
   return (
-    <div className="flex gap-2">
-      <dt className={muted ? "text-muted" : undefined}>{label}:</dt>
-      <dd className="whitespace-pre-wrap">{value}</dd>
+    <div className="flex gap-4">
+      <dt className={muted ? "font-bold text-muted" : undefined}>{label}:</dt>
+      <dd className={`whitespace-pre-wrap ${muted ? "font-medium" : ""}`}>
+        {value}
+      </dd>
     </div>
   );
 }

@@ -72,15 +72,20 @@ const DEFAULT_ITEMS: EventItem[] = Array.from(
   (_, i) => BASE_ITEMS[i % BASE_ITEMS.length]
 );
 
-/** Rendered twice: at the bottom at rest, at the top between the badges on hover. */
+/**
+ * Rendered twice: at the bottom at rest, at the top between the badges on hover.
+ * Geist Mono 500 on a 26 line with 4 between the two of them.
+ */
 function EventTitle({ item }: { item: EventItem }) {
   return (
-    <>
-      <p className="font-mono text-xl/[30px] uppercase tracking-[1px]">{item.title}</p>
-      <p className="font-mono text-xl/[30px] uppercase tracking-[1px]">
+    <div className="flex flex-col gap-1">
+      <p className="font-mono text-xl/[26px] font-medium uppercase tracking-[1px]">
+        {item.title}
+      </p>
+      <p className="font-mono text-xl/[26px] font-medium uppercase tracking-[1px]">
         {item.location}
       </p>
-    </>
+    </div>
   );
 }
 
@@ -112,8 +117,8 @@ export function EventsCarousel({
 
   return (
     <section className="px-6 pt-10 lg:px-10">
-      <div className="mb-10 flex items-center justify-between">
-        <h2 className="whitespace-nowrap font-mono text-2xl/[29px] uppercase tracking-[3px]">
+      <div className="mb-6 flex items-center justify-between pb-5">
+        <h2 className="whitespace-nowrap font-mono text-2xl/[31.2px] uppercase tracking-[3px]">
           [{heading}]
         </h2>
         {/* Bare 22px glyphs 44px apart in the mockup - no round border */}
@@ -193,12 +198,14 @@ export function EventsCarousel({
 
             <div className="absolute inset-x-0 bottom-0 flex flex-col gap-7 p-6 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               {item.description && (
-                <p className="text-center text-sm/[17px]">{item.description}</p>
+                <p className="text-center text-sm/[17px] font-medium">
+                  {item.description}
+                </p>
               )}
               {item.ctaLabel && (
                 <a
                   href={item.ctaHref ?? "#"}
-                  className="flex h-[49px] items-center justify-center bg-brand font-mono text-sm uppercase tracking-[3px]"
+                  className="flex h-[49px] items-center justify-center bg-brand text-sm uppercase tracking-[3px]"
                 >
                   {item.ctaLabel}
                 </a>

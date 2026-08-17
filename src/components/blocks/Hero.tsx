@@ -43,23 +43,23 @@ export function Hero({
       <div className="absolute inset-0 bg-black/[0.49]" />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6 pt-[var(--header-h,0px)] text-center lg:px-10">
-        {/* 36px with 3px tracking in the mockup */}
-        <p className="max-w-5xl font-mono text-xl uppercase text-white sm:text-2xl lg:text-[36px] lg:tracking-[3px]">
+        {/* Geist Mono 36 on a 46.8 line, 3 of tracking */}
+        <p className="max-w-5xl font-mono text-xl uppercase text-white sm:text-2xl lg:text-[36px]/[46.8px] lg:tracking-[3px]">
           {tagline}
         </p>
 
-        {/* 49px tall, 24px apart, 17px of air either side of the label; the
-            first one is white at 40% */}
+        {/* 49 tall, 24 apart, 16 of air either side; the label is Inter Tight,
+            not the mono it reads as - the file says so. First one white at 40% */}
         <div className="flex flex-wrap justify-center gap-6">
           <Link
             href={primaryCta.href}
-            className="flex h-[49px] items-center bg-white/40 px-[17px] font-mono text-sm uppercase tracking-[3px] text-white"
+            className="flex h-[49px] items-center bg-white/40 px-4 text-sm uppercase tracking-[3px] text-white"
           >
             {primaryCta.label}
           </Link>
           <Link
             href={secondaryCta.href}
-            className="flex h-[49px] items-center bg-brand px-[17px] font-mono text-sm uppercase tracking-[3px] text-white"
+            className="flex h-[49px] items-center bg-brand px-4 text-sm uppercase tracking-[3px] text-white"
           >
             {secondaryCta.label}
           </Link>

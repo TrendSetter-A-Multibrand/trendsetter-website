@@ -13,7 +13,7 @@ type NewsletterSignupProps = {
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** 23px square with a 1px rule, the tick inside it, label 16 to the right. */
+/** 24px square with a 1px rule, the tick inside it, label 16 to the right. */
 function Checkbox({
   children,
   name,
@@ -29,7 +29,7 @@ function Checkbox({
         defaultChecked
         className="peer sr-only"
       />
-      <span className="flex h-[23px] w-[23px] shrink-0 items-center justify-center border border-white peer-checked:[&>svg]:opacity-100">
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center border border-white peer-checked:[&>svg]:opacity-100">
         <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 opacity-0">
           <path
             d="m5 13 4 4L19 7"
@@ -75,18 +75,16 @@ export function NewsletterSignup({
   }, [submitted]);
 
   return (
-    <section className="relative overflow-hidden bg-brand px-6 py-[22px] font-mono text-white lg:px-10">
-      <div className="relative z-10 max-w-[880px]">
-        <h2 className="text-xl uppercase tracking-[5px] lg:text-2xl/[29px]">
+    <section className="relative overflow-hidden bg-brand px-6 py-10 font-mono text-white lg:px-10">
+      <div className="relative z-10 max-w-[881px]">
+        <h2 className="text-xl uppercase tracking-[5px] lg:text-2xl/[31.2px]">
           [{heading}]
         </h2>
 
-        <p className="mt-[25px] whitespace-pre-line text-sm/[18px]">
-          {description}
-        </p>
+        <p className="mt-6 whitespace-pre-line text-sm/[18px]">{description}</p>
 
         {/* 880 across: a 700 field with its 180 button hard against it */}
-        <form onSubmit={handleSubmit} className="mt-[25px] flex h-12 w-full">
+        <form onSubmit={handleSubmit} className="mt-6 flex h-12 w-full">
           <input
             type="email"
             required
@@ -98,18 +96,18 @@ export function NewsletterSignup({
           <button
             type="submit"
             disabled={!isValid}
-            className="h-[49px] shrink-0 self-start whitespace-nowrap bg-white text-sm uppercase tracking-[3px] text-ink disabled:cursor-not-allowed lg:w-[180px]"
+            className="h-[49px] shrink-0 self-start whitespace-nowrap bg-white font-sans text-sm font-medium uppercase tracking-[3px] text-ink disabled:cursor-not-allowed lg:w-[180px]"
           >
             Подписаться
           </button>
         </form>
 
-        <div className="mt-[25px] flex flex-wrap gap-x-10 gap-y-[25px] text-sm">
+        <div className="mt-6 flex flex-wrap gap-6 text-sm">
           <Checkbox name="men">Для мужчин</Checkbox>
           <Checkbox name="women">Для девушек</Checkbox>
         </div>
 
-        <div className="mt-[25px] text-sm">
+        <div className="mt-6 text-sm">
           <Checkbox name="consent">
             Я даю согласие на обработку персональных данных в соответствии с{" "}
             <Link href={`/${locale}/privacy-policy`} className="underline">

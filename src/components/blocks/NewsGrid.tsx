@@ -104,8 +104,10 @@ export function NewsGrid({
 
   return (
     <section className="px-6 pt-10 lg:px-10">
-      <div className="mb-10 flex items-center gap-10">
-        <h2 className="whitespace-nowrap font-mono text-2xl/[29px] uppercase tracking-[3px]">
+      {/* The heading row carries 20 of its own air top and bottom, and the file
+          leaves 24 from there to the cards */}
+      <div className="mb-6 flex items-center gap-10 py-5">
+        <h2 className="whitespace-nowrap font-mono text-2xl/[31.2px] uppercase tracking-[3px]">
           [{heading}]
         </h2>
         {/* The bar runs from the heading to the right margin: a 2px rule with a
@@ -149,10 +151,10 @@ export function NewsGrid({
               )}
               <ReadOverlay />
             </div>
-            <p className="mt-6 font-mono text-sm/[18px] uppercase tracking-[1px] text-brand">
+            <p className="mt-6 font-mono text-sm/[18px] font-medium uppercase tracking-[1px] text-brand">
               {item.tags.map((tag) => `[${tag}]`).join(" ")}
             </p>
-            <p className="mt-4 text-2xl/[29px]">{item.title}</p>
+            <p className="mt-4 text-2xl/[29px] font-medium">{item.title}</p>
           </a>
         ))}
       </div>
