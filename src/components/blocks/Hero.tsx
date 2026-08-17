@@ -22,7 +22,7 @@ export function Hero({
   // page's own white - is what shows while the bar slides in and out. The copy
   // is padded back down to stay centred in what is left below the bar.
   return (
-    <section className="relative mt-[calc(-1*var(--header-h,0px))] flex h-[100svh] flex-col justify-end overflow-hidden bg-neutral-800">
+    <section className="on-dark relative mt-[calc(-1*var(--header-h,0px))] flex h-[100svh] flex-col justify-end overflow-hidden bg-neutral-800">
       {imageSrc ? (
         <Image
           src={imageSrc}

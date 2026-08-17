@@ -65,7 +65,7 @@ export function Footer({ locale }: { locale: Locale }) {
   const companyLinks = NAV_ITEMS.find((item) => item.slug === "company")?.children ?? [];
 
   return (
-    <footer className="bg-ink pb-10 pt-10 text-white">
+    <footer className="on-dark bg-ink pb-10 pt-10 text-white">
       {/* Columns sit at 40 / 221 / 670 / 1119 in the mockup, so their widths are
           the file's, not a regular grid. The tiles close the row at 1880. */}
       <div className="grid gap-x-10 gap-y-10 px-6 lg:grid-cols-[181px_449px_449px_1fr_auto] lg:gap-x-0 lg:px-10">
@@ -104,9 +104,12 @@ export function Footer({ locale }: { locale: Locale }) {
         <SocialLinks large className="h-fit" />
       </div>
 
-      {/* White under SOFT_LIGHT in the mockup - the mark greys into the dark background */}
-      <div className="mt-[76px] px-6 mix-blend-soft-light lg:px-10">
-        <Wordmark className="text-white" />
+      {/* The file paints this white under SOFT_LIGHT, but Figma's soft light is
+          the Photoshop formula and CSS uses the W3C one - over #252120 they land
+          on #453e3c and #605a58. The backdrop here is flat, so the blend buys
+          nothing: paint the colour Figma arrives at and be exact. */}
+      <div className="mt-[76px] px-6 lg:px-10">
+        <Wordmark className="text-[#453e3c]" />
       </div>
     </footer>
   );

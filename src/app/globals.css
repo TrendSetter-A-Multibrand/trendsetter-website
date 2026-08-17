@@ -62,6 +62,30 @@
   }
 }
 
+/* Light type on a dark ground comes out about a third heavier in a browser than
+   it does in Figma: Chrome gamma-corrects text antialiasing, Figma composites
+   linearly. Measured against Figma's own render of the footer, the same 14px
+   Inter Tight covers 0.296 of its ink box here against 0.224 there - identical
+   glyph widths, so it is the rasteriser and not the font.
+   Stepping one notch down the variable axis closes most of it: at 300 the ink
+   comes to 0.245, within a tenth of the file, and the string grows by 2px in
+   234. Type on light ground already agrees and is left alone.
+   Put `on-dark` on a dark block and everything inside steps down; delete these
+   two rules and the site is back on the file's literal weights. */
+.on-dark {
+  font-weight: 300;
+}
+
+.on-dark :is(.font-medium, .font-semibold) {
+  font-weight: 400;
+}
+
+/* A light-ground island inside a dark block - a white button, a white field -
+   renders dark on light and so needs none of this. */
+.on-dark .on-light {
+  font-weight: 500;
+}
+
 /* Painted separately from body: past 1920 the body no longer covers the
    viewport, and without this the gutters would take the body's colour. */
 html {

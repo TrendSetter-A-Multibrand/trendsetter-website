@@ -150,7 +150,7 @@ export function EventsCarousel({
           // 586.7x312, three across with 40px gaps
           <div
             key={i}
-            className="group relative aspect-[220/117] w-[85%] shrink-0 overflow-hidden bg-neutral-800 sm:w-[calc(50%-20px)] lg:w-[calc(33.333%-26.667px)]"
+            className="on-dark group relative aspect-[220/117] w-[85%] shrink-0 overflow-hidden bg-neutral-800 sm:w-[calc(50%-20px)] lg:w-[calc(33.333%-26.667px)]"
           >
             {item.image ? (
               <Image src={item.image} alt="" fill className="object-cover" />

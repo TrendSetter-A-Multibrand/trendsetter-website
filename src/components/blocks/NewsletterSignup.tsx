@@ -75,7 +75,7 @@ export function NewsletterSignup({
   }, [submitted]);
 
   return (
-    <section className="relative overflow-hidden bg-brand px-6 py-10 font-mono text-white lg:px-10">
+    <section className="on-dark relative overflow-hidden bg-brand px-6 py-10 font-mono text-white lg:px-10">
       <div className="relative z-10 max-w-[881px]">
         <h2 className="text-xl uppercase tracking-[5px] lg:text-2xl/[31.2px]">
           [{heading}]
@@ -96,7 +96,7 @@ export function NewsletterSignup({
           <button
             type="submit"
             disabled={!isValid}
-            className="h-[49px] shrink-0 self-start whitespace-nowrap bg-white font-sans text-sm font-medium uppercase tracking-[3px] text-ink disabled:cursor-not-allowed lg:w-[180px]"
+            className="on-light h-[49px] shrink-0 self-start whitespace-nowrap bg-white font-sans text-sm uppercase tracking-[3px] text-ink disabled:cursor-not-allowed lg:w-[180px]"
           >
             Подписаться
           </button>

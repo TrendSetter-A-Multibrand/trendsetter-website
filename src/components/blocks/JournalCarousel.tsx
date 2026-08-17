@@ -95,7 +95,7 @@ export function JournalCarousel({
           <a
             key={i}
             href={item.href ?? "#"}
-            className="group relative aspect-[4/3] w-[85%] shrink-0 overflow-hidden bg-neutral-800 sm:aspect-[900/444] sm:w-[calc(50%-20px)]"
+            className="on-dark group relative aspect-[4/3] w-[85%] shrink-0 overflow-hidden bg-neutral-800 sm:aspect-[900/444] sm:w-[calc(50%-20px)]"
           >
             {item.image ? (
               <Image src={item.image} alt="" fill className="object-cover" />

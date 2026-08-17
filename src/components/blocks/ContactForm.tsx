@@ -34,7 +34,7 @@ export function ContactForm({
   }
 
   return (
-    <section className="relative overflow-hidden bg-brand px-6 pb-10 pt-[46px] text-white lg:px-10">
+    <section className="on-dark relative overflow-hidden bg-brand px-6 pb-10 pt-[46px] text-white lg:px-10">
       <div className="relative z-10 max-w-[1190px]">
         <h2 className="font-mono text-xl/6 uppercase">[{heading}]</h2>
 
@@ -42,7 +42,7 @@ export function ContactForm({
           <textarea
             name="message"
             placeholder={placeholder}
-            className="block h-[207px] w-full resize-none bg-white p-4 text-sm/[18px] tracking-[1px] text-ink outline-none placeholder:text-muted"
+            className="on-light block h-[207px] w-full resize-none bg-white p-4 text-sm/[18px] tracking-[1px] text-ink outline-none placeholder:text-muted"
           />
 
           <div className="mt-4 grid gap-4 sm:grid-cols-3">
@@ -61,7 +61,7 @@ export function ContactForm({
             <select
               name="subject"
               defaultValue=""
-              className="h-[49px] appearance-none bg-white bg-[length:12px] bg-[right_16px_center] bg-no-repeat px-4 text-sm/[18px] tracking-[1px] text-ink outline-none"
+              className="on-light h-[49px] appearance-none bg-white bg-[length:12px] bg-[right_16px_center] bg-no-repeat px-4 text-sm/[18px] tracking-[1px] text-ink outline-none"
               style={{
                 backgroundImage:
                   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23252120' stroke-width='2'/%3E%3C/svg%3E\")",
@@ -81,7 +81,7 @@ export function ContactForm({
           <div className="mt-6 flex flex-wrap items-center gap-6">
             <button
               type="submit"
-              className="h-[49px] w-[180px] shrink-0 bg-white font-mono text-sm uppercase tracking-[3px] text-ink"
+              className="on-light h-[49px] w-[180px] shrink-0 bg-white text-sm uppercase tracking-[3px] text-ink"
             >
               {sent ? "Отправлено" : "Отправить"}
             </button>
