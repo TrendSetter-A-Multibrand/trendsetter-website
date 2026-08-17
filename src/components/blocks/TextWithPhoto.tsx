@@ -1,3 +1,5 @@
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+
 /**
  * Two 900 columns 40 apart: heading and copy on the left, a square photo with
  * its caption on the right. Both columns start on the same line, which is why
@@ -20,7 +22,9 @@ export function TextWithPhoto({
       </div>
 
       <div>
-        <div className="aspect-square w-full bg-surface-strong" />
+        <div className="relative aspect-square w-full">
+          <ImagePlaceholder />
+        </div>
         <p className="mt-4 text-sm lg:mt-6 lg:text-2xl/[29px]">{caption}</p>
       </div>
     </section>

@@ -1,4 +1,5 @@
 import type { TeamMember } from "@/lib/company";
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
 /**
  * Six 251 portraits to a row, 62 apart, each with a name and a role under it.
@@ -18,7 +19,9 @@ export function TeamGrid({ members }: { members: TeamMember[] }) {
       <div className="mt-8 grid grid-cols-2 gap-x-10 gap-y-10 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-[62px] lg:max-w-[1818px]">
         {members.map((member, i) => (
           <div key={i} className="text-center">
-            <div className="aspect-square w-full rounded-full bg-surface-strong" />
+            <div className="relative aspect-square w-full">
+              <ImagePlaceholder className="overflow-hidden rounded-full" />
+            </div>
             <p className="mt-4 text-base lg:mt-6 lg:text-2xl/[29px]">
               {member.name}
             </p>

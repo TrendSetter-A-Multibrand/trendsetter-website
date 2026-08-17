@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { STORES, type Store } from "@/lib/stores";
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
 type StoreLocatorProps = {
   heading?: string;
@@ -40,7 +41,8 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
                   : "bg-surface hover:bg-surface-active"
               }`}
             >
-              <div className="relative aspect-square w-24 shrink-0 overflow-hidden bg-surface-strong lg:aspect-auto lg:w-[273px]">
+              <div className="relative aspect-square w-24 shrink-0 overflow-hidden lg:aspect-auto lg:w-[273px]">
+                <ImagePlaceholder />
                 <Image
                   src={store.image}
                   alt=""
@@ -99,7 +101,8 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
             </a>
           </div>
 
-          <div className="relative min-h-64 bg-surface-strong">
+          <div className="relative min-h-64">
+            <ImagePlaceholder />
             <Image
               src={active.map}
               alt=""

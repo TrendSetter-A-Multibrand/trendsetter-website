@@ -26,20 +26,23 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
   return (
     <nav
       aria-label="Страницы"
-      className="flex items-center justify-center gap-2 py-10 font-mono text-xl"
+      className="flex items-center justify-center gap-2 py-10 font-mono text-[22px]/[28.6px] font-medium tracking-[1px]"
     >
       <Link
         href={hrefFor(Math.max(page - 1, 1))}
         aria-label="Предыдущая страница"
-        className="px-4 text-ink"
+        className="flex h-[52px] w-[52px] items-center justify-center text-ink"
       >
         <Chevron direction="left" />
       </Link>
 
       {pageWindow(page, pageCount).map((item, i) =>
         item === "gap" ? (
-          <span key={`gap-${i}`} className="w-[34px] text-center text-ink">
-            …
+          <span
+            key={`gap-${i}`}
+            className="flex h-[52px] w-[26px] items-center justify-center text-ink"
+          >
+            <Dots />
           </span>
         ) : (
           <Link
@@ -47,7 +50,9 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
             href={hrefFor(item)}
             aria-current={item === page ? "page" : undefined}
             className={`flex h-[52px] w-[60px] items-center justify-center ${
-              item === page ? "bg-brand text-white" : "bg-ink/6 text-ink"
+              item === page
+                ? "bg-brand text-white"
+                : "bg-surface text-ink hover:bg-surface-active"
             }`}
           >
             {item}
@@ -58,7 +63,7 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
       <Link
         href={hrefFor(Math.min(page + 1, pageCount))}
         aria-label="Следующая страница"
-        className="px-4 text-ink"
+        className="flex h-[52px] w-[52px] items-center justify-center text-ink"
       >
         <Chevron direction="right" />
       </Link>
@@ -66,16 +71,26 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
   );
 }
 
+/** 5 across and 10 tall inside a 24 icon box, drawn 2px - no shaft on it */
 function Chevron({ direction }: { direction: "left" | "right" }) {
   return (
-    <svg width="12" height="20" viewBox="0 0 12 20" fill="none" aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
-        d={direction === "left" ? "M10 2 2 10l8 8" : "M2 2l8 8-8 8"}
+        d={direction === "left" ? "M14 7 9 12l5 5" : "M10 7l5 5-5 5"}
         stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        strokeWidth="2"
       />
+    </svg>
+  );
+}
+
+/** Three round 4px dots 8 apart - the file draws the skipped pages, not an ellipsis */
+function Dots() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+      <circle cx="5" cy="13" r="2" fill="currentColor" />
+      <circle cx="13" cy="13" r="2" fill="currentColor" />
+      <circle cx="21" cy="13" r="2" fill="currentColor" />
     </svg>
   );
 }

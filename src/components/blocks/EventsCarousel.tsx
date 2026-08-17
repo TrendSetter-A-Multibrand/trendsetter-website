@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
 type EventItem = {
   day: string;
@@ -150,12 +151,11 @@ export function EventsCarousel({
           // 586.7x312, three across with 40px gaps
           <div
             key={i}
-            className="on-dark group relative aspect-[220/117] w-[85%] shrink-0 overflow-hidden bg-neutral-800 sm:w-[calc(50%-20px)] lg:w-[calc(33.333%-26.667px)]"
+            className="on-dark group relative aspect-[220/117] w-[85%] shrink-0 overflow-hidden sm:w-[calc(50%-20px)] lg:w-[calc(33.333%-26.667px)]"
           >
-            {item.image ? (
+            <ImagePlaceholder />
+            {item.image && (
               <Image src={item.image} alt="" fill className="object-cover" />
-            ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
             )}
 
             {/* At rest the bottom half fades to #252120 at 60%. On hover that

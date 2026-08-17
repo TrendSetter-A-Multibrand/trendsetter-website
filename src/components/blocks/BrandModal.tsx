@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import type { Brand } from "@/lib/brands";
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
 /** 1214x819 sheet centred over a dimmed page, 40 of padding all round. */
 export function BrandModal({
@@ -61,7 +62,8 @@ export function BrandModal({
           </button>
         </div>
 
-        <div className="relative mt-6 aspect-[1134/280] w-full shrink-0 bg-surface-strong lg:mt-[25px]">
+        <div className="relative mt-6 aspect-[1134/280] w-full shrink-0 lg:mt-[25px]">
+          <ImagePlaceholder />
           <Image src={brand.image} alt="" fill sizes="1134px" className="object-cover" />
         </div>
 

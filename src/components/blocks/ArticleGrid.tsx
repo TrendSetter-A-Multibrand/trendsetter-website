@@ -32,7 +32,7 @@ export function ArticleGrid({ articles }: { articles: Article[] }) {
   return (
     <section className="flex flex-col gap-10">
       {toRows(articles).map((row, i) => (
-        <div key={i} className={row.onBrand ? "bg-brand py-10" : undefined}>
+        <div key={i} className={row.onBrand ? "on-dark bg-brand py-10" : undefined}>
           <div
             className={`grid gap-10 px-6 lg:px-10 ${
               row.cols === 3

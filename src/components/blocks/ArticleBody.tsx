@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { ArticleBlock } from "@/lib/article";
 import { QuoteMarquee } from "@/components/ui/QuoteMarquee";
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
 const SUBTITLE = "text-2xl/8 font-medium text-inherit lg:text-4xl/11";
 const BODY = "text-lg/7 text-inherit lg:text-[30px]/9";
@@ -19,7 +20,8 @@ function Block({ block }: { block: ArticleBlock }) {
           }`}
         >
           {block.images.map((src, i) => (
-            <div key={i} className="relative aspect-square overflow-hidden bg-surface-strong">
+            <div key={i} className="relative aspect-square overflow-hidden">
+              <ImagePlaceholder />
               <Image
                 src={src}
                 alt=""
@@ -44,7 +46,8 @@ function Block({ block }: { block: ArticleBlock }) {
             ))}
           </div>
           <figure className="m-0">
-            <div className="relative aspect-square overflow-hidden bg-surface-strong">
+            <div className="relative aspect-square overflow-hidden">
+              <ImagePlaceholder />
               <Image src={block.image} alt="" fill sizes="47vw" className="object-cover" />
             </div>
             {block.caption && (

@@ -5,6 +5,7 @@ import { ArticleHeader } from "@/components/blocks/ArticleHeader";
 import { ArticleBody } from "@/components/blocks/ArticleBody";
 import { ArticleReactions } from "@/components/blocks/ArticleReactions";
 import { RelatedArticles } from "@/components/blocks/RelatedArticles";
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { PLACEHOLDER_ARTICLE } from "@/lib/article";
 import { NEWS_FILTERS, PLACEHOLDER_ARTICLES } from "@/lib/articles";
 
@@ -22,7 +23,8 @@ export default async function ArticlePage({
     <>
       <ArticleHeader locale={locale} meta={meta} filters={NEWS_FILTERS} />
 
-      <div className="relative mt-10 h-[940px] w-full overflow-hidden bg-surface-strong">
+      <div className="relative mt-10 h-[940px] w-full overflow-hidden">
+        <ImagePlaceholder />
         <Image
           src={meta.heroImage}
           alt=""

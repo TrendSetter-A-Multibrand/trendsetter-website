@@ -3,6 +3,7 @@
 import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from "react";
 import Image from "next/image";
 import { ReadOverlay } from "@/components/ui/ReadOverlay";
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
 const THUMB_WIDTH = 56;
 
@@ -139,7 +140,8 @@ export function NewsGrid({
             className="group flex w-[70%] shrink-0 flex-col sm:w-[calc(50%-20px)] lg:w-[calc(25%-30px)]"
           >
             {/* Square now, 430x430 four across */}
-            <div className="relative aspect-square w-full overflow-hidden bg-surface-strong">
+            <div className="relative aspect-square w-full overflow-hidden">
+              <ImagePlaceholder />
               {item.image && (
                 <Image
                   src={item.image}

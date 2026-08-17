@@ -2,10 +2,11 @@ import Link from "next/link";
 
 /**
  * 42 tall pill with a 2px outline and 14 of padding inside it - 16 from the edge
- * to the label, which is what the mockup measures - and a 14px mono label.
+ * to the label, which is what the mockup measures - and a 14px mono label. The
+ * file sets every one of these at weight 500, on the journal and on search alike.
  */
 const CHIP =
-  "flex h-[42px] items-center rounded-full border-2 px-[14px] font-mono text-sm uppercase transition-colors";
+  "flex h-[42px] items-center rounded-full border-2 px-[14px] font-mono text-sm/[18px] font-medium uppercase transition-colors";
 
 const tone = (active: boolean) =>
   active ? "border-brand bg-brand text-white" : "border-black text-brand";

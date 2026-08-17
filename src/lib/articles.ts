@@ -3,6 +3,8 @@ export type Article = {
   title: string;
   href?: string;
   image?: string;
+  /** Which of the two sections it belongs to - what the search chips filter on. */
+  section?: "journal" | "news";
 };
 
 export const JOURNAL_FILTERS = [
@@ -67,5 +69,11 @@ const BASE_ARTICLES: Article[] = [
  */
 export const PLACEHOLDER_ARTICLES: Article[] = Array.from(
   { length: 13 },
-  (_, i) => ({ ...BASE_ARTICLES[i % BASE_ARTICLES.length], href: "#" })
+  (_, i) => ({
+    ...BASE_ARTICLES[i % BASE_ARTICLES.length],
+    href: "#",
+    // Nothing behind this yet: the sections alternate so the search chips have
+    // something to sort until Storyblok says which is which.
+    section: i % 2 === 0 ? ("news" as const) : ("journal" as const),
+  })
 );

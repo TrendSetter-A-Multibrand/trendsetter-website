@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
 type JournalItem = {
   tags: string[];
@@ -95,12 +96,11 @@ export function JournalCarousel({
           <a
             key={i}
             href={item.href ?? "#"}
-            className="on-dark group relative aspect-[4/3] w-[85%] shrink-0 overflow-hidden bg-neutral-800 sm:aspect-[900/444] sm:w-[calc(50%-20px)]"
+            className="on-dark group relative aspect-[4/3] w-[85%] shrink-0 overflow-hidden sm:aspect-[900/444] sm:w-[calc(50%-20px)]"
           >
-            {item.image ? (
+            <ImagePlaceholder />
+            {item.image && (
               <Image src={item.image} alt="" fill className="object-cover" />
-            ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
             )}
 
             {/* Both cards carry this in the mockup: #252120 at 80%, darkest at
