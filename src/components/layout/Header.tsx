@@ -65,7 +65,9 @@ export function Header({ locale }: { locale: Locale }) {
         <Wordmark />
       </Link>
 
-      <nav className="hidden h-full items-center gap-10 font-mono text-sm uppercase tracking-[1px] lg:flex">
+      {/* 757 of links, plus a 273 logo and the icons - it does not fit until
+          1280, and under that the burger carries the whole menu */}
+      <nav className="hidden h-full items-center gap-10 font-mono text-sm uppercase tracking-[1px] xl:flex">
         {NAV_ITEMS.map((item) => (
           <NavEntry key={item.slug} locale={locale} item={item} />
         ))}

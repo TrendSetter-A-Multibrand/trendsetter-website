@@ -116,7 +116,7 @@ export function ContactForm({
           the third is below anything an eye can catch, so it shares the round
           number the newsletter smiley rests at. That tilt is where it comes back
           to after rolling out of the band on send. */}
-      <div className="pointer-events-none absolute -top-[43px] right-6 hidden lg:right-[58px] lg:block">
+      <div className="pointer-events-none absolute -top-[43px] right-6 hidden wide:right-[58px] wide:block">
         <div
           className={`transition-transform duration-700 ease-in ${
             sent

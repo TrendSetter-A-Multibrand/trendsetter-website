@@ -28,7 +28,7 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
         </h2>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-[619px_minmax(0,1fr)] lg:gap-10">
+      <div className="grid gap-6 wide:grid-cols-[619px_minmax(0,1fr)] wide:gap-10">
         <div className="flex flex-col gap-6">
           {stores.map((store, i) => (
             <button
@@ -71,7 +71,7 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
           ))}
         </div>
 
-        <div className="grid bg-surface sm:grid-cols-[minmax(0,1fr)_240px] lg:grid-cols-[429px_minmax(0,1fr)] lg:gap-10">
+        <div className="grid bg-surface sm:grid-cols-[minmax(0,1fr)_240px] wide:grid-cols-[429px_minmax(0,1fr)] wide:gap-10">
           <div className="flex flex-col p-6">
             <p className="text-lg font-bold lg:text-xl/[30px]">{active.name}</p>
 

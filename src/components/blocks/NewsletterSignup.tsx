@@ -131,7 +131,7 @@ export function NewsletterSignup({
       </div>
 
       {/* Taller than the band in the mockup, so it overflows and gets clipped */}
-      <div className="pointer-events-none absolute inset-y-0 right-6 flex items-center lg:right-[289px]">
+      <div className="pointer-events-none absolute inset-y-0 right-6 hidden items-center wide:right-[289px] wide:flex">
         {/* tilted ~10deg counter-clockwise in the mockup; the roll keeps that as its resting angle */}
         <div
           className={`relative h-60 w-60 transition-transform duration-700 ease-in sm:h-80 sm:w-80 lg:h-[420px] lg:w-[420px] ${
