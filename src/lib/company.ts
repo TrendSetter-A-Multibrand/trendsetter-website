@@ -12,9 +12,9 @@ const FILLER =
   "Неделя моды весна-лето 2026 . Чего (не) ждать от предстоящих показов нового сезона";
 
 export const ABOUT_FEATURE = {
-  title: "Наша миссия",
+  title: "О TRENDSETTER",
   body: Array.from({ length: 11 }, () => FILLER).join(" "),
-  caption: "Описание к фото / подпись",
+  image: "/images/home/journal/2.jpg",
 };
 
 export const ABOUT_MISSION =
@@ -27,9 +27,9 @@ const MISSION =
   "To make stylish, high-quality clothing accessible to everyone. Trendsetter is a flexible and ambitious brand, currently building a strong team and actively expanding across the region. We believe fashion should be simple, accessible, and inspiring — every single day.";
 
 export const ABOUT_CARDS = [
-  { title: "Наша миссия", body: HISTORY },
-  { title: "Наша миссия", body: MISSION },
-  { title: "Наша миссия", body: MISSION },
+  { title: "Наши преимущества", body: HISTORY, image: "/images/home/news/2.jpg" },
+  { title: "Наши преимущества", body: MISSION, image: "/images/home/news/3.jpg" },
+  { title: "Наши преимущества", body: MISSION, image: "/images/home/news/4.jpg" },
 ];
 
 export const ABOUT_BANNER = { title: "Наша миссия", body: HISTORY };
@@ -54,3 +54,10 @@ export const SPACE_CARDS = [
 /** Вакансии is still a draft in the file - every heading on it reads «Наша миссия». */
 export const CAREERS_INTRO = { title: "Наша миссия", body: MISSION };
 export const CAREERS_CARDS = ABOUT_CARDS;
+
+/** Six of the same name in the file; the client's own are to come. */
+export const COLLABORATIONS = Array.from({ length: 6 }, (_, i) => ({
+  slug: `collaboration-${i + 1}`,
+  title: "TRENDSETTER x Collaboration",
+  image: ["/images/home/journal/1.jpg", "/images/home/journal/2.jpg", "/images/home/news/1.jpg"][i % 3],
+}));

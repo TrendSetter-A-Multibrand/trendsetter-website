@@ -103,8 +103,10 @@ export function ContactForm({
         </form>
       </div>
 
-      {/* 575 across in the mockup, and it runs off the top of the band */}
-      <div className="pointer-events-none absolute -top-[43px] right-6 hidden lg:right-[58px] lg:block">
+      {/* 575 across in the mockup, running off the top of the band, and turned
+          0.1804 of a radian off square - the file tilts it rather than setting
+          it upright */}
+      <div className="pointer-events-none absolute -top-[43px] right-6 hidden -rotate-[10.33deg] lg:right-[58px] lg:block">
         <Image src={imageSrc} alt="" width={575} height={575} />
       </div>
     </section>

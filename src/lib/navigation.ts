@@ -31,6 +31,7 @@ export const NAV_ITEMS: NavItem[] = [
     children: [
       { label: "О нас", slug: "about" },
       { label: "Пространство", slug: "space" },
+      { label: "Коллаборации", slug: "collaborations" },
       { label: "Сотрудничество", slug: "cooperation" },
       { label: "Вакансии", slug: "careers" },
       { label: "Контакты", slug: "contacts" },

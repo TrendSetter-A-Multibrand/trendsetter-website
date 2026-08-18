@@ -8,7 +8,7 @@ const MENU_LINKS = [
   { label: "Журнал", slug: "journal" },
   { label: "Бренды", slug: "brands" },
   { label: "Магазины", slug: "stores" },
-  { label: "Коллаборации", slug: "collaborations" },
+  { label: "Коллаборации", slug: "company/collaborations" },
   { label: "Компания", slug: "company" },
 ];
 

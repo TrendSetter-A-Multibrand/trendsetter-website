@@ -1,16 +1,15 @@
+import { notFound } from "next/navigation";
+import { isLocale } from "@/lib/i18n/locales";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PageCover } from "@/components/blocks/PageCover";
-import { MissionBand } from "@/components/blocks/MissionBand";
 import { TextWithPhoto } from "@/components/blocks/TextWithPhoto";
+import { MissionBand } from "@/components/blocks/MissionBand";
 import { PhotoCards } from "@/components/blocks/PhotoCards";
-import { TextBanner } from "@/components/blocks/TextBanner";
 import { TeamGrid } from "@/components/blocks/TeamGrid";
-import { HelpCards } from "@/components/blocks/HelpCards";
+import { ContactForm } from "@/components/blocks/ContactForm";
 import {
-  ABOUT_BANNER,
   ABOUT_CARDS,
   ABOUT_FEATURE,
-  ABOUT_INTRO,
   ABOUT_MISSION,
   TEAM,
 } from "@/lib/company";
@@ -21,50 +20,32 @@ export default async function AboutPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  if (!isLocale(locale)) notFound();
 
   return (
-    <div className="pb-10">
-      <Breadcrumbs
-        items={[{ label: "Главная", href: `/${locale}` }, { label: "О нас" }]}
-      />
-
-      <div className="pt-11">
-        <PageCover
-          title="О нас"
-          imageSrc="/images/covers/articles.jpg"
-          flush={false}
+    <>
+      <div className="py-5">
+        <Breadcrumbs
+          items={[{ label: "Главная", href: `/${locale}` }, { label: "О нас" }]}
         />
       </div>
 
-      {/* 1744 wide in the mockup, centred - 88 of air either side */}
-      <p className="mx-auto mt-10 max-w-[1744px] px-6 text-center font-mono text-base lg:px-0 lg:text-[36px]/[47px]">
-        {ABOUT_INTRO}
-      </p>
+      <PageCover
+        title="О нас"
+        subtitle="История, наша миссия и цели"
+        imageSrc="/images/covers/articles.jpg"
+        flush={false}
+      />
 
-      {/* 80 under the opening paragraph, 40 between every block after it */}
-      <div className="mt-20">
-        <TextWithPhoto {...ABOUT_FEATURE} />
-      </div>
+      <TextWithPhoto {...ABOUT_FEATURE} />
+      <MissionBand body={ABOUT_MISSION} />
+      <PhotoCards cards={ABOUT_CARDS} />
 
-      <div className="mt-10">
-        <MissionBand body={ABOUT_MISSION} />
-      </div>
+      <TeamGrid members={TEAM} />
 
-      <div className="mt-10">
-        <PhotoCards cards={ABOUT_CARDS} />
+      <div className="pt-10">
+        <ContactForm locale={locale} />
       </div>
-
-      <div className="mt-10">
-        <TextBanner {...ABOUT_BANNER} />
-      </div>
-
-      <div className="mt-10">
-        <TeamGrid members={TEAM} />
-      </div>
-
-      <div className="mt-20">
-        <HelpCards locale={locale} />
-      </div>
-    </div>
+    </>
   );
 }

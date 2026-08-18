@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
 /**
@@ -11,7 +12,7 @@ import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 export function SpaceCards({
   cards,
 }: {
-  cards: { title: string; image?: string }[];
+  cards: { title: string; image?: string; href?: string }[];
 }) {
   return (
     <section className="grid gap-10 px-6 py-10 lg:grid-cols-3 lg:px-10">
@@ -38,6 +39,14 @@ export function SpaceCards({
           <p className="absolute inset-x-0 bottom-10 px-10 text-center text-xl font-medium uppercase tracking-[0.32px] text-white lg:text-[32px]/[38.72px]">
             {card.title}
           </p>
+
+          {card.href && (
+            <Link
+              href={card.href}
+              aria-label={card.title}
+              className="absolute inset-0"
+            />
+          )}
         </div>
       ))}
     </section>
