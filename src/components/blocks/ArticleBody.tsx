@@ -1,17 +1,16 @@
 import Image from "next/image";
 import type { ArticleBlock } from "@/lib/article";
-import { QuoteMarquee } from "@/components/ui/QuoteMarquee";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { QuoteMarks } from "@/components/ui/QuoteMarks";
 
 const SUBTITLE = "text-2xl/8 font-medium text-inherit lg:text-4xl/11";
 const BODY = "text-lg/7 text-inherit lg:text-[30px]/9";
+const QUOTE_LEAD = "text-xl/6 font-medium lg:text-[32px]/[38.72px] lg:tracking-[0.32px]";
+const QUOTE_BODY = "text-base/5 lg:text-2xl/[29px] lg:tracking-[0.24px]";
 
-/** Renders one article block; the marquee and the red band go full-bleed. */
+/** Renders one article block; the quote band goes full-bleed. */
 function Block({ block }: { block: ArticleBlock }) {
   switch (block.kind) {
-    case "marquee":
-      return <QuoteMarquee text={block.text} size={block.size} />;
-
     case "images":
       return (
         <div
@@ -59,16 +58,23 @@ function Block({ block }: { block: ArticleBlock }) {
         </div>
       );
 
-    case "brand":
-      // 200px side padding inside the band, per the mockup
+    case "quote":
+      // 40 of padding all round, a mark at the head and another at the foot of
+      // the copy, and 40 between the marks and the text
       return (
-        <div className="bg-brand px-6 py-12 text-white lg:px-[200px] lg:py-[47px]">
-          {block.subtitle && <h2 className={SUBTITLE}>{block.subtitle}</h2>}
-          {block.body.map((p, i) => (
-            <p key={i} className={`mt-8 ${BODY}`}>
-              {p}
-            </p>
-          ))}
+        <div className="on-dark flex gap-6 bg-brand p-6 text-white lg:gap-10 lg:p-10">
+          <QuoteMarks className="max-lg:h-[52px] max-lg:w-[73px]" />
+          <div className="flex flex-1 flex-col gap-6 lg:flex-row lg:gap-10">
+            <div className="flex flex-1 flex-col gap-6 lg:gap-10">
+              {block.subtitle && <h2 className={QUOTE_LEAD}>{block.subtitle}</h2>}
+              {block.body.map((p, i) => (
+                <p key={i} className={QUOTE_BODY}>
+                  {p}
+                </p>
+              ))}
+            </div>
+            <QuoteMarks className="self-end max-lg:h-[52px] max-lg:w-[73px]" />
+          </div>
         </div>
       );
 
@@ -88,7 +94,7 @@ function Block({ block }: { block: ArticleBlock }) {
 
 export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
   return (
-    <div className="flex flex-col gap-16">
+    <div className="flex flex-col gap-10">
       {blocks.map((block, i) => (
         <Block key={i} block={block} />
       ))}

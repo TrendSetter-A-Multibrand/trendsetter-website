@@ -2,7 +2,7 @@ import { PageCover } from "@/components/blocks/PageCover";
 import { ArticleFilters } from "@/components/blocks/ArticleFilters";
 import { ArticleGrid } from "@/components/blocks/ArticleGrid";
 import { Pagination } from "@/components/ui/Pagination";
-import { byTag, JOURNAL_FILTERS, PLACEHOLDER_ARTICLES } from "@/lib/articles";
+import { byTag, tagsOf, PLACEHOLDER_ARTICLES } from "@/lib/articles";
 
 export default async function JournalPage({
   params,
@@ -14,13 +14,13 @@ export default async function JournalPage({
   const { locale } = await params;
   const { tag } = await searchParams;
 
-  const articles = byTag(
-    PLACEHOLDER_ARTICLES.map((article, i) => ({
-      ...article,
-      href: `/${locale}/journal/article-${i + 1}`,
-    })),
-    tag,
-  );
+  const all = PLACEHOLDER_ARTICLES.map((article, i) => ({
+    ...article,
+    href: `/${locale}/journal/article-${i + 1}`,
+  }));
+  // The chips are the tags the cards on this page carry, not a list of their own
+  const filters = tagsOf(all);
+  const articles = byTag(all, tag);
 
   return (
     <>
@@ -30,7 +30,7 @@ export default async function JournalPage({
         imageSrc="/images/covers/journal.jpg"
       />
       <ArticleFilters
-        filters={JOURNAL_FILTERS}
+        filters={filters}
         locale={locale}
         section="journal"
         activeTag={tag}

@@ -12,8 +12,9 @@ export type ArticleBlock =
       caption?: string;
     }
   | { kind: "images"; images: string[] }
-  | { kind: "marquee"; text: string; size: "sm" | "lg" }
-  | { kind: "brand"; subtitle?: string; body: string[] };
+  /** The red band, quote marks either side of it. The file dropped the two
+      running lines this replaces. */
+  | { kind: "quote"; subtitle?: string; body: string[] };
 
 export type ArticleMeta = {
   section: string;
@@ -24,6 +25,10 @@ export type ArticleMeta = {
   views: number;
   readingMinutes: number;
   heroImage: string;
+  /** The tags shown as chips over the title - the card's own, not a fixed list. */
+  tags: string[];
+  /** What the article invites you to, if it invites you to anything. */
+  event?: { day: string; month: string; time: string; label: string; href: string };
 };
 
 const LOREM =
@@ -41,6 +46,14 @@ export const PLACEHOLDER_ARTICLE: { meta: ArticleMeta; blocks: ArticleBlock[] } 
     views: 715,
     readingMinutes: 5,
     heroImage: "/images/home/journal/1.jpg",
+    tags: ["Мода", "Тренды"],
+    event: {
+      day: "27",
+      month: "июл",
+      time: "18:00",
+      label: "Записаться",
+      href: "#",
+    },
   },
   blocks: [
     {
@@ -50,10 +63,8 @@ export const PLACEHOLDER_ARTICLE: { meta: ArticleMeta; blocks: ArticleBlock[] } 
       image: "/images/home/news/1.jpg",
       caption: "Описание к фото / подпись",
     },
-    { kind: "marquee", text: "Цитата бегущей строкой", size: "sm" },
     { kind: "images", images: ["/images/home/news/2.jpg", "/images/home/news/3.jpg"] },
     { kind: "text", subtitle: SUBTITLE, body: [PARAGRAPH] },
-    { kind: "marquee", text: "Цитата бегущей строкой", size: "lg" },
     {
       kind: "images",
       images: [
@@ -62,6 +73,6 @@ export const PLACEHOLDER_ARTICLE: { meta: ArticleMeta; blocks: ArticleBlock[] } 
         "/images/home/news/1.jpg",
       ],
     },
-    { kind: "brand", subtitle: SUBTITLE, body: [PARAGRAPH, PARAGRAPH] },
+    { kind: "quote", subtitle: SUBTITLE, body: [PARAGRAPH] },
   ],
 };

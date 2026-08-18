@@ -12,18 +12,12 @@ const MENU_LINKS = [
   { label: "Компания", slug: "company" },
 ];
 
-/**
- * The file draws this column two ways; this is the one that carries the offer.
- * It leaves out the FAQ and the cookie policy, both of which are still reachable
- * - the FAQ from the help cards, cookies from the notice at the bottom of the
- * page. The last two have no document behind them yet.
- */
 const LEGAL_LINKS = [
+  { label: "Часто задаваемые вопросы", slug: "faq" },
   { label: "Пользовательское соглашение", slug: "user-agreement" },
-  { label: "Политика обработки персональных данных", slug: "privacy-policy" },
+  { label: "Политика обработки cookie", slug: "cookies" },
   { label: "Согласие на обработку персональных данных", slug: "personal-data-consent" },
-  { label: "Публичная оферта", slug: null },
-  { label: "Доставка, оплата, возврат", slug: null },
+  { label: "Политика обработки персональных данных", slug: "privacy-policy" },
 ];
 
 const CONTACT_EMAIL = "trader@calledagarment.com";
@@ -86,7 +80,7 @@ export function Footer({ locale }: { locale: Locale }) {
           title="Покупателям"
           links={LEGAL_LINKS.map((item) => ({
             label: item.label,
-            href: item.slug ? `/${locale}/${item.slug}` : "#",
+            href: `/${locale}/${item.slug}`,
           }))}
         />
         <FooterColumn

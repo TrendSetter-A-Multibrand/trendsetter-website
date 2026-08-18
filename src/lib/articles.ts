@@ -7,26 +7,6 @@ export type Article = {
   section?: "journal" | "news";
 };
 
-export const JOURNAL_FILTERS = [
-  "Люди",
-  "Обзоры",
-  "Тренды",
-  "Идеи",
-  "Добрые дела",
-  "Вторая жизнь вещей",
-  "Мастерская",
-  "Детская",
-  "Савеловский",
-  "ТЦ Вегас",
-];
-
-export const NEWS_FILTERS = [
-  "Новости компании",
-  "Акции",
-  "Открытие точек",
-  "Мероприятия",
-];
-
 const BASE_ARTICLES: Article[] = [
   {
     tags: ["Красота", "Косметика"],
@@ -128,4 +108,27 @@ export function search(articles: Article[], query: string) {
         article.title.toLowerCase().includes(word.toLowerCase()),
       ),
   );
+}
+
+/**
+ * The chips over a section are the tags its cards actually carry - nothing
+ * invented, nothing left over. First appearance wins the spelling, so whichever
+ * way an editor cased the tag first is the way it is shown.
+ */
+export function tagsOf(articles: Article[]) {
+  const seen: string[] = [];
+  for (const article of articles) {
+    for (const tag of article.tags) {
+      if (!seen.some((own) => sameTag(own, tag))) seen.push(tag);
+    }
+  }
+  return seen;
+}
+
+/** The articles of one section, in the order they were written. */
+export function inSection(
+  articles: Article[],
+  section: NonNullable<Article["section"]>,
+) {
+  return articles.filter((article) => article.section === section);
 }

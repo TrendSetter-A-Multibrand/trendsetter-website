@@ -1,15 +1,19 @@
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
 import type { ArticleMeta } from "@/lib/article";
+import { FilterChip } from "@/components/ui/FilterChip";
+import { tagHref } from "@/lib/articles";
+
+const META_LABEL = "font-mono text-sm/[18px] font-medium uppercase text-ink";
+const META_VALUE = "mt-1 text-xs/[15px] tracking-[1px] text-muted";
 
 type ArticleHeaderProps = {
   locale: Locale;
   meta: ArticleMeta;
-  filters: string[];
 };
 
-/** Title on the left, a 180px meta column pinned to the right content edge. */
-export function ArticleHeader({ locale, meta, filters }: ArticleHeaderProps) {
+/** Title on the left, a 160px meta column pinned to the right content edge. */
+export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
   return (
     <section className="px-6 pt-6 lg:px-10">
       <nav className="flex gap-2 font-mono text-sm tracking-[1px] text-ink">
@@ -20,39 +24,43 @@ export function ArticleHeader({ locale, meta, filters }: ArticleHeaderProps) {
         </Link>
       </nav>
 
-      <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:justify-between">
-        <div className="lg:max-w-[1620px]">
-          <div className="flex flex-wrap gap-[18px]">
-            {/* Same destination a tag under a card has: the section, cut to
-                that tag */}
-            {filters.map((filter) => (
-              <Link
-                key={filter}
-                href={`/${locale}/${meta.sectionHref}?tag=${encodeURIComponent(filter)}`}
-                className="flex h-10 items-center rounded-full border-2 border-black px-4 font-mono text-sm uppercase text-brand"
-              >
-                {filter}
-              </Link>
+      <div className="mt-5 flex flex-col gap-10 lg:flex-row lg:gap-40">
+        <div className="flex flex-1 flex-col gap-10">
+          {/* The article's own tags, not a list of its own - and each one leads
+              where the same tag under a card leads. 8 apart here, not the 16
+              the section pages use. */}
+          <div className="flex flex-wrap gap-2">
+            {meta.tags.map((tag) => (
+              <FilterChip
+                key={tag}
+                label={tag}
+                href={tagHref(locale, meta.sectionHref === "journal" ? "journal" : "news", tag)}
+              />
             ))}
           </div>
 
-          <h1 className="mt-10 font-mono text-3xl uppercase tracking-[3px] text-ink lg:text-[60px] lg:leading-[84px]">
+          <h1 className="font-mono text-3xl uppercase tracking-[3px] text-ink lg:text-[60px]/[80px]">
             {meta.title}
           </h1>
         </div>
 
-        <dl className="shrink-0 font-mono text-sm text-ink lg:w-[180px]">
-          <dt className="tracking-[1px]">АВТОР</dt>
-          <dd className="mt-1 text-ink/70">{meta.author}</dd>
+        {/* 160 wide, and the values are Inter Tight 12 in grey under mono labels */}
+        <dl className="shrink-0 lg:w-40">
+          <dt className={META_LABEL}>Автор</dt>
+          <dd className={META_VALUE}>{meta.author}</dd>
 
-          <dt className="mt-6 tracking-[1px]">ДАТА ПУБЛИКАЦИИ</dt>
-          <dd className="mt-1 text-ink/70">{meta.publishedAt}</dd>
+          <dt className={`mt-4 ${META_LABEL}`}>Дата публикации</dt>
+          <dd className={META_VALUE}>{meta.publishedAt}</dd>
 
-          <dd className="mt-6 flex items-center gap-3 text-ink/70">
-            <EyeIcon />
-            {meta.views}
-            <BookIcon />
-            {meta.readingMinutes} мин
+          <dd className="mt-4 flex items-center gap-4 text-sm/[17px] tracking-[1px] text-muted">
+            <span className="flex items-center gap-1">
+              <EyeIcon />
+              {meta.views}
+            </span>
+            <span className="flex items-center gap-1">
+              <BookIcon />
+              {meta.readingMinutes} мин
+            </span>
           </dd>
         </dl>
       </div>

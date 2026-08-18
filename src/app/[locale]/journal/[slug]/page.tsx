@@ -7,7 +7,8 @@ import { ArticleReactions } from "@/components/blocks/ArticleReactions";
 import { RelatedArticles } from "@/components/blocks/RelatedArticles";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { PLACEHOLDER_ARTICLE } from "@/lib/article";
-import { NEWS_FILTERS, PLACEHOLDER_ARTICLES } from "@/lib/articles";
+import { PLACEHOLDER_ARTICLES } from "@/lib/articles";
+import { ArticleEventCta } from "@/components/blocks/ArticleEventCta";
 
 export default async function ArticlePage({
   params,
@@ -21,7 +22,7 @@ export default async function ArticlePage({
 
   return (
     <>
-      <ArticleHeader locale={locale} meta={meta} filters={NEWS_FILTERS} />
+      <ArticleHeader locale={locale} meta={meta} />
 
       <div className="relative mt-10 h-[940px] w-full overflow-hidden">
         <ImagePlaceholder />
@@ -33,9 +34,11 @@ export default async function ArticlePage({
           sizes="100vw"
           className="object-cover"
         />
+        {meta.event && <ArticleEventCta event={meta.event} />}
       </div>
 
-      <div className="mt-16">
+      {/* The file stacks the blocks 40 apart, and the hero at the same distance */}
+      <div className="mt-10">
         <ArticleBody blocks={blocks} />
       </div>
 

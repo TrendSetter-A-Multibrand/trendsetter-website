@@ -98,11 +98,17 @@ export default async function SearchPage({
       </section>
 
       {matches.length > 0 ? (
-        <Pagination
-          page={page}
-          pageCount={pageCount}
-          hrefFor={(target) => hrefFor(type, target)}
-        />
+        // One page of results has no pager, and the air under the cards was
+        // going with it - the red band was landing on the last line of a title
+        pageCount > 1 ? (
+          <Pagination
+            page={page}
+            pageCount={pageCount}
+            hrefFor={(target) => hrefFor(type, target)}
+          />
+        ) : (
+          <div className="pb-10" />
+        )
       ) : (
         <div className="mt-10 pb-10">
           <RecommendedRow articles={PLACEHOLDER_ARTICLES} locale={locale} />

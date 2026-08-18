@@ -2,7 +2,7 @@ import { PageCover } from "@/components/blocks/PageCover";
 import { ArticleFilters } from "@/components/blocks/ArticleFilters";
 import { ArticleGrid } from "@/components/blocks/ArticleGrid";
 import { Pagination } from "@/components/ui/Pagination";
-import { byTag, NEWS_FILTERS, PLACEHOLDER_ARTICLES } from "@/lib/articles";
+import { byTag, tagsOf, PLACEHOLDER_ARTICLES } from "@/lib/articles";
 
 // Same layout as the journal page - only the cover, the filters and where a
 // tag leads differ. Articles still open under /journal: there is no separate
@@ -17,13 +17,13 @@ export default async function NewsPage({
   const { locale } = await params;
   const { tag } = await searchParams;
 
-  const articles = byTag(
-    PLACEHOLDER_ARTICLES.map((article, i) => ({
-      ...article,
-      href: `/${locale}/journal/article-${i + 1}`,
-    })),
-    tag,
-  );
+  const all = PLACEHOLDER_ARTICLES.map((article, i) => ({
+    ...article,
+    href: `/${locale}/journal/article-${i + 1}`,
+  }));
+  // The chips are the tags the cards on this page carry, not a list of their own
+  const filters = tagsOf(all);
+  const articles = byTag(all, tag);
 
   return (
     <>
@@ -33,7 +33,7 @@ export default async function NewsPage({
         imageSrc="/images/covers/news.jpg"
       />
       <ArticleFilters
-        filters={NEWS_FILTERS}
+        filters={filters}
         locale={locale}
         section="news"
         activeTag={tag}

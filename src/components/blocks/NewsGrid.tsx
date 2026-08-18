@@ -168,7 +168,9 @@ export function NewsGrid({
                   alt=""
                   width={430}
                   height={430}
-                  className="h-full w-full object-cover"
+                  // `relative` only so the photo paints over the placeholder
+                  // underneath it - this is the one card whose image is not `fill`
+                  className="relative h-full w-full object-cover"
                 />
               )}
               <ReadOverlay />
