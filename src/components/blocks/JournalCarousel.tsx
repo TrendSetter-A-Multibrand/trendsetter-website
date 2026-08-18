@@ -1,9 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import { Fragment, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { useCarousel } from "@/lib/useCarousel";
+import { tagHref } from "@/lib/articles";
+import { useLocale } from "@/lib/i18n/useLocale";
 
 type JournalItem = {
   tags: string[];
@@ -55,6 +58,7 @@ export function JournalCarousel({
   heading = "Журнал",
   items = DEFAULT_ITEMS,
 }: JournalCarouselProps) {
+  const locale = useLocale();
   const trackRef = useRef<HTMLDivElement>(null);
   useCarousel(trackRef, { autoplay: true });
 
@@ -95,9 +99,11 @@ export function JournalCarousel({
         className="flex gap-10 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
-          <a
+          // The photo is the click target, so the link is stretched over the
+          // whole card and the tags ride above it. The stack below the tags
+          // lets clicks through to it rather than swallowing them.
+          <div
             key={i}
-            href={item.href ?? "#"}
             className="on-dark group relative aspect-[4/3] w-[85%] shrink-0 overflow-hidden sm:aspect-[900/444] sm:w-[calc(50%-20px)]"
           >
             <ImagePlaceholder />
@@ -109,11 +115,27 @@ export function JournalCarousel({
                 the top and bottom edges and clear through the middle */}
             <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink opacity-80" />
 
-            <p className="absolute left-6 top-6 font-mono text-sm/[18px] font-medium uppercase tracking-[1px] text-white">
-              {item.tags.map((tag) => `[${tag}]`).join(" ")}
+            <Link
+              href={item.href ?? "#"}
+              aria-label={item.title}
+              className="absolute inset-0 z-10"
+            />
+
+            <p className="absolute left-6 top-6 z-20 font-mono text-sm/[18px] font-medium uppercase tracking-[1px] text-white">
+              {item.tags.map((tag, t) => (
+                <Fragment key={tag}>
+                  {t > 0 && " "}
+                  <Link
+                    href={tagHref(locale, "journal", tag)}
+                    className="hover:underline"
+                  >
+                    [{tag}]
+                  </Link>
+                </Fragment>
+              ))}
             </p>
 
-            <div className="absolute inset-x-0 bottom-0 flex flex-col p-6 text-white">
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col p-6 text-white">
               <p className="text-xl/[26px] font-medium sm:text-2xl/[29px]">
                 {item.title}
               </p>
@@ -133,7 +155,7 @@ export function JournalCarousel({
                 </div>
               </div>
             </div>
-          </a>
+          </div>
         ))}
       </div>
     </section>

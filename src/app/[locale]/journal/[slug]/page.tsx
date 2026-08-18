@@ -40,7 +40,7 @@ export default async function ArticlePage({
       </div>
 
       <ArticleReactions articleId={slug} likes={12} dislikes={0} />
-      <RelatedArticles articles={PLACEHOLDER_ARTICLES} />
+      <RelatedArticles articles={PLACEHOLDER_ARTICLES} locale={locale} />
     </>
   );
 }

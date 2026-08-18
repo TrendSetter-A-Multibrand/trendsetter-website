@@ -13,9 +13,11 @@ import { useCarousel } from "@/lib/useCarousel";
 export function RecommendedRow({
   heading = "Рекомендованные материалы",
   articles,
+  locale,
 }: {
   heading?: string;
   articles: Article[];
+  locale: string;
 }) {
   const row = useRef<HTMLDivElement>(null);
   useCarousel(row, { autoplay: true });
@@ -54,7 +56,7 @@ export function RecommendedRow({
             key={i}
             className="w-[280px] shrink-0 snap-start sm:w-[360px] lg:w-[430px]"
           >
-            <ArticleCard article={article} sizes="430px" />
+            <ArticleCard article={article} locale={locale} sizes="430px" />
           </div>
         ))}
       </div>

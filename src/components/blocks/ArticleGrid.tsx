@@ -28,7 +28,13 @@ function toRows(articles: Article[]): Row[] {
   return rows;
 }
 
-export function ArticleGrid({ articles }: { articles: Article[] }) {
+export function ArticleGrid({
+  articles,
+  locale,
+}: {
+  articles: Article[];
+  locale: string;
+}) {
   return (
     <section className="flex flex-col gap-10">
       {toRows(articles).map((row, i) => (
@@ -44,6 +50,7 @@ export function ArticleGrid({ articles }: { articles: Article[] }) {
               <ArticleCard
                 key={`${i}-${j}`}
                 article={article}
+                locale={locale}
                 onBrand={row.onBrand}
                 sizes={
                   row.cols === 3

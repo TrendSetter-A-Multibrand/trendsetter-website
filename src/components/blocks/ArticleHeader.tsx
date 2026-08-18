@@ -23,13 +23,16 @@ export function ArticleHeader({ locale, meta, filters }: ArticleHeaderProps) {
       <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:justify-between">
         <div className="lg:max-w-[1620px]">
           <div className="flex flex-wrap gap-[18px]">
+            {/* Same destination a tag under a card has: the section, cut to
+                that tag */}
             {filters.map((filter) => (
-              <span
+              <Link
                 key={filter}
+                href={`/${locale}/${meta.sectionHref}?tag=${encodeURIComponent(filter)}`}
                 className="flex h-10 items-center rounded-full border-2 border-black px-4 font-mono text-sm uppercase text-brand"
               >
                 {filter}
-              </span>
+              </Link>
             ))}
           </div>
 

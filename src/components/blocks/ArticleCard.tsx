@@ -1,12 +1,15 @@
+import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ReadOverlay } from "@/components/ui/ReadOverlay";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
-import type { Article } from "@/lib/articles";
+import { tagHref, type Article } from "@/lib/articles";
 
 type ArticleCardProps = {
   article: Article;
+  /** Needed for the tag links; every page that shows a card knows it. */
+  locale: string;
   /** Cards on the red band carry white text instead of red tags on dark type. */
   onBrand?: boolean;
   sizes?: string;
@@ -32,15 +35,29 @@ function mark(title: string, query: string) {
 
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+/**
+ * The photo and the title lead to the article, each tag to its own section
+ * filtered down to that tag. Three links rather than one wrapping the lot,
+ * because a link inside a link is not a thing a browser will render. The photo
+ * is hidden from the keyboard so the card is one stop and not two.
+ */
 export function ArticleCard({
   article,
+  locale,
   onBrand,
   sizes,
   highlight,
 }: ArticleCardProps) {
+  const href = article.href ?? "#";
+
   return (
-    <Link href={article.href ?? "#"} className="group flex flex-col">
-      <div className="relative aspect-square overflow-hidden">
+    <div className="group flex flex-col">
+      <Link
+        href={href}
+        tabIndex={-1}
+        aria-hidden="true"
+        className="relative aspect-square overflow-hidden"
+      >
         <ImagePlaceholder />
         {article.image && (
           <Image
@@ -52,23 +69,34 @@ export function ArticleCard({
           />
         )}
         <ReadOverlay />
-      </div>
+      </Link>
 
       <p
         className={`mt-6 font-mono text-sm/[18px] font-medium uppercase tracking-[1px] ${
           onBrand ? "text-white" : "text-brand"
         }`}
       >
-        {article.tags.map((tag) => `[${tag}]`).join(" ")}
+        {article.tags.map((tag, i) => (
+          <Fragment key={tag}>
+            {i > 0 && " "}
+            <Link
+              href={tagHref(locale, article.section, tag)}
+              className="hover:underline"
+            >
+              [{tag}]
+            </Link>
+          </Fragment>
+        ))}
       </p>
 
-      <p
+      <Link
+        href={href}
         className={`mt-4 text-2xl/[29px] font-medium ${
           onBrand ? "text-white" : "text-ink"
         }`}
       >
         {highlight ? mark(article.title, highlight) : article.title}
-      </p>
-    </Link>
+      </Link>
+    </div>
   );
 }

@@ -89,6 +89,7 @@ export default async function SearchPage({
               <ArticleCard
                 key={i}
                 article={article}
+                locale={locale}
                 highlight={query}
                 sizes="(min-width: 1024px) 23vw, (min-width: 640px) 47vw, 92vw"
               />
@@ -105,7 +106,7 @@ export default async function SearchPage({
         />
       ) : (
         <div className="mt-10 pb-10">
-          <RecommendedRow articles={PLACEHOLDER_ARTICLES} />
+          <RecommendedRow articles={PLACEHOLDER_ARTICLES} locale={locale} />
         </div>
       )}
 

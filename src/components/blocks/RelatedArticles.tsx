@@ -5,9 +5,11 @@ import type { Article } from "@/lib/articles";
 export function RelatedArticles({
   heading = "Похожие материалы",
   articles,
+  locale,
 }: {
   heading?: string;
   articles: Article[];
+  locale: string;
 }) {
   return (
     <section className="px-6 py-16 lg:px-10">
@@ -20,6 +22,7 @@ export function RelatedArticles({
           <ArticleCard
             key={i}
             article={article}
+            locale={locale}
             sizes="(min-width: 1024px) 23vw, (min-width: 640px) 47vw, 92vw"
           />
         ))}

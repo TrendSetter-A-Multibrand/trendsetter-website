@@ -77,3 +77,30 @@ export const PLACEHOLDER_ARTICLES: Article[] = Array.from(
     section: i % 2 === 0 ? ("news" as const) : ("journal" as const),
   })
 );
+
+/**
+ * Tags arrive as free text and are written by hand, so compare them the way a
+ * reader would rather than by exact bytes.
+ */
+export function sameTag(a: string, b: string) {
+  const plain = (s: string) => s.trim().toLowerCase().replace(/ё/g, "е");
+  return plain(a) === plain(b);
+}
+
+/** Where a tag under a card leads: its own section, narrowed to that tag. */
+export function tagHref(
+  locale: string,
+  section: Article["section"],
+  tag: string,
+) {
+  const path = section === "journal" ? "journal" : "news";
+  return `/${locale}/${path}?tag=${encodeURIComponent(tag)}`;
+}
+
+/** Everything carrying the tag, or everything at all when none is asked for. */
+export function byTag(articles: Article[], tag?: string) {
+  if (!tag) return articles;
+  return articles.filter((article) =>
+    article.tags.some((own) => sameTag(own, tag)),
+  );
+}
