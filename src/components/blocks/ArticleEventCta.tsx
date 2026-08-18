@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ArticleMeta } from "@/lib/article";
+import type { Event } from "@/lib/events";
 
 /**
  * What an article invites you to, pinned to the right of the hero photo.
@@ -9,11 +9,7 @@ import type { ArticleMeta } from "@/lib/article";
  * length. Here it has one place and keeps it. The date and time are the same
  * 56px plates the event cards on the home page carry.
  */
-export function ArticleEventCta({
-  event,
-}: {
-  event: NonNullable<ArticleMeta["event"]>;
-}) {
+export function ArticleEventCta({ event }: { event: Event }) {
   const [hours, minutes] = event.time.split(":");
 
   return (
@@ -32,11 +28,12 @@ export function ArticleEventCta({
         </Plate>
       </div>
 
+      {/* Only an event asks you to sign up; an ordinary article has no button */}
       <Link
-        href={event.href}
+        href={`#${event.slug}`}
         className="flex h-[49px] items-center justify-center bg-brand px-4 text-sm uppercase tracking-[3px] text-white"
       >
-        {event.label}
+        Записаться
       </Link>
     </div>
   );

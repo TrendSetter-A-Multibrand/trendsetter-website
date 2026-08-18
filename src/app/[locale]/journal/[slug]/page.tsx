@@ -6,7 +6,7 @@ import { ArticleBody } from "@/components/blocks/ArticleBody";
 import { ArticleReactions } from "@/components/blocks/ArticleReactions";
 import { RelatedArticles } from "@/components/blocks/RelatedArticles";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
-import { PLACEHOLDER_ARTICLE } from "@/lib/article";
+import { articleFor } from "@/lib/article";
 import { PLACEHOLDER_ARTICLES } from "@/lib/articles";
 import { ArticleEventCta } from "@/components/blocks/ArticleEventCta";
 
@@ -18,7 +18,7 @@ export default async function ArticlePage({
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
 
-  const { meta, blocks } = PLACEHOLDER_ARTICLE;
+  const { meta, blocks } = articleFor(slug);
 
   return (
     <>

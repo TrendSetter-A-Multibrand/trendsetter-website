@@ -4,81 +4,24 @@ import { useRef } from "react";
 import Image from "next/image";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { useCarousel } from "@/lib/useCarousel";
-
-type EventItem = {
-  day: string;
-  month: string;
-  time: string;
-  title: string;
-  location: string;
-  description?: string;
-  ctaLabel?: string;
-  ctaHref?: string;
-  image?: string;
-};
+import { EVENTS, type Event } from "@/lib/events";
+import { useLocale } from "@/lib/i18n/useLocale";
 
 type EventsCarouselProps = {
   heading?: string;
-  items?: EventItem[];
+  items?: Event[];
 };
 
-const BASE_ITEMS: EventItem[] = [
-  {
-    day: "27",
-    month: "июл",
-    time: "18:00",
-    title: "Мастер-класс",
-    location: 'ТЦ "Атриум"',
-    description: "Мастер-класс по лепке от известного керамиста Юрия Базанова.",
-    ctaLabel: "Подробнее",
-    ctaHref: "#",
-    image: "/images/home/events/1.jpg",
-  },
-  {
-    day: "3",
-    month: "авг",
-    time: "19:00",
-    title: "Встреча книжного клуба",
-    location: "Дубровка",
-    description: "Обсуждаем новинки нон-фикшна вместе с гостями магазина.",
-    ctaLabel: "Подробнее",
-    ctaHref: "#",
-    image: "/images/home/events/2.jpg",
-  },
-  {
-    day: "10",
-    month: "авг",
-    time: "17:30",
-    title: "Показ капсульной коллекции",
-    location: 'ТЦ "Атриум"',
-    description: "Первыми увидите новую капсулу до старта продаж.",
-    ctaLabel: "Подробнее",
-    ctaHref: "#",
-    image: "/images/home/events/3.jpg",
-  },
-  {
-    day: "16",
-    month: "авг",
-    time: "12:00",
-    title: "Воркшоп по стайлингу",
-    location: "Хлебозавод №9",
-    description: "Разбираем базовый гардероб с личным стилистом.",
-    ctaLabel: "Подробнее",
-    ctaHref: "#",
-    image: "/images/home/events/4.jpg",
-  },
-];
-
-const DEFAULT_ITEMS: EventItem[] = Array.from(
+const DEFAULT_ITEMS: Event[] = Array.from(
   { length: 16 },
-  (_, i) => BASE_ITEMS[i % BASE_ITEMS.length]
+  (_, i) => EVENTS[i % EVENTS.length]
 );
 
 /**
  * Rendered twice: at the bottom at rest, at the top between the badges on hover.
  * Geist Mono 500 on a 26 line with 4 between the two of them.
  */
-function EventTitle({ item }: { item: EventItem }) {
+function EventTitle({ item }: { item: Event }) {
   return (
     <div className="flex flex-col gap-1">
       <p className="font-mono text-xl/[26px] font-medium uppercase tracking-[1px]">
@@ -109,6 +52,7 @@ export function EventsCarousel({
   heading = "Ближайшие события",
   items = DEFAULT_ITEMS,
 }: EventsCarouselProps) {
+  const locale = useLocale();
   const trackRef = useRef<HTMLDivElement>(null);
   useCarousel(trackRef, { autoplay: true });
 
@@ -206,7 +150,7 @@ export function EventsCarousel({
               )}
               {item.ctaLabel && (
                 <a
-                  href={item.ctaHref ?? "#"}
+                  href={`/${locale}/journal/${item.slug}`}
                   className="flex h-[49px] items-center justify-center bg-brand text-sm uppercase tracking-[3px]"
                 >
                   {item.ctaLabel}

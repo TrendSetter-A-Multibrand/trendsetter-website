@@ -1,3 +1,5 @@
+import { findEvent, type Event } from "@/lib/events";
+
 /**
  * The article body is a sequence of blocks, which is the shape Storyblok will
  * hand us later. Each variant matches one layout in the mockup.
@@ -27,8 +29,12 @@ export type ArticleMeta = {
   heroImage: string;
   /** The tags shown as chips over the title - the card's own, not a fixed list. */
   tags: string[];
-  /** What the article invites you to, if it invites you to anything. */
-  event?: { day: string; month: string; time: string; label: string; href: string };
+  /**
+   * Set only on an article that is an event. The date, the time and the title
+   * come from the same entry the card in Ближайшие события is drawn from, so
+   * the two cannot disagree - see lib/events.
+   */
+  event?: Event;
 };
 
 const LOREM =
@@ -47,13 +53,6 @@ export const PLACEHOLDER_ARTICLE: { meta: ArticleMeta; blocks: ArticleBlock[] } 
     readingMinutes: 5,
     heroImage: "/images/home/journal/1.jpg",
     tags: ["Мода", "Тренды"],
-    event: {
-      day: "27",
-      month: "июл",
-      time: "18:00",
-      label: "Записаться",
-      href: "#",
-    },
   },
   blocks: [
     {
@@ -76,3 +75,18 @@ export const PLACEHOLDER_ARTICLE: { meta: ArticleMeta; blocks: ArticleBlock[] } 
     { kind: "quote", subtitle: SUBTITLE, body: [PARAGRAPH] },
   ],
 };
+
+/**
+ * The article behind a slug. Everything shares one placeholder body until
+ * Storyblok is wired up; what differs is whether the slug names an event, and
+ * only then does the article carry an invitation to sign up.
+ */
+export function articleFor(slug: string) {
+  const event = findEvent(slug);
+  const { meta, blocks } = PLACEHOLDER_ARTICLE;
+  if (!event) return { meta, blocks };
+  return {
+    meta: { ...meta, title: event.title, event },
+    blocks,
+  };
+}
