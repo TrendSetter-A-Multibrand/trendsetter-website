@@ -104,3 +104,28 @@ export function byTag(articles: Article[], tag?: string) {
     article.tags.some((own) => sameTag(own, tag)),
   );
 }
+
+/**
+ * A query is read as words unless a word is written as a hashtag. `дом` looks
+ * for the word in titles, `#дом` for the tag, and the two can be mixed - every
+ * part has to hold, so adding a word narrows rather than widens.
+ */
+export function parseQuery(query: string) {
+  const tokens = query.trim().split(/\s+/).filter(Boolean);
+  return {
+    tags: tokens.filter((t) => t.startsWith("#")).map((t) => t.slice(1)),
+    words: tokens.filter((t) => !t.startsWith("#")),
+  };
+}
+
+export function search(articles: Article[], query: string) {
+  const { tags, words } = parseQuery(query);
+  if (!tags.length && !words.length) return [];
+  return articles.filter(
+    (article) =>
+      tags.every((tag) => article.tags.some((own) => sameTag(own, tag))) &&
+      words.every((word) =>
+        article.title.toLowerCase().includes(word.toLowerCase()),
+      ),
+  );
+}

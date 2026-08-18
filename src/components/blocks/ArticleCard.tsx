@@ -13,17 +13,17 @@ type ArticleCardProps = {
   /** Cards on the red band carry white text instead of red tags on dark type. */
   onBrand?: boolean;
   sizes?: string;
-  /** Search results pick the matched word out of the title in red. */
-  highlight?: string;
+  /** Search results pick the matched words out of the title in red. */
+  highlight?: string[];
 };
 
-/** Splits the title on the query; the mockup sets the matched part red and up. */
-function mark(title: string, query: string) {
-  const needle = query.trim();
-  if (!needle) return title;
-  const parts = title.split(new RegExp(`(${escape(needle)})`, "gi"));
-  return parts.map((part, i) =>
-    part.toLowerCase() === needle.toLowerCase() ? (
+/** Splits the title on the words searched for; the mockup sets them red and up. */
+function mark(title: string, words: string[]) {
+  const needles = words.map((w) => w.trim()).filter(Boolean);
+  if (!needles.length) return title;
+  const hit = new RegExp(`(${needles.map(escape).join("|")})`, "gi");
+  return title.split(hit).map((part, i) =>
+    needles.some((n) => n.toLowerCase() === part.toLowerCase()) ? (
       <span key={i} className="uppercase text-brand">
         {part}
       </span>
@@ -95,7 +95,7 @@ export function ArticleCard({
           onBrand ? "text-white" : "text-ink"
         }`}
       >
-        {highlight ? mark(article.title, highlight) : article.title}
+        {highlight?.length ? mark(article.title, highlight) : article.title}
       </Link>
     </div>
   );

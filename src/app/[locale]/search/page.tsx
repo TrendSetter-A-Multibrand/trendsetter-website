@@ -5,7 +5,7 @@ import { RecommendedRow } from "@/components/blocks/RecommendedRow";
 import { NewsletterSignup } from "@/components/blocks/NewsletterSignup";
 import { FilterChip } from "@/components/ui/FilterChip";
 import { Pagination } from "@/components/ui/Pagination";
-import { PLACEHOLDER_ARTICLES } from "@/lib/articles";
+import { parseQuery, search, PLACEHOLDER_ARTICLES } from "@/lib/articles";
 
 /**
  * Both halves of the mockup live here: the same head - chips, [РЕЗУЛЬТАТЫ
@@ -37,13 +37,12 @@ export default async function SearchPage({
   const { q = "", type = "all", page: rawPage } = await searchParams;
   const query = q.trim();
 
-  const matches = query
-    ? PLACEHOLDER_ARTICLES.filter(
-        (article) =>
-          article.title.toLowerCase().includes(query.toLowerCase()) &&
-          (type === "all" || article.section === type),
-      )
-    : [];
+  // Words look through titles, #hashtags through tags, and the chips above
+  // narrow whatever comes back to one section
+  const { words } = parseQuery(query);
+  const matches = search(PLACEHOLDER_ARTICLES, query).filter(
+    (article) => type === "all" || article.section === type,
+  );
 
   const pageCount = Math.max(1, Math.ceil(matches.length / PER_PAGE));
   const page = Math.min(Math.max(Number(rawPage) || 1, 1), pageCount);
@@ -90,7 +89,7 @@ export default async function SearchPage({
                 key={i}
                 article={article}
                 locale={locale}
-                highlight={query}
+                highlight={words}
                 sizes="(min-width: 1024px) 23vw, (min-width: 640px) 47vw, 92vw"
               />
             ))}
