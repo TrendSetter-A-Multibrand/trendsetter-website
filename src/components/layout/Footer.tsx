@@ -68,7 +68,7 @@ export function Footer({ locale }: { locale: Locale }) {
     <footer className="on-dark bg-ink pb-10 pt-10 text-white">
       {/* Columns sit at 40 / 221 / 670 / 1119 in the mockup, so their widths are
           the file's, not a regular grid. The tiles close the row at 1880. */}
-      <div className="grid gap-x-10 gap-y-10 px-6 lg:grid-cols-[181px_449px_449px_1fr_auto] lg:gap-x-0 lg:px-10">
+      <div className="grid gap-x-10 gap-y-10 px-6 lg:grid-cols-[181px_449px_449px_minmax(0,1fr)_auto] lg:gap-x-0 lg:px-10">
         <FooterColumn
           title="Меню"
           links={MENU_LINKS.map((item) => ({

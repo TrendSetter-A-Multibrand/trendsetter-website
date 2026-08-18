@@ -25,9 +25,11 @@ export function TeamGrid({ members }: { members: TeamMember[] }) {
             <p className="mt-4 text-base font-medium lg:mt-6 lg:text-2xl/[29px]">
               {member.name}
             </p>
-            {/* One line, as in the mockup: the role is 1px wider than the
-                portrait it sits under and would otherwise break in two */}
-            <p className="mt-2 font-mono text-xs font-medium uppercase text-brand lg:mt-4 lg:whitespace-nowrap lg:text-sm/[18px]">
+            {/* One line, as in the mockup - but only where the mockup's room
+                exists. The role is 1px wider than the 252 portrait it sits
+                under, so at 1920 it just fits and anywhere narrower it was
+                hanging off the side of the page. */}
+            <p className="mt-2 font-mono text-xs font-medium uppercase text-brand lg:mt-4 lg:text-sm/[18px] min-[1900px]:whitespace-nowrap">
               [{member.role}]
             </p>
           </div>

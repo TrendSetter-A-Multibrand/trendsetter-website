@@ -24,7 +24,9 @@ export default async function ArticlePage({
     <>
       <ArticleHeader locale={locale} meta={meta} />
 
-      <div className="relative mt-10 h-[940px] w-full overflow-hidden">
+      {/* 1920x940 in the file. Kept as a ratio rather than a fixed 940, which
+          would be two thirds of a phone screen and most of a laptop's */}
+      <div className="relative mt-10 aspect-[1920/940] w-full overflow-hidden">
         <ImagePlaceholder />
         <Image
           src={meta.heroImage}

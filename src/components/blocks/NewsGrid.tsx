@@ -121,8 +121,8 @@ export function NewsGrid({
     <section className="px-6 pt-10 lg:px-10">
       {/* The heading row carries 20 of its own air top and bottom, and the file
           leaves 24 from there to the cards */}
-      <div className="mb-6 flex items-center gap-10 py-5">
-        <h2 className="whitespace-nowrap font-mono text-2xl/[31.2px] uppercase tracking-[3px]">
+      <div className="mb-6 flex flex-col gap-4 py-5 lg:flex-row lg:items-center lg:gap-10">
+        <h2 className="font-mono text-xl/[26px] uppercase tracking-[3px] lg:whitespace-nowrap lg:text-2xl/[31.2px]">
           [{heading}]
         </h2>
         {/* The bar runs from the heading to the right margin: a 2px rule with a

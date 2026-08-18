@@ -71,7 +71,7 @@ export function JournalCarousel({
   return (
     <section className="px-6 pt-10 lg:px-10">
       <div className="mb-6 flex items-center justify-between pb-5">
-        <h2 className="whitespace-nowrap font-mono text-2xl/[31.2px] uppercase tracking-[3px]">
+        <h2 className="min-w-0 font-mono text-xl/[26px] uppercase tracking-[3px] lg:whitespace-nowrap lg:text-2xl/[31.2px]">
           [{heading}]
         </h2>
         <div className="flex gap-[44px]">
