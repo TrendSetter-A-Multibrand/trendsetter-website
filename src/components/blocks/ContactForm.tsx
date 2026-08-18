@@ -8,7 +8,7 @@ type ContactFormProps = {
   locale?: string;
   heading?: string;
   placeholder?: string;
-  /** No list in the mockup yet - one option stands in until the client names them. */
+  /** The list the file opens the dropdown with on О нас. */
   subjects?: string[];
   imageSrc?: string;
 };
@@ -23,7 +23,14 @@ export function ContactForm({
   locale = "ru_ru",
   heading = "Свяжитесь с нами",
   placeholder = "Задайте вопрос или напишите ваши пожелания и предложения",
-  subjects = ["Тема обращения"],
+  subjects = [
+    "О нас",
+    "Пространство",
+    "Сотрудничество",
+    "Вакансии",
+    "Контакты",
+    "Обратная связь",
+  ],
   imageSrc = "/images/home/smile.svg",
 }: ContactFormProps) {
   const [sent, setSent] = useState(false);
@@ -68,9 +75,9 @@ export function ContactForm({
               }}
             >
               <option value="" disabled>
-                {subjects[0]}
+                Тема обращения
               </option>
-              {subjects.slice(1).map((subject) => (
+              {subjects.map((subject) => (
                 <option key={subject} value={subject}>
                   {subject}
                 </option>

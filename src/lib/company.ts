@@ -17,7 +17,8 @@ export const ABOUT_FEATURE = {
   caption: "Описание к фото / подпись",
 };
 
-export const ABOUT_QUOTE = "Цитата бегущей строкой";
+export const ABOUT_MISSION =
+  "Since 2023, we have been successfully selling products from global brands on Wildberries through exclusive supply channels. In 2025, we expanded offline and opened our first store in the heart of Yerevan, and in 2026 we are opening two more stores in Moscow.";
 
 const HISTORY =
   "Since 2023, we have been successfully selling products from global brands on Wildberries through exclusive supply channels. In 2025, we expanded offline and opened our first store in the heart of Yerevan, and in 2026 we are opening two more stores in Moscow.";

@@ -1,6 +1,6 @@
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PageCover } from "@/components/blocks/PageCover";
-import { QuoteMarquee } from "@/components/ui/QuoteMarquee";
+import { MissionBand } from "@/components/blocks/MissionBand";
 import { TextWithPhoto } from "@/components/blocks/TextWithPhoto";
 import { PhotoCards } from "@/components/blocks/PhotoCards";
 import { TextBanner } from "@/components/blocks/TextBanner";
@@ -11,7 +11,7 @@ import {
   ABOUT_CARDS,
   ABOUT_FEATURE,
   ABOUT_INTRO,
-  ABOUT_QUOTE,
+  ABOUT_MISSION,
   TEAM,
 } from "@/lib/company";
 
@@ -47,7 +47,7 @@ export default async function AboutPage({
       </div>
 
       <div className="mt-10">
-        <QuoteMarquee text={ABOUT_QUOTE} />
+        <MissionBand body={ABOUT_MISSION} />
       </div>
 
       <div className="mt-10">
