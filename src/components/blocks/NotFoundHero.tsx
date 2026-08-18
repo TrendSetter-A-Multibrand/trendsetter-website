@@ -116,9 +116,20 @@ export function NotFoundHero({
         ref={board}
         onPointerMove={shy}
         onPointerLeave={settle}
-        className="relative aspect-[1920/952] w-full"
+        // The whole composition is percentages of a 1920x952 board, so it
+        // shrinks with the board - and on a phone that left the balloons the
+        // size of a thumbnail, with the heading landing on top of them. The
+        // board is drawn wider than the screen there and centred instead; the
+        // section clips the empty margins, and the balloons sit in the middle
+        // 40% of it, well inside what stays visible. `shrink-0` because a flex
+        // item is otherwise pulled straight back to the width of its container.
+        className="@container relative aspect-[1920/952] w-[200%] shrink-0 sm:w-[150%] lg:w-full"
       >
-        <h1 className="absolute inset-x-0 top-[21.5%] text-center font-mono text-xl uppercase tracking-[5px] text-ink lg:text-[36px]">
+        {/* Sized off the board rather than the screen, like everything else
+            here: 36 on the file's 1840 is 1.96% of it, so the line keeps its
+            place above the balloons instead of landing on them when the board
+            is drawn wider than the screen */}
+        <h1 className="absolute inset-x-0 top-[21.5%] text-center font-mono text-[1.96cqw] uppercase tracking-[0.14em] text-ink">
           [{heading}]
         </h1>
 
