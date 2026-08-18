@@ -40,3 +40,17 @@ export const TEAM: TeamMember[] = Array.from({ length: 12 }, () => ({
   name: "Иван Иванов",
   role: "Руководитель отдела приколов",
 }));
+
+export const SPACE_INTRO =
+  "TRENDSETTER — международный fashion-стартап, развивающий мультибрендовый магазин одежды, обуви и аксессуаров. В нашем ассортименте представлены популярные мировые бренды, в том числе H&M, Reserved, Sinsay, House и другие.";
+
+/** Three of the same name in the file - real ones to come from the client. */
+export const SPACE_CARDS = [
+  { title: "Гончарная мастерская", image: "/images/home/journal/1.jpg" },
+  { title: "Гончарная мастерская", image: "/images/home/journal/2.jpg" },
+  { title: "Гончарная мастерская", image: "/images/home/news/1.jpg" },
+];
+
+/** Вакансии is still a draft in the file - every heading on it reads «Наша миссия». */
+export const CAREERS_INTRO = { title: "Наша миссия", body: MISSION };
+export const CAREERS_CARDS = ABOUT_CARDS;
