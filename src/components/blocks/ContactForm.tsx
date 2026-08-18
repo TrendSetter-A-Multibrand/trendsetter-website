@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -39,6 +39,14 @@ export function ContactForm({
     e.preventDefault();
     setSent(true);
   }
+
+  useEffect(() => {
+    if (!sent) return;
+    // demo timing only, same as the newsletter band - the real wait comes back
+    // with whatever actually sends the message
+    const timeout = setTimeout(() => setSent(false), 10000);
+    return () => clearTimeout(timeout);
+  }, [sent]);
 
   return (
     <section className="on-dark relative overflow-hidden bg-brand px-6 pb-10 pt-[46px] text-white lg:px-10">
@@ -103,11 +111,21 @@ export function ContactForm({
         </form>
       </div>
 
-      {/* 575 across in the mockup, running off the top of the band, and turned
-          0.1804 of a radian off square - the file tilts it rather than setting
-          it upright */}
-      <div className="pointer-events-none absolute -top-[43px] right-6 hidden -rotate-[10.33deg] lg:right-[58px] lg:block">
-        <Image src={imageSrc} alt="" width={575} height={575} />
+      {/* 575 across in the mockup, running off the top of the band. The file
+          turns it 0.1804 of a radian off square - ten degrees and a third, and
+          the third is below anything an eye can catch, so it shares the round
+          number the newsletter smiley rests at. That tilt is where it comes back
+          to after rolling out of the band on send. */}
+      <div className="pointer-events-none absolute -top-[43px] right-6 hidden lg:right-[58px] lg:block">
+        <div
+          className={`transition-transform duration-700 ease-in ${
+            sent
+              ? "translate-x-[100vw] rotate-[890deg]"
+              : "-rotate-[10deg] translate-x-0"
+          }`}
+        >
+          <Image src={imageSrc} alt="" width={575} height={575} />
+        </div>
       </div>
     </section>
   );

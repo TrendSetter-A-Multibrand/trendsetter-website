@@ -3,6 +3,8 @@
 import { useEffect, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { NoticeModal } from "@/components/ui/NoticeModal";
+import { isSubscribed, remember } from "@/lib/subscribers";
 
 type NewsletterSignupProps = {
   locale?: string;
@@ -58,11 +60,22 @@ export function NewsletterSignup({
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  /** The address someone tried to sign up twice, held for the notice */
+  const [duplicate, setDuplicate] = useState<string | null>(null);
   const isValid = EMAIL_PATTERN.test(email);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!isValid) return;
+
+    // Signing the same address up again would look like it worked and quietly
+    // do nothing, so say so instead
+    if (isSubscribed(email)) {
+      setDuplicate(email.trim());
+      return;
+    }
+
+    remember(email);
     setSubmitted(true);
     setEmail("");
   }
@@ -130,6 +143,19 @@ export function NewsletterSignup({
           <Image src={imageSrc} alt="" fill className="object-contain" />
         </div>
       </div>
+
+      {duplicate && (
+        <NoticeModal
+          title="Вы уже подписаны"
+          onClose={() => setDuplicate(null)}
+        >
+          <p>
+            На адрес <span className="font-medium">{duplicate}</span> подписка
+            уже оформлена. Если письма не приходят, загляните в папки
+            «Промоакции» и «Спам».
+          </p>
+        </NoticeModal>
+      )}
     </section>
   );
 }
