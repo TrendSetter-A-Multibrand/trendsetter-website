@@ -11,7 +11,7 @@ type HelpCard = {
   icon: "support" | "phone" | "faq";
 };
 
-const DEFAULT_CARDS: HelpCard[] = [
+const defaultCards = (locale: string): HelpCard[] => [
   {
     title: "Обратная связь",
     text: "Новодмитровская 1 стр. 13. Пространство «Хлебозавод №9»",
@@ -27,15 +27,23 @@ const DEFAULT_CARDS: HelpCard[] = [
   {
     title: "FAQs",
     text: "Новодмитровская 1 стр. 13. Пространство «Хлебозавод №9»",
-    href: "#",
+    href: `/${locale}/faq`,
     icon: "faq",
   },
 ];
 
-export function HelpCards({ cards = DEFAULT_CARDS }: { cards?: HelpCard[] }) {
+export function HelpCards({
+  locale,
+  cards,
+}: {
+  locale: string;
+  cards?: HelpCard[];
+}) {
+  const items = cards ?? defaultCards(locale);
+
   return (
     <section className="grid gap-6 px-6 lg:grid-cols-3 lg:gap-10 lg:px-10">
-      {cards.map((card) => (
+      {items.map((card) => (
         <div
           key={card.title}
           className="flex items-center gap-4 bg-ink/6 p-6 lg:h-[187px] lg:gap-0 lg:p-0"

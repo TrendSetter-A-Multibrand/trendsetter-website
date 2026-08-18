@@ -63,7 +63,7 @@ export default async function AboutPage({
       </div>
 
       <div className="mt-20">
-        <HelpCards />
+        <HelpCards locale={locale} />
       </div>
     </div>
   );

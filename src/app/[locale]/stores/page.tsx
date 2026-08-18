@@ -18,7 +18,7 @@ export default async function StoresPage({
         <StoreLocator />
       </div>
       <div className="mt-10">
-        <HelpCards />
+        <HelpCards locale={locale} />
       </div>
     </div>
   );
