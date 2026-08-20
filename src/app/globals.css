@@ -163,3 +163,20 @@ body {
     column-gap: 0;
   }
 }
+
+/* The API leaves `cursor: auto` on every layer it builds - the hand you see on
+   Яндекс Карты themselves is their own styling, not something the map brings
+   with it. Set on our container rather than on their class names, which are
+   theirs to rename; cursor inherits, so it reaches the canvas underneath. */
+.ts-map {
+  cursor: grab;
+}
+
+.ts-map:active {
+  cursor: grabbing;
+}
+
+/* The plate is not a link, so it should not look grabbable either */
+.ts-pin {
+  cursor: default;
+}

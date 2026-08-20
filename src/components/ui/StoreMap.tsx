@@ -77,7 +77,7 @@ export function StoreMap({
       {/* Sits underneath: covered by the map once it draws, and left showing if
           it never does */}
       <ImagePlaceholder />
-      {!failed && <div ref={host} className="absolute inset-0" />}
+      {!failed && <div ref={host} className="ts-map absolute inset-0" />}
     </div>
   );
 }
