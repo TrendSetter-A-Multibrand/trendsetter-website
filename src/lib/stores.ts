@@ -21,43 +21,31 @@ const FILLER = {
   phone: "8 926 794 97 42",
   brandCount: "50 шт.",
   assortment: "Мужской 30%   Женский 70%",
-  directions: Array.from(
-    { length: 4 },
-    () => "Идете на второй этаж потом направо потом налево",
-  ),
 };
 
-/**
- * Three shops, named as the team named them. Everything except the name and the
- * point on the map is still placeholder copy.
- *
- * The coordinates put the pin on the shopping centre, not on the shop inside
- * it, and only Мозаика's are exact - the other two are read off the address and
- * land within a block or so. All three want replacing with the real thing,
- * which is a minute's work: find the door in Яндекс Картах, right-click, «Что
- * здесь?», and copy the pair - remembering that the site wants them the other
- * way round, longitude first.
- */
 export const STORES: Store[] = [
   {
-    name: "Авеню Север",
-    address: "Дмитровское шоссе, 9",
+    name: "Avenue Sever",
+    address: "Коровинское шоссе, 2",
+    directions: ["2 этаж"],
     image: "/images/home/stores/1.jpg",
-    coords: [37.582, 55.8085], // приблизительно, по адресу
+    coords: [37.544638, 55.866713],
     ...FILLER,
   },
   {
     name: "ТРЦ Мозаика",
     address: "7-я Кожуховская улица, 9",
+    directions: ["1 этаж"],
     image: "/images/home/stores/2.jpg",
-    coords: [37.675109, 55.710692], // точные
+    coords: [37.675109, 55.710692],
     ...FILLER,
   },
   {
-    name: "Вегас Каширка",
-    address: "24-й километр МКАД",
+    name: "ТРЦ Vegas",
+    address: "МКАД, 24-й километр, владение 1",
+    directions: ["1 этаж"],
     image: "/images/home/stores/3.jpg",
-    coords: [37.737, 55.592], // приблизительно, по адресу
+    coords: [37.723202, 55.585051],
     ...FILLER,
   },
 ];
