@@ -4,6 +4,8 @@ import { useState } from "react";
 import Image from "next/image";
 import { STORES, type Store } from "@/lib/stores";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { StoreMap } from "@/components/ui/StoreMap";
+import { StoreRouteModal } from "@/components/blocks/StoreRouteModal";
 
 type StoreLocatorProps = {
   heading?: string;
@@ -18,6 +20,8 @@ type StoreLocatorProps = {
  */
 export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
   const [selected, setSelected] = useState(0);
+  /** Which shop the route sheet is open for, if any. */
+  const [routeFor, setRouteFor] = useState<Store | null>(null);
   const active = stores[selected];
 
   return (
@@ -93,26 +97,25 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
               ))}
             </div>
 
-            <a
-              href={active.directionsHref ?? "#"}
-              className="mt-10 flex h-[49px] w-full items-center justify-center border-2 border-ink text-sm uppercase tracking-[3px] lg:mt-auto"
+            <button
+              type="button"
+              onClick={() => setRouteFor(active)}
+              className="mt-10 flex h-[49px] w-full items-center justify-center border-2 border-ink text-sm uppercase tracking-[3px] transition-colors hover:bg-surface-active lg:mt-auto"
             >
               Построить маршрут
-            </a>
+            </button>
           </div>
 
-          <div className="relative min-h-64">
-            <ImagePlaceholder />
-            <Image
-              src={active.map}
-              alt=""
-              fill
-              sizes="712px"
-              className="object-cover"
-            />
-          </div>
+          <StoreMap
+            center={active.coords}
+            className="min-h-64 overflow-hidden"
+          />
         </div>
       </div>
+
+      {routeFor && (
+        <StoreRouteModal store={routeFor} onClose={() => setRouteFor(null)} />
+      )}
     </section>
   );
 }

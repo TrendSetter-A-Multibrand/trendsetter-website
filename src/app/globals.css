@@ -104,3 +104,35 @@ body {
   font-family: var(--font-inter-tight), Arial, Helvetica, sans-serif;
 }
 
+/* The plate that marks a shop on the map. Written as plain CSS rather than
+   utility classes because the element is built by hand and handed to the maps
+   API, where Tailwind never sees it to generate anything.
+   Shape is the one the file's own markers use: a plate with a tail hanging off
+   its bottom left corner, so the corner - not the middle - is the actual point.
+   The translate puts that corner on the coordinate. */
+.ts-pin {
+  position: absolute;
+  transform: translate(0, -100%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 12px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  filter: drop-shadow(0 2px 5px rgb(0 0 0 / 0.35));
+}
+
+.ts-pin::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 100%;
+  border-left: 11px solid var(--ink);
+  border-bottom: 11px solid transparent;
+}
