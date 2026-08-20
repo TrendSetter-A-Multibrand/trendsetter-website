@@ -75,7 +75,10 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
           ))}
         </div>
 
-        <div className="grid bg-surface sm:grid-cols-[minmax(0,1fr)_240px] wide:grid-cols-[429px_minmax(0,1fr)] wide:gap-10">
+        {/* 429 of text beside the map at the file's own width, stacked under it
+            below that. No smaller breakpoint here on purpose: paired with one,
+            `wide:` loses - see the note in globals.css. */}
+        <div className="grid bg-surface wide:grid-cols-[429px_minmax(0,1fr)] wide:gap-10">
           <div className="flex flex-col p-6">
             <p className="text-lg font-bold lg:text-xl/[30px]">{active.name}</p>
 
@@ -106,9 +109,11 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
             </button>
           </div>
 
+          {/* Stacked it has no height of its own; beside the text it stretches
+              to the row and the minimum stops mattering */}
           <StoreMap
             center={active.coords}
-            className="min-h-64 overflow-hidden"
+            className="min-h-[320px] overflow-hidden"
           />
         </div>
       </div>

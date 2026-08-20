@@ -13,12 +13,6 @@
 }
 
 @theme inline {
-  /* Tailwind's lg is 1024, and the file is drawn at 1920. Anything whose
-     measurements come straight off the mockup - the footer's column widths, the
-     shop list beside its panel, the smiley overflowing a red band - needs a
-     breakpoint that means "there is room for the file's own layout" rather than
-     "this is not a phone". 1440 is where those all fit. */
-  --breakpoint-wide: 1440px;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-brand: var(--brand);
@@ -32,6 +26,27 @@
   --animate-marquee: marquee 24s linear infinite;
   --animate-topbar-in: topbar-in 0.4s cubic-bezier(0, 0, 0.8, 1);
   --animate-float: float 4s ease-in-out infinite alternate;
+}
+
+/* Tailwind's lg is 1024 and the file is drawn at 1920, so anything measured off
+   the mockup - the shop list beside its panel, a smiley overflowing a red band -
+   needs a breakpoint meaning "there is room for the file's own layout" rather
+   than "this is not a phone".
+
+   1700, not 1440: the file's tracks are fixed pixels and they add up. The footer
+   spends 1343 on its four fixed columns and the address needs about 250 more;
+   the shop panel spends 619 on the list, 429 on the text and wants 400 left for
+   the map. Both land near 1670, so below 1700 the fixed layout squeezes - at
+   1440 the address column came out 2px wide and the map 217.
+
+   CAREFUL: Tailwind emits this breakpoint's media query BEFORE its own, whatever
+   order we declare it in - measured output runs 64rem, 1440px, 1900px, 40rem,
+   64rem, 80rem. Equal specificity means the later rule wins, so a `wide:` class
+   loses to any built-in breakpoint class setting the same property. Never pair
+   them; where the file's layout has to beat a smaller breakpoint, write it as a
+   plain rule at the foot of this file instead, which lands after every utility. */
+@theme {
+  --breakpoint-wide: 1700px;
 }
 
 @keyframes marquee {
@@ -135,4 +150,16 @@ body {
   top: 100%;
   border-left: 11px solid var(--ink);
   border-bottom: 11px solid transparent;
+}
+
+/* The footer's columns, straight off the file: 181 / 449 / 449, the address
+   taking what is left, and the social tiles closing the row at 1880.
+   Written as a plain rule rather than a `wide:` utility because it has to beat
+   xl:grid-cols-4, and a `wide:` class cannot - see the note by the breakpoint.
+   Everything in this file is emitted after the utilities, so this one holds. */
+@media (min-width: 1700px) {
+  .footer-columns {
+    grid-template-columns: 181px 449px 449px minmax(0, 1fr) auto;
+    column-gap: 0;
+  }
 }

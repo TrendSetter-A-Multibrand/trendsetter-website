@@ -41,19 +41,23 @@ export function HelpCards({
 }) {
   const items = cards ?? defaultCards(locale);
 
+  // Three across only from 1280. The card's own furniture is fixed - a 194 icon
+  // column and a 180 button - so it needs about 374 to itself, and three of
+  // those plus the gaps do not fit in 1024: at that width the third card hung
+  // 51px off the page.
   return (
-    <section className="grid gap-6 px-6 lg:grid-cols-3 lg:gap-10 lg:px-10">
+    <section className="grid gap-6 px-6 lg:px-10 xl:grid-cols-3 xl:gap-10">
       {items.map((card) => (
         <div
           key={card.title}
-          className="flex items-center gap-4 bg-ink/6 p-6 lg:h-[187px] lg:gap-0 lg:p-0"
+          className="flex items-center gap-4 bg-ink/6 p-6 xl:h-[187px] xl:gap-0 xl:p-0"
         >
-          <div className="flex shrink-0 justify-center text-brand lg:w-[194px]">
+          <div className="flex shrink-0 justify-center text-brand xl:w-[194px]">
             <Icon name={card.icon} />
           </div>
           {/* 21 from the top in the mockup rather than centred - the icon is
               what sits on the card's middle */}
-          <div className="flex flex-col lg:self-start lg:pt-[21px]">
+          <div className="flex flex-col xl:self-start xl:pt-[21px]">
             <p className="text-base font-semibold lg:text-xl/6">{card.title}</p>
             <p className="mt-3 text-sm lg:mt-3.5 lg:text-base/5">{card.text}</p>
             <a
