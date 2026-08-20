@@ -122,23 +122,27 @@ body {
 /* The plate that marks a shop on the map. Written as plain CSS rather than
    utility classes because the element is built by hand and handed to the maps
    API, where Tailwind never sees it to generate anything.
-   Shape is the one the file's own markers use: a plate with a tail hanging off
-   its bottom left corner, so the corner - not the middle - is the actual point.
-   The translate puts that corner on the coordinate. */
+
+   Brand red with the name spelled out, small and widely tracked so a word that
+   long still reads as a marker rather than a banner. The tail hangs off the
+   bottom left corner, and the whole plate is lifted by its own height plus the
+   tail so that the tail's tip - not the corner above it - lands on the
+   coordinate, which is where a reader looks for the spot. */
 .ts-pin {
+  --ts-pin-tail: 11px;
   position: absolute;
-  transform: translate(0, -100%);
+  transform: translate(0, calc(-100% - var(--ts-pin-tail)));
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 11px 12px;
-  background: var(--ink);
+  padding: 10px 13px;
+  background: var(--brand);
   color: #fff;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 19px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 1;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.16em;
   white-space: nowrap;
   filter: drop-shadow(0 2px 5px rgb(0 0 0 / 0.35));
 }
@@ -148,8 +152,8 @@ body {
   position: absolute;
   left: 0;
   top: 100%;
-  border-left: 11px solid var(--ink);
-  border-bottom: 11px solid transparent;
+  border-left: var(--ts-pin-tail) solid var(--brand);
+  border-bottom: var(--ts-pin-tail) solid transparent;
 }
 
 /* The footer's columns, straight off the file: 181 / 449 / 449, the address

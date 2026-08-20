@@ -16,8 +16,8 @@ type StoreMapProps = {
 /**
  * One shop on a Yandex map, with our own plate rather than the stock pin.
  *
- * The marker is an ordinary DOM element handed to the API, so it is our mono,
- * our black and our brackets - the same [TS] the site sets its headings in.
+ * The marker is an ordinary DOM element handed to the API, so it is our mono
+ * and our red, with the name spelled out rather than a stock pin.
  *
  * While the API is loading, and if it never arrives, the grey smiley stays put:
  * a missing key or a blocked script leaves a placeholder, not a hole.
@@ -25,7 +25,7 @@ type StoreMapProps = {
 export function StoreMap({
   center,
   zoom = 16,
-  label = "[TS]",
+  label = "TRENDSETTER",
   className = "",
 }: StoreMapProps) {
   const host = useRef<HTMLDivElement>(null);
