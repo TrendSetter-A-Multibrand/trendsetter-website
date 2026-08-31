@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Image from "next/image";
 import type { Brand } from "@/lib/brands";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { Marker } from "@/components/ui/Marker";
 
 /** 1214x819 sheet centred over a dimmed page, 40 of padding all round. */
 export function BrandModal({
@@ -78,12 +79,7 @@ export function BrandModal({
         <ul className="mt-4 flex flex-col gap-[11px] lg:mt-[22px]">
           {brand.stores.map((store) => (
             <li key={store.name} className="flex items-center gap-4 lg:text-xl/6">
-              <span
-                aria-hidden="true"
-                className={`h-[18px] w-[18px] shrink-0 rounded-full ${
-                  store.available ? "bg-[#71CC98]" : "bg-brand"
-                }`}
-              />
+              <Marker tone={store.available ? "green" : "red"} />
               {store.name}
             </li>
           ))}

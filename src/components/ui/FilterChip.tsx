@@ -9,7 +9,7 @@ const CHIP =
   "flex h-[42px] items-center rounded-full border-2 px-[14px] font-mono text-sm/[18px] font-medium uppercase transition-colors";
 
 const tone = (active: boolean) =>
-  active ? "border-brand bg-brand text-white" : "border-black text-brand";
+  active ? "border-brand bg-brand text-white" : "border-ink text-brand";
 
 export function FilterChip({
   label,
