@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FilterChip } from "@/components/ui/FilterChip";
+import { Drop } from "@/components/ui/Drop";
 import type { FaqGroup } from "@/lib/legal";
 
 const groupId = (i: number) => `faq-group-${i}`;
@@ -50,50 +51,23 @@ export function FaqAccordion({ groups }: { groups: FaqGroup[] }) {
 
           {group.items.map((item, j) => {
             const key = `${i}-${j}`;
-            const isOpen = open === key;
             return (
-              <div key={key}>
-                <button
-                  type="button"
-                  onClick={() => setOpen(isOpen ? null : key)}
-                  aria-expanded={isOpen}
-                  className={`flex w-full items-center justify-between gap-6 pt-[38px] text-left ${
-                    isOpen ? "pb-[30px]" : "pb-[38px]"
-                  }`}
-                >
+              <Drop
+                key={key}
+                open={open === key}
+                onToggle={() => setOpen(open === key ? null : key)}
+                title={
                   <span className="text-lg/6 uppercase lg:text-2xl/6">
                     {item.question}
                   </span>
-                  <Toggle open={isOpen} />
-                </button>
-
-                {isOpen && (
-                  <p className="pb-8 text-base/6 lg:text-xl/6">{item.answer}</p>
-                )}
-
-                <div className="h-px bg-ink/15" />
-              </div>
+                }
+              >
+                <p className="text-base/6 lg:text-xl/6">{item.answer}</p>
+              </Drop>
             );
           })}
         </section>
       ))}
     </div>
-  );
-}
-
-/** 22 square, 2px strokes; the upright of the plus goes when the row opens. */
-function Toggle({ open }: { open: boolean }) {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 22 22"
-      fill="none"
-      aria-hidden="true"
-      className="shrink-0"
-    >
-      <path d="M0 11h22" stroke="currentColor" strokeWidth="2" />
-      {!open && <path d="M11 0v22" stroke="currentColor" strokeWidth="2" />}
-    </svg>
   );
 }
