@@ -61,8 +61,9 @@ export function Hero({
         </div>
       </div>
 
-      {/* LINEAR_DODGE in the mockup - lets the photo read through the letters */}
-      <h1 className="relative w-full px-6 pb-10 mix-blend-plus-lighter lg:px-10">
+      {/* LINEAR_DODGE in the mockup - lets the photo read through the letters.
+          24 of air all round it, which is what makes the wordmark 1872 at 1920 */}
+      <h1 className="relative w-full px-6 pb-6 mix-blend-plus-lighter">
         <Wordmark className="text-brand" />
       </h1>
     </section>

@@ -28,12 +28,13 @@ function NavEntry({ locale, item }: { locale: Locale; item: NavItem }) {
       className="group relative flex h-full items-center"
       onMouseLeave={() => setDismissed(false)}
     >
-      {/* Brackets are drawn outside the label so hovering never reflows the nav */}
+      {/* Brackets are drawn outside the label so hovering never reflows the nav.
+          The file leaves 2 between bracket and word, and a bracket is 9 wide. */}
       <Link
         href={href}
         aria-current={current ? "page" : undefined}
         onClick={() => setDismissed(true)}
-        className={`relative transition-colors before:absolute before:-left-2.5 before:transition-opacity before:content-['['] after:absolute after:-right-2.5 after:transition-opacity after:content-[']'] group-hover:text-brand group-hover:before:opacity-100 group-hover:after:opacity-100 ${
+        className={`relative transition-colors before:absolute before:-left-[11px] before:transition-opacity before:content-['['] after:absolute after:-right-[11px] after:transition-opacity after:content-[']'] group-hover:text-brand group-hover:before:opacity-100 group-hover:after:opacity-100 ${
           current
             ? "text-brand before:opacity-100 after:opacity-100"
             : "before:opacity-0 after:opacity-0"
@@ -67,16 +68,16 @@ export function Header({ locale }: { locale: Locale }) {
 
       {/* 757 of links, plus a 273 logo and the icons - it does not fit until
           1280, and under that the burger carries the whole menu */}
-      <nav className="hidden h-full items-center gap-10 font-mono text-sm uppercase tracking-[1px] xl:flex">
+      <nav className="hidden h-full items-center gap-10 font-mono text-sm font-medium uppercase tracking-[1px] xl:flex">
         {NAV_ITEMS.map((item) => (
           <NavEntry key={item.slug} locale={locale} item={item} />
         ))}
       </nav>
 
-      {/* 88px across closed, 384 with the field out: two 24px icons 40 apart,
-          and a 320 field whose rule runs under the magnifier as well. The gap
-          lives on the burger rather than on the row, so the closed field - a
-          flex item of no width - does not add one of its own. */}
+      {/* 92 across closed, 384 with the field out: two 24px icons 44 apart, and
+          a 320 field whose rule runs under the magnifier as well. The gap lives
+          on the burger rather than on the row, so the closed field - a flex item
+          of no width - does not add one of its own. */}
       <div className="flex shrink-0 items-center">
         <Suspense fallback={<div className="h-12 w-6" />}>
           <HeaderSearch locale={locale} />
@@ -90,7 +91,7 @@ export function Header({ locale }: { locale: Locale }) {
           type="button"
           aria-label="Меню"
           onClick={() => setMenuOpen(true)}
-          className="ml-6 min-[1921px]:hidden lg:ml-10"
+          className="ml-6 min-[1921px]:hidden lg:ml-11"
         >
           <MenuIcon />
         </button>

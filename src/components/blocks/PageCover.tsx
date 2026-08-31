@@ -45,12 +45,16 @@ export function PageCover({
       {/* Blended, not solid: the same LINEAR_DODGE the wordmark over the home
           photo uses, so the picture reads through the letters. Every section
           title in the file is drawn this way. */}
-      <h1 className="relative font-mono text-5xl uppercase tracking-[5px] text-brand mix-blend-plus-lighter lg:text-[96px]">
+      <h1 className="relative font-mono text-5xl uppercase tracking-[5px] text-brand mix-blend-plus-lighter lg:text-[96px]/[125px]">
         [{title}]
       </h1>
 
       {subtitle && (
-        <p className="relative mt-2 text-lg text-white lg:text-2xl">{subtitle}</p>
+        // The two sit against each other in the file: the title's 125 line
+        // leaves the air, and 154 of type centred in 400 is what it comes to
+        <p className="relative text-lg font-medium tracking-[1px] text-white lg:text-2xl/[29px]">
+          {subtitle}
+        </p>
       )}
     </section>
   );
