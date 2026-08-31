@@ -1,20 +1,14 @@
 "use client";
 
-import {
-  Fragment,
-  useEffect,
-  useRef,
-  type PointerEvent as ReactPointerEvent,
-} from "react";
+import { Fragment, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ReadOverlay } from "@/components/ui/ReadOverlay";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useCarousel } from "@/lib/useCarousel";
 import { tagHref } from "@/lib/articles";
 import { useLocale } from "@/lib/i18n/useLocale";
-
-const THUMB_WIDTH = 56;
 
 type NewsItem = {
   tags: string[];
@@ -65,86 +59,24 @@ export function NewsGrid({
 }: NewsGridProps) {
   const locale = useLocale();
   const trackRef = useRef<HTMLDivElement>(null);
-  const barRef = useRef<HTMLDivElement>(null);
-  const thumbRef = useRef<HTMLDivElement>(null);
-
-  /** Written straight to the DOM: running this through state would re-render every card on every scroll frame. */
-  function syncThumb() {
-    const track = trackRef.current;
-    const bar = barRef.current;
-    const thumb = thumbRef.current;
-    if (!track || !bar || !thumb) return;
-
-    const maxScroll = track.scrollWidth - track.clientWidth;
-    const progress = maxScroll > 0 ? track.scrollLeft / maxScroll : 0;
-    thumb.style.transform = `translateX(${
-      progress * (bar.clientWidth - THUMB_WIDTH)
-    }px)`;
-  }
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    syncThumb();
-    const observer = new ResizeObserver(syncThumb);
-    observer.observe(track);
-    return () => observer.disconnect();
-  }, []);
 
   // Dragging the row and the row walking on by itself both move the same scroll
   // position the red block is already following, so it keeps up either way
   useCarousel(trackRef, { autoplay: true });
 
-  function scrollToPointer(clientX: number) {
-    const track = trackRef.current;
-    const bar = barRef.current;
-    if (!track || !bar) return;
-
-    const rect = bar.getBoundingClientRect();
-    const usable = rect.width - THUMB_WIDTH;
-    const offset = clientX - rect.left - THUMB_WIDTH / 2;
-    const progress = usable > 0 ? Math.min(1, Math.max(0, offset / usable)) : 0;
-    track.scrollLeft = progress * (track.scrollWidth - track.clientWidth);
-  }
-
-  function handlePointerDown(e: ReactPointerEvent<HTMLDivElement>) {
-    barRef.current?.setPointerCapture(e.pointerId);
-    scrollToPointer(e.clientX);
-  }
-
-  function handlePointerMove(e: ReactPointerEvent<HTMLDivElement>) {
-    if (!barRef.current?.hasPointerCapture(e.pointerId)) return;
-    scrollToPointer(e.clientX);
-  }
-
   return (
     <section className="px-6 pt-10 lg:px-10">
       {/* The heading row carries 20 of its own air top and bottom, and the file
           leaves 24 from there to the cards */}
-      <div className="mb-6 flex flex-col gap-4 py-5 lg:flex-row lg:items-center lg:gap-10">
-        <h2 className="font-mono text-xl/[26px] uppercase tracking-[3px] lg:whitespace-nowrap lg:text-2xl/[31.2px]">
-          [{heading}]
-        </h2>
-        {/* The bar runs from the heading to the right margin: a 2px rule with a
-            56x24 red block riding it */}
-        <div
-          ref={barRef}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          className="relative flex h-6 flex-1 cursor-pointer touch-none select-none items-center"
-        >
-          <div className="h-0.5 w-full bg-ink" />
-          <div
-            ref={thumbRef}
-            style={{ width: THUMB_WIDTH }}
-            className="absolute left-0 h-6 cursor-grab bg-brand active:cursor-grabbing"
-          />
-        </div>
-      </div>
+      <SectionTitle
+        heading={heading}
+        trackRef={trackRef}
+        controls="bar"
+        className="mb-6 py-5"
+      />
 
       <div
         ref={trackRef}
-        onScroll={syncThumb}
         className="flex gap-10 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (

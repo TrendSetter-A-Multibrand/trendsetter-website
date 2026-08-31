@@ -8,7 +8,7 @@ type Options = {
 };
 
 /** One card plus the gap between them, read off the row itself. */
-function stepWidth(el: HTMLElement) {
+export function stepWidth(el: HTMLElement) {
   const first = el.firstElementChild as HTMLElement | null;
   if (!first) return el.clientWidth;
   const gap = parseFloat(getComputedStyle(el).columnGap || "0") || 0;

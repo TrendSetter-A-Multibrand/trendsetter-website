@@ -3,7 +3,9 @@
 import { Fragment, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { buttonClass } from "@/components/ui/Button";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useCarousel } from "@/lib/useCarousel";
 import { tagHref } from "@/lib/articles";
 import { useLocale } from "@/lib/i18n/useLocale";
@@ -62,41 +64,18 @@ export function JournalCarousel({
   const trackRef = useRef<HTMLDivElement>(null);
   useCarousel(trackRef, { autoplay: true });
 
-  function scroll(direction: 1 | -1) {
-    const track = trackRef.current;
-    if (!track) return;
-    track.scrollBy({ left: direction * track.clientWidth * 0.9, behavior: "smooth" });
-  }
-
   return (
     <section className="px-6 pt-10 lg:px-10">
-      <div className="mb-6 flex items-center justify-between pb-5">
-        <h2 className="min-w-0 font-mono text-xl/[26px] uppercase tracking-[3px] lg:whitespace-nowrap lg:text-2xl/[31.2px]">
-          [{heading}]
-        </h2>
-        <div className="flex gap-[44px]">
-          <button
-            type="button"
-            aria-label="Назад"
-            onClick={() => scroll(-1)}
-            className="flex h-[22px] w-[22px] items-center justify-center text-[22px] leading-none"
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            aria-label="Вперёд"
-            onClick={() => scroll(1)}
-            className="flex h-[22px] w-[22px] items-center justify-center text-[22px] leading-none"
-          >
-            →
-          </button>
-        </div>
-      </div>
+      <SectionTitle
+        heading={heading}
+        trackRef={trackRef}
+        controls="arrows"
+        className="mb-6 pb-5"
+      />
 
       <div
         ref={trackRef}
-        className="flex gap-10 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-10 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
           // The photo is the click target, so the link is stretched over the
@@ -148,7 +127,9 @@ export function JournalCarousel({
                     {item.excerpt && (
                       <p className="text-sm/[17px]">{item.excerpt}</p>
                     )}
-                    <span className="flex h-[49px] items-center justify-center bg-white/40 text-sm uppercase tracking-[3px] text-white backdrop-blur-[2px]">
+                    <span
+                      className={`${buttonClass("whiteOpacity")} backdrop-blur-[2px]`}
+                    >
                       Читать
                     </span>
                   </div>
