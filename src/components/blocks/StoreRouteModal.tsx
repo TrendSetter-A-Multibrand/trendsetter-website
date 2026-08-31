@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
+import { buttonClass } from "@/components/ui/Button";
 import { StoreMap } from "@/components/ui/StoreMap";
 import { routeHref } from "@/lib/ymaps";
 import type { Store } from "@/lib/stores";
@@ -118,11 +119,7 @@ export function StoreRouteModal({
               href={routeHref(store.coords, mode.id)}
               target="_blank"
               rel="noreferrer"
-              className={`flex h-[49px] items-center justify-center px-6 text-sm uppercase tracking-[3px] transition-colors ${
-                i === 0
-                  ? "bg-brand text-white"
-                  : "border-2 border-ink text-ink hover:bg-surface"
-              }`}
+              className={buttonClass(i === 0 ? "primary" : "outline")}
             >
               {mode.label}
             </a>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { buttonClass } from "@/components/ui/Button";
 import type { Event } from "@/lib/events";
 
 /**
@@ -31,7 +32,7 @@ export function ArticleEventCta({ event }: { event: Event }) {
       {/* Only an event asks you to sign up; an ordinary article has no button */}
       <Link
         href={`#${event.slug}`}
-        className="flex h-[49px] items-center justify-center bg-brand px-4 text-sm uppercase tracking-[3px] text-white"
+        className={buttonClass("primary")}
       >
         Записаться
       </Link>

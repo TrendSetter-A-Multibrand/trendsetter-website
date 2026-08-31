@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
+import { buttonClass } from "@/components/ui/Button";
 import { Wordmark } from "@/components/ui/Wordmark";
 
 type HeroProps = {
@@ -48,19 +49,13 @@ export function Hero({
           {tagline}
         </p>
 
-        {/* 49 tall, 24 apart, 16 of air either side; the label is Inter Tight,
-            not the mono it reads as - the file says so. First one white at 40% */}
+        {/* 24 apart; the labels are Inter Tight, not the mono they read as - the
+            file says so. The library has the pair as White Opacity and Primmary */}
         <div className="flex flex-wrap justify-center gap-6">
-          <Link
-            href={primaryCta.href}
-            className="flex h-[49px] items-center bg-white/40 px-4 text-sm uppercase tracking-[3px] text-white"
-          >
+          <Link href={primaryCta.href} className={buttonClass("whiteOpacity")}>
             {primaryCta.label}
           </Link>
-          <Link
-            href={secondaryCta.href}
-            className="flex h-[49px] items-center bg-brand px-4 text-sm uppercase tracking-[3px] text-white"
-          >
+          <Link href={secondaryCta.href} className={buttonClass("primary")}>
             {secondaryCta.label}
           </Link>
         </div>

@@ -1,3 +1,5 @@
+import { buttonClass } from "@/components/ui/Button";
+
 /**
  * Three 586x187 cards under the shop list. The icons are lifted straight out of
  * the Figma export, so their viewBox keeps the page coordinates - each one is a
@@ -62,7 +64,7 @@ export function HelpCards({
             <p className="mt-3 text-sm lg:mt-3.5 lg:text-base/5">{card.text}</p>
             <a
               href={card.href}
-              className="mt-5 flex h-[49px] w-[180px] items-center justify-center bg-ink font-mono text-sm uppercase tracking-[3px] text-white lg:mt-6"
+              className={`${buttonClass("secondaryBlack")} mt-5 w-[180px] lg:mt-6`}
             >
               Подробнее
             </a>

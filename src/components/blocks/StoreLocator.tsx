@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { STORES, type Store } from "@/lib/stores";
+import { buttonClass } from "@/components/ui/Button";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { StoreMap } from "@/components/ui/StoreMap";
 import { StoreRouteModal } from "@/components/blocks/StoreRouteModal";
@@ -103,7 +104,7 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
             <button
               type="button"
               onClick={() => setRouteFor(active)}
-              className="mt-10 flex h-[49px] w-full items-center justify-center border-2 border-ink text-sm uppercase tracking-[3px] transition-colors hover:bg-surface-active lg:mt-auto"
+              className={`${buttonClass("outline")} mt-10 w-full lg:mt-auto`}
             >
               Построить маршрут
             </button>

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
+import { buttonClass } from "@/components/ui/Button";
 
 /**
  * A short message over a dimmed page, built like the brand sheet - same backdrop,
@@ -68,7 +69,7 @@ export function NoticeModal({
         <button
           type="button"
           onClick={onClose}
-          className="mt-10 flex h-[49px] w-full items-center justify-center bg-brand text-sm uppercase tracking-[3px] text-white lg:w-[180px]"
+          className={`${buttonClass("primary")} mt-10 w-full lg:w-[180px]`}
         >
           Понятно
         </button>
