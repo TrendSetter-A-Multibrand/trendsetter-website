@@ -3,6 +3,8 @@
 import { type FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { buttonClass } from "@/components/ui/Button";
+import { Dropdown } from "@/components/ui/Dropdown";
 
 type ContactFormProps = {
   locale?: string;
@@ -64,39 +66,28 @@ export function ContactForm({
             <input
               name="name"
               placeholder="Ваше имя"
-              className="h-12 border border-white bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-white"
+              className="h-12 border border-white bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-white/40"
             />
             <input
               type="email"
               name="email"
               placeholder="E-mail"
-              className="h-12 border border-white bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-white"
+              className="h-12 border border-white bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-white/40"
             />
-            {/* White rather than outlined, and a hair taller - that is how it is drawn */}
-            <select
+            {/* The library draws this as its own Dropdown rather than a native
+                select: white ground, and the list opens over the band instead
+                of pushing the button down */}
+            <Dropdown
               name="subject"
-              defaultValue=""
-              className="on-light h-[49px] appearance-none bg-white bg-[length:12px] bg-[right_16px_center] bg-no-repeat px-4 text-sm/[18px] tracking-[1px] text-ink outline-none"
-              style={{
-                backgroundImage:
-                  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23252120' stroke-width='2'/%3E%3C/svg%3E\")",
-              }}
-            >
-              <option value="" disabled>
-                Тема обращения
-              </option>
-              {subjects.map((subject) => (
-                <option key={subject} value={subject}>
-                  {subject}
-                </option>
-              ))}
-            </select>
+              placeholder="Тема обращения"
+              options={subjects}
+            />
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-6">
             <button
               type="submit"
-              className="on-light h-[49px] w-[180px] shrink-0 bg-white text-sm uppercase tracking-[3px] text-ink"
+              className={`${buttonClass("secondaryGhost")} w-[180px] shrink-0`}
             >
               {sent ? "Отправлено" : "Отправить"}
             </button>

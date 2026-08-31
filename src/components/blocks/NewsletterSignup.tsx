@@ -3,6 +3,8 @@
 import { useEffect, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { buttonClass } from "@/components/ui/Button";
+import { Checkbox } from "@/components/ui/Checkbox";
 import { NoticeModal } from "@/components/ui/NoticeModal";
 import { isSubscribed, remember } from "@/lib/subscribers";
 
@@ -14,38 +16,6 @@ type NewsletterSignupProps = {
 };
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-/** 24px square with a 1px rule, the tick inside it, label 16 to the right. */
-function Checkbox({
-  children,
-  name,
-}: {
-  children: React.ReactNode;
-  name: string;
-}) {
-  return (
-    <label className="flex cursor-pointer items-center gap-4">
-      <input
-        type="checkbox"
-        name={name}
-        defaultChecked
-        className="peer sr-only"
-      />
-      <span className="flex h-6 w-6 shrink-0 items-center justify-center border border-white peer-checked:[&>svg]:opacity-100">
-        <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 opacity-0">
-          <path
-            d="m5 13 4 4L19 7"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </span>
-      <span>{children}</span>
-    </label>
-  );
-}
 
 /**
  * The red band under the shops, 303 tall: everything set 40 from the left in
@@ -104,12 +74,12 @@ export function NewsletterSignup({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Ваш E-mail адрес здесь"
-            className="min-w-0 flex-1 border border-white bg-transparent px-4 text-center text-sm placeholder:text-white/60 focus:outline-none"
+            className="min-w-0 flex-1 border border-white bg-transparent px-4 font-sans text-sm tracking-[1px] placeholder:text-white/40 focus:outline-none"
           />
           <button
             type="submit"
             disabled={!isValid}
-            className="on-light h-[49px] shrink-0 self-start whitespace-nowrap bg-white font-sans text-sm uppercase tracking-[3px] text-ink disabled:cursor-not-allowed lg:w-[180px]"
+            className={`${buttonClass("secondaryGhost")} shrink-0 self-start whitespace-nowrap disabled:cursor-not-allowed lg:w-[180px]`}
           >
             Подписаться
           </button>

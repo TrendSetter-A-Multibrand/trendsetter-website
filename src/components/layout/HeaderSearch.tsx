@@ -78,12 +78,12 @@ export function HeaderSearch({ locale }: { locale: string }) {
         type="search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Поиск"
+        placeholder="Введите запрос"
         aria-label="Поиск по сайту"
         onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
         // Chrome hangs its own clear cross off a search field; the mockup has
         // only the magnifier, and Escape already empties it
-        className="min-w-0 flex-1 bg-transparent font-mono text-sm text-ink outline-none placeholder:text-ink/50 [&::-webkit-search-cancel-button]:appearance-none"
+        className="min-w-0 flex-1 bg-transparent text-sm tracking-[1px] text-ink outline-none placeholder:text-ink/40 [&::-webkit-search-cancel-button]:appearance-none"
       />
       <button
         type={open ? "submit" : "button"}

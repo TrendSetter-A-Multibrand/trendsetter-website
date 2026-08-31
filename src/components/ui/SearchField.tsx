@@ -19,7 +19,7 @@ export function SearchField({
         placeholder={placeholder}
         value={value}
         onChange={onChange && ((e) => onChange(e.target.value))}
-        className="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink/40 [&::-webkit-search-cancel-button]:appearance-none"
+        className="min-w-0 flex-1 bg-transparent text-sm tracking-[1px] text-ink outline-none placeholder:text-ink/40 [&::-webkit-search-cancel-button]:appearance-none"
       />
       <SearchIcon />
     </label>
