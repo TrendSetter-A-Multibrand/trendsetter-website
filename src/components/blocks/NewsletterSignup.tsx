@@ -59,14 +59,14 @@ export function NewsletterSignup({
 
   return (
     <section className="on-dark relative overflow-hidden bg-brand px-6 py-10 font-mono text-white lg:px-10">
-      <div className="relative z-10 max-w-[881px]">
-        <h2 className="text-xl uppercase tracking-[5px] lg:text-2xl/[31.2px]">
+      <div className="relative z-10 max-w-[821px]">
+        <h2 className="text-xl uppercase tracking-[3px] lg:text-2xl/[31.2px]">
           [{heading}]
         </h2>
 
         <p className="mt-6 whitespace-pre-line text-sm/[18px]">{description}</p>
 
-        {/* 880 across: a 700 field with its 180 button hard against it */}
+        {/* 821 across: a 641 field with its 180 button hard against it */}
         <form onSubmit={handleSubmit} className="mt-6 flex h-12 w-full">
           <input
             type="email"
@@ -90,7 +90,8 @@ export function NewsletterSignup({
           <Checkbox name="women">Для девушек</Checkbox>
         </div>
 
-        <div className="mt-6 text-sm">
+        {/* 16 between the two rows of boxes, 24 from the field above them */}
+        <div className="mt-4 text-sm">
           <Checkbox name="consent">
             Я даю согласие на обработку персональных данных в соответствии с{" "}
             <Link href={`/${locale}/privacy-policy`} className="underline">

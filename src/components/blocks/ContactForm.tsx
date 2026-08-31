@@ -51,15 +51,17 @@ export function ContactForm({
   }, [sent]);
 
   return (
-    <section className="on-dark relative overflow-hidden bg-brand px-6 pb-10 pt-[46px] text-white lg:px-10">
+    <section className="on-dark relative overflow-hidden bg-brand px-6 py-10 text-white lg:px-10">
       <div className="relative z-10 max-w-[1190px]">
-        <h2 className="font-mono text-xl/6 uppercase">[{heading}]</h2>
+        <h2 className="font-mono text-2xl/[31px] uppercase tracking-[3px]">
+          [{heading}]
+        </h2>
 
-        <form onSubmit={handleSubmit} className="mt-[30px]">
+        <form onSubmit={handleSubmit} className="mt-6">
           <textarea
             name="message"
             placeholder={placeholder}
-            className="on-light block h-[207px] w-full resize-none bg-white p-4 text-sm/[18px] tracking-[1px] text-ink outline-none placeholder:text-muted"
+            className="on-light block h-[200px] w-full resize-none bg-white p-4 text-sm/[18px] tracking-[1px] text-ink outline-none placeholder:text-muted"
           />
 
           <div className="mt-4 grid gap-4 sm:grid-cols-3">
@@ -91,7 +93,7 @@ export function ContactForm({
             >
               {sent ? "Отправлено" : "Отправить"}
             </button>
-            <p className="max-w-[545px] text-sm/[18px]">
+            <p className="max-w-[986px] text-sm/[18px]">
               Нажимая на кнопку «Отправить», Вы соглашаетесь на обработку
               персональных данных в соответствии с{" "}
               <Link href={`/${locale}/user-agreement`} className="underline">
