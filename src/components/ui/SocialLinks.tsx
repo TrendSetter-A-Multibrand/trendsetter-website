@@ -6,7 +6,8 @@ import { SOCIAL_LINKS } from "@/lib/navigation";
  */
 export function SocialLinks({
   className,
-  /** The footer draws them at 48 with 24 between; the side menu keeps 40/12. */
+  /** Tiles are 40 either way; the footer sets 24 between them and a 24 glyph,
+      the side menu 12 and 16. */
   large,
 }: {
   className?: string;
@@ -19,12 +20,10 @@ export function SocialLinks({
           key={social.label}
           href={social.href}
           aria-label={social.label}
-          className={`flex items-center justify-center bg-brand text-white ${
-            large ? "h-12 w-12" : "h-10 w-10"
-          }`}
+          className="flex h-10 w-10 items-center justify-center bg-brand text-white"
         >
           <span
-            className={`block bg-current ${large ? "h-[26px] w-[26px]" : "h-4 w-4"}`}
+            className={`block bg-current ${large ? "h-6 w-6" : "h-4 w-4"}`}
             style={{
               maskImage: `url(${social.icon})`,
               maskSize: "contain",

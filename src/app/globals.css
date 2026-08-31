@@ -160,14 +160,14 @@ body {
   border-bottom: var(--ts-pin-tail) solid transparent;
 }
 
-/* The footer's columns, straight off the file: 181 / 449 / 449, the address
-   taking what is left, and the social tiles closing the row at 1880.
+/* The footer's columns, straight off the library: 181 / 449 / 231, the address
+   taking what is left, and the social tiles closing the row at 1840.
    Written as a plain rule rather than a `wide:` utility because it has to beat
    xl:grid-cols-4, and a `wide:` class cannot - see the note by the breakpoint.
    Everything in this file is emitted after the utilities, so this one holds. */
 @media (min-width: 1700px) {
   .footer-columns {
-    grid-template-columns: 181px 449px 449px minmax(0, 1fr) auto;
+    grid-template-columns: 181px 449px 231px minmax(0, 1fr) auto;
     column-gap: 0;
   }
 }

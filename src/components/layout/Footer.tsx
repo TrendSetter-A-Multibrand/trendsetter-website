@@ -23,14 +23,13 @@ const LEGAL_LINKS = [
 const CONTACT_EMAIL = "trader@calledagarment.com";
 
 /**
- * 22px in the mockup. Deliberately its own size, not shared with the section
- * headings in components/blocks - those are 24 and scaling them together
- * would move the sliders above. The 34 of leading is what drops the brackets
- * to where the file draws them, 8 below the top of the social tiles.
+ * The same 24 on a 31 line the section titles carry - the library sets all of
+ * them from one style, and the 22 measured off the old export was simply wrong.
+ * 24 of air under it to the first link.
  */
 function FooterHeading({ children }: { children: string }) {
   return (
-    <h2 className="mb-6 font-mono text-[22px]/[34px] uppercase tracking-[3px]">
+    <h2 className="mb-6 font-mono text-2xl/[31px] uppercase tracking-[3px]">
       [{children}]
     </h2>
   );
@@ -62,12 +61,17 @@ function FooterColumn({
 }
 
 export function Footer({ locale }: { locale: Locale }) {
-  const companyLinks = NAV_ITEMS.find((item) => item.slug === "company")?.children ?? [];
+  // Коллаборации live in the Меню column here, as the library draws it, so the
+  // section's own list drops them rather than printing the link twice. Six links
+  // is also what makes the column 269 and the footer 525.
+  const companyLinks = (
+    NAV_ITEMS.find((item) => item.slug === "company")?.children ?? []
+  ).filter((item) => item.slug !== "collaborations");
 
   return (
     <footer className="on-dark bg-ink pb-10 pt-10 text-white">
-      {/* Columns sit at 40 / 221 / 670 / 1119 in the mockup, so their widths are
-          the file's, not a regular grid. The tiles close the row at 1880. */}
+      {/* Columns sit at 40 / 221 / 670 / 901 in the library, so their widths are
+          the file's, not a regular grid. The tiles close the row at 1840. */}
       <div className="footer-columns grid gap-x-10 gap-y-10 px-6 sm:grid-cols-2 lg:px-10 xl:grid-cols-4">
         <FooterColumn
           title="Меню"
@@ -108,7 +112,8 @@ export function Footer({ locale }: { locale: Locale }) {
           the Photoshop formula and CSS uses the W3C one - over #252120 they land
           on #453e3c and #605a58. The backdrop here is flat, so the blend buys
           nothing: paint the colour Figma arrives at and be exact. */}
-      <div className="mt-[76px] px-6 lg:px-10">
+      {/* 40 under the columns, and 40 to the foot of the page */}
+      <div className="mt-10 px-6 lg:px-10">
         <Wordmark className="text-[#453e3c]" />
       </div>
     </footer>
