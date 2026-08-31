@@ -81,13 +81,16 @@ export function Header({ locale }: { locale: Locale }) {
         <Suspense fallback={<div className="h-12 w-6" />}>
           <HeaderSearch locale={locale} />
         </Suspense>
-        {/* Kept at every width: the panel lays the whole site out at once, which
-            the seven links in the bar do not */}
+        {/* The panel lays the whole site out at once, which the seven links in
+            the bar do not - so it is kept everywhere the page fills the window.
+            Past 1920 the page is a fixed column in the middle of the monitor and
+            the panel slides out beside it rather than at an edge, which reads as
+            floating; at those widths the bar's own links carry the menu. */}
         <button
           type="button"
           aria-label="Меню"
           onClick={() => setMenuOpen(true)}
-          className="ml-6 lg:ml-10"
+          className="ml-6 min-[1921px]:hidden lg:ml-10"
         >
           <MenuIcon />
         </button>

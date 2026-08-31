@@ -36,7 +36,7 @@ export function SideMenu({
   // 1920 cap leaves beside the page.
   return createPortal(
     <div
-      className={`fixed inset-0 z-50 transition-opacity ${
+      className={`fixed inset-0 z-50 transition-opacity min-[1921px]:hidden ${
         open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
       }`}
       aria-hidden={!open}
