@@ -1,8 +1,6 @@
 import { Fragment } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { ReadOverlay } from "@/components/ui/ReadOverlay";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { CardImage } from "@/components/ui/CardImage";
 
 import { tagHref, type Article } from "@/lib/articles";
 
@@ -58,17 +56,7 @@ export function ArticleCard({
         aria-hidden="true"
         className="relative aspect-square overflow-hidden"
       >
-        <ImagePlaceholder />
-        {article.image && (
-          <Image
-            src={article.image}
-            alt=""
-            fill
-            sizes={sizes}
-            className="object-cover"
-          />
-        )}
-        <ReadOverlay />
+        <CardImage src={article.image} sizes={sizes} label="Читать" />
       </Link>
 
       <p

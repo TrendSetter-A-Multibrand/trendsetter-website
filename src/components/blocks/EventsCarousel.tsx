@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
 import { buttonClass } from "@/components/ui/Button";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { CardImage } from "@/components/ui/CardImage";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useCarousel } from "@/lib/useCarousel";
 import { EVENTS, type Event } from "@/lib/events";
@@ -77,10 +76,7 @@ export function EventsCarousel({
             key={i}
             className="on-dark group relative aspect-[220/117] w-[85%] shrink-0 overflow-hidden sm:w-[calc(50%-20px)] lg:w-[calc(33.333%-26.667px)]"
           >
-            <ImagePlaceholder />
-            {item.image && (
-              <Image src={item.image} alt="" fill className="object-cover" />
-            )}
+            <CardImage src={item.image} sizes="(min-width: 1024px) 587px, (min-width: 640px) 50vw, 85vw" />
 
             {/* At rest the bottom half fades to #252120 at 60%. On hover that
                 gives way to the same 49% black the header photos carry - the

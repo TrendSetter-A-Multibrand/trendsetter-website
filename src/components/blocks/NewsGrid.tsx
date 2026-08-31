@@ -1,10 +1,8 @@
 "use client";
 
 import { Fragment, useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { ReadOverlay } from "@/components/ui/ReadOverlay";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { CardImage } from "@/components/ui/CardImage";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useCarousel } from "@/lib/useCarousel";
 import { tagHref } from "@/lib/articles";
@@ -93,19 +91,7 @@ export function NewsGrid({
               aria-hidden="true"
               className="relative aspect-square w-full overflow-hidden"
             >
-              <ImagePlaceholder />
-              {item.image && (
-                <Image
-                  src={item.image}
-                  alt=""
-                  width={430}
-                  height={430}
-                  // `relative` only so the photo paints over the placeholder
-                  // underneath it - this is the one card whose image is not `fill`
-                  className="relative h-full w-full object-cover"
-                />
-              )}
-              <ReadOverlay />
+              <CardImage src={item.image} sizes="430px" label="Читать" />
             </Link>
             <p className="mt-6 font-mono text-sm/[18px] font-medium uppercase tracking-[1px] text-brand">
               {item.tags.map((tag, t) => (

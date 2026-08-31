@@ -1,10 +1,9 @@
 "use client";
 
 import { Fragment, useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/Button";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { CardImage } from "@/components/ui/CardImage";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useCarousel } from "@/lib/useCarousel";
 import { tagHref } from "@/lib/articles";
@@ -85,10 +84,7 @@ export function JournalCarousel({
             key={i}
             className="on-dark group relative aspect-[4/3] w-[85%] shrink-0 overflow-hidden sm:aspect-[900/444] sm:w-[calc(50%-20px)]"
           >
-            <ImagePlaceholder />
-            {item.image && (
-              <Image src={item.image} alt="" fill className="object-cover" />
-            )}
+            <CardImage src={item.image} sizes="(min-width: 640px) 900px, 85vw" />
 
             {/* Both cards carry this in the mockup: #252120 at 80%, darkest at
                 the top and bottom edges and clear through the middle */}
