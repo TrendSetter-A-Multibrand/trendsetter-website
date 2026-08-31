@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { STORES, type Store } from "@/lib/stores";
 import { buttonClass } from "@/components/ui/Button";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { CardImage } from "@/components/ui/CardImage";
 import { StoreMap } from "@/components/ui/StoreMap";
 import { StoreRouteModal } from "@/components/blocks/StoreRouteModal";
 
@@ -47,22 +46,14 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
               }`}
             >
               <div className="relative aspect-square w-24 shrink-0 overflow-hidden lg:aspect-auto lg:w-[273px]">
-                <ImagePlaceholder />
-                <Image
-                  src={store.image}
-                  alt=""
-                  fill
-                  sizes="273px"
-                  className="object-cover"
-                />
+                <CardImage src={store.image} sizes="273px" />
               </div>
 
-              <div className="flex min-w-0 flex-1 flex-col px-4 py-4 lg:px-6 lg:pt-[29px]">
-                <p className="text-base font-semibold lg:text-xl/[24px]">
+              <div className="flex min-w-0 flex-1 flex-col px-4 py-4 lg:px-6 lg:pt-6">
+                <p className="text-base font-medium tracking-[1px] lg:text-2xl/[29px]">
                   {store.name}
                 </p>
-                {/* Nothing is greyed down here - only the panel does that */}
-                <dl className="mt-3 space-y-1 text-sm lg:mt-6 lg:space-y-4 lg:text-base/[19px]">
+                <dl className="mt-3 space-y-1 text-sm lg:mt-6 lg:space-y-4 lg:text-base/5">
                   <Row label="Адрес" value={store.address} />
                   <Row label="Телефон" value={store.phone} />
                   <Row label="Часы работы" value={store.hours} />
@@ -81,21 +72,23 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
             `wide:` loses - see the note in globals.css. */}
         <div className="grid bg-surface wide:grid-cols-[429px_minmax(0,1fr)] wide:gap-10">
           <div className="flex flex-col p-6">
-            <p className="text-lg font-bold lg:text-xl/[30px]">{active.name}</p>
+            <p className="text-lg font-medium tracking-[1px] lg:text-2xl/[29px]">
+              {active.name}
+            </p>
 
-            {/* Rows are 36 tall and 8 apart, and only here is the label greyed */}
-            <dl className="mt-2 space-y-2 text-sm lg:text-base/9">
-              <Row label="Адрес" value={active.address} muted />
-              <Row label="Часы работы" value={active.hours} muted />
-              <Row label="Телефон" value={active.phone} muted />
-              <Row label="Кол-во брендов" value={active.brandCount} muted />
-              <Row label="Ассортимент" value={active.assortment} muted />
+            {/* 20 tall and 16 apart, the same rows the card carries */}
+            <dl className="mt-4 space-y-2 text-sm lg:mt-6 lg:space-y-4 lg:text-base/5">
+              <Row label="Адрес" value={active.address} />
+              <Row label="Часы работы" value={active.hours} />
+              <Row label="Телефон" value={active.phone} />
+              <Row label="Кол-во брендов" value={active.brandCount} />
+              <Row label="Ассортимент" value={active.assortment} />
             </dl>
 
-            <p className="mt-2 text-lg font-semibold lg:text-xl/[24px]">
+            <p className="mt-4 text-lg font-medium tracking-[1px] lg:mt-6 lg:text-2xl/[29px]">
               Как пройти:
             </p>
-            <div className="mt-2 text-sm font-medium lg:text-base/[19px]">
+            <div className="mt-4 text-sm lg:text-base/5">
               {active.directions.map((line, i) => (
                 <p key={i}>{line}</p>
               ))}
@@ -126,22 +119,15 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
   );
 }
 
-/** Label and value on one line; only the panel greys the label down. */
-function Row({
-  label,
-  value,
-  muted = false,
-}: {
-  label: string;
-  value: string;
-  muted?: boolean;
-}) {
+/**
+ * Label and value on one line, 8 apart. The library greys the label down and
+ * bolds it in both places the row appears - the card and the panel beside it.
+ */
+function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex gap-4">
-      <dt className={muted ? "font-bold text-muted" : undefined}>{label}:</dt>
-      <dd className={`whitespace-pre-wrap ${muted ? "font-medium" : ""}`}>
-        {value}
-      </dd>
+    <div className="flex gap-2">
+      <dt className="font-bold text-muted">{label}:</dt>
+      <dd className="whitespace-pre-wrap">{value}</dd>
     </div>
   );
 }

@@ -18,13 +18,17 @@ type Ymaps3 = {
   YMapMarker: new (
     props: { coordinates: [number, number] },
     element: HTMLElement,
-  ) => object;
+  ) => YMapMarkerInstance;
 };
 
-type YMapInstance = {
+export type YMapInstance = {
   addChild: (child: object) => void;
   destroy: () => void;
   setLocation: (location: { center?: [number, number]; zoom?: number }) => void;
+};
+
+export type YMapMarkerInstance = {
+  update: (props: { coordinates: [number, number] }) => void;
 };
 
 declare global {
