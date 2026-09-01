@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Locale } from "@/lib/i18n/locales";
@@ -53,8 +53,50 @@ function NavEntry({ locale, item }: { locale: Locale; item: NavItem }) {
   );
 }
 
+/** The air the bar keeps between the last link and the field. */
+const CLEARANCE = 24;
+
+/**
+ * The field grows over the row rather than pushing it, so whichever links end up
+ * underneath are hidden - and hidden with `visibility`, which takes them out of
+ * sight, out of the tab order and out of the reading order while leaving their
+ * place alone. Nothing that stays moves, which is the point: the burger carries
+ * the whole menu anyway.
+ *
+ * Reading positions is safe here for the same reason: visibility changes no
+ * layout, so the observer cannot set itself off again.
+ */
+function useLinksOutOfTheField(
+  row: React.RefObject<HTMLElement | null>,
+  field: HTMLElement | null
+) {
+  useEffect(() => {
+    const nav = row.current;
+    if (!nav || !field) return;
+
+    function update() {
+      const edge = field!.getBoundingClientRect().left - CLEARANCE;
+      for (const link of Array.from(nav!.children) as HTMLElement[]) {
+        link.style.visibility =
+          link.getBoundingClientRect().right > edge ? "hidden" : "";
+      }
+    }
+
+    const observer = new ResizeObserver(update);
+    observer.observe(field);
+    observer.observe(nav);
+    update();
+    return () => observer.disconnect();
+  }, [row, field]);
+}
+
 export function Header({ locale }: { locale: Locale }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const nav = useRef<HTMLElement>(null);
+  // The field only exists once the boundary below has resolved, so the bar keeps
+  // it in state rather than looking for it once and giving up.
+  const [field, setField] = useState<HTMLElement | null>(null);
+  useLinksOutOfTheField(nav, field);
 
   // 88px tall in the mockup, with a 273px wordmark. Nothing separates the three
   // groups but the space left over, which is what puts equal air either side of
@@ -68,7 +110,10 @@ export function Header({ locale }: { locale: Locale }) {
 
       {/* 757 of links, plus a 273 logo and the icons - it does not fit until
           1280, and under that the burger carries the whole menu */}
-      <nav className="hidden h-full items-center gap-10 font-mono text-sm font-medium uppercase tracking-[1px] xl:flex">
+      <nav
+        ref={nav}
+        className="hidden h-full items-center gap-10 whitespace-nowrap font-mono text-sm font-medium uppercase tracking-[1px] xl:flex"
+      >
         {NAV_ITEMS.map((item) => (
           <NavEntry key={item.slug} locale={locale} item={item} />
         ))}
@@ -80,7 +125,7 @@ export function Header({ locale }: { locale: Locale }) {
           of no width - does not add one of its own. */}
       <div className="flex shrink-0 items-center">
         <Suspense fallback={<div className="h-12 w-6" />}>
-          <HeaderSearch locale={locale} />
+          <HeaderSearch locale={locale} onField={setField} />
         </Suspense>
         {/* The panel lays the whole site out at once, which the seven links in
             the bar do not - so it is kept everywhere the page fills the window.

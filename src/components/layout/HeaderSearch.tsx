@@ -12,7 +12,14 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
  * way the mockup shows it - land there from a shared link and you can see, and
  * edit, what was searched for.
  */
-export function HeaderSearch({ locale }: { locale: string }) {
+export function HeaderSearch({
+  locale,
+  onField,
+}: {
+  locale: string;
+  /** Hands the growing box to the bar, which hides the links it covers. */
+  onField?: (el: HTMLDivElement | null) => void;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -61,17 +68,25 @@ export function HeaderSearch({ locale }: { locale: string }) {
     if (q) router.push(`/${locale}/search?q=${encodeURIComponent(q)}`);
   }
 
+  // The form itself is the 24 the magnifier takes and never anything else. The
+  // field grows out of it towards the middle of the bar rather than pushing the
+  // bar aside: its right edge is pinned where the icon stands, so nothing in the
+  // row moves when it opens.
   return (
     <form
       ref={field}
       onSubmit={submit}
       role="search"
-      className={`flex h-12 items-center transition-[width] duration-300 ${
-        open
-          ? "w-[240px] border-b-2 border-ink xl:w-[320px]"
-          : "w-6 border-b-2 border-transparent"
-      }`}
+      className="relative h-12 w-6 shrink-0"
     >
+      <div
+        ref={onField}
+        className={`absolute right-0 top-0 flex h-12 items-center transition-[width] duration-300 ${
+          open
+            ? "w-[240px] border-b-2 border-ink xl:w-[320px]"
+            : "w-6 border-b-2 border-transparent"
+        }`}
+      >
       <input
         ref={input}
         name="q"
@@ -94,6 +109,7 @@ export function HeaderSearch({ locale }: { locale: string }) {
       >
         <SearchIcon />
       </button>
+      </div>
     </form>
   );
 }
