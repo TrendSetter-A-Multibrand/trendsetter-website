@@ -14,11 +14,16 @@ import { Wordmark } from "@/components/ui/Wordmark";
  * The brackets are drawn outside the label, so hovering never reflows the row.
  * The file leaves 2 between bracket and word and a bracket is 9 wide, which is
  * the 11 they sit at once they are home.
+ *
+ * Red of their own, not the label's. Inheriting it, they spent the first frames
+ * of their arrival black, because the word itself is still crossing from black
+ * to red underneath them - and a bracket that fades up already the wrong colour
+ * is the one thing about them the eye catches.
  */
 const BRACKETS =
   "relative transition-colors " +
-  "before:absolute before:-left-[11px] before:content-['['] " +
-  "after:absolute after:-right-[11px] after:content-[']'] " +
+  "before:absolute before:-left-[11px] before:text-brand before:content-['['] " +
+  "after:absolute after:-right-[11px] after:text-brand after:content-[']'] " +
   "before:transition before:duration-[350ms] before:ease-in-out " +
   "after:transition after:duration-[350ms] after:ease-in-out " +
   "motion-reduce:before:transition-none motion-reduce:after:transition-none";
