@@ -20,9 +20,11 @@ type Content = { component: string; body: Block[] };
  * here: the legal documents came through this route, and the next ones will too.
  */
 export async function generateStaticParams() {
+  // Asked fresh: the build must not learn which pages exist from a cache that
+  // predates the newest of them.
   const { links } = await storyblokFetch<{
     links: Record<string, { slug: string; is_folder: boolean }>;
-  }>("links");
+  }>("links", { fresh: true });
 
   return Object.values(links)
     .filter((link) => !link.is_folder && link.slug !== HOME)

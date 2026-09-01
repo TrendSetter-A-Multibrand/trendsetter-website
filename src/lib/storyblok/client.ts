@@ -44,13 +44,19 @@ type Query = Record<string, string | number | undefined>;
  * `draft` asks for what the editor is looking at rather than what visitors see,
  * and such an answer is never cached - it would be one editor's unsaved view
  * served to everybody.
+ *
+ * `fresh` is for the one question a build must not answer from cache: which
+ * pages exist. Vercel keeps the fetch cache between deployments, so a story
+ * added since the last build would otherwise be missing from the list and the
+ * page it feeds would never be prerendered.
  */
 export async function storyblokFetch<T>(
   path: string,
-  { query = {}, tags = [], draft = false }: {
+  { query = {}, tags = [], draft = false, fresh = false }: {
     query?: Query;
     tags?: string[];
     draft?: boolean;
+    fresh?: boolean;
   } = {}
 ): Promise<T> {
   const token = process.env.STORYBLOK_TOKEN;
@@ -68,7 +74,7 @@ export async function storyblokFetch<T>(
   }
 
   const response = await fetch(url, {
-    ...(draft
+    ...(draft || fresh
       ? { cache: "no-store" as const }
       : {
           cache: "force-cache" as const,

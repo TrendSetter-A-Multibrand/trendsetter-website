@@ -18,7 +18,8 @@
           "stores_row",
           "newsletter",
           "legal_article",
-          "contact_form"
+          "contact_form",
+          "faq"
         ],
         "pos": 0
       }
@@ -202,6 +203,70 @@
         "type": "text",
         "display_name": "Заголовок",
         "pos": 0
+      }
+    }
+  },
+  {
+    "name": "faq",
+    "display_name": "Вопросы и ответы",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "crumb": {
+        "type": "text",
+        "display_name": "Название в хлебных крошках",
+        "description": "Строка над заголовком: Главная / вот это",
+        "pos": 0
+      },
+      "groups": {
+        "type": "bloks",
+        "display_name": "Группы вопросов",
+        "description": "Названия групп встают чипами наверху страницы и перемотают к своей группе. Первая группа даёт странице заголовок",
+        "restrict_components": true,
+        "component_whitelist": [
+          "faq_group"
+        ],
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "faq_group",
+    "display_name": "Группа вопросов",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "title": {
+        "type": "text",
+        "display_name": "Название группы",
+        "pos": 0
+      },
+      "items": {
+        "type": "bloks",
+        "display_name": "Вопросы",
+        "restrict_components": true,
+        "component_whitelist": [
+          "faq_item"
+        ],
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "faq_item",
+    "display_name": "Вопрос",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "question": {
+        "type": "text",
+        "display_name": "Вопрос",
+        "pos": 0
+      },
+      "answer": {
+        "type": "textarea",
+        "display_name": "Ответ",
+        "pos": 1
       }
     }
   }

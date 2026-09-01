@@ -9,41 +9,10 @@
  * left alone: deleting someone's block because it is missing here would take
  * their content with it.
  *
- * node --env-file=.env.local scripts/storyblok-push.mjs
+ * npm run storyblok:push
  */
 import { readFile } from "node:fs/promises";
-
-const HOSTS = {
-  eu: "mapi.storyblok.com",
-  us: "api-us.storyblok.com",
-  ap: "api-ap.storyblok.com",
-  ca: "api-ca.storyblok.com",
-};
-
-const space = process.env.STORYBLOK_SPACE_ID;
-const token = process.env.STORYBLOK_PERSONAL_TOKEN;
-const host = HOSTS[process.env.STORYBLOK_REGION ?? "eu"];
-
-if (!space || !token) {
-  console.error("Нужны STORYBLOK_SPACE_ID и STORYBLOK_PERSONAL_TOKEN");
-  process.exit(1);
-}
-
-const api = async (path, init = {}) => {
-  const response = await fetch(`https://${host}/v1/spaces/${space}${path}`, {
-    ...init,
-    headers: {
-      Authorization: token,
-      "Content-Type": "application/json",
-      ...init.headers,
-    },
-  });
-  const text = await response.text();
-  if (!response.ok) {
-    throw new Error(`${init.method ?? "GET"} ${path} -> ${response.status}\n${text.slice(0, 400)}`);
-  }
-  return text ? JSON.parse(text) : null;
-};
+import { api } from "./mapi.mjs";
 
 const wanted = JSON.parse(await readFile("storyblok/components.json", "utf8"));
 const { components: existing } = await api("/components");
@@ -69,4 +38,6 @@ for (const component of wanted) {
 const untouched = existing
   .filter((c) => !wanted.some((w) => w.name === c.name))
   .map((c) => c.name);
-if (untouched.length) console.log(`\nв пространстве есть ещё, не тронуты: ${untouched.join(", ")}`);
+if (untouched.length) {
+  console.log(`\nв пространстве есть ещё, не тронуты: ${untouched.join(", ")}`);
+}

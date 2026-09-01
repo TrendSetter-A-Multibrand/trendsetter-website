@@ -9,6 +9,8 @@ import { StoreLocator } from "@/components/blocks/StoreLocator";
 import { NewsletterSignup } from "@/components/blocks/NewsletterSignup";
 import { LegalArticle } from "@/components/blocks/LegalArticle";
 import { ContactForm } from "@/components/blocks/ContactForm";
+import { FaqAccordion } from "@/components/blocks/FaqAccordion";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 /** As much of a Storyblok link field as we read. */
 type Link = { url?: string; cached_url?: string };
@@ -100,6 +102,33 @@ const DRAW: Record<
   ),
   contact_form: (blok, locale) => (
     <ContactForm locale={locale} heading={text(blok.heading)} />
+  ),
+
+  // The crumbs belong to the block rather than to the page: the file drops them
+  // 20 lower here than the header leaves them, and the whole gap to the chips
+  // below is the block's own.
+  faq: (blok, locale) => (
+    <>
+      <div className="pt-5">
+        <Breadcrumbs
+          items={[
+            { label: "Главная", href: `/${locale}` },
+            { label: text(blok.crumb) ?? "FAQ" },
+          ]}
+        />
+      </div>
+      <div className="pt-11">
+        <FaqAccordion
+          groups={((blok.groups as Block[] | undefined) ?? []).map((group) => ({
+            title: text(group.title) ?? "",
+            items: ((group.items as Block[] | undefined) ?? []).map((item) => ({
+              question: text(item.question) ?? "",
+              answer: text(item.answer) ?? "",
+            })),
+          }))}
+        />
+      </div>
+    </>
   ),
 
   newsletter: (blok, locale) => (
