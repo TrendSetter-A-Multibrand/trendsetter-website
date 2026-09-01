@@ -16,7 +16,9 @@
           "events_row",
           "journal_row",
           "stores_row",
-          "newsletter"
+          "newsletter",
+          "legal_article",
+          "contact_form"
         ],
         "pos": 0
       }
@@ -35,7 +37,9 @@
       },
       "image": {
         "type": "asset",
-        "filetypes": ["images"],
+        "filetypes": [
+          "images"
+        ],
         "display_name": "Фото",
         "description": "Занимает окно целиком, так что важное держите в середине",
         "pos": 1
@@ -137,9 +141,67 @@
       },
       "image": {
         "type": "asset",
-        "filetypes": ["images"],
+        "filetypes": [
+          "images"
+        ],
         "display_name": "Картинка справа",
         "pos": 2
+      }
+    }
+  },
+  {
+    "name": "legal_article",
+    "display_name": "Правовой документ",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "title": {
+        "type": "text",
+        "display_name": "Название документа",
+        "pos": 0
+      },
+      "sections": {
+        "type": "bloks",
+        "display_name": "Разделы",
+        "description": "Каждый раздел на странице сворачивается. Вводный текст без заголовка стоит раскрытым сверху",
+        "restrict_components": true,
+        "component_whitelist": [
+          "legal_section"
+        ],
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "legal_section",
+    "display_name": "Раздел документа",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "heading": {
+        "type": "text",
+        "display_name": "Заголовок раздела",
+        "description": "Оставьте пустым для вводного текста — он не сворачивается",
+        "pos": 0
+      },
+      "body": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "description": "Пустая строка между абзацами разделяет их на странице",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "contact_form",
+    "display_name": "Форма обратной связи",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "heading": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 0
       }
     }
   }

@@ -7,6 +7,8 @@ import { EventsCarousel } from "@/components/blocks/EventsCarousel";
 import { JournalCarousel } from "@/components/blocks/JournalCarousel";
 import { StoreLocator } from "@/components/blocks/StoreLocator";
 import { NewsletterSignup } from "@/components/blocks/NewsletterSignup";
+import { LegalArticle } from "@/components/blocks/LegalArticle";
+import { ContactForm } from "@/components/blocks/ContactForm";
 
 /** As much of a Storyblok link field as we read. */
 type Link = { url?: string; cached_url?: string };
@@ -43,6 +45,17 @@ const image = (value: unknown) => {
 };
 
 /**
+ * A blank line starts a new paragraph, which is what the field tells the editor
+ * it does. Anything else in the gap - stray spaces, a third newline - is the
+ * same gap.
+ */
+const paragraphs = (body: unknown) =>
+  (text(body) ?? "")
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+
+/**
  * Which component each block in the space draws, and how its fields reach that
  * component's props. One table rather than a file per block: our components
  * already exist with props of their own, and a wrapper each would only restate
@@ -76,6 +89,19 @@ const DRAW: Record<
       <StoreLocator heading={text(blok.heading)} />
     </div>
   ),
+  legal_article: (blok) => (
+    <LegalArticle
+      title={text(blok.title) ?? ""}
+      sections={((blok.sections as Block[] | undefined) ?? []).map((section) => ({
+        heading: text(section.heading),
+        paragraphs: paragraphs(section.body),
+      }))}
+    />
+  ),
+  contact_form: (blok, locale) => (
+    <ContactForm locale={locale} heading={text(blok.heading)} />
+  ),
+
   newsletter: (blok, locale) => (
     <div className="mt-10">
       <NewsletterSignup

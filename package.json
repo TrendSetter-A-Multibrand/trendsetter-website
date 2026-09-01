@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "storyblok:push": "node --env-file=.env.local scripts/storyblok-push.mjs",
-    "storyblok:seed": "node --env-file=.env.local scripts/storyblok-seed-home.mjs"
+    "storyblok:seed": "node --env-file=.env.local scripts/storyblok-seed-home.mjs",
+    "storyblok:seed-legal": "node --env-file=.env.local scripts/storyblok-seed-legal.mts"
   },
   "dependencies": {
     "next": "16.2.12",
