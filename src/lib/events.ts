@@ -65,3 +65,30 @@ export const EVENTS: Event[] = [
 
 export const findEvent = (slug: string) =>
   EVENTS.find((event) => event.slug === slug);
+
+/**
+ * How the badges read the date: the day large, the month small under it in the
+ * genitive, the hour over the minute.
+ *
+ * The month list is written out rather than left to Intl: the file spells them
+ * «июля» and Intl's own month name is «июль», which is a different word.
+ */
+const MONTHS = [
+  "января", "февраля", "марта", "апреля", "мая", "июня",
+  "июля", "августа", "сентября", "октября", "ноября", "декабря",
+];
+
+/**
+ * Storyblok keeps a date and time as "2026-07-27 18:00" - the wall clock the
+ * editor typed, with no zone on it. Read as text rather than through Date, which
+ * would take it for UTC and could move the day for a reader in another country.
+ */
+export function eventDate(value: string) {
+  const [date = "", time = ""] = value.split(" ");
+  const [, month = "", day = ""] = date.split("-");
+  return {
+    day: String(Number(day) || ""),
+    month: MONTHS[Number(month) - 1] ?? "",
+    time: time.slice(0, 5),
+  };
+}

@@ -4,22 +4,17 @@ import { useRef } from "react";
 import { EventCard } from "@/components/blocks/EventCard";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useCarousel } from "@/lib/useCarousel";
-import { EVENTS, type Event } from "@/lib/events";
+import type { Event } from "@/lib/events";
 import { useLocale } from "@/lib/i18n/useLocale";
 
 type EventsCarouselProps = {
   heading?: string;
-  items?: Event[];
+  items: Event[];
 };
-
-const DEFAULT_ITEMS: Event[] = Array.from(
-  { length: 16 },
-  (_, i) => EVENTS[i % EVENTS.length]
-);
 
 export function EventsCarousel({
   heading = "Ближайшие события",
-  items = DEFAULT_ITEMS,
+  items,
 }: EventsCarouselProps) {
   const locale = useLocale();
   const trackRef = useRef<HTMLDivElement>(null);

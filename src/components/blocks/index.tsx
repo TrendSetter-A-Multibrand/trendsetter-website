@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n/locales";
 import type { Block } from "@/lib/storyblok/fetchStory";
 import { Hero } from "@/components/blocks/Hero";
 import { NewsGrid } from "@/components/blocks/NewsGrid";
-import { EventsCarousel } from "@/components/blocks/EventsCarousel";
+import { EventsSection } from "@/components/blocks/EventsSection";
 import { JournalCarousel } from "@/components/blocks/JournalCarousel";
 import { StoresSection } from "@/components/blocks/StoresSection";
 import { NewsletterSignup } from "@/components/blocks/NewsletterSignup";
@@ -176,7 +176,7 @@ const DRAW: Record<
   ),
 
   news_row: (blok) => <NewsGrid heading={text(blok.heading)} />,
-  events_row: (blok) => <EventsCarousel heading={text(blok.heading)} />,
+  events_row: (blok) => <EventsSection heading={text(blok.heading)} />,
   journal_row: (blok) => <JournalCarousel heading={text(blok.heading)} />,
 
   // The two below carry the air around them: the shops block has none of its own

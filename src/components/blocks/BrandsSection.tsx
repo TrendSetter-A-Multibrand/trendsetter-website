@@ -1,7 +1,7 @@
 import { BrandDirectory } from "@/components/blocks/BrandDirectory";
 import { fetchStories } from "@/lib/storyblok/fetchStory";
 import type { Brand } from "@/lib/brands";
-import { EVENTS } from "@/lib/events";
+import { fetchEvents } from "@/lib/storyblok/events";
 
 type Availability = { store?: string; available?: boolean };
 
@@ -27,9 +27,10 @@ type StoreFields = { name?: string };
  * rather than drawn as a blank line.
  */
 export async function BrandsSection() {
-  const [brands, shops] = await Promise.all([
+  const [brands, shops, events] = await Promise.all([
     fetchStories<BrandFields>("brand"),
     fetchStories<StoreFields>("store"),
+    fetchEvents(),
   ]);
 
   const nameByUuid = new Map(
@@ -49,9 +50,10 @@ export async function BrandsSection() {
         name: nameByUuid.get(row.store!)!,
         available: Boolean(row.available),
       })),
-    // Events are not stories yet, so every brand's sheet still ends on the same
-    // two from the repository. They follow when the journal does.
-    events: EVENTS.slice(0, 2),
+    // Which events belong to which brand is not something the space says yet:
+    // a brand has no field for them, so every sheet ends on the same two. It
+    // gets one when there is anything to choose between.
+    events: events.slice(0, 2),
   }));
 
   return <BrandDirectory brands={list} />;

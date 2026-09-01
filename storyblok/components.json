@@ -716,5 +716,49 @@
         "pos": 1
       }
     }
+  },
+  {
+    "name": "event",
+    "display_name": "Мероприятие",
+    "is_root": true,
+    "is_nestable": false,
+    "schema": {
+      "title": {
+        "type": "text",
+        "display_name": "Название",
+        "pos": 0
+      },
+      "location": {
+        "type": "text",
+        "display_name": "Место",
+        "description": "Например «ТЦ „Атриум“»",
+        "pos": 1
+      },
+      "date": {
+        "type": "datetime",
+        "display_name": "Когда",
+        "description": "Дата и время начала. На карточке дата встаёт слева, время справа",
+        "pos": 2
+      },
+      "description": {
+        "type": "textarea",
+        "display_name": "Описание",
+        "description": "Появляется на карточке при наведении",
+        "pos": 3
+      },
+      "cta_label": {
+        "type": "text",
+        "display_name": "Надпись на кнопке",
+        "pos": 4
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Фото",
+        "pos": 5
+      }
+    }
   }
 ]
