@@ -64,13 +64,12 @@ export function NewsGrid({
 
   return (
     <section className="px-6 pt-10 lg:px-10">
-      {/* The heading row carries 20 of its own air top and bottom, and the file
-          leaves 24 from there to the cards */}
+      {/* The file leaves 40 from the heading to the row, and nothing above it */}
       <SectionTitle
         heading={heading}
         trackRef={trackRef}
         controls="bar"
-        className="mb-6 py-5"
+        className="mb-10"
       />
 
       <div

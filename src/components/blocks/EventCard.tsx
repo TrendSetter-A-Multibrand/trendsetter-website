@@ -1,5 +1,6 @@
 import { buttonClass } from "@/components/ui/Button";
 import { CardImage } from "@/components/ui/CardImage";
+import { CardScrim } from "@/components/ui/CardScrim";
 import type { Event } from "@/lib/events";
 
 /**
@@ -54,14 +55,7 @@ export function EventCard({ item, href, sizes, className = "" }: EventCardProps)
     >
       <CardImage src={item.image} sizes={sizes} />
 
-      {/* At rest the file lays two gradients over the photo, each at half
-          strength: black at the top edge and at the bottom, both fading out by
-          the middle. On hover they give way to one flat black at 50%. */}
-      <div className="absolute inset-0 transition-opacity duration-200 group-hover:opacity-0">
-        <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-t from-transparent to-black/50" />
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-b from-transparent to-black/50" />
-      </div>
-      <div className="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+      <CardScrim />
 
       <div className="absolute inset-x-0 top-0 flex items-center gap-4 p-6 text-white">
         <Badge>

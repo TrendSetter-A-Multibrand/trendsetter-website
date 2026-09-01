@@ -4,6 +4,7 @@ import { Fragment, useRef } from "react";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/Button";
 import { CardImage } from "@/components/ui/CardImage";
+import { CardScrim } from "@/components/ui/CardScrim";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useCarousel } from "@/lib/useCarousel";
 import { tagHref } from "@/lib/articles";
@@ -69,7 +70,7 @@ export function JournalCarousel({
         heading={heading}
         trackRef={trackRef}
         controls="arrows"
-        className="mb-6 pb-5"
+        className="mb-10"
       />
 
       <div
@@ -82,13 +83,10 @@ export function JournalCarousel({
           // lets clicks through to it rather than swallowing them.
           <div
             key={i}
-            className="on-dark group relative aspect-[4/3] w-[85%] shrink-0 overflow-hidden sm:aspect-[900/444] sm:w-[calc(50%-20px)]"
+            className="on-dark group relative h-[430px] w-[85%] shrink-0 overflow-hidden sm:w-[calc(50%-20px)]"
           >
             <CardImage src={item.image} sizes="(min-width: 640px) 900px, 85vw" />
-
-            {/* Both cards carry this in the mockup: #252120 at 80%, darkest at
-                the top and bottom edges and clear through the middle */}
-            <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink opacity-80" />
+            <CardScrim />
 
             <Link
               href={item.href ?? "#"}
@@ -110,21 +108,22 @@ export function JournalCarousel({
               ))}
             </p>
 
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col p-6 text-white">
-              <p className="text-xl/[26px] font-medium sm:text-2xl/[29px]">
-                {item.title}
-              </p>
+            {/* Title and write-up both stand at the foot at rest, 16 apart; it is
+                the button that arrives on hover, lifting them by its own 48 and
+                the 24 above it. */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 p-6 text-white">
+              <div className="flex flex-col gap-4">
+                <p className="text-xl/[26px] font-medium sm:text-2xl/[29px]">
+                  {item.title}
+                </p>
+                {item.excerpt && <p className="text-base/5">{item.excerpt}</p>}
+              </div>
 
-              {/* Collapsed to zero height at rest so the title lands in the same
-                  place on every card, whether or not there is an excerpt */}
               <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-200 group-hover:grid-rows-[1fr]">
                 <div className="overflow-hidden">
-                  <div className="flex flex-col gap-4 pt-4">
-                    {item.excerpt && (
-                      <p className="text-sm/[17px]">{item.excerpt}</p>
-                    )}
+                  <div className="pt-6">
                     <span
-                      className={`${buttonClass("whiteOpacity")} backdrop-blur-[2px]`}
+                      className={`${buttonClass("whiteOpacity")} w-full backdrop-blur-[2px]`}
                     >
                       Читать
                     </span>

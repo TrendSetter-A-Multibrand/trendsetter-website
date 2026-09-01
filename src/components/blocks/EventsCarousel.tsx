@@ -31,7 +31,7 @@ export function EventsCarousel({
         heading={heading}
         trackRef={trackRef}
         controls="arrows"
-        className="mb-6 pb-5"
+        className="mb-10"
       />
 
       <div

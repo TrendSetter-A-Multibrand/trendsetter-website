@@ -4,6 +4,7 @@ import { useState } from "react";
 import { STORES, type Store } from "@/lib/stores";
 import { buttonClass } from "@/components/ui/Button";
 import { CardImage } from "@/components/ui/CardImage";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 import { StoreMap } from "@/components/ui/StoreMap";
 import { StoreRouteModal } from "@/components/blocks/StoreRouteModal";
 
@@ -26,11 +27,8 @@ export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
 
   return (
     <section className="px-6 lg:px-10">
-      {heading && (
-        <h2 className="mb-6 pb-5 font-mono text-xl uppercase tracking-[3px] lg:text-2xl/[31.2px]">
-          [{heading}]
-        </h2>
-      )}
+      {/* The library's Title with neither control, 40 above the row */}
+      {heading && <SectionTitle heading={heading} className="mb-10" />}
 
       <div className="grid gap-6 wide:grid-cols-[619px_minmax(0,1fr)] wide:gap-10">
         <div className="flex flex-col gap-6">
