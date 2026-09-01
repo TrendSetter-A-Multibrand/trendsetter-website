@@ -46,3 +46,25 @@ export async function fetchStory<T = Block>(
     throw error;
   }
 }
+
+/**
+ * Every story of one kind, in the order the space lists them. Used by the blocks
+ * that show a list of something rather than a page of their own - the shops, and
+ * the articles and events after them.
+ *
+ * A hundred is well past anything this site holds; if a list ever outgrows it,
+ * that is the moment to page through rather than to raise the number.
+ */
+export async function fetchStories<T = Block>(
+  contentType: string
+): Promise<Story<T>[]> {
+  const { isEnabled: draft } = await draftMode();
+
+  const { stories } = await storyblokFetch<{ stories: Story<T>[] }>("stories", {
+    query: { content_type: contentType, per_page: 100 },
+    tags: [`storyblok:${contentType}`],
+    draft,
+  });
+
+  return stories;
+}

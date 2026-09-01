@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { STORES, type Store } from "@/lib/stores";
+import type { Store } from "@/lib/stores";
 import { buttonClass } from "@/components/ui/Button";
 import { CardImage } from "@/components/ui/CardImage";
 import { SectionTitle } from "@/components/ui/SectionTitle";
@@ -10,7 +10,7 @@ import { StoreRouteModal } from "@/components/blocks/StoreRouteModal";
 
 type StoreLocatorProps = {
   heading?: string;
-  stores?: Store[];
+  stores: Store[];
 };
 
 /**
@@ -19,7 +19,7 @@ type StoreLocatorProps = {
  * split into 469 of text and a 712 map. Three cards and the panel come to the
  * same 624.
  */
-export function StoreLocator({ heading, stores = STORES }: StoreLocatorProps) {
+export function StoreLocator({ heading, stores }: StoreLocatorProps) {
   const [selected, setSelected] = useState(0);
   /** Which shop the route sheet is open for, if any. */
   const [routeFor, setRouteFor] = useState<Store | null>(null);

@@ -1,5 +1,5 @@
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { StoreLocator } from "@/components/blocks/StoreLocator";
+import { StoresSection } from "@/components/blocks/StoresSection";
 import { HelpCards } from "@/components/blocks/HelpCards";
 
 export default async function StoresPage({
@@ -15,7 +15,7 @@ export default async function StoresPage({
         items={[{ label: "Главная", href: `/${locale}` }, { label: "Магазины" }]}
       />
       <div className="pt-11">
-        <StoreLocator />
+        <StoresSection />
       </div>
       <div className="mt-10">
         <HelpCards locale={locale} />

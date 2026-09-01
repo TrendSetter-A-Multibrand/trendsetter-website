@@ -5,7 +5,7 @@ import { Hero } from "@/components/blocks/Hero";
 import { NewsGrid } from "@/components/blocks/NewsGrid";
 import { EventsCarousel } from "@/components/blocks/EventsCarousel";
 import { JournalCarousel } from "@/components/blocks/JournalCarousel";
-import { StoreLocator } from "@/components/blocks/StoreLocator";
+import { StoresSection } from "@/components/blocks/StoresSection";
 import { NewsletterSignup } from "@/components/blocks/NewsletterSignup";
 import { LegalArticle } from "@/components/blocks/LegalArticle";
 import { ContactForm } from "@/components/blocks/ContactForm";
@@ -184,7 +184,7 @@ const DRAW: Record<
   // band runs to the page edges, so its 40 has to sit outside it.
   stores_row: (blok) => (
     <div className="pt-10">
-      <StoreLocator heading={text(blok.heading)} />
+      <StoresSection heading={text(blok.heading)} />
     </div>
   ),
   legal_article: (blok) => (
