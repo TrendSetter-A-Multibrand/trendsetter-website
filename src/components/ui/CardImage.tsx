@@ -16,6 +16,11 @@ import { Skeleton } from "@/components/ui/Skeleton";
  * failure is the only thing held as state, and the only reason for the client.
  *
  * Expects a positioned, clipped parent, and a `group` for the hover plate.
+ *
+ * On a card that answers to the pointer the photo also draws 15% closer, under
+ * whatever the card lays over it. Written as a `group-hover` rather than a prop
+ * because it costs nothing where there is no group to hover - the sheet's own
+ * 1280 photo, for one, is not a card and stands still.
  */
 export function CardImage({
   src,
@@ -40,7 +45,7 @@ export function CardImage({
           fill
           sizes={sizes}
           onError={() => setFailed(true)}
-          className="object-cover"
+          className="object-cover transition-transform duration-200 group-hover:scale-[1.15]"
         />
       )}
 
