@@ -9,6 +9,13 @@ export type Brand = {
   stores: { name: string; available: boolean }[];
   /** What the brand is holding next - the sheet ends on a row of them. */
   events: Event[];
+  /**
+   * The brand's own colour, the one its logo is drawn in - the sheet writes the
+   * shop names in it. Every brand has its own and none of them is a style in the
+   * file, so it arrives as data rather than as a token; the names fall back to
+   * ink where a brand has none.
+   */
+  color?: string;
 };
 
 export const BRAND_CATEGORIES = [
@@ -46,6 +53,7 @@ const BASE: Omit<Brand, "name"> = {
     { name: 'ТЦ "Авеню"', available: false },
   ],
   events: EVENTS.slice(0, 2),
+  color: "#1F3F70",
 };
 
 /** Nine under A and nine under B, the way the mockup shows them. */

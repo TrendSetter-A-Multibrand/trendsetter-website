@@ -101,13 +101,14 @@ export function BrandModal({
         <section className="flex flex-col gap-6">
           <SectionTitle heading="Наличие в магазинах" className="px-6 lg:px-10" />
 
-          {/* 16 apart, the marker 16 off the name. The file paints the names
-              #1f3f70 rather than the ink the rest of the sheet is set in. */}
+          {/* 16 apart, the marker 16 off the name. The names are written in the
+              brand's own colour, not the ink the rest of the sheet is set in. */}
           <ul className="flex flex-col gap-4 px-6 lg:px-10">
             {brand.stores.map((store) => (
               <li
                 key={store.name}
-                className="flex items-center gap-4 text-sm/[19px] uppercase tracking-[1px] text-[#1F3F70]"
+                style={brand.color ? { color: brand.color } : undefined}
+                className="flex items-center gap-4 text-sm/[19px] uppercase tracking-[1px]"
               >
                 <Marker tone={store.available ? "green" : "red"} />
                 {store.name}

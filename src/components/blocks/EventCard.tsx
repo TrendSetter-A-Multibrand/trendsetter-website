@@ -8,11 +8,9 @@ import type { Event } from "@/lib/events";
  * across the home page at 587, two inside a brand's sheet at 580. The box is the
  * caller's to set, everything inside it is the file's.
  *
- * The file ships the card as two states of one component. At rest the date and
- * the time stand at the top with the name at the foot; on hover the name moves
- * up between the two badges and the foot gives way to the write-up and the
- * button. Both are drawn here at once and traded with opacity, which is what
- * lets the name cross the card rather than blink from one place to the other.
+ * The file ships the card as two states of one component. The date, the name and
+ * the time stand at the top in both; on hover the write-up and the button arrive
+ * at the foot, and the head stays where it is.
  */
 type EventCardProps = {
   item: Event;
@@ -67,7 +65,7 @@ export function EventCard({ item, href, sizes, className = "" }: EventCardProps)
           </span>
         </Badge>
 
-        <div className="flex-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+        <div className="flex-1">
           <EventTitle item={item} />
         </div>
 
@@ -81,10 +79,6 @@ export function EventCard({ item, href, sizes, className = "" }: EventCardProps)
             {item.time.split(":")[1]}
           </span>
         </Badge>
-      </div>
-
-      <div className="absolute inset-x-0 bottom-0 p-6 text-white transition-opacity duration-200 group-hover:opacity-0">
-        <EventTitle item={item} />
       </div>
 
       {/* 24 between the write-up and the button, and the button runs the full

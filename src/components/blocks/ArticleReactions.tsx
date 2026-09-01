@@ -33,8 +33,10 @@ function readVote(key: string): Reaction | null {
 }
 
 /**
- * 54px squares, 24px apart. Per the designer: hovering lifts the icon and
- * reveals the count, and clicking keeps it in that raised state.
+ * 52px squares, 24 apart, the library's own four states: not voted is Pagination
+ * Primary - #eeeeee going to #f7f7f7 under the pointer - and voted is Icon
+ * Primary, brand red going to its hover. The icon and the count are 24 over 20
+ * and both are always in sight; only the ground changes.
  *
  * The vote lives in localStorage rather than behind a login - the counts are
  * meant to be aggregate. `likes` / `dislikes` come in as props so they can be
@@ -93,50 +95,49 @@ function ReactionButton({
   flipped?: boolean;
   onClick: () => void;
 }) {
+  // 24 of icon over 20 of counter comes to 44 of the square's 52
   return (
     <button
       type="button"
       aria-label={label}
       aria-pressed={active}
       onClick={onClick}
-      className={`group relative flex h-[54px] w-[54px] items-center justify-center overflow-hidden ${
-        active ? "bg-brand text-white" : "bg-ink/6 text-ink"
+      className={`flex size-[52px] flex-col items-center justify-center font-mono text-base/5 font-medium transition-colors ${
+        active
+          ? "bg-brand text-white hover:bg-brand-hover"
+          : "bg-surface-active text-ink hover:bg-surface"
       }`}
     >
-      <span
-        className={`transition-transform duration-200 ${
-          active ? "-translate-y-2" : "group-hover:-translate-y-2"
-        }`}
-      >
-        <ThumbIcon flipped={flipped} />
-      </span>
-      <span
-        className={`absolute bottom-1 font-mono text-[10px] leading-none transition-opacity duration-200 ${
-          active ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-        }`}
-      >
-        {count}
-      </span>
+      <ThumbIcon flipped={flipped} />
+      {count}
     </button>
   );
 }
 
+/**
+ * The file's own thumb, 2 thick in a 24 box - the cuff is a line of its own so
+ * the hand reads at this size. Turned over for the other vote.
+ *
+ * Only the pressed state of the library button carries it: the resting one was
+ * left with the icon set's Telegram glyph, which is not a thumb at all.
+ */
 function ThumbIcon({ flipped }: { flipped?: boolean }) {
   return (
     <svg
-      width="19"
-      height="18"
-      viewBox="0 0 19 18"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"
       className={flipped ? "rotate-180" : undefined}
     >
       <path
-        d="M6 16V7l4-5a2 2 0 0 1 2 2v3h4a2 2 0 0 1 2 2.3l-1 5A2 2 0 0 1 15 16H6Zm0 0H2V7h4"
+        d="M19 20H4V10H9L13 4H16L15 10H21L19 20Z"
         stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
       />
+      <path d="M8 10V20" stroke="currentColor" strokeWidth="2" />
     </svg>
   );
 }

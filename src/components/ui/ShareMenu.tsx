@@ -71,7 +71,7 @@ export function ShareMenu() {
         aria-label="Поделиться"
         aria-expanded={open}
         onClick={() => setOpen((wasOpen) => !wasOpen)}
-        className="flex h-[54px] w-[54px] items-center justify-center bg-ink/12 text-ink"
+        className="flex size-[52px] items-center justify-center text-ink transition-colors hover:text-muted"
       >
         <ShareIcon />
       </button>
