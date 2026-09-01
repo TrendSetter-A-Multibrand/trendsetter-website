@@ -6,15 +6,14 @@ import react from "@vitejs/plugin-react";
  * follows the source tree rather than a folder of its own. `tsconfigPaths` is
  * what makes `@/` mean the same here as it does in the app.
  *
- * CAREFUL: while the project lives at a path with a space in it - «Web
- * TRENDSETTER» - Vite cannot resolve anything out of node_modules: it builds the
- * path as a URL, and %20 breaks the lookup. Tests that only reach for our own
- * files work, because `@/` resolves to a real path; anything importing a package
- * fails at transform with "Does the file exist?".
+ * CAREFUL: the repository must not live at a path with a space in it. Vite builds
+ * the path as a URL, and %20 breaks the walk up to node_modules - every import of
+ * a package then fails at transform with "Does the file exist?", while our own
+ * files still resolve because `@/` gives a real path. That is what «Web
+ * TRENDSETTER» did, and why this now sits at C:\Work	rendsetter.
  *
- * That is why there are no component tests yet: they need @testing-library/react.
- * Both testing-library packages are installed and the plugin below is here for
- * them - move the repository somewhere without a space and they run as they are.
+ * No jest-dom either: its matchers are sugar over assertions the runner already
+ * has, and one package fewer is one package fewer.
  */
 export default defineConfig({
   plugins: [react()],
