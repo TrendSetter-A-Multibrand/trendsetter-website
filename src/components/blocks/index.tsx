@@ -11,6 +11,13 @@ import { LegalArticle } from "@/components/blocks/LegalArticle";
 import { ContactForm } from "@/components/blocks/ContactForm";
 import { FaqAccordion } from "@/components/blocks/FaqAccordion";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { PageCover } from "@/components/blocks/PageCover";
+import { TextWithPhoto } from "@/components/blocks/TextWithPhoto";
+import { MissionBand } from "@/components/blocks/MissionBand";
+import { PhotoCards } from "@/components/blocks/PhotoCards";
+import { TeamGrid } from "@/components/blocks/TeamGrid";
+import { SpaceCards } from "@/components/blocks/SpaceCards";
+import { ContactDetails } from "@/components/blocks/ContactDetails";
 
 /** As much of a Storyblok link field as we read. */
 type Link = { url?: string; cached_url?: string };
@@ -51,6 +58,16 @@ const image = (value: unknown) => {
  * it does. Anything else in the gap - stray spaces, a third newline - is the
  * same gap.
  */
+/** The nested blocks of a field, whatever the editor put in it. */
+const nested = (value: unknown) => (value as Block[] | undefined) ?? [];
+
+/** One line each, as the field says. */
+const lines = (value: unknown) =>
+  (text(value) ?? "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
 const paragraphs = (body: unknown) =>
   (text(body) ?? "")
     .split(/\n\s*\n/)
@@ -79,6 +96,85 @@ const DRAW: Record<
     />
   ),
 
+  // The crumbs and the cover are one thing on every page that has them: the
+  // crumbs sit in a 59 band of their own, 20 either side, and the cover follows.
+  // `flush` is off - the photo runs under the header only on the home page.
+  page_cover: (blok, locale) => (
+    <>
+      <div className="py-5">
+        <Breadcrumbs
+          items={[
+            { label: "Главная", href: `/${locale}` },
+            { label: text(blok.crumb) ?? text(blok.title) ?? "" },
+          ]}
+        />
+      </div>
+      <PageCover
+        title={text(blok.title) ?? ""}
+        subtitle={text(blok.subtitle)}
+        imageSrc={image(blok.image) ?? "/images/covers/articles.jpg"}
+        flush={false}
+      />
+    </>
+  ),
+
+  /* 24 mono across the whole measure, centred, with 40 of air over it */
+  intro_text: (blok) => (
+    <p className="px-6 pt-10 text-center font-mono text-base lg:px-10 lg:text-2xl/[31.2px]">
+      {text(blok.text)}
+    </p>
+  ),
+
+  text_with_photo: (blok) => (
+    <TextWithPhoto
+      title={text(blok.title) ?? ""}
+      body={text(blok.body) ?? ""}
+      image={image(blok.image)}
+    />
+  ),
+
+  mission_band: (blok) => (
+    <MissionBand heading={text(blok.heading)} body={text(blok.body) ?? ""} />
+  ),
+
+  photo_cards: (blok) => (
+    <PhotoCards
+      cards={nested(blok.cards).map((card) => ({
+        title: text(card.title) ?? "",
+        body: text(card.body) ?? "",
+        image: image(card.image),
+      }))}
+    />
+  ),
+
+  team_grid: (blok) => (
+    <TeamGrid
+      members={nested(blok.members).map((member) => ({
+        name: text(member.name) ?? "",
+        role: text(member.role) ?? "",
+      }))}
+    />
+  ),
+
+  space_cards: (blok, locale) => (
+    <SpaceCards
+      cards={nested(blok.cards).map((card) => ({
+        title: text(card.title) ?? "",
+        image: image(card.image),
+        href: href(card.link, locale),
+      }))}
+    />
+  ),
+
+  contact_details: (blok) => (
+    <ContactDetails
+      groups={nested(blok.groups).map((group) => ({
+        title: text(group.title) ?? "",
+        lines: lines(group.lines),
+      }))}
+    />
+  ),
+
   news_row: (blok) => <NewsGrid heading={text(blok.heading)} />,
   events_row: (blok) => <EventsCarousel heading={text(blok.heading)} />,
   journal_row: (blok) => <JournalCarousel heading={text(blok.heading)} />,
@@ -94,7 +190,7 @@ const DRAW: Record<
   legal_article: (blok) => (
     <LegalArticle
       title={text(blok.title) ?? ""}
-      sections={((blok.sections as Block[] | undefined) ?? []).map((section) => ({
+      sections={nested(blok.sections).map((section) => ({
         heading: text(section.heading),
         paragraphs: paragraphs(section.body),
       }))}
@@ -119,9 +215,9 @@ const DRAW: Record<
       </div>
       <div className="pt-11">
         <FaqAccordion
-          groups={((blok.groups as Block[] | undefined) ?? []).map((group) => ({
+          groups={nested(blok.groups).map((group) => ({
             title: text(group.title) ?? "",
-            items: ((group.items as Block[] | undefined) ?? []).map((item) => ({
+            items: nested(group.items).map((item) => ({
               question: text(item.question) ?? "",
               answer: text(item.answer) ?? "",
             })),

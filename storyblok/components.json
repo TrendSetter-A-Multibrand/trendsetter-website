@@ -19,7 +19,15 @@
           "newsletter",
           "legal_article",
           "contact_form",
-          "faq"
+          "faq",
+          "page_cover",
+          "intro_text",
+          "text_with_photo",
+          "mission_band",
+          "photo_cards",
+          "team_grid",
+          "space_cards",
+          "contact_details"
         ],
         "pos": 0
       }
@@ -267,6 +275,260 @@
         "type": "textarea",
         "display_name": "Ответ",
         "pos": 1
+      }
+    }
+  },
+  {
+    "name": "page_cover",
+    "display_name": "Обложка страницы",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "crumb": {
+        "type": "text",
+        "display_name": "Название в хлебных крошках",
+        "pos": 0,
+        "description": "Строка над обложкой: Главная / вот это"
+      },
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 1
+      },
+      "subtitle": {
+        "type": "text",
+        "display_name": "Подзаголовок",
+        "pos": 2,
+        "description": "Необязательный, встаёт под заголовком"
+      },
+      "image": {
+        "type": "asset",
+        "display_name": "Фото",
+        "pos": 3,
+        "filetypes": [
+          "images"
+        ]
+      }
+    }
+  },
+  {
+    "name": "intro_text",
+    "display_name": "Вступительный текст",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "text": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "pos": 0,
+        "description": "Одним абзацем по центру страницы"
+      }
+    }
+  },
+  {
+    "name": "text_with_photo",
+    "display_name": "Текст с фотографией",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 0
+      },
+      "body": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "pos": 1
+      },
+      "image": {
+        "type": "asset",
+        "display_name": "Фото справа",
+        "pos": 2,
+        "filetypes": [
+          "images"
+        ]
+      }
+    }
+  },
+  {
+    "name": "mission_band",
+    "display_name": "Красная полоса",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "heading": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 0,
+        "description": "Скобки вокруг него ставит сайт"
+      },
+      "body": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "photo_cards",
+    "display_name": "Три карточки с текстом",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "cards": {
+        "type": "bloks",
+        "display_name": "Карточки",
+        "pos": 0,
+        "description": "В ряду три; больше трёх переедут на вторую строку",
+        "restrict_components": true,
+        "component_whitelist": [
+          "photo_card"
+        ]
+      }
+    }
+  },
+  {
+    "name": "photo_card",
+    "display_name": "Карточка с текстом",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 0
+      },
+      "body": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "pos": 1
+      },
+      "image": {
+        "type": "asset",
+        "display_name": "Фото",
+        "pos": 2,
+        "filetypes": [
+          "images"
+        ]
+      }
+    }
+  },
+  {
+    "name": "team_grid",
+    "display_name": "Команда",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "members": {
+        "type": "bloks",
+        "display_name": "Люди",
+        "pos": 0,
+        "description": "По шесть в ряду",
+        "restrict_components": true,
+        "component_whitelist": [
+          "team_member"
+        ]
+      }
+    }
+  },
+  {
+    "name": "team_member",
+    "display_name": "Человек",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "name": {
+        "type": "text",
+        "display_name": "Имя",
+        "pos": 0
+      },
+      "role": {
+        "type": "text",
+        "display_name": "Должность",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "space_cards",
+    "display_name": "Высокие карточки",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "cards": {
+        "type": "bloks",
+        "display_name": "Карточки",
+        "pos": 0,
+        "description": "В ряду три",
+        "restrict_components": true,
+        "component_whitelist": [
+          "space_card"
+        ]
+      }
+    }
+  },
+  {
+    "name": "space_card",
+    "display_name": "Высокая карточка",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "title": {
+        "type": "text",
+        "display_name": "Название",
+        "pos": 0
+      },
+      "image": {
+        "type": "asset",
+        "display_name": "Фото",
+        "pos": 1,
+        "filetypes": [
+          "images"
+        ]
+      },
+      "link": {
+        "type": "multilink",
+        "display_name": "Куда ведёт",
+        "pos": 2,
+        "description": "Необязательно; без ссылки карточка не кликается"
+      }
+    }
+  },
+  {
+    "name": "contact_details",
+    "display_name": "Контакты",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "groups": {
+        "type": "bloks",
+        "display_name": "Группы",
+        "pos": 0,
+        "restrict_components": true,
+        "component_whitelist": [
+          "contact_group"
+        ]
+      }
+    }
+  },
+  {
+    "name": "contact_group",
+    "display_name": "Группа контактов",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 0,
+        "description": "Скобки вокруг него ставит сайт"
+      },
+      "lines": {
+        "type": "textarea",
+        "display_name": "Строки",
+        "pos": 1,
+        "description": "Каждая строка с новой строки"
       }
     }
   }

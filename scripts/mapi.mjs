@@ -60,17 +60,39 @@ export const block = (component, fields) => ({
 });
 
 /**
- * Writes a story at a slug, published, whether or not it is already there.
- * Matching by slug rather than by id keeps the scripts re-runnable.
+ * A folder for stories to sit in, so that their paths read the way the site's do
+ * - company/about rather than company-about.
  */
-export async function putStory(slug, name, content) {
+export async function folder(slug, name) {
   const { stories } = await api(`/stories?with_slug=${slug}`);
+  if (stories[0]) return stories[0].id;
+
+  const { story } = await api("/stories", {
+    method: "POST",
+    body: JSON.stringify({ story: { name, slug, is_folder: true } }),
+  });
+  return story.id;
+}
+
+/**
+ * Writes a story at a path, published, whether or not it is already there.
+ * Matching by path rather than by id keeps the scripts re-runnable.
+ *
+ * `slug` is the last part of the path and `parent` the folder it sits in, which
+ * is how Storyblok holds it; `path` is the whole thing, which is how the site
+ * asks for it.
+ */
+export async function putStory(slug, name, content, parent = 0, path = slug) {
+  const { stories } = await api(`/stories?with_slug=${path}`);
   const existing = stories[0];
 
   if (existing) {
     await api(`/stories/${existing.id}`, {
       method: "PUT",
-      body: JSON.stringify({ story: { name, slug, content }, publish: 1 }),
+      body: JSON.stringify({
+        story: { name, slug, content, parent_id: parent },
+        publish: 1,
+      }),
     });
     return "обновлена";
   }
@@ -78,7 +100,7 @@ export async function putStory(slug, name, content) {
   await api("/stories", {
     method: "POST",
     body: JSON.stringify({
-      story: { name, slug, content_type: "page", content },
+      story: { name, slug, content_type: "page", content, parent_id: parent },
       publish: 1,
     }),
   });
