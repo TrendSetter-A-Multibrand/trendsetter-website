@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "storyblok:push": "node --env-file=.env.local scripts/storyblok-push.mjs",
+    "storyblok:seed": "node --env-file=.env.local scripts/storyblok-seed-home.mjs"
   },
   "dependencies": {
     "next": "16.2.12",

@@ -1,0 +1,146 @@
+[
+  {
+    "name": "page",
+    "display_name": "Страница",
+    "is_root": true,
+    "is_nestable": false,
+    "schema": {
+      "body": {
+        "type": "bloks",
+        "display_name": "Секции",
+        "description": "Сверху вниз, в том порядке, в каком идут на странице",
+        "restrict_components": true,
+        "component_whitelist": [
+          "hero",
+          "news_row",
+          "events_row",
+          "journal_row",
+          "stores_row",
+          "newsletter"
+        ],
+        "pos": 0
+      }
+    }
+  },
+  {
+    "name": "hero",
+    "display_name": "Обложка",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "tagline": {
+        "type": "text",
+        "display_name": "Строка поверх фото",
+        "pos": 0
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": ["images"],
+        "display_name": "Фото",
+        "description": "Занимает окно целиком, так что важное держите в середине",
+        "pos": 1
+      },
+      "primary_label": {
+        "type": "text",
+        "display_name": "Красная кнопка — надпись",
+        "pos": 2
+      },
+      "primary_link": {
+        "type": "multilink",
+        "display_name": "Красная кнопка — куда ведёт",
+        "pos": 3
+      },
+      "secondary_label": {
+        "type": "text",
+        "display_name": "Светлая кнопка — надпись",
+        "pos": 4
+      },
+      "secondary_link": {
+        "type": "multilink",
+        "display_name": "Светлая кнопка — куда ведёт",
+        "pos": 5
+      }
+    }
+  },
+  {
+    "name": "news_row",
+    "display_name": "Ряд новостей",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "heading": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "description": "Квадратные скобки вокруг него ставит сайт, писать их не нужно",
+        "pos": 0
+      }
+    }
+  },
+  {
+    "name": "events_row",
+    "display_name": "Ряд событий",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "heading": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "description": "Квадратные скобки вокруг него ставит сайт, писать их не нужно",
+        "pos": 0
+      }
+    }
+  },
+  {
+    "name": "journal_row",
+    "display_name": "Ряд журнала",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "heading": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "description": "Квадратные скобки вокруг него ставит сайт, писать их не нужно",
+        "pos": 0
+      }
+    }
+  },
+  {
+    "name": "stores_row",
+    "display_name": "Магазины",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "heading": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "description": "Квадратные скобки вокруг него ставит сайт, писать их не нужно",
+        "pos": 0
+      }
+    }
+  },
+  {
+    "name": "newsletter",
+    "display_name": "Подписка на новости",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "heading": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 0
+      },
+      "description": {
+        "type": "textarea",
+        "display_name": "Текст под заголовком",
+        "description": "Перенос строки в этом поле станет переносом на сайте",
+        "pos": 1
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": ["images"],
+        "display_name": "Картинка справа",
+        "pos": 2
+      }
+    }
+  }
+]
