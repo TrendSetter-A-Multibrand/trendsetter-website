@@ -9,6 +9,9 @@ import { fetchStory, type Block } from "@/lib/storyblok/fetchStory";
 /** The home story answers at the root, not at /home. */
 const HOME = "home";
 
+/** The one kind of story this route draws. */
+const PAGE = "page";
+
 type Content = { component: string; body: Block[] };
 
 /**
@@ -20,15 +23,19 @@ type Content = { component: string; body: Block[] };
  * here: the legal documents came through this route, and the next ones will too.
  */
 export async function generateStaticParams() {
+  // Pages only. The space also holds shops, brands, events and articles, and
+  // those are not pages: each is drawn by the block or the route that knows how,
+  // and prerendering them here would claim their addresses with empty pages.
+  //
   // Asked fresh: the build must not learn which pages exist from a cache that
   // predates the newest of them.
-  const { links } = await storyblokFetch<{
-    links: Record<string, { slug: string; is_folder: boolean }>;
-  }>("links", { fresh: true });
+  const { stories } = await storyblokFetch<{
+    stories: { full_slug: string }[];
+  }>("stories", { query: { content_type: PAGE, per_page: 100 }, fresh: true });
 
-  return Object.values(links)
-    .filter((link) => !link.is_folder && link.slug !== HOME)
-    .map((link) => ({ slug: link.slug.split("/") }));
+  return stories
+    .filter((story) => story.full_slug !== HOME)
+    .map((story) => ({ slug: story.full_slug.split("/") }));
 }
 
 export default async function StoryPage({
@@ -44,7 +51,9 @@ export default async function StoryPage({
   if (path === HOME) notFound();
 
   const story = await fetchStory<Content>(path);
-  if (!story) notFound();
+  // A shop or an article sits at a path of its own too, and is not a page: it is
+  // drawn where it belongs, not here.
+  if (!story || story.content.component !== PAGE) notFound();
 
   const { isEnabled: draft } = await draftMode();
 

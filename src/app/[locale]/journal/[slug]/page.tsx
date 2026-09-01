@@ -6,8 +6,7 @@ import { ArticleBody } from "@/components/blocks/ArticleBody";
 import { ArticleReactions } from "@/components/blocks/ArticleReactions";
 import { RelatedArticles } from "@/components/blocks/RelatedArticles";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
-import { articleFor } from "@/lib/article";
-import { PLACEHOLDER_ARTICLES } from "@/lib/articles";
+import { fetchArticlePage, fetchArticles } from "@/lib/storyblok/articles";
 import { ArticleEventCta } from "@/components/blocks/ArticleEventCta";
 
 export default async function ArticlePage({
@@ -18,7 +17,12 @@ export default async function ArticlePage({
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
 
-  const { meta, blocks } = articleFor(slug);
+  const [article, articles] = await Promise.all([
+    fetchArticlePage(slug),
+    fetchArticles(locale),
+  ]);
+  if (!article) notFound();
+  const { meta, blocks } = article;
 
   return (
     <>
@@ -45,7 +49,10 @@ export default async function ArticlePage({
       </div>
 
       <ArticleReactions articleId={slug} likes={12} dislikes={0} />
-      <RelatedArticles articles={PLACEHOLDER_ARTICLES} locale={locale} />
+      <RelatedArticles
+        articles={articles.filter((other) => other.title !== meta.title)}
+        locale={locale}
+      />
     </>
   );
 }

@@ -13,7 +13,8 @@
     "storyblok:seed-company": "node --env-file=.env.local scripts/storyblok-seed-company.mts",
     "storyblok:seed-stores": "node --env-file=.env.local scripts/storyblok-seed-stores.mts",
     "storyblok:seed-brands": "node --env-file=.env.local scripts/storyblok-seed-brands.mts",
-    "storyblok:seed-events": "node --env-file=.env.local scripts/storyblok-seed-events.mts"
+    "storyblok:seed-events": "node --env-file=.env.local scripts/storyblok-seed-events.mts",
+    "storyblok:seed-articles": "node --env-file=.env.local scripts/storyblok-seed-articles.mts"
   },
   "dependencies": {
     "next": "16.2.12",

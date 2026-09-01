@@ -2,7 +2,8 @@ import { PageCover } from "@/components/blocks/PageCover";
 import { ArticleFilters } from "@/components/blocks/ArticleFilters";
 import { ArticleGrid } from "@/components/blocks/ArticleGrid";
 import { Pagination } from "@/components/ui/Pagination";
-import { byTag, tagsOf, PLACEHOLDER_ARTICLES } from "@/lib/articles";
+import { byTag, inSection, tagsOf } from "@/lib/articles";
+import { fetchArticles } from "@/lib/storyblok/articles";
 
 export default async function JournalPage({
   params,
@@ -14,10 +15,7 @@ export default async function JournalPage({
   const { locale } = await params;
   const { tag } = await searchParams;
 
-  const all = PLACEHOLDER_ARTICLES.map((article, i) => ({
-    ...article,
-    href: `/${locale}/journal/article-${i + 1}`,
-  }));
+  const all = inSection(await fetchArticles(locale), "journal");
   // The chips are the tags the cards on this page carry, not a list of their own
   const filters = tagsOf(all);
   const articles = byTag(all, tag);

@@ -2,9 +2,8 @@ import { Fragment } from "react";
 import type { Locale } from "@/lib/i18n/locales";
 import type { Block } from "@/lib/storyblok/fetchStory";
 import { Hero } from "@/components/blocks/Hero";
-import { NewsGrid } from "@/components/blocks/NewsGrid";
 import { EventsSection } from "@/components/blocks/EventsSection";
-import { JournalCarousel } from "@/components/blocks/JournalCarousel";
+import { NewsRow, JournalRow } from "@/components/blocks/ArticlesRow";
 import { StoresSection } from "@/components/blocks/StoresSection";
 import { NewsletterSignup } from "@/components/blocks/NewsletterSignup";
 import { LegalArticle } from "@/components/blocks/LegalArticle";
@@ -175,9 +174,13 @@ const DRAW: Record<
     />
   ),
 
-  news_row: (blok) => <NewsGrid heading={text(blok.heading)} />,
+  news_row: (blok, locale) => (
+    <NewsRow heading={text(blok.heading)} locale={locale} />
+  ),
   events_row: (blok) => <EventsSection heading={text(blok.heading)} />,
-  journal_row: (blok) => <JournalCarousel heading={text(blok.heading)} />,
+  journal_row: (blok, locale) => (
+    <JournalRow heading={text(blok.heading)} locale={locale} />
+  ),
 
   // The two below carry the air around them: the shops block has none of its own
   // so the Магазины page can sit it flush under the breadcrumbs, and the red

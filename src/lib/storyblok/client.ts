@@ -28,6 +28,16 @@ export const ALL = "storyblok";
 /** And its own, so publishing one story leaves the rest of the cache alone. */
 export const storyTag = (slug: string) => `storyblok:${slug}`;
 
+/**
+ * Storyblok counts requests per second and refuses the ones over the line. A
+ * build renders every page at once across as many workers as the machine has
+ * cores, so the line is crossed there rather than in front of a reader - and a
+ * refused request would fail the whole build. Waited out and asked again, twice.
+ */
+const RETRIES = 3;
+
+const wait = (ms: number) => new Promise((done) => setTimeout(done, ms));
+
 export class StoryblokError extends Error {
   constructor(
     readonly status: number,
@@ -73,18 +83,27 @@ export async function storyblokFetch<T>(
     if (value !== undefined) url.searchParams.set(key, String(value));
   }
 
-  const response = await fetch(url, {
+  const options = {
     ...(draft || fresh
       ? { cache: "no-store" as const }
       : {
           cache: "force-cache" as const,
           next: { revalidate: MAX_AGE, tags: [ALL, ...tags] },
         }),
-  });
+  };
 
-  if (!response.ok) {
-    throw new StoryblokError(response.status, path, await response.text());
+  for (let attempt = 1; ; attempt++) {
+    const response = await fetch(url, options);
+
+    if (response.status === 429 && attempt < RETRIES) {
+      await wait(attempt * 1000);
+      continue;
+    }
+
+    if (!response.ok) {
+      throw new StoryblokError(response.status, path, await response.text());
+    }
+
+    return response.json() as Promise<T>;
   }
-
-  return response.json() as Promise<T>;
 }

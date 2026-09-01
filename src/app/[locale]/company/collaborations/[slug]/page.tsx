@@ -7,7 +7,7 @@ import { ArticleReactions } from "@/components/blocks/ArticleReactions";
 import { RelatedArticles } from "@/components/blocks/RelatedArticles";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { articleFor } from "@/lib/article";
-import { PLACEHOLDER_ARTICLES } from "@/lib/articles";
+import { fetchArticles } from "@/lib/storyblok/articles";
 
 /**
  * A collaboration reads exactly like a journal piece in the file - same header,
@@ -22,7 +22,10 @@ export default async function CollaborationArticlePage({
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
 
+  // The page itself is still the placeholder template - collaborations are not
+  // a kind of story yet - but the row under it shows real articles.
   const { meta, blocks } = articleFor(slug);
+  const articles = await fetchArticles(locale);
   const own = {
     ...meta,
     section: "Коллаборации",
@@ -52,7 +55,7 @@ export default async function CollaborationArticlePage({
       </div>
 
       <ArticleReactions articleId={slug} likes={12} dislikes={0} />
-      <RelatedArticles articles={PLACEHOLDER_ARTICLES} locale={locale} />
+      <RelatedArticles articles={articles} locale={locale} />
     </>
   );
 }

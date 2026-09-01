@@ -760,5 +760,232 @@
         "pos": 5
       }
     }
+  },
+  {
+    "name": "article",
+    "display_name": "Статья",
+    "is_root": true,
+    "is_nestable": false,
+    "schema": {
+      "section": {
+        "type": "option",
+        "display_name": "Раздел",
+        "pos": 0,
+        "options": [
+          {
+            "name": "Журнал",
+            "value": "journal"
+          },
+          {
+            "name": "Новости",
+            "value": "news"
+          }
+        ],
+        "default_value": "journal",
+        "exclude_empty_option": true
+      },
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 1
+      },
+      "tags": {
+        "type": "options",
+        "display_name": "Теги",
+        "pos": 3,
+        "options": [
+          {
+            "name": "Мода",
+            "value": "Мода"
+          },
+          {
+            "name": "Тренды",
+            "value": "Тренды"
+          },
+          {
+            "name": "Красота",
+            "value": "Красота"
+          },
+          {
+            "name": "Косметика",
+            "value": "Косметика"
+          },
+          {
+            "name": "Комьюнити",
+            "value": "Комьюнити"
+          },
+          {
+            "name": "Общество",
+            "value": "Общество"
+          },
+          {
+            "name": "Впечатления",
+            "value": "Впечатления"
+          },
+          {
+            "name": "Дом",
+            "value": "Дом"
+          },
+          {
+            "name": "Люди",
+            "value": "Люди"
+          },
+          {
+            "name": "Истории",
+            "value": "Истории"
+          },
+          {
+            "name": "Мастерская",
+            "value": "Мастерская"
+          }
+        ],
+        "description": "Ими же фильтруются страницы раздела и поиск"
+      },
+      "hero": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Обложка",
+        "pos": 4
+      },
+      "author": {
+        "type": "text",
+        "display_name": "Автор",
+        "pos": 5
+      },
+      "published_at": {
+        "type": "datetime",
+        "display_name": "Дата публикации",
+        "pos": 6
+      },
+      "reading_minutes": {
+        "type": "number",
+        "display_name": "Время чтения, минут",
+        "pos": 7
+      },
+      "views": {
+        "type": "number",
+        "display_name": "Просмотры",
+        "description": "Пока вводится руками; позже будет считаться само",
+        "pos": 8
+      },
+      "event": {
+        "type": "option",
+        "display_name": "Мероприятие",
+        "source": "internal_stories",
+        "folder_slug": "events",
+        "filter_content_type": [
+          "event"
+        ],
+        "use_uuid": true,
+        "description": "Если статья про мероприятие — выберите его, и на обложке появится приглашение записаться",
+        "pos": 9
+      },
+      "body": {
+        "type": "bloks",
+        "display_name": "Текст статьи",
+        "pos": 10,
+        "restrict_components": true,
+        "component_whitelist": [
+          "article_text",
+          "article_text_image",
+          "article_images",
+          "article_quote"
+        ]
+      },
+      "excerpt": {
+        "type": "textarea",
+        "display_name": "Краткое описание",
+        "description": "Показывается под заголовком на карточке в ряду «Журнал»",
+        "pos": 2
+      }
+    }
+  },
+  {
+    "name": "article_text",
+    "display_name": "Абзацы",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "subtitle": {
+        "type": "text",
+        "display_name": "Подзаголовок",
+        "pos": 0
+      },
+      "body": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "description": "Пустая строка разделяет абзацы",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "article_text_image",
+    "display_name": "Текст и фото рядом",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "subtitle": {
+        "type": "text",
+        "display_name": "Подзаголовок",
+        "pos": 0
+      },
+      "body": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "description": "Пустая строка разделяет абзацы",
+        "pos": 1
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Фото справа",
+        "pos": 2
+      },
+      "caption": {
+        "type": "text",
+        "display_name": "Подпись под фото",
+        "pos": 3
+      }
+    }
+  },
+  {
+    "name": "article_images",
+    "display_name": "Ряд фотографий",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "images": {
+        "type": "multiasset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Фотографии",
+        "description": "Две или три в ряд",
+        "pos": 0
+      }
+    }
+  },
+  {
+    "name": "article_quote",
+    "display_name": "Цитата на красной полосе",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "subtitle": {
+        "type": "text",
+        "display_name": "Крупная строка",
+        "pos": 0
+      },
+      "body": {
+        "type": "textarea",
+        "display_name": "Текст под ней",
+        "pos": 1
+      }
+    }
   }
 ]

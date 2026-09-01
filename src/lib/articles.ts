@@ -1,62 +1,13 @@
 export type Article = {
   tags: string[];
   title: string;
+  /** Under the title on a journal card; not every piece carries one. */
+  excerpt?: string;
   href?: string;
   image?: string;
   /** Which of the two sections it belongs to - what the search chips filter on. */
   section?: "journal" | "news";
 };
-
-const BASE_ARTICLES: Article[] = [
-  {
-    tags: ["Красота", "Косметика"],
-    title: "Что положить в косметичку: 8 уходовых средств на все случаи жизни",
-    image: "/images/home/news/2.jpg",
-  },
-  {
-    tags: ["Мода", "Тренды"],
-    title:
-      "Неделя моды весна-лето 2026 . Чего (не) ждать от предстоящих показов нового сезона",
-    image: "/images/home/news/3.jpg",
-  },
-  {
-    tags: ["Комьюнити", "Общество"],
-    title:
-      "Карабин, плёнка и Тарковский: как «нишевость» и стремление быть «не как все» превратились в мем",
-    image: "/images/home/news/4.jpg",
-  },
-  {
-    tags: ["Впечатления", "Дом"],
-    title:
-      "Не только Dolce&Gabbana: home-коллекции модных брендов, о которых мы могли не знать",
-    image: "/images/home/news/1.jpg",
-  },
-  {
-    tags: ["Люди", "Истории"],
-    title: "Как устроен день стилиста: от утреннего кофе до примерочной",
-    image: "/images/home/journal/1.jpg",
-  },
-  {
-    tags: ["Мастерская"],
-    title: "Керамика для начинающих: что нужно знать перед первым занятием",
-    image: "/images/home/journal/2.jpg",
-  },
-];
-
-/**
- * Stand-in until Storyblok is wired up. 13 cards is what the mockup's
- * 3 / 2 / 3 / 2 / 3 row pattern needs to read correctly.
- */
-export const PLACEHOLDER_ARTICLES: Article[] = Array.from(
-  { length: 13 },
-  (_, i) => ({
-    ...BASE_ARTICLES[i % BASE_ARTICLES.length],
-    href: "#",
-    // Nothing behind this yet: the sections alternate so the search chips have
-    // something to sort until Storyblok says which is which.
-    section: i % 2 === 0 ? ("news" as const) : ("journal" as const),
-  })
-);
 
 /**
  * Tags arrive as free text and are written by hand, so compare them the way a

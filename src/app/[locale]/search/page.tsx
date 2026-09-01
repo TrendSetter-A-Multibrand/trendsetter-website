@@ -5,7 +5,8 @@ import { RecommendedRow } from "@/components/blocks/RecommendedRow";
 import { NewsletterSignup } from "@/components/blocks/NewsletterSignup";
 import { FilterChip } from "@/components/ui/FilterChip";
 import { Pagination } from "@/components/ui/Pagination";
-import { parseQuery, search, PLACEHOLDER_ARTICLES } from "@/lib/articles";
+import { parseQuery, search } from "@/lib/articles";
+import { fetchArticles } from "@/lib/storyblok/articles";
 
 /**
  * Both halves of the mockup live here: the same head - chips, [РЕЗУЛЬТАТЫ
@@ -40,7 +41,8 @@ export default async function SearchPage({
   // Words look through titles, #hashtags through tags, and the chips above
   // narrow whatever comes back to one section
   const { words } = parseQuery(query);
-  const matches = search(PLACEHOLDER_ARTICLES, query).filter(
+  const all = await fetchArticles(locale);
+  const matches = search(all, query).filter(
     (article) => type === "all" || article.section === type,
   );
 
@@ -113,7 +115,7 @@ export default async function SearchPage({
         )
       ) : (
         <div className="mt-10 pb-10">
-          <RecommendedRow articles={PLACEHOLDER_ARTICLES} locale={locale} />
+          <RecommendedRow articles={all} locale={locale} />
         </div>
       )}
 

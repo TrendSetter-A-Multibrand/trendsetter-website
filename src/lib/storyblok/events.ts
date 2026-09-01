@@ -19,13 +19,15 @@ type EventFields = {
  * and the article about it share one. When articles become stories the event will
  * point at one, the way a brand points at a shop, and this goes.
  */
-export async function fetchEvents(): Promise<Event[]> {
+export async function fetchEvents(): Promise<(Event & { uuid: string })[]> {
   const stories = await fetchStories<EventFields>("event");
 
-  return stories.map(({ content, slug }) => {
+  return stories.map(({ content, slug, uuid }) => {
     const { day, month, time } = eventDate(content.date ?? "");
 
     return {
+      // What an article points at, so the two cannot disagree about the date
+      uuid,
       slug,
       day,
       month,

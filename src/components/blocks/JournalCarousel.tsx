@@ -20,45 +20,12 @@ type JournalItem = {
 
 type JournalCarouselProps = {
   heading?: string;
-  items?: JournalItem[];
+  items: JournalItem[];
 };
-
-const BASE_ITEMS: JournalItem[] = [
-  {
-    tags: ["Мода", "Тренды"],
-    image: "/images/home/journal/1.jpg",
-    title:
-      "Неделя моды весна-лето 2026 . Чего (не) ждать от предстоящих показов нового сезона",
-    excerpt:
-      "Неделя моды весна-лето 2026 . Чего (не) ждать от предстоящих показов нового сезона",
-  },
-  {
-    tags: ["Впечатления", "Дом"],
-    image: "/images/home/journal/2.jpg",
-    title:
-      "Не только Dolce&Gabbana: home-коллекции модных брендов, о которых мы могли не знать",
-  },
-  {
-    tags: ["Красота", "Косметика"],
-    image: "/images/home/journal/1.jpg",
-    title: "Что положить в косметичку: 8 уходовых средств на все случаи жизни",
-  },
-  {
-    tags: ["Комьюнити", "Общество"],
-    image: "/images/home/journal/2.jpg",
-    title:
-      "Карабин, плёнка и Тарковский: как «нишевость» и стремление быть «не как все» превратились в мем",
-  },
-];
-
-const DEFAULT_ITEMS: JournalItem[] = Array.from(
-  { length: 16 },
-  (_, i) => BASE_ITEMS[i % BASE_ITEMS.length]
-);
 
 export function JournalCarousel({
   heading = "Журнал",
-  items = DEFAULT_ITEMS,
+  items,
 }: JournalCarouselProps) {
   const locale = useLocale();
   const trackRef = useRef<HTMLDivElement>(null);

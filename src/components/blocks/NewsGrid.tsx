@@ -17,43 +17,12 @@ type NewsItem = {
 
 type NewsGridProps = {
   heading?: string;
-  items?: NewsItem[];
+  items: NewsItem[];
 };
-
-const BASE_ITEMS: NewsItem[] = [
-  {
-    tags: ["Впечатления", "Дом"],
-    image: "/images/home/news/1.jpg",
-    title:
-      "Не только Dolce&Gabbana: home-коллекции модных брендов, о которых мы могли не знать",
-  },
-  {
-    tags: ["Красота", "Косметика"],
-    image: "/images/home/news/2.jpg",
-    title: "Что положить в косметичку: 8 уходовых средств на все случаи жизни",
-  },
-  {
-    tags: ["Мода", "Тренды"],
-    image: "/images/home/news/3.jpg",
-    title:
-      "Неделя моды весна-лето 2026. Чего (не) ждать от предстоящих показов нового сезона",
-  },
-  {
-    tags: ["Комьюнити", "Общество"],
-    image: "/images/home/news/4.jpg",
-    title:
-      "Карабин, пленка и Тарковский: как «нишевость» и стремление быть «не как все» превратились в мем",
-  },
-];
-
-const DEFAULT_ITEMS: NewsItem[] = Array.from(
-  { length: 20 },
-  (_, i) => BASE_ITEMS[i % BASE_ITEMS.length]
-);
 
 export function NewsGrid({
   heading = "Последние новости",
-  items = DEFAULT_ITEMS,
+  items,
 }: NewsGridProps) {
   const locale = useLocale();
   const trackRef = useRef<HTMLDivElement>(null);
