@@ -24,8 +24,14 @@ export async function GET(request: Request) {
   const draft = await draftMode();
   draft.enable();
 
+  // The editor appends the story's own path, and the home story's path is
+  // "home", which is not an address on the site - its address is the root. Every
+  // other story's path is already the site's own, and the locale in front of it
+  // is added by the proxy.
+  const asked = url.searchParams.get("to") ?? "/";
+  const to = asked.replace(/^\/?home\/?$/, "/");
+
   // Only a path of our own, never wherever the address happens to point: an open
   // redirect here would let the link be used to send people anywhere.
-  const to = url.searchParams.get("to") ?? "/";
   redirect(to.startsWith("/") && !to.startsWith("//") ? to : "/");
 }

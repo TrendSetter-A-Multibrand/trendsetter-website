@@ -1,5 +1,7 @@
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/lib/i18n/locales";
+import { StoryblokBridge } from "@/components/layout/StoryblokBridge";
 import { Blocks } from "@/components/blocks";
 import { fetchStory, type Block } from "@/lib/storyblok/fetchStory";
 
@@ -19,5 +21,14 @@ export default async function HomePage({
   const story = await fetchStory<{ component: string; body: Block[] }>("home");
   if (!story) notFound();
 
-  return <Blocks body={story.content.body ?? []} locale={locale} />;
+  // Nothing of the editor reaches a visitor: the bridge is only mounted for a
+  // request that carries the draft cookie.
+  const { isEnabled: draft } = await draftMode();
+
+  return (
+    <>
+      <Blocks body={story.content.body ?? []} locale={locale} />
+      {draft && <StoryblokBridge />}
+    </>
+  );
 }
