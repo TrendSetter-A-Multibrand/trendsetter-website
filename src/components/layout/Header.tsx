@@ -11,6 +11,39 @@ import { NavDropdown } from "@/components/layout/NavDropdown";
 import { Wordmark } from "@/components/ui/Wordmark";
 
 /**
+ * The brackets are drawn outside the label, so hovering never reflows the row.
+ * The file leaves 2 between bracket and word and a bracket is 9 wide, which is
+ * the 11 they sit at once they are home.
+ */
+const BRACKETS =
+  "relative transition-colors " +
+  "before:absolute before:-left-[11px] before:content-['['] " +
+  "after:absolute after:-right-[11px] after:content-[']'] " +
+  "before:transition before:duration-[350ms] before:ease-in-out " +
+  "after:transition after:duration-[350ms] after:ease-in-out " +
+  "motion-reduce:before:transition-none motion-reduce:after:transition-none";
+
+/** Out past the word and not yet there: the file opens the gap from 2 to 8. */
+const BRACKETS_AWAY =
+  "before:-translate-x-[6px] before:opacity-0 after:translate-x-[6px] after:opacity-0";
+
+/**
+ * Closed on the word at full strength. They come in fading up as they close -
+ * the three frames of the file, in order - and go out the same way round. 350ms
+ * either direction: 700 the round trip, which is the figure that was given.
+ *
+ * They hold while the pointer is anywhere on the entry, the panel below it
+ * included, because the panel hangs inside this same group.
+ */
+const BRACKETS_HOME =
+  "group-hover:before:translate-x-0 group-hover:before:opacity-100 " +
+  "group-hover:after:translate-x-0 group-hover:after:opacity-100";
+
+/** The section you are in wears them for good, as the mockup shows it. */
+const BRACKETS_STAY =
+  "before:translate-x-0 before:opacity-100 after:translate-x-0 after:opacity-100";
+
+/**
  * The panel opens on hover through CSS. Following a link leaves the pointer
  * sitting on the item, so `:hover` would still be true and the panel would hang
  * around over the new page - hence the dismissed flag, cleared once the pointer
@@ -20,7 +53,6 @@ function NavEntry({ locale, item }: { locale: Locale; item: NavItem }) {
   const [dismissed, setDismissed] = useState(false);
   const pathname = usePathname();
   const href = `/${locale}/${item.slug}`;
-  // The section you are in wears the brackets for good, as the mockup shows it
   const current = pathname === href || pathname.startsWith(`${href}/`);
 
   return (
@@ -28,16 +60,14 @@ function NavEntry({ locale, item }: { locale: Locale; item: NavItem }) {
       className="group relative flex h-full items-center"
       onMouseLeave={() => setDismissed(false)}
     >
-      {/* Brackets are drawn outside the label so hovering never reflows the nav.
-          The file leaves 2 between bracket and word, and a bracket is 9 wide. */}
       <Link
         href={href}
         aria-current={current ? "page" : undefined}
         onClick={() => setDismissed(true)}
-        className={`relative transition-colors before:absolute before:-left-[11px] before:transition-opacity before:content-['['] after:absolute after:-right-[11px] after:transition-opacity after:content-[']'] group-hover:text-brand group-hover:before:opacity-100 group-hover:after:opacity-100 ${
+        className={`${BRACKETS} group-hover:text-brand ${
           current
-            ? "text-brand before:opacity-100 after:opacity-100"
-            : "before:opacity-0 after:opacity-0"
+            ? `text-brand ${BRACKETS_STAY}`
+            : `${BRACKETS_AWAY} ${BRACKETS_HOME}`
         }`}
       >
         {item.label}
