@@ -21,8 +21,11 @@ export function stepWidth(el: HTMLElement) {
  * transform, so anything already listening for `scroll` - the red block riding
  * the rule over the news row, for one - follows without being told.
  *
- * The row stops while the pointer is on it, while it holds focus, while the tab
- * is in the background, and for anyone who has asked for less motion.
+ * The row stops while the pointer is anywhere on its section, while it holds
+ * focus, while the tab is in the background, and for anyone who has asked for
+ * less motion. The section rather than the row itself: a hand on its way to a
+ * card often rests on the heading above them first, and a row that walks on
+ * under it reads as one that does not stop at all.
  */
 export function useCarousel<T extends HTMLElement>(
   ref: RefObject<T | null>,
@@ -94,10 +97,12 @@ export function useCarousel<T extends HTMLElement>(
     el.addEventListener("pointercancel", onPointerUp);
     el.addEventListener("click", onClick, true);
     el.addEventListener("dragstart", onDragStart);
-    el.addEventListener("pointerenter", enter);
-    el.addEventListener("pointerleave", leave);
-    el.addEventListener("focusin", enter);
-    el.addEventListener("focusout", leave);
+    /** The heading and its bar belong to the row as far as a hand is concerned. */
+    const zone = el.closest("section") ?? el;
+    zone.addEventListener("pointerenter", enter);
+    zone.addEventListener("pointerleave", leave);
+    zone.addEventListener("focusin", enter);
+    zone.addEventListener("focusout", leave);
 
     let timer = 0;
     const still = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -120,10 +125,10 @@ export function useCarousel<T extends HTMLElement>(
       el.removeEventListener("pointercancel", onPointerUp);
       el.removeEventListener("click", onClick, true);
       el.removeEventListener("dragstart", onDragStart);
-      el.removeEventListener("pointerenter", enter);
-      el.removeEventListener("pointerleave", leave);
-      el.removeEventListener("focusin", enter);
-      el.removeEventListener("focusout", leave);
+      zone.removeEventListener("pointerenter", enter);
+      zone.removeEventListener("pointerleave", leave);
+      zone.removeEventListener("focusin", enter);
+      zone.removeEventListener("focusout", leave);
       window.clearInterval(timer);
     };
   }, [ref, autoplay, interval]);
