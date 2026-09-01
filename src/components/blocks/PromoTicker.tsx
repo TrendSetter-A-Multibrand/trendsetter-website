@@ -1,13 +1,28 @@
 import Link from "next/link";
 
+/**
+ * The library draws the band in four colours. Yellow, green and blue have no
+ * token of their own - the file's Colors page is still a row of unnamed
+ * swatches - so they stay written out here, as the Marker's do.
+ */
+export type TickerTone = "red" | "yellow" | "green" | "blue";
+
+const TONES: Record<TickerTone, string> = {
+  red: "bg-brand text-white",
+  yellow: "bg-[#F3E73F] text-ink",
+  green: "bg-[#71CC98] text-ink",
+  blue: "bg-[#1F3F70] text-white",
+};
+
 type PromoTickerProps = {
   text?: string;
   ctaLabel?: string;
   href?: string;
+  tone?: TickerTone;
 };
 
 /**
- * The red strip above the header. One repeat measures 428px in the mockup: the
+ * The strip above the header. One repeat measures 428px in the mockup: the
  * announcement, the arrow, the call to action and the slash, evenly spaced - the
  * slash carries the same gap after it, so the repeats space themselves.
  *
@@ -19,12 +34,13 @@ export function PromoTicker({
   text = "Скоро открытие нового магазина",
   ctaLabel = "Узнать подробнее",
   href = "#",
+  tone = "red",
 }: PromoTickerProps) {
   const item = (key: number) => (
     <Link
       key={key}
       href={href}
-      className="flex shrink-0 items-center gap-2 pr-2 text-white"
+      className="flex shrink-0 items-center gap-2 pr-2"
     >
       <span>{text}</span>
       <Arrow />
@@ -34,7 +50,9 @@ export function PromoTicker({
   );
 
   return (
-    <div className="flex h-10 items-center overflow-hidden bg-brand font-mono text-xs uppercase tracking-[1px]">
+    <div
+      className={`flex h-10 items-center overflow-hidden font-mono text-xs font-medium uppercase tracking-[1px] ${TONES[tone]}`}
+    >
       <div className="flex shrink-0 animate-marquee">
         {Array.from({ length: 6 }, (_, i) => item(i))}
       </div>
