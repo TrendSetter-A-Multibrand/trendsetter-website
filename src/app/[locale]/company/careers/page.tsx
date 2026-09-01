@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/lib/i18n/locales";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -6,6 +7,7 @@ import { PhotoCards } from "@/components/blocks/PhotoCards";
 import { MissionBand } from "@/components/blocks/MissionBand";
 import { HelpCards } from "@/components/blocks/HelpCards";
 import { ABOUT_MISSION, CAREERS_CARDS, CAREERS_INTRO } from "@/lib/company";
+import { seo } from "@/lib/seo";
 
 /**
  * Assembled from the frame as it stands, which is still a draft: every heading
@@ -13,6 +15,22 @@ import { ABOUT_MISSION, CAREERS_CARDS, CAREERS_INTRO } from "@/lib/company";
  * «Кому понравится у нас» and «Актуальные вакансии» - are lying loose in the
  * file, outside the page frame. Both are waiting on the designer.
  */
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return seo({
+    title: "Вакансии",
+    description:
+      "Открытые вакансии TRENDSETTER и что мы предлагаем тем, кто к нам приходит.",
+    path: "/company/careers",
+    locale,
+  });
+}
+
 export default async function CareersPage({
   params,
 }: {

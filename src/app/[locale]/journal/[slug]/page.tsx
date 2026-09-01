@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { isLocale } from "@/lib/i18n/locales";
 import { notFound } from "next/navigation";
@@ -7,7 +8,27 @@ import { ArticleReactions } from "@/components/blocks/ArticleReactions";
 import { RelatedArticles } from "@/components/blocks/RelatedArticles";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { fetchArticlePage, fetchArticles } from "@/lib/storyblok/articles";
+import { seo } from "@/lib/seo";
 import { ArticleEventCta } from "@/components/blocks/ArticleEventCta";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const article = await fetchArticlePage(slug);
+  if (!article) return {};
+
+  // The piece's own photograph is what a link to it should carry, not the site's
+  return seo({
+    title: article.meta.title,
+    description: article.meta.excerpt,
+    image: article.meta.heroImage,
+    path: `/journal/${slug}`,
+    locale,
+  });
+}
 
 export default async function ArticlePage({
   params,

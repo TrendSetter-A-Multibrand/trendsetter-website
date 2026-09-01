@@ -29,6 +29,8 @@ export type ArticleMeta = {
   heroImage: string;
   /** The tags shown as chips over the title - the card's own, not a fixed list. */
   tags: string[];
+  /** Under the title on a card, and what a search engine is given to quote. */
+  excerpt?: string;
   /**
    * Set only on an article that is an event. The date, the time and the title
    * come from the same entry the card in Ближайшие события is drawn from, so

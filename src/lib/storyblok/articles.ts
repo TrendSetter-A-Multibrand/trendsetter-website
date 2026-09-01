@@ -117,6 +117,7 @@ export async function fetchArticlePage(
       readingMinutes: Number(content.reading_minutes) || 0,
       heroImage: content.hero?.filename ?? "",
       tags: content.tags ?? [],
+      excerpt: content.excerpt || undefined,
       event,
     },
     blocks,

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/lib/i18n/locales";
@@ -5,6 +6,7 @@ import { Blocks } from "@/components/blocks";
 import { StoryblokBridge } from "@/components/layout/StoryblokBridge";
 import { storyblokFetch } from "@/lib/storyblok/client";
 import { fetchStory, type Block } from "@/lib/storyblok/fetchStory";
+import { seo } from "@/lib/seo";
 
 /** The home story answers at the root, not at /home. */
 const HOME = "home";
@@ -12,7 +14,32 @@ const HOME = "home";
 /** The one kind of story this route draws. */
 const PAGE = "page";
 
-type Content = { component: string; body: Block[] };
+type Content = {
+  component: string;
+  body: Block[];
+  meta_title?: string;
+  meta_description?: string;
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string[] }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const path = slug.join("/");
+  const story = await fetchStory<Content>(path);
+  if (!story || story.content.component !== PAGE) return {};
+
+  // The story's own name where nothing was written for the search results: it is
+  // what the editor called the page, which is usually what a reader wants to see.
+  return seo({
+    title: story.content.meta_title || story.name,
+    description: story.content.meta_description,
+    path: `/${path}`,
+    locale,
+  });
+}
 
 /**
  * Any path under a locale that no file of its own answers. It is a story if the

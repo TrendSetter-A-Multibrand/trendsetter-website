@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { siteName, siteUrl } from "@/lib/site";
+import { DEFAULT_DESCRIPTION } from "@/lib/seo";
 import "./globals.css";
 
 // Variable fonts supplied by the designer; the italic files sit alongside them
@@ -18,9 +20,20 @@ const geistMono = localFont({
   display: "swap",
 });
 
+/**
+ * What holds for the whole site. `metadataBase` is what lets every page below
+ * name its canonical address and its picture with a path rather than a host, and
+ * the template is what puts the name at the end of every title without each page
+ * having to remember to.
+ */
 export const metadata: Metadata = {
-  title: "TRENDSETTER",
-  description: "TRENDSETTER",
+  metadataBase: new URL(siteUrl),
+  title: { default: siteName, template: `%s — ${siteName}` },
+  description: DEFAULT_DESCRIPTION,
+  applicationName: siteName,
+  robots: { index: true, follow: true },
+  openGraph: { siteName, type: "website" },
+  formatDetection: { telephone: false, address: false, email: false },
 };
 
 export default function RootLayout({

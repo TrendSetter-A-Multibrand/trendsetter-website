@@ -1,9 +1,27 @@
+import type { Metadata } from "next";
 import { PageCover } from "@/components/blocks/PageCover";
 import { ArticleFilters } from "@/components/blocks/ArticleFilters";
 import { ArticleGrid } from "@/components/blocks/ArticleGrid";
 import { Pagination } from "@/components/ui/Pagination";
 import { byTag, inSection, tagsOf } from "@/lib/articles";
 import { fetchArticles } from "@/lib/storyblok/articles";
+import { seo } from "@/lib/seo";
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return seo({
+    title: "Журнал",
+    description:
+      "Разбираемся, сравниваем, считаем: тексты о моде, красоте, доме и людях от редакции TRENDSETTER.",
+    path: "/journal",
+    locale,
+  });
+}
 
 export default async function JournalPage({
   params,
