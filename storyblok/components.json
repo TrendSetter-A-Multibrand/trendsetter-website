@@ -597,5 +597,124 @@
         "pos": 9
       }
     }
+  },
+  {
+    "name": "brand",
+    "display_name": "Бренд",
+    "is_root": true,
+    "is_nestable": false,
+    "schema": {
+      "name": {
+        "type": "text",
+        "display_name": "Название",
+        "pos": 0
+      },
+      "logo": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Логотип",
+        "pos": 1
+      },
+      "color": {
+        "type": "text",
+        "display_name": "Цвет бренда",
+        "description": "Как в логотипе, шестнадцатеричный: #1F3F70. Им пишутся названия магазинов в карточке бренда",
+        "pos": 2
+      },
+      "categories": {
+        "type": "options",
+        "display_name": "Категории",
+        "options": [
+          {
+            "name": "Одежда",
+            "value": "Одежда"
+          },
+          {
+            "name": "Обувь",
+            "value": "Обувь"
+          },
+          {
+            "name": "Аксессуары",
+            "value": "Аксессуары"
+          },
+          {
+            "name": "Косметика",
+            "value": "Косметика"
+          },
+          {
+            "name": "Дом",
+            "value": "Дом"
+          },
+          {
+            "name": "Еда",
+            "value": "Еда"
+          },
+          {
+            "name": "Мужчинам",
+            "value": "Мужчинам"
+          },
+          {
+            "name": "Девушкам",
+            "value": "Девушкам"
+          },
+          {
+            "name": "Детям",
+            "value": "Детям"
+          }
+        ],
+        "pos": 3
+      },
+      "description": {
+        "type": "textarea",
+        "display_name": "Описание",
+        "pos": 4
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Фото в карточке",
+        "description": "Во всю ширину карточки, 400 высотой",
+        "pos": 5
+      },
+      "availability": {
+        "type": "bloks",
+        "display_name": "Наличие в магазинах",
+        "description": "По строке на магазин: какой и есть ли бренд в нём",
+        "restrict_components": true,
+        "component_whitelist": [
+          "brand_store"
+        ],
+        "pos": 6
+      }
+    }
+  },
+  {
+    "name": "brand_store",
+    "display_name": "Наличие в магазине",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "store": {
+        "type": "option",
+        "display_name": "Магазин",
+        "source": "internal_stories",
+        "folder_slug": "stores",
+        "filter_content_type": [
+          "store"
+        ],
+        "use_uuid": true,
+        "pos": 0
+      },
+      "available": {
+        "type": "boolean",
+        "display_name": "Бренд есть в этом магазине",
+        "description": "Снятая галочка рисует красный маркер вместо зелёного",
+        "pos": 1
+      }
+    }
   }
 ]

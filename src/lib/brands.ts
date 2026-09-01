@@ -1,4 +1,4 @@
-import { EVENTS, type Event } from "@/lib/events";
+import type { Event } from "@/lib/events";
 
 export type Brand = {
   name: string;
@@ -35,31 +35,6 @@ export const BRAND_INDEX = [
   ...Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)),
   "RU",
   "#",
-];
-
-const DESCRIPTION = Array.from(
-  { length: 10 },
-  () =>
-    "Неделя моды весна-лето 2026 . Чего (не) ждать от предстоящих показов нового сезона"
-).join(" ");
-
-const BASE: Omit<Brand, "name"> = {
-  categories: ["Одежда", "Обувь", "Мужчинам", "Девушкам", "Детям"],
-  logo: "/images/brands/abercrombie-fitch.svg",
-  image: "/images/home/journal/1.jpg",
-  description: DESCRIPTION,
-  stores: [
-    { name: 'ТЦ "Вегас"', available: true },
-    { name: 'ТЦ "Авеню"', available: false },
-  ],
-  events: EVENTS.slice(0, 2),
-  color: "#1F3F70",
-};
-
-/** Nine under A and nine under B, the way the mockup shows them. */
-export const BRANDS: Brand[] = [
-  ...Array.from({ length: 9 }, () => ({ ...BASE, name: "Abercrombie & Fitch" })),
-  ...Array.from({ length: 9 }, () => ({ ...BASE, name: "Balenciaga" })),
 ];
 
 /** Bucket a brand under its first character, matching BRAND_INDEX. */

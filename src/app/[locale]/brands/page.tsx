@@ -1,6 +1,5 @@
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { BrandDirectory } from "@/components/blocks/BrandDirectory";
-import { BRANDS } from "@/lib/brands";
+import { BrandsSection } from "@/components/blocks/BrandsSection";
 
 export default async function BrandsPage({
   params,
@@ -14,7 +13,7 @@ export default async function BrandsPage({
       <Breadcrumbs
         items={[{ label: "Главная", href: `/${locale}` }, { label: "Бренды" }]}
       />
-      <BrandDirectory brands={BRANDS} />
+      <BrandsSection />
     </>
   );
 }
