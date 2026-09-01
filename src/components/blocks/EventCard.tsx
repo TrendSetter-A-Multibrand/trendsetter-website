@@ -34,14 +34,16 @@ function Badge({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Geist Mono 24 on a 31.2 line, 3 of tracking - the same as the day and hour. */
+/**
+ * Geist Mono 16 on a 20 line, untracked. It used to be set as big as the day and
+ * the hour beside it; the designer cut it down, because a name of any length ran
+ * to four lines across the middle of the card.
+ */
 function EventTitle({ item }: { item: Event }) {
   return (
     <div className="text-center uppercase">
-      <p className="font-mono text-2xl/[31.2px] tracking-[3px]">{item.title}</p>
-      <p className="font-mono text-2xl/[31.2px] tracking-[3px]">
-        {item.location}
-      </p>
+      <p className="font-mono text-base/5 font-medium">{item.title}</p>
+      <p className="font-mono text-base/5 font-medium">{item.location}</p>
     </div>
   );
 }
