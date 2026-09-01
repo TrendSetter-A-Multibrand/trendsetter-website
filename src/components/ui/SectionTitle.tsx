@@ -37,9 +37,10 @@ export function SectionTitle({
   className = "",
 }: {
   heading: string;
-  trackRef: RefObject<HTMLElement | null>;
-  /** Which of the file's two controls this row is drawn with. */
-  controls: "bar" | "arrows";
+  /** Only a row that scrolls has one; the shops and markets titles do not. */
+  trackRef?: RefObject<HTMLElement | null>;
+  /** Which of the file's two controls this row is drawn with, if either. */
+  controls?: "bar" | "arrows";
   /** Each section keeps its own air around the row. */
   className?: string;
 }) {
@@ -51,7 +52,7 @@ export function SectionTitle({
    * in the row on every scroll frame.
    */
   const sync = useCallback(() => {
-    const track = trackRef.current;
+    const track = trackRef?.current;
     if (!track || !bar.current || !thumb.current) return;
 
     const maxScroll = track.scrollWidth - track.clientWidth;
@@ -62,7 +63,7 @@ export function SectionTitle({
   }, [trackRef]);
 
   useEffect(() => {
-    const track = trackRef.current;
+    const track = trackRef?.current;
     if (!track || controls !== "bar") return;
     sync();
     track.addEventListener("scroll", sync, { passive: true });
@@ -75,6 +76,7 @@ export function SectionTitle({
   }, [trackRef, sync, controls]);
 
   function scrollToPointer(clientX: number) {
+    if (!trackRef) return;
     const track = trackRef.current;
     if (!track || !bar.current) return;
 
@@ -97,7 +99,7 @@ export function SectionTitle({
 
   /** One card plus the gap after it, the same step the row walks itself along by. */
   function step(direction: 1 | -1) {
-    const track = trackRef.current;
+    const track = trackRef?.current;
     if (!track) return;
     track.scrollBy({ left: direction * stepWidth(track), behavior: "smooth" });
   }

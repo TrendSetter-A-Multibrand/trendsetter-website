@@ -1,3 +1,5 @@
+import { EVENTS, type Event } from "@/lib/events";
+
 export type Brand = {
   name: string;
   categories: string[];
@@ -5,6 +7,8 @@ export type Brand = {
   image: string;
   description: string;
   stores: { name: string; available: boolean }[];
+  /** What the brand is holding next - the sheet ends on a row of them. */
+  events: Event[];
 };
 
 export const BRAND_CATEGORIES = [
@@ -41,6 +45,7 @@ const BASE: Omit<Brand, "name"> = {
     { name: 'ТЦ "Вегас"', available: true },
     { name: 'ТЦ "Авеню"', available: false },
   ],
+  events: EVENTS.slice(0, 2),
 };
 
 /** Nine under A and nine under B, the way the mockup shows them. */
