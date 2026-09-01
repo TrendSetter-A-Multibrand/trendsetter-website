@@ -55,8 +55,8 @@ export default async function SearchPage({
   return (
     <>
       <section className="px-6 pt-10 lg:px-10">
-        {/* 42 tall, 16 apart; the search itself stays up in the header */}
-        <div className="flex flex-wrap gap-4">
+        {/* 42 tall, 8 apart; the search itself stays up in the header */}
+        <div className="flex flex-wrap gap-2">
           {SECTIONS.map((section) => (
             <FilterChip
               key={section.value}
@@ -71,19 +71,21 @@ export default async function SearchPage({
           [Результаты поиска]
         </h1>
 
-        {/* 60 on an 80 line - the one place on the site type gets this big */}
-        <p className="mt-6 font-mono uppercase text-brand max-lg:text-4xl lg:text-[60px]/[80px] lg:tracking-[3px]">
+        {/* 60 on an 80 line - the one place on the site type gets this big. The
+            file leaves nothing between it and the heading above, or between it
+            and the apology below: the three read as one block. */}
+        <p className="font-mono uppercase text-brand max-lg:text-4xl lg:text-[60px]/[80px] lg:tracking-[3px]">
           {query}
         </p>
 
         {matches.length === 0 && (
-          <p className="text-lg tracking-[1px] lg:text-2xl/[29px]">
+          <p className="text-lg font-medium tracking-[1px] lg:text-2xl/[29px]">
             Результатов не найдено. Попробуйте использовать другое слово.
           </p>
         )}
 
         {found.length > 0 && (
-          <div className="mt-10 grid gap-x-10 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {found.map((article, i) => (
               <ArticleCard
                 key={i}

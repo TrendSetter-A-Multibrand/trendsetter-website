@@ -27,7 +27,7 @@ export function RecommendedRow({
   useCarousel(row, { autoplay: true });
 
   return (
-    <section className="px-6 py-5 lg:px-10">
+    <section className="px-6 lg:px-10">
       <SectionTitle heading={heading} trackRef={row} controls="bar" />
 
       <div

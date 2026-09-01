@@ -26,7 +26,7 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
   return (
     <nav
       aria-label="Страницы"
-      className="flex items-center justify-center gap-2 py-10 font-mono text-[22px]/[28.6px] font-medium tracking-[1px]"
+      className="flex items-center justify-center gap-2 py-10 font-mono text-base/5 font-medium"
     >
       <Link
         href={hrefFor(Math.max(page - 1, 1))}
@@ -40,7 +40,7 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
         item === "gap" ? (
           <span
             key={`gap-${i}`}
-            className="flex h-[52px] w-[26px] items-center justify-center text-ink"
+            className="flex h-[52px] w-6 items-center justify-center text-ink"
           >
             <Dots />
           </span>
@@ -49,10 +49,10 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
             key={item}
             href={hrefFor(item)}
             aria-current={item === page ? "page" : undefined}
-            className={`flex h-[52px] w-[60px] items-center justify-center ${
+            className={`flex size-[52px] items-center justify-center transition-colors ${
               item === page
                 ? "bg-brand text-white"
-                : "bg-surface text-ink hover:bg-surface-active"
+                : "bg-surface-active text-ink hover:bg-surface"
             }`}
           >
             {item}
@@ -84,13 +84,13 @@ function Chevron({ direction }: { direction: "left" | "right" }) {
   );
 }
 
-/** Three round 4px dots 8 apart - the file draws the skipped pages, not an ellipsis */
+/** Three round 4px dots in a 24 box - the file draws the skipped pages, not an ellipsis */
 function Dots() {
   return (
-    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
-      <circle cx="5" cy="13" r="2" fill="currentColor" />
-      <circle cx="13" cy="13" r="2" fill="currentColor" />
-      <circle cx="21" cy="13" r="2" fill="currentColor" />
+    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="4" cy="12" r="2" fill="currentColor" />
+      <circle cx="12" cy="12" r="2" fill="currentColor" />
+      <circle cx="20" cy="12" r="2" fill="currentColor" />
     </svg>
   );
 }
