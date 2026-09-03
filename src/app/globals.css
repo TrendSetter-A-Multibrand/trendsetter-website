@@ -1,17 +1,24 @@
 @import "tailwindcss";
 
-/* Values pulled from the Figma file (page WEB) - see ARCHITECTURE.md */
+/* Values pulled from the Figma file's Colors page - see ARCHITECTURE.md.
+   Two of the page's colours are missing on purpose. The hovers are not on that
+   page at all - they are drawn as the Buttons set's State=hover variants, and
+   these two match them. And its three opacity variants are Tailwind modifiers
+   on a colour already here - white/40, ink/40, ink/15 - so a token would only
+   be a second way to write them. */
 :root {
   --background: #ffffff;
   --foreground: #252120;
   --brand: #a22325;
   --brand-hover: #bd2729;
+  --deep-blue: #1f3f70;
   --ink: #252120;
   --ink-hover: #3b3837;
   --muted: #888888;
   --surface: #f7f7f7;
   --surface-active: #eeeeee;
-  --surface-strong: #e8e8e8;
+  --accent-green: #71cc98;
+  --accent-yellow: #f3e73f;
 }
 
 @theme inline {
@@ -19,12 +26,14 @@
   --color-foreground: var(--foreground);
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
+  --color-deep-blue: var(--deep-blue);
   --color-ink: var(--ink);
   --color-ink-hover: var(--ink-hover);
   --color-muted: var(--muted);
   --color-surface: var(--surface);
   --color-surface-active: var(--surface-active);
-  --color-surface-strong: var(--surface-strong);
+  --color-accent-green: var(--accent-green);
+  --color-accent-yellow: var(--accent-yellow);
   --font-sans: var(--font-inter-tight);
   --font-mono: var(--font-geist-mono);
   --animate-marquee: marquee 24s linear infinite;

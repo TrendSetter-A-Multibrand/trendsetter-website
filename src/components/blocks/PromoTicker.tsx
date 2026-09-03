@@ -1,17 +1,16 @@
 import Link from "next/link";
 
 /**
- * The library draws the band in four colours. Yellow, green and blue have no
- * token of their own - the file's Colors page is still a row of unnamed
- * swatches - so they stay written out here, as the Marker's do.
+ * The library draws the band in four colours. The Colors page names all four
+ * now - Brand Red, Yellow, Green, Deep Blue - so each comes from its token.
  */
 export type TickerTone = "red" | "yellow" | "green" | "blue";
 
 const TONES: Record<TickerTone, string> = {
   red: "bg-brand text-white",
-  yellow: "bg-[#F3E73F] text-ink",
-  green: "bg-[#71CC98] text-ink",
-  blue: "bg-[#1F3F70] text-white",
+  yellow: "bg-accent-yellow text-ink",
+  green: "bg-accent-green text-ink",
+  blue: "bg-deep-blue text-white",
 };
 
 type PromoTickerProps = {
