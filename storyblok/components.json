@@ -560,33 +560,39 @@
         "display_name": "Адрес",
         "pos": 1
       },
+      "tags": {
+        "type": "textarea",
+        "display_name": "Категории",
+        "description": "По одной в строке, как «Одежда». В скобки их ставит сайт",
+        "pos": 2
+      },
       "directions": {
         "type": "textarea",
         "display_name": "Как пройти",
         "description": "Каждая строка с новой строки",
-        "pos": 2
+        "pos": 3
       },
       "hours": {
         "type": "text",
         "display_name": "Часы работы",
-        "pos": 3
+        "pos": 4
       },
       "phone": {
         "type": "text",
         "display_name": "Телефон",
-        "pos": 4
+        "pos": 5
       },
       "brands_count": {
         "type": "text",
         "display_name": "Кол-во брендов",
         "description": "Как показывать, например «50 шт.»",
-        "pos": 5
+        "pos": 6
       },
       "assortment": {
         "type": "text",
         "display_name": "Ассортимент",
         "description": "Например «Мужской 30%   Женский 70%»",
-        "pos": 6
+        "pos": 7
       },
       "image": {
         "type": "asset",
@@ -594,19 +600,19 @@
           "images"
         ],
         "display_name": "Фото",
-        "pos": 7
+        "pos": 8
       },
       "lon": {
         "type": "number",
         "display_name": "Долгота",
         "description": "Первое число в Яндекс.Картах после запятой — восток-запад, около 37 для Москвы",
-        "pos": 8
+        "pos": 9
       },
       "lat": {
         "type": "number",
         "display_name": "Широта",
         "description": "Север-юг, около 55 для Москвы",
-        "pos": 9
+        "pos": 10
       }
     }
   },

@@ -6,6 +6,8 @@ export type Store = {
   /** Only the details panel shows these two. */
   brandCount: string;
   assortment: string;
+  /** What the shop sells, written out in brackets under its name in the sheet. */
+  tags: string[];
   /** One line each, set tight under «Как пройти». */
   directions: string[];
   image: string;
@@ -21,6 +23,7 @@ const FILLER = {
   phone: "8 926 794 97 42",
   brandCount: "50 шт.",
   assortment: "Мужской 30%   Женский 70%",
+  tags: ["Одежда", "Обувь", "Мужчинам", "Девушкам", "Детям"],
 };
 
 export const STORES: Store[] = [

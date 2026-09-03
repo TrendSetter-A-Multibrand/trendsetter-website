@@ -39,6 +39,7 @@ for (const store of STORES) {
       name: store.name,
       address: store.address,
       directions: store.directions.join("\n"),
+      tags: store.tags.join("\n"),
       hours: store.hours,
       phone: store.phone,
       brands_count: store.brandCount,

@@ -1,4 +1,4 @@
-import { StoreLocator } from "@/components/blocks/StoreLocator";
+import { StoreCards } from "@/components/blocks/StoreCards";
 import { fetchStories } from "@/lib/storyblok/fetchStory";
 import type { Store } from "@/lib/stores";
 
@@ -10,15 +10,23 @@ type StoreFields = {
   phone?: string;
   brands_count?: string;
   assortment?: string;
+  tags?: string;
   image?: { filename?: string };
   lon?: string;
   lat?: string;
 };
 
+/** A textarea comes back as one string; the site wants it a line at a time. */
+const lines = (field?: string) =>
+  (field ?? "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
 /**
- * The shops the space holds, drawn by the same panel as before. Adding a shop is
- * adding a story: it turns up in the row on the home page, on the shops page and
- * on the map at once.
+ * The shops the space holds, drawn as the row of cards the file now asks for.
+ * Adding a shop is adding a story: it turns up on the home page and on the
+ * shops page at once, and on the map inside the sheet its card opens.
  *
  * Storyblok keeps a number field as a string of digits, which is why the two
  * coordinates come back as text and are read here.
@@ -33,17 +41,14 @@ export async function StoresSection({ heading }: { heading?: string }) {
     phone: content.phone ?? "",
     brandCount: content.brands_count ?? "",
     assortment: content.assortment ?? "",
-    directions: (content.directions ?? "")
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(Boolean),
+    directions: lines(content.directions),
+    tags: lines(content.tags),
     image: content.image?.filename || "",
     coords: [Number(content.lon), Number(content.lat)],
   }));
 
-  // The panel writes out whichever shop is selected, so with none there is no
-  // selection to write out. An empty space is the only way here.
+  // An empty space draws no row at all rather than an empty one.
   if (stores.length === 0) return null;
 
-  return <StoreLocator heading={heading} stores={stores} />;
+  return <StoreCards heading={heading} stores={stores} />;
 }
