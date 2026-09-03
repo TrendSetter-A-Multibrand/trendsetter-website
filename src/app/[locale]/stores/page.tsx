@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { StoresSection } from "@/components/blocks/StoresSection";
-import { HelpCards } from "@/components/blocks/HelpCards";
 import { seo } from "@/lib/seo";
 
 
@@ -32,11 +31,11 @@ export default async function StoresPage({
       <Breadcrumbs
         items={[{ label: "Главная", href: `/${locale}` }, { label: "Магазины" }]}
       />
-      <div className="pt-11">
+      {/* 40 under the crumbs, and the 40 below the row is the page's own
+          bottom padding - the file puts nothing else between them and the
+          footer. */}
+      <div className="pt-10">
         <StoresSection />
-      </div>
-      <div className="mt-10">
-        <HelpCards locale={locale} />
       </div>
     </div>
   );
