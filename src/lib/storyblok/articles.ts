@@ -23,10 +23,14 @@ type ArticleFields = {
 
 const LABELS = { journal: "Журнал", news: "Новости" } as const;
 
-/** «22 сентября 2026», the way the file writes a date under a title. */
+/**
+ * «22 сентября 2026», the way the file writes a date under a title. The whole
+ * word here rather than the plates' three letters: this one is read as a line
+ * of text and has the width of the page to do it in.
+ */
 function written(value: string) {
-  const { day, month } = eventDate(value);
-  return day && month ? `${day} ${month} ${value.slice(0, 4)}` : "";
+  const { day, monthFull } = eventDate(value);
+  return day && monthFull ? `${day} ${monthFull} ${value.slice(0, 4)}` : "";
 }
 
 const paragraphs = (body?: string) =>

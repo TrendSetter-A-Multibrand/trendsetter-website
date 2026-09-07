@@ -70,12 +70,24 @@ export const findEvent = (slug: string) =>
  * How the badges read the date: the day large, the month small under it in the
  * genitive, the hour over the minute.
  *
- * The month list is written out rather than left to Intl: the file spells them
- * «июля» and Intl's own month name is «июль», which is a different word.
+ * Two lists, because the same month is written two ways. The plate is 64 square
+ * with 12 of padding, so the month has 40 to live in at 10px with 3 of tracking
+ * - about four letters. «сентября» wants some seventy and ran out of the plate
+ * on both sides; the file draws «июля», which is short enough to have hidden
+ * that. So the plates take three letters and prose takes the whole word.
+ *
+ * Written out rather than left to Intl either way: Intl's own name for the
+ * month is «июль», and a date needs «июля», which is a different word.
  */
 const MONTHS = [
   "января", "февраля", "марта", "апреля", "мая", "июня",
   "июля", "августа", "сентября", "октября", "ноября", "декабря",
+];
+
+/** The same twelve as the plates wear them: three letters, no full stop. */
+const MONTHS_SHORT = [
+  "янв", "фев", "мар", "апр", "мая", "июн",
+  "июл", "авг", "сен", "окт", "ноя", "дек",
 ];
 
 /**
@@ -86,9 +98,13 @@ const MONTHS = [
 export function eventDate(value: string) {
   const [date = "", time = ""] = value.split(" ");
   const [, month = "", day = ""] = date.split("-");
+  const index = Number(month) - 1;
   return {
     day: String(Number(day) || ""),
-    month: MONTHS[Number(month) - 1] ?? "",
+    /** For the plates on a card, which have room for no more. */
+    month: MONTHS_SHORT[index] ?? "",
+    /** For a date read as a sentence: «22 сентября 2026». */
+    monthFull: MONTHS[index] ?? "",
     time: time.slice(0, 5),
   };
 }
