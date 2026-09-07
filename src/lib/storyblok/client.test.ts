@@ -1,5 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ALL, StoryblokError, storyblokFetch, storyTag } from "@/lib/storyblok/client";
+import {
+  ALL,
+  StoryblokError,
+  storyblokFetch,
+  storyblokFetchAll,
+  storyTag,
+} from "@/lib/storyblok/client";
 
 const answer = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status });
@@ -91,5 +97,79 @@ describe("storyblokFetch", () => {
     await expect(storyblokFetch("stories/nope")).rejects.toMatchObject({
       status: 404,
     });
+  });
+});
+
+/**
+ * Ради чего это вообще есть: одна страница выглядит как полный ответ. Список
+ * обрывается на сотне без ошибки и без признака, что он оборван, - и сотая с
+ * лишним новость просто исчезает и из ряда, и из карты сайта, и из списка
+ * страниц, которые сборка отрисовывает заранее.
+ *
+ * Тело Response читается один раз, поэтому каждый ответ собирается заново.
+ */
+describe("storyblokFetchAll", () => {
+  const env = { ...process.env };
+
+  beforeEach(() => {
+    process.env.STORYBLOK_TOKEN = "секрет";
+    process.env.STORYBLOK_REGION = "eu";
+  });
+
+  afterEach(() => {
+    process.env = { ...env };
+    vi.unstubAllGlobals();
+  });
+
+  const page = (count: number, from = 0) =>
+    answer({
+      stories: Array.from({ length: count }, (_, i) => ({ id: from + i })),
+    });
+
+  it("список длиннее сотни дочитывает до конца", async () => {
+    const fetcher = vi
+      .fn()
+      .mockImplementationOnce(() => page(100))
+      .mockImplementationOnce(() => page(30, 100));
+    vi.stubGlobal("fetch", fetcher);
+
+    const stories = await storyblokFetchAll<{ id: number }>("stories", {
+      query: { content_type: "article" },
+    });
+
+    expect(stories).toHaveLength(130);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(String(fetcher.mock.calls[0][0])).toContain("per_page=100");
+    expect(String(fetcher.mock.calls[0][0])).toContain("page=1");
+    expect(String(fetcher.mock.calls[1][0])).toContain("page=2");
+  });
+
+  it("на короткой странице второй раз не спрашивает", async () => {
+    const fetcher = vi.fn().mockImplementation(() => page(4));
+    vi.stubGlobal("fetch", fetcher);
+
+    expect(await storyblokFetchAll("stories")).toHaveLength(4);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
+  it("ровно сотня - идёт за второй страницей и останавливается на пустой", async () => {
+    const fetcher = vi
+      .fn()
+      .mockImplementationOnce(() => page(100))
+      .mockImplementationOnce(() => answer({ stories: [] }));
+    vi.stubGlobal("fetch", fetcher);
+
+    expect(await storyblokFetchAll("stories")).toHaveLength(100);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+
+  it("упирается в предел страниц, а не крутится вечно", async () => {
+    const fetcher = vi.fn().mockImplementation(() => page(100));
+    vi.stubGlobal("fetch", fetcher);
+
+    const stories = await storyblokFetchAll("stories");
+
+    expect(fetcher).toHaveBeenCalledTimes(50);
+    expect(stories).toHaveLength(5000);
   });
 });

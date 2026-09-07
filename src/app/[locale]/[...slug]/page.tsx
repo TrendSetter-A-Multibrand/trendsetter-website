@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { isLocale } from "@/lib/i18n/locales";
 import { Blocks } from "@/components/blocks";
 import { StoryblokBridge } from "@/components/layout/StoryblokBridge";
-import { storyblokFetch } from "@/lib/storyblok/client";
+import { storyblokFetchAll } from "@/lib/storyblok/client";
 import { fetchStory, type Block } from "@/lib/storyblok/fetchStory";
 import { seo } from "@/lib/seo";
 
@@ -56,9 +56,10 @@ export async function generateStaticParams() {
   //
   // Asked fresh: the build must not learn which pages exist from a cache that
   // predates the newest of them.
-  const { stories } = await storyblokFetch<{
-    stories: { full_slug: string }[];
-  }>("stories", { query: { content_type: PAGE, per_page: 100 }, fresh: true });
+  const stories = await storyblokFetchAll<{ full_slug: string }>("stories", {
+    query: { content_type: PAGE },
+    fresh: true,
+  });
 
   return stories
     .filter((story) => story.full_slug !== HOME)

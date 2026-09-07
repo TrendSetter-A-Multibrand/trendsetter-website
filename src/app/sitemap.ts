@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { absoluteLanguages, everyLocale } from "@/lib/site";
-import { storyblokFetch } from "@/lib/storyblok/client";
+import { storyblokFetchAll } from "@/lib/storyblok/client";
 import { JOURNAL } from "@/lib/storyblok/articles";
 
 /**
@@ -24,11 +24,10 @@ type Listed = { full_slug: string; published_at: string | null };
  * yesterday's pages is worse than none.
  */
 async function published(contentType: string) {
-  const { stories } = await storyblokFetch<{ stories: Listed[] }>("stories", {
-    query: { content_type: contentType, per_page: 100 },
+  return storyblokFetchAll<Listed>("stories", {
+    query: { content_type: contentType },
     fresh: true,
   });
-  return stories;
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

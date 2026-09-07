@@ -107,3 +107,50 @@ export async function storyblokFetch<T>(
     return response.json() as Promise<T>;
   }
 }
+
+/** What the list endpoint gives at most in one answer, whatever is asked of it. */
+const PER_PAGE = 100;
+
+/**
+ * A ceiling on the walk rather than `while (true)`: five thousand stories would
+ * mean the answers had stopped telling us when they ran out, and stopping is
+ * better than looping.
+ */
+const MAX_PAGES = 50;
+
+/**
+ * Every story of a kind, however many pages that takes.
+ *
+ * The list endpoint hands out a hundred at a time and says nothing about what
+ * is left, so a single page looks like a complete answer. A space grown past a
+ * hundred articles would quietly lose the hundred-and-first from every row on
+ * the site, from the sitemap and from the prerendered paths - with no error
+ * anywhere to say so. The page that comes back short is the last one, and that
+ * is what ends the walk.
+ */
+export async function storyblokFetchAll<T>(
+  path: string,
+  {
+    query = {},
+    ...rest
+  }: {
+    query?: Query;
+    tags?: string[];
+    draft?: boolean;
+    fresh?: boolean;
+  } = {}
+): Promise<T[]> {
+  const all: T[] = [];
+
+  for (let page = 1; page <= MAX_PAGES; page++) {
+    const { stories } = await storyblokFetch<{ stories: T[] }>(path, {
+      ...rest,
+      query: { ...query, per_page: PER_PAGE, page },
+    });
+
+    all.push(...stories);
+    if (stories.length < PER_PAGE) break;
+  }
+
+  return all;
+}
