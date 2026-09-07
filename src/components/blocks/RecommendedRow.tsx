@@ -26,6 +26,10 @@ export function RecommendedRow({
   const row = useRef<HTMLDivElement>(null);
   useCarousel(row, { autoplay: true });
 
+  // No records, no row: a heading over a blank strip is worse than nothing.
+  // The shops section already answers this way.
+  if (articles.length === 0) return null;
+
   return (
     <section className="px-6 lg:px-10">
       <SectionTitle heading={heading} trackRef={row} controls="bar" />

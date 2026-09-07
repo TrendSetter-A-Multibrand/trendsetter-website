@@ -13,13 +13,15 @@ import react from "@vitejs/plugin-react";
  * TRENDSETTER» did, and why this now sits at C:\Work	rendsetter.
  *
  * No jest-dom either: its matchers are sugar over assertions the runner already
- * has, and one package fewer is one package fewer.
+ * has, and one package fewer is one package fewer. `vitest.setup.ts` is not a
+ * package but three lines of our own: the browser APIs jsdom leaves out.
  */
 export default defineConfig({
   plugins: [react()],
   resolve: { tsconfigPaths: true },
   test: {
     environment: "jsdom",
+    setupFiles: ["./vitest.setup.ts"],
     include: ["src/**/*.test.{ts,tsx}"],
   },
 });

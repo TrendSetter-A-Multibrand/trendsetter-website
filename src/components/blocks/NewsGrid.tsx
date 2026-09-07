@@ -31,6 +31,10 @@ export function NewsGrid({
   // position the red block is already following, so it keeps up either way
   useCarousel(trackRef, { autoplay: true });
 
+  // No records, no row: a heading over a blank strip is worse than nothing.
+  // The shops section already answers this way.
+  if (items.length === 0) return null;
+
   return (
     <section className="px-6 pt-10 lg:px-10">
       {/* The file leaves 40 from the heading to the row, and nothing above it */}

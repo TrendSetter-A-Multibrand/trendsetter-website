@@ -31,6 +31,10 @@ export function JournalCarousel({
   const trackRef = useRef<HTMLDivElement>(null);
   useCarousel(trackRef, { autoplay: true });
 
+  // No records, no row: a heading over a blank strip is worse than nothing.
+  // The shops section already answers this way.
+  if (items.length === 0) return null;
+
   return (
     <section className="px-6 pt-10 lg:px-10">
       <SectionTitle

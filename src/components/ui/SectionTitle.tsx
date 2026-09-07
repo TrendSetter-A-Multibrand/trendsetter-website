@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useRef,
+  useState,
   type PointerEvent as ReactPointerEvent,
   type RefObject,
 } from "react";
@@ -29,6 +30,14 @@ const THUMB_WIDTH = 56;
  *
  * The file draws twelve positions of the block. Scroll position is continuous,
  * so the block simply rides it instead.
+ *
+ * Neither control is drawn while the row fits the width it is given. A control
+ * that cannot move is worse than no control - the block sits at the left end of
+ * its rule and the arrows do nothing when clicked - and that is not a rare
+ * state: four news cards measure the row exactly, so the space holding four
+ * news and no more is enough to produce it. The answer is measured rather than
+ * counted, because either side of it can change: the space gains a card, or the
+ * window grows.
  */
 export function SectionTitle({
   heading,
@@ -48,6 +57,31 @@ export function SectionTitle({
   const thumb = useRef<HTMLDivElement>(null);
 
   /**
+   * True until measured, so the server draws the control the file draws and
+   * hydration has nothing to disagree about; the first measurement takes it
+   * away where there is nothing to scroll.
+   */
+  const [scrollable, setScrollable] = useState(true);
+
+  const measure = useCallback(() => {
+    const track = trackRef?.current;
+    if (track) setScrollable(track.scrollWidth > track.clientWidth);
+  }, [trackRef]);
+
+  /** After every render: a card added or removed changes the content width. */
+  useEffect(measure);
+
+  /** And on resize: the window changes the width the row has to fill. */
+  useEffect(() => {
+    const track = trackRef?.current;
+    if (!track || !controls) return;
+
+    const observer = new ResizeObserver(measure);
+    observer.observe(track);
+    return () => observer.disconnect();
+  }, [trackRef, controls, measure]);
+
+  /**
    * Written straight to the DOM: through state this would re-render every card
    * in the row on every scroll frame.
    */
@@ -62,9 +96,11 @@ export function SectionTitle({
     }px)`;
   }, [trackRef]);
 
+  // Keyed on `scrollable` as well, so the block is put where the row already
+  // stands the moment the bar appears rather than starting from the left
   useEffect(() => {
     const track = trackRef?.current;
-    if (!track || controls !== "bar") return;
+    if (!track || controls !== "bar" || !scrollable) return;
     sync();
     track.addEventListener("scroll", sync, { passive: true });
     const observer = new ResizeObserver(sync);
@@ -73,7 +109,7 @@ export function SectionTitle({
       track.removeEventListener("scroll", sync);
       observer.disconnect();
     };
-  }, [trackRef, sync, controls]);
+  }, [trackRef, sync, controls, scrollable]);
 
   function scrollToPointer(clientX: number) {
     if (!trackRef) return;
@@ -112,7 +148,7 @@ export function SectionTitle({
         [{heading}]
       </h2>
 
-      {controls === "bar" && (
+      {controls === "bar" && scrollable && (
         <div
           ref={bar}
           onPointerDown={handlePointerDown}
@@ -128,7 +164,7 @@ export function SectionTitle({
         </div>
       )}
 
-      {controls === "arrows" && (
+      {controls === "arrows" && scrollable && (
         <div className="flex shrink-0 gap-10">
           <button type="button" aria-label="Назад" onClick={() => step(-1)}>
             <Arrow className="rotate-180" />
