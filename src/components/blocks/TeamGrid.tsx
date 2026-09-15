@@ -8,7 +8,7 @@ import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
  */
 export function TeamGrid({ members }: { members: TeamMember[] }) {
   return (
-    <section className="px-6 pt-10 lg:px-10">
+    <section className="px-6 pt-10 pb-10 lg:px-10">
       <h2 className="font-mono text-xl uppercase tracking-[5px] lg:text-[30px]/[39px]">
         [Команда]
       </h2>

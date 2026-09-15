@@ -7,7 +7,9 @@ import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
  *
  * The file draws the first in colour and the other two fully desaturated, which
  * is a hover state written down rather than three different pictures: at rest
- * they are grey, and the one under the pointer comes back to colour.
+ * they are grey, and the one under the pointer comes back to colour and draws
+ * 15% closer, same as the other cards on the site (confirmed with the designer
+ * 15.09.2026).
  */
 export function SpaceCards({
   cards,
@@ -29,7 +31,7 @@ export function SpaceCards({
               alt=""
               fill
               sizes="(min-width: 1024px) 31vw, 92vw"
-              className="object-cover grayscale transition-[filter] duration-300 group-hover:grayscale-0"
+              className="object-cover grayscale transition-[filter,transform] duration-300 group-hover:scale-[1.15] group-hover:grayscale-0"
             />
           )}
 
