@@ -10,6 +10,7 @@ import {
   ABOUT_CARDS,
   ABOUT_FEATURE,
   ABOUT_MISSION,
+  COLLAB_INTRO,
   COLLABORATIONS,
   SPACE_CARDS,
   SPACE_INTRO,
@@ -28,9 +29,11 @@ const photoCards = (cards: { title: string; body: string }[]) =>
     ),
   });
 
-const spaceCards = (cards: { title: string }[]) =>
+const spaceCards = (cards: { title: string; body?: string }[]) =>
   block("space_cards", {
-    cards: cards.map((card) => block("space_card", { title: card.title })),
+    cards: cards.map((card) =>
+      block("space_card", { title: card.title, body: card.body ?? "" })
+    ),
   });
 
 const parent = await folder("company", "Компания");
@@ -70,7 +73,7 @@ const pages: [string, string, unknown[]][] = [
     "Коллаборации",
     [
       cover("Коллаборации", "Коллаборации", "Для всей семьи"),
-      block("intro_text", { text: SPACE_INTRO }),
+      block("intro_text", { text: COLLAB_INTRO }),
       spaceCards(COLLABORATIONS),
       block("contact_form", {}),
     ],

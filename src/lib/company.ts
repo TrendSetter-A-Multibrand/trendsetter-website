@@ -1,35 +1,34 @@
 /**
- * Copy for the О нас page. Everything past the opening paragraph is the
- * placeholder text the mockup itself carries - the client's own wording, the
- * team and the photos are still to come.
+ * Copy for the О нас page. Pulled from the client's own doc ("тексты на сайт
+ * TS", tab "О НАС") on 22.09.2026 - preliminary wording, not yet in Figma, will
+ * change once the designer lays the page out around it. Photos are still the
+ * placeholders until real ones arrive.
  */
 
 export const ABOUT_INTRO =
   "TRENDSETTER — международный fashion-стартап, развивающий мультибрендовый магазин одежды, обуви и аксессуаров. В нашем ассортименте представлены популярные мировые бренды, в том числе H&M, Reserved, Sinsay, House и другие.";
 
-/** The mockup fills the left column by repeating this one sentence. */
-const FILLER =
-  "Неделя моды весна-лето 2026 . Чего (не) ждать от предстоящих показов нового сезона";
-
 export const ABOUT_FEATURE = {
   title: "О TRENDSETTER",
-  body: Array.from({ length: 11 }, () => FILLER).join(" "),
+  body: "Привет! Мы — Trendsetter. Сеть оффпрайс-магазинов нового поколения. Покупка одежды, косметики и предметов интерьера должна приносить тактильную радость и чувство приятного открытия. Наша цель — сделать разумный выбор оригинальных отечественных и зарубежных брендов доступным, легким и комфортным. И все это — рядом с домом, без лишней суеты и долгих поездок.",
   image: "/images/home/journal/2.jpg",
 };
 
-export const ABOUT_MISSION =
-  "Since 2023, we have been successfully selling products from global brands on Wildberries through exclusive supply channels. In 2025, we expanded offline and opened our first store in the heart of Yerevan, and in 2026 we are opening two more stores in Moscow.";
+export const ABOUT_MISSION = "Доверьте поиск нам, а выбор — себе.";
 
 const HISTORY =
-  "Since 2023, we have been successfully selling products from global brands on Wildberries through exclusive supply channels. In 2025, we expanded offline and opened our first store in the heart of Yerevan, and in 2026 we are opening two more stores in Moscow.";
+  "Старт проекта пришелся на период больших перемен в российском ритейле: мы вышли в e-commerce и вошли в топ продавцов на Wildberries, а по продажам H&M стали продавцом №1 в России — 2 млн+ доставленных вещей и 330 000+ отзывов показали, насколько силен запрос аудитории на предсказуемое качество и подлинность. Но чем активнее рос онлайн-бизнес, тем понятнее становилось: экрану смартфона не хватает осязаемости, поэтому следующим шагом стал выход в офлайн — большой концептуальный магазин в центре Еревана, наша первая точка физического ритейла. Полученный опыт лёг в основу проекта в Москве, адаптированного под ритм мегаполиса.";
 
-const MISSION =
-  "To make stylish, high-quality clothing accessible to everyone. Trendsetter is a flexible and ambitious brand, currently building a strong team and actively expanding across the region. We believe fashion should be simple, accessible, and inspiring — every single day.";
+const AUTHENTICITY =
+  "Доверие гостей — наш ключевой приоритет. Именно поэтому работа ведется строго в правовом поле, напрямую с производителями, фабриками, официальными поставщиками и торговыми агентами. Каждая позиция каталога проходит внутренний контроль подлинности и проверку состояния, прежде чем попасть в магазин — и мы открыто рассказываем, как устроен этот процесс.";
+
+const NEIGHBOURHOOD =
+  "Поездка в огромный ТЦ в центре города в единственный выходной — это всегда стресс, знакомый каждому жителю Москвы: потерянные часы в пробках и на утомительную логистику. Именно поэтому мы выбрали концепцию «магазина у дома». Наша стратегия — быть полезными соседями: приходить в жилые районы столицы и становиться частью повседневного маршрута, избавляя вас от необходимости тратить целые выходные на долгие поездки за покупками.";
 
 export const ABOUT_CARDS = [
-  { title: "Наши преимущества", body: HISTORY, image: "/images/home/news/2.jpg" },
-  { title: "Наши преимущества", body: MISSION, image: "/images/home/news/3.jpg" },
-  { title: "Наши преимущества", body: MISSION, image: "/images/home/news/4.jpg" },
+  { title: "Наша история: от e-commerce к тактильному опыту", body: HISTORY, image: "/images/home/news/2.jpg" },
+  { title: "Гарантия подлинности", body: AUTHENTICITY, image: "/images/home/news/3.jpg" },
+  { title: "Локальность и философия соседства", body: NEIGHBOURHOOD, image: "/images/home/news/4.jpg" },
 ];
 
 export const ABOUT_BANNER = { title: "Наша миссия", body: HISTORY };
@@ -42,22 +41,46 @@ export const TEAM: TeamMember[] = Array.from({ length: 12 }, () => ({
 }));
 
 export const SPACE_INTRO =
-  "TRENDSETTER — международный fashion-стартап, развивающий мультибрендовый магазин одежды, обуви и аксессуаров. В нашем ассортименте представлены популярные мировые бренды, в том числе H&M, Reserved, Sinsay, House и другие.";
+  "Когда пространство перегружено рейлами с вещами, шопинг быстро начинает отнимать силы. В Trendsetter мы пошли от обратного — от потребности в просторе, удобстве и свете, от масштаба, который привлекает внимание с первых шагов. Планировка торгового зала задумана как открытый и свободный маршрут: у каждого гостя свой путь — кто-то направляется сразу к рейлам с одеждой, а кто-то просто гуляет без четкого плана и находит то, чего совсем не ожидал.";
 
-/** Three of the same name in the file - real ones to come from the client. */
+const ASSORTMENT_BODY =
+  "Одежда и обувь. Базовые модели и сезонные коллекции женского, мужского и детского гардероба известных российских и зарубежных брендов. Вещи по честным ценам, которые составляют основу современного гардероба.\n\nТовары для дома. Текстиль из натурального льна и хлопка, посуда из керамики и предметы декора для создания уюта в вашем доме.\n\nКосметика и уход. Востребованные селективные марки, премиальный и качественный уход, культовые бьюти-хиты и нишевые парфюмерные композиции.\n\nАксессуары. Аксессуары из кожи, украшения, солнцезащитные очки и наручные часы для завершения образа.";
+
+const EXTRA_CATEGORIES_BODY =
+  "AMUNCE — собственный бренд современной базовой одежды для женщин, мужчин и детей. Мы создаем универсальные вещи из качественных материалов с продуманной посадкой — основу гардероба, которую легко носить, сочетать и адаптировать под свой стиль.\n\nКоллаборации. Лимитированные капсулы с художниками, независимыми брендами и локальными мастерами — в рамках наших направлений Playground, Together и Select. Каждая коллекция существует ограниченным тиражом и не появится здесь снова.\n\nМаркет. Место, где можно перекусить, не прерывая процесс шопинга. Здесь представлена наша собственная торговая марка и разнообразный ассортимент полезных и вкусных перекусов от наших партнеров.";
+
+const SERVICES_BODY =
+  "Ателье. Вещи приходят к нам ограниченными партиями, часто в единственном экземпляре. Если вы нашли свое сокровище, но оно не подходит по размеру, наш мастер поможет скорректировать посадку или длину изделия под ваши параметры — оформить услугу можно прямо в зоне примерочных.\n\nМастерская. Образовательный и культурный центр нашего пространства — площадка для лекций, интенсивов, творческих мастер-классов и других активностей.\n\nЗона для детей. Игровая площадка для творчества у детского отдела одежды — безопасное пространство с развивающими игрушками и материалами для плетения, где дети могут играть, пока родители заняты покупками.\n\nМини 3D-ферма. В торговом зале работают 3D-принтеры: вы можете в реальном времени наблюдать за печатью и создать уникальный кастомный аксессуар прямо во время визита.\n\nЗона упаковки. Отдельная зона самостоятельного оформления подарков, расположенная у касс.";
+
+/** The three sections the client's doc splits Пространство into - each
+ * card's body is what the click-through modal shows (see [[SpaceCards]]). */
 export const SPACE_CARDS = [
-  { title: "Гончарная мастерская", image: "/images/home/journal/1.jpg" },
-  { title: "Гончарная мастерская", image: "/images/home/journal/2.jpg" },
-  { title: "Гончарная мастерская", image: "/images/home/news/1.jpg" },
+  { title: "Основной ассортимент", body: ASSORTMENT_BODY, image: "/images/home/journal/1.jpg" },
+  { title: "Дополнительные категории", body: EXTRA_CATEGORIES_BODY, image: "/images/home/journal/2.jpg" },
+  { title: "Уникальные сервисы", body: SERVICES_BODY, image: "/images/home/news/1.jpg" },
 ];
 
+export const COLLAB_INTRO =
+  "Trendsetter выходит за пределы классического ритейла и создает пространство для эксперимента. Мы соединяем привычный процесс покупок с искусством, дизайном и локальным ремеслом, превращая творчество в способ вместе исследовать объекты, формы и цвета и находить в них что-то новое. Наше сотрудничество с художниками, авторами и независимыми брендами строится по трем ключевым направлениям: Trendsetter Playground, Trendsetter Together и Trendsetter Select.";
+
+const PLAYGROUND_BODY =
+  "Творческая площадка внутри магазина, где исследуются новые способы работы с материалами, объектами и пространством. Через совместные инициативы с художниками, ремесленниками и дизайнерами привычные элементы магазина становятся частью уникального опыта покупателя.\n\nPlayground развивается по четырем направлениям: Art Playground — интеграция авторских художественных работ в функциональные зоны магазина (например, проект Behind the Curtain — занавески для примерочных, превращённые художниками в текстильные арт-объекты); Material & Object Playground — переосмысление привычных материалов и предметов через ремесленные техники; Upcycling Playground — новые сценарии использования уже существовавших объектов; Neighborhood Playground — творческие проекты в соавторстве с жителями районов и локальными мастерскими.";
+
+const TOGETHER_BODY =
+  "История о сотворчестве и дружбе брендов. Мы объединяемся с независимыми брендами, семейными мастерскими и дизайнерами, чтобы разрабатывать и выпускать совместные лимитированные серии одежды, посуды и аксессуаров — и поддержать небольшие локальные проекты, рассказав о них нашей аудитории.";
+
+const SELECT_BODY =
+  "Бережно отобранная витрина готовых работ независимых авторов — от небольших производств до крупных брендов. Мы находим и привозим к себе на полки самобытные локальные проекты, от авторской посуды до полезных перекусов, чтобы познакомить вас с новыми именами.";
+
 /** Вакансии is still a draft in the file - every heading on it reads «Наша миссия». */
-export const CAREERS_INTRO = { title: "Наша миссия", body: MISSION };
+const CAREERS_PLACEHOLDER =
+  "To make stylish, high-quality clothing accessible to everyone. Trendsetter is a flexible and ambitious brand, currently building a strong team and actively expanding across the region. We believe fashion should be simple, accessible, and inspiring — every single day.";
+export const CAREERS_INTRO = { title: "Наша миссия", body: CAREERS_PLACEHOLDER };
 export const CAREERS_CARDS = ABOUT_CARDS;
 
-/** Six of the same name in the file; the client's own are to come. */
-export const COLLABORATIONS = Array.from({ length: 6 }, (_, i) => ({
-  slug: `collaboration-${i + 1}`,
-  title: "TRENDSETTER x Collaboration",
-  image: ["/images/home/journal/1.jpg", "/images/home/journal/2.jpg", "/images/home/news/1.jpg"][i % 3],
-}));
+/** The three programmes the client's doc names, not six placeholder slots. */
+export const COLLABORATIONS = [
+  { slug: "playground", title: "TRENDSETTER PLAYGROUND", body: PLAYGROUND_BODY, image: "/images/home/journal/1.jpg" },
+  { slug: "together", title: "TRENDSETTER TOGETHER", body: TOGETHER_BODY, image: "/images/home/journal/2.jpg" },
+  { slug: "select", title: "TRENDSETTER SELECT", body: SELECT_BODY, image: "/images/home/news/1.jpg" },
+];
