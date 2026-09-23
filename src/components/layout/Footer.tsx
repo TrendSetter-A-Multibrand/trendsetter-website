@@ -29,7 +29,7 @@ const CONTACT_EMAIL = "trader@calledagarment.com";
  */
 function FooterHeading({ children }: { children: string }) {
   return (
-    <h2 className="mb-6 font-mono text-2xl/[31px] uppercase tracking-[3px]">
+    <h2 className="mb-6 font-mono text-xl/[26px] uppercase tracking-[3px] lg:text-2xl/[31px]">
       [{children}]
     </h2>
   );
@@ -69,10 +69,10 @@ export function Footer({ locale }: { locale: Locale }) {
   ).filter((item) => item.slug !== "collaborations");
 
   return (
-    <footer className="on-dark bg-ink pb-10 pt-10 text-white">
+    <footer className="on-dark bg-ink py-6 text-white lg:py-10">
       {/* Columns sit at 40 / 221 / 670 / 901 in the library, so their widths are
           the file's, not a regular grid. The tiles close the row at 1840. */}
-      <div className="footer-columns grid gap-x-10 gap-y-10 px-6 sm:grid-cols-2 lg:px-10 xl:grid-cols-4">
+      <div className="footer-columns grid gap-6 px-4 sm:grid-cols-2 lg:gap-10 lg:px-10 xl:grid-cols-4">
         <FooterColumn
           title="Меню"
           links={MENU_LINKS.map((item) => ({
@@ -105,7 +105,7 @@ export function Footer({ locale }: { locale: Locale }) {
           </a>
         </div>
 
-        <SocialLinks large className="h-fit" />
+        <SocialLinks large className="h-fit justify-center sm:justify-start" />
       </div>
 
       {/* The file paints this white under SOFT_LIGHT, but Figma's soft light is
@@ -113,7 +113,7 @@ export function Footer({ locale }: { locale: Locale }) {
           on #453e3c and #605a58. The backdrop here is flat, so the blend buys
           nothing: paint the colour Figma arrives at and be exact. */}
       {/* 40 under the columns, and 40 to the foot of the page */}
-      <div className="mt-10 px-6 lg:px-10">
+      <div className="mt-6 px-4 lg:mt-10 lg:px-10">
         <Wordmark className="text-[#453e3c]" />
       </div>
     </footer>

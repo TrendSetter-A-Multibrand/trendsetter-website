@@ -5,7 +5,8 @@ import type { ReactNode } from "react";
 /**
  * The drop the FAQ opens its questions with, and now the legal pages as well:
  * one row, a rule under it, and a plus that loses its upright when the row
- * opens. Rows are 38 of air above and below, 30 below once open.
+ * opens. Rows are 38 of air above and below on lg, 30 below once open; at 375
+ * a row breathes 8 all round instead.
  *
  * The designer asked for this one drop everywhere rather than one per section -
  * "чтобы не плодить компоненты" - so the title arrives as a node. Each page
@@ -28,15 +29,15 @@ export function Drop({
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        className={`flex w-full items-center justify-between gap-6 pt-[38px] text-left ${
-          open ? "pb-[30px]" : "pb-[38px]"
+        className={`flex w-full items-center justify-between gap-6 pt-2 text-left lg:pt-[38px] ${
+          open ? "pb-2 lg:pb-[30px]" : "pb-2 lg:pb-[38px]"
         }`}
       >
         {title}
         <Toggle open={open} />
       </button>
 
-      {open && <div className="pb-8">{children}</div>}
+      {open && <div className="pb-4 lg:pb-8">{children}</div>}
 
       <div className="h-px bg-ink/15" />
     </div>

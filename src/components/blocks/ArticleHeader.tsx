@@ -4,8 +4,9 @@ import type { ArticleMeta } from "@/lib/article";
 import { FilterChip } from "@/components/ui/FilterChip";
 import { tagHref } from "@/lib/articles";
 
-const META_LABEL = "font-mono text-sm/[18px] font-medium uppercase text-ink";
-const META_VALUE = "mt-1 text-xs/[15px] tracking-[1px] text-muted";
+const META_LABEL =
+  "text-xs tracking-[1px] text-muted lg:font-mono lg:text-sm/[18px] lg:font-medium lg:uppercase lg:text-ink lg:tracking-normal";
+const META_VALUE = "text-xs/[15px] tracking-[1px] text-muted lg:mt-1";
 
 type ArticleHeaderProps = {
   locale: Locale;
@@ -15,7 +16,7 @@ type ArticleHeaderProps = {
 /** Title on the left, a 160px meta column pinned to the right content edge. */
 export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
   return (
-    <section className="px-6 pt-6 lg:px-10">
+    <section className="px-4 pt-4 pb-5 lg:px-10 lg:pt-6 lg:pb-0">
       <nav className="flex gap-2 font-mono text-sm tracking-[1px] text-ink">
         <Link href={`/${locale}`}>Главная</Link>
         <span>/</span>
@@ -24,8 +25,8 @@ export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
         </Link>
       </nav>
 
-      <div className="mt-5 flex flex-col gap-10 lg:flex-row lg:gap-40">
-        <div className="flex flex-1 flex-col gap-10">
+      <div className="mt-4 flex flex-col gap-4 lg:mt-5 lg:flex-row lg:gap-40">
+        <div className="flex flex-1 flex-col gap-4 lg:gap-10">
           {/* The article's own tags, not a list of its own - and each one leads
               where the same tag under a card leads. 8 apart here, not the 16
               the section pages use. */}
@@ -39,29 +40,40 @@ export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
             ))}
           </div>
 
-          <h1 className="font-mono text-3xl uppercase tracking-[3px] text-ink lg:text-[60px]/[80px]">
+          <h1 className="font-mono text-2xl uppercase tracking-[3px] text-ink lg:text-[60px]/[80px]">
             {meta.title}
           </h1>
         </div>
 
-        {/* 160 wide, and the values are Inter Tight 12 in grey under mono labels */}
-        <dl className="shrink-0 lg:w-40">
-          <dt className={META_LABEL}>Автор</dt>
-          <dd className={META_VALUE}>{meta.author}</dd>
+        {/* 160 wide, and the values are Inter Tight 12 in grey under mono labels.
+            On mobile the column collapses to two stacked rows with the label and
+            value inline, wrapping onto a second line for a long author name. */}
+        <dl className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 shrink-0 lg:block lg:w-40">
+          <div className="flex items-baseline gap-1 lg:block">
+            <dt className={META_LABEL}>
+              Автор<span className="lg:hidden">:</span>
+            </dt>
+            <dd className={META_VALUE}>{meta.author}</dd>
+          </div>
 
-          <dt className={`mt-4 ${META_LABEL}`}>Дата публикации</dt>
-          <dd className={META_VALUE}>{meta.publishedAt}</dd>
+          <div className="lg:mt-4">
+            <dt className={`${META_LABEL} max-lg:hidden`}>Дата публикации</dt>
+            <dd className={META_VALUE}>{meta.publishedAt}</dd>
+          </div>
 
-          <dd className="mt-4 flex items-center gap-4 text-sm/[17px] tracking-[1px] text-muted">
-            <span className="flex items-center gap-1">
-              <EyeIcon />
-              {meta.views}
-            </span>
-            <span className="flex items-center gap-1">
-              <BookIcon />
-              {meta.readingMinutes} мин
-            </span>
-          </dd>
+          <div className="hidden lg:mt-4 lg:block">
+            <dt className="sr-only">Просмотры и время чтения</dt>
+            <dd className="flex items-center gap-4 text-sm/[17px] tracking-[1px] text-muted">
+              <span className="flex items-center gap-1">
+                <EyeIcon />
+                {meta.views}
+              </span>
+              <span className="flex items-center gap-1">
+                <BookIcon />
+                {meta.readingMinutes} мин
+              </span>
+            </dd>
+          </div>
         </dl>
       </div>
     </section>

@@ -23,7 +23,7 @@ export function Hero({
   // page's own white - is what shows while the bar slides in and out. The copy
   // is padded back down to stay centred in what is left below the bar.
   return (
-    <section className="on-dark relative mt-[calc(-1*var(--header-h,0px))] flex h-[100svh] flex-col justify-end overflow-hidden bg-neutral-800">
+    <section className="on-dark relative mt-[calc(-1*var(--header-h,0px))] flex h-[524px] flex-col justify-end overflow-hidden bg-neutral-800 lg:h-[100svh]">
       {imageSrc ? (
         <Image
           src={imageSrc}
@@ -43,27 +43,34 @@ export function Hero({
           over it sits differently. */}
       <div className="absolute inset-0 bg-black/[0.49]" />
 
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6 pt-[var(--header-h,0px)] text-center lg:px-10">
+      {/* The 375 frame pins the buttons to the foot of the image, 16 up from
+          the edge, with the tagline riding well above them rather than
+          stacked close - the file's own gap here is 160. lg keeps the group
+          centred in the frame instead, as it always has. */}
+      <div className="absolute inset-0 flex flex-col items-center justify-end gap-[160px] px-4 pb-4 pt-[var(--header-h,0px)] text-center lg:justify-center lg:gap-6 lg:px-10 lg:pb-0">
         {/* Geist Mono 36 on a 46.8 line, 3 of tracking */}
-        <p className="max-w-5xl font-mono text-xl uppercase text-white sm:text-2xl lg:text-[36px]/[46.8px] lg:tracking-[3px]">
+        <p className="max-w-5xl font-mono text-2xl uppercase text-white sm:text-2xl lg:text-[36px]/[46.8px] lg:tracking-[3px]">
           {tagline}
         </p>
 
         {/* 24 apart; the labels are Inter Tight, not the mono they read as - the
-            file says so. The library has the pair as White Opacity and Primmary */}
-        <div className="flex flex-wrap justify-center gap-6">
-          <Link href={primaryCta.href} className={buttonClass("whiteOpacity")}>
+            file says so. The library has the pair as White Opacity and Primmary.
+            375 stacks them full-width; the row comes back from lg. */}
+        <div className="flex w-full flex-col gap-4 lg:w-auto lg:flex-row lg:flex-wrap lg:justify-center lg:gap-6">
+          <Link href={primaryCta.href} className={`w-full lg:w-auto ${buttonClass("whiteOpacity")}`}>
             {primaryCta.label}
           </Link>
-          <Link href={secondaryCta.href} className={buttonClass("primary")}>
+          <Link href={secondaryCta.href} className={`w-full lg:w-auto ${buttonClass("primary")}`}>
             {secondaryCta.label}
           </Link>
         </div>
       </div>
 
       {/* LINEAR_DODGE in the mockup - lets the photo read through the letters.
-          24 of air all round it, which is what makes the wordmark 1872 at 1920 */}
-      <h1 className="relative w-full px-6 pb-6 mix-blend-plus-lighter">
+          24 of air all round it, which is what makes the wordmark 1872 at 1920.
+          The 375 frame carries no bottom wordmark, so it goes sr-only below lg -
+          still the page's one <h1>, read by a screen reader rather than removed. */}
+      <h1 className="sr-only w-full px-4 pb-4 mix-blend-plus-lighter lg:relative lg:not-sr-only lg:px-6 lg:pb-6">
         <Wordmark className="text-brand" />
       </h1>
     </section>

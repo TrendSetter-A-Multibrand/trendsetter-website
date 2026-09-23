@@ -13,7 +13,7 @@ export function SearchField({
   onChange?: (value: string) => void;
 }) {
   return (
-    <label className="flex h-12 w-[280px] items-center border-b-2 border-ink">
+    <label className="flex h-12 w-full items-center border-b-2 border-ink lg:w-[280px]">
       <input
         type="search"
         placeholder={placeholder}
@@ -34,7 +34,7 @@ function SearchIcon() {
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"
-      className="shrink-0"
+      className="size-4 shrink-0 lg:size-6"
     >
       <circle cx="10.8" cy="10.8" r="9" stroke="currentColor" strokeWidth="2" />
       <path

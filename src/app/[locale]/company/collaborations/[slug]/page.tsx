@@ -37,8 +37,10 @@ export default async function CollaborationArticlePage({
       <ArticleHeader locale={locale} meta={own} />
 
       {/* 1920x940 in the file. Kept as a ratio rather than a fixed 940, which
-          would be two thirds of a phone screen and most of a laptop's */}
-      <div className="relative mt-10 aspect-[1920/940] w-full overflow-hidden">
+          would be two thirds of a phone screen and most of a laptop's. On
+          mobile it's a fixed 240 instead, with the header's own pb-5 already
+          giving it the gap above. */}
+      <div className="relative h-60 w-full overflow-hidden lg:mt-10 lg:aspect-[1920/940] lg:h-auto">
         <ImagePlaceholder />
         <Image
           src={meta.heroImage}
@@ -50,7 +52,7 @@ export default async function CollaborationArticlePage({
         />
       </div>
 
-      <div className="mt-10">
+      <div className="mt-4 lg:mt-10">
         <ArticleBody blocks={blocks} />
       </div>
 

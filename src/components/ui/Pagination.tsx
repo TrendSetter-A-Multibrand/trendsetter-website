@@ -49,10 +49,17 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
             key={item}
             href={hrefFor(item)}
             aria-current={item === page ? "page" : undefined}
+            // Below lg only the ends and the current page show; the gaps stay
+            // visible either side and end up sitting between whatever numbers
+            // are left, so the row still reads as a window onto the whole count.
             className={`flex size-[52px] items-center justify-center transition-colors ${
               item === page
                 ? "bg-brand text-white"
                 : "bg-surface-active text-ink hover:bg-surface"
+            } ${
+              item === 1 || item === pageCount || item === page
+                ? ""
+                : "max-lg:hidden"
             }`}
           >
             {item}

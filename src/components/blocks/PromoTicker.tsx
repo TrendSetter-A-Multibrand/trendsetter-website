@@ -50,7 +50,7 @@ export function PromoTicker({
 
   return (
     <div
-      className={`flex h-10 items-center overflow-hidden font-mono text-xs font-medium uppercase tracking-[1px] ${TONES[tone]}`}
+      className={`flex h-8 items-center overflow-hidden font-mono text-[10px] font-medium uppercase tracking-[1px] lg:h-10 lg:text-xs ${TONES[tone]}`}
     >
       <div className="flex shrink-0 animate-marquee">
         {Array.from({ length: 6 }, (_, i) => item(i))}

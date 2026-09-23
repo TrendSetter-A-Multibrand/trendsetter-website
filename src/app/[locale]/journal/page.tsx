@@ -61,7 +61,7 @@ export default async function JournalPage({
           )}
         </>
       ) : (
-        <p className="px-6 pb-16 text-lg lg:px-10 lg:text-2xl/[29px]">
+        <p className="px-4 pb-16 text-lg lg:px-10 lg:text-2xl/[29px]">
           По тегу «{tag}» пока ничего нет.
         </p>
       )}

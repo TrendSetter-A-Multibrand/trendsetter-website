@@ -10,7 +10,9 @@ import type { LegalSection } from "@/lib/legal";
  *
  * Sizes off the file: the title is 60 mono with 3 of tracking, section headings
  * 32, the body Inter Tight 20 on a 24 line. A hairline at 15% opens the title
- * and closes every section.
+ * and closes every section. At 375 the title and the section headings converge
+ * on one plain 24px, no caps, while the body drops to 14 on a 16 line with a
+ * point of tracking; the desktop numbers above are untouched.
  *
  * The sections are drops, at the designer's asking - these pages run to a couple
  * of hundred clauses and nobody reads them from the top. The lead-in has no
@@ -26,8 +28,8 @@ export function LegalArticle({
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <article className="px-6 pb-10 lg:px-10">
-      <h1 className="pt-10 font-mono text-4xl/[46px] uppercase tracking-[3px] lg:text-[60px]/[78px]">
+    <article className="px-4 pb-10 lg:px-10">
+      <h1 className="pt-4 font-mono text-2xl/[30px] tracking-[1px] lg:pt-10 lg:uppercase lg:tracking-[3px] lg:text-[60px]/[78px]">
         {title}
       </h1>
 
@@ -40,7 +42,7 @@ export function LegalArticle({
             open={open === i}
             onToggle={() => setOpen(open === i ? null : i)}
             title={
-              <h2 className="font-mono text-2xl/[31px] uppercase tracking-[3px] lg:text-[32px]/[41px]">
+              <h2 className="font-mono text-2xl/[30px] tracking-[1px] lg:uppercase lg:tracking-[3px] lg:text-[32px]/[41px]">
                 [{section.heading}]
               </h2>
             }
@@ -60,7 +62,7 @@ export function LegalArticle({
 
 function Paragraphs({ section }: { section: LegalSection }) {
   return (
-    <div className="space-y-6 text-base/6 lg:text-xl/6">
+    <div className="space-y-6 text-sm/[16px] tracking-[1px] lg:tracking-normal lg:text-xl/6">
       {section.paragraphs.map((paragraph, j) => (
         <p key={j}>{paragraph}</p>
       ))}

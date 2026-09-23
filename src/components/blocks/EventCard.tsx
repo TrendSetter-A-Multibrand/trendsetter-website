@@ -28,7 +28,7 @@ type EventCardProps = {
  */
 function Badge({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex size-16 shrink-0 flex-col items-center justify-center bg-white/40 px-3 font-mono text-white backdrop-blur-[4px]">
+    <div className="flex size-14 shrink-0 flex-col items-center justify-center bg-white/40 px-3 font-mono text-white backdrop-blur-[4px] lg:size-16">
       {children}
     </div>
   );
@@ -57,11 +57,11 @@ export function EventCard({ item, href, sizes, className = "" }: EventCardProps)
 
       <CardScrim />
 
-      <div className="absolute inset-x-0 top-0 flex items-center gap-4 p-6 text-white">
+      <div className="absolute inset-x-0 top-0 flex items-center gap-4 p-4 text-white lg:p-6">
         <Badge>
           {/* 31.2 over 13 comes to 44 of the plate's 64; the pair is centred in
               what is left, which is how the file draws it */}
-          <span className="text-2xl/[31.2px] tracking-[3px]">{item.day}</span>
+          <span className="text-xl/[26px] tracking-[3px] lg:text-2xl/[31.2px]">{item.day}</span>
           <span className="text-[10px]/[13px] font-medium uppercase tracking-[3px]">
             {item.month}
           </span>
@@ -73,19 +73,22 @@ export function EventCard({ item, href, sizes, className = "" }: EventCardProps)
 
         <Badge>
           {/* two 31.2 lines and the rule between them fill the plate exactly */}
-          <span className="text-2xl/[31.2px] tracking-[3px]">
+          <span className="text-xl/[26px] tracking-[3px] lg:text-2xl/[31.2px]">
             {item.time.split(":")[0]}
           </span>
           <span className="h-px w-full bg-white" />
-          <span className="text-2xl/[31.2px] tracking-[3px]">
+          <span className="text-xl/[26px] tracking-[3px] lg:text-2xl/[31.2px]">
             {item.time.split(":")[1]}
           </span>
         </Badge>
       </div>
 
       {/* 24 between the write-up and the button, and the button runs the full
-          width of the card the way the file draws it */}
-      <div className="absolute inset-x-0 bottom-0 flex flex-col gap-6 p-6 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          width of the card the way the file draws it. Below lg, `group-hover`
+          only fires under `@media (hover: hover)`, so touch devices never see
+          it - the block stays visible by default and only hides-then-reveals
+          on hover from lg up. */}
+      <div className="absolute inset-x-0 bottom-0 flex flex-col gap-4 p-4 text-white opacity-100 transition-opacity duration-200 lg:gap-6 lg:p-6 lg:opacity-0 lg:group-hover:opacity-100">
         {item.description && (
           <p className="text-base/5">{item.description}</p>
         )}

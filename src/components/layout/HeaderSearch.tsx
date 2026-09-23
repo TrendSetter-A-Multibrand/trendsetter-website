@@ -77,7 +77,7 @@ export function HeaderSearch({
       ref={field}
       onSubmit={submit}
       role="search"
-      className="relative h-12 w-6 shrink-0"
+      className="relative hidden h-12 w-6 shrink-0 sm:block"
     >
       <div
         ref={onField}

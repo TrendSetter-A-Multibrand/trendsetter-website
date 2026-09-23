@@ -117,9 +117,10 @@ const DRAW: Record<
     </>
   ),
 
-  /* 24 mono across the whole measure, centred, with 40 of air over it */
+  // 24 mono across the whole measure, centred, with 40 of air over it on lg;
+  // at 375 that drops to 14 mono with 16 of air over it.
   intro_text: (blok) => (
-    <p className="px-6 pt-10 text-center font-mono text-base lg:px-10 lg:text-2xl/[31.2px]">
+    <p className="px-4 pt-4 text-center font-mono text-sm lg:px-10 lg:pt-10 lg:text-2xl/[31.2px]">
       {text(blok.text)}
     </p>
   ),
@@ -155,12 +156,12 @@ const DRAW: Record<
     />
   ),
 
-  space_cards: (blok, locale) => (
+  space_cards: (blok) => (
     <SpaceCards
       cards={nested(blok.cards).map((card) => ({
         title: text(card.title) ?? "",
+        body: text(card.body) ?? "",
         image: image(card.image),
-        href: href(card.link, locale),
       }))}
     />
   ),
@@ -186,7 +187,7 @@ const DRAW: Record<
   // so the Магазины page can sit it flush under the breadcrumbs, and the red
   // band runs to the page edges, so its 40 has to sit outside it.
   stores_row: (blok) => (
-    <div className="pt-10">
+    <div className="pt-6 lg:pt-10">
       <StoresSection heading={text(blok.heading)} />
     </div>
   ),
@@ -205,7 +206,7 @@ const DRAW: Record<
 
   // The crumbs belong to the block rather than to the page: the file drops them
   // 20 lower here than the header leaves them, and the whole gap to the chips
-  // below is the block's own.
+  // below is the block's own - 44 on lg, 16 at 375.
   faq: (blok, locale) => (
     <>
       <div className="pt-5">
@@ -216,7 +217,7 @@ const DRAW: Record<
           ]}
         />
       </div>
-      <div className="pt-11">
+      <div className="pt-4 lg:pt-11">
         <FaqAccordion
           groups={nested(blok.groups).map((group) => ({
             title: text(group.title) ?? "",
@@ -231,7 +232,7 @@ const DRAW: Record<
   ),
 
   newsletter: (blok, locale) => (
-    <div className="mt-10">
+    <div className="mt-6 lg:mt-10">
       <NewsletterSignup
         locale={locale}
         heading={text(blok.heading)}

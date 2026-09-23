@@ -27,14 +27,14 @@ export default async function StoresPage({
   const { locale } = await params;
 
   return (
-    <div className="pb-10">
+    <div className="pb-6 lg:pb-10">
       <Breadcrumbs
         items={[{ label: "Главная", href: `/${locale}` }, { label: "Магазины" }]}
       />
-      {/* 40 under the crumbs, and the 40 below the row is the page's own
-          bottom padding - the file puts nothing else between them and the
-          footer. */}
-      <div className="pt-10">
+      {/* 40 under the crumbs and 40 below the row on lg+ - the desktop file's
+          own numbers, with nothing else between them and the footer. At 375
+          the file asks for less: 16 above the first card, 24 at the foot. */}
+      <div className="pt-4 lg:pt-10">
         <StoresSection />
       </div>
     </div>

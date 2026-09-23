@@ -58,47 +58,54 @@ export function NewsletterSignup({
   }, [submitted]);
 
   return (
-    <section className="on-dark relative overflow-hidden bg-brand px-6 py-10 font-mono text-white lg:px-10">
+    <section className="on-dark relative overflow-hidden bg-brand px-4 py-6 font-mono text-white lg:px-10 lg:py-10">
       <div className="relative z-10 max-w-[821px]">
         <h2 className="text-xl uppercase tracking-[3px] lg:text-2xl/[31.2px]">
           [{heading}]
         </h2>
 
-        <p className="mt-6 whitespace-pre-line text-sm/[18px]">{description}</p>
+        <p className="mt-4 whitespace-pre-line text-sm/[18px] lg:mt-6">{description}</p>
 
-        {/* 821 across: a 641 field with its 180 button hard against it */}
-        <form onSubmit={handleSubmit} className="mt-6 flex h-12 w-full">
+        {/* 821 across: a 641 field with its 180 button hard against it on lg.
+            Below lg the frame orders these field → checkboxes → consent →
+            button (submit last), not field+button first - `order` carries that
+            without duplicating the row markup per breakpoint. */}
+        <form
+          onSubmit={handleSubmit}
+          className="mt-4 flex w-full flex-wrap gap-4 lg:mt-6 lg:gap-x-0 lg:gap-y-6"
+        >
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Ваш E-mail адрес здесь"
-            className="min-w-0 flex-1 border border-white bg-transparent px-4 font-sans text-sm tracking-[1px] placeholder:text-white/40 focus:outline-none"
+            className="order-1 h-12 min-w-0 flex-1 border border-white bg-transparent px-4 font-sans text-sm tracking-[1px] placeholder:text-white/40 focus:outline-none"
           />
+
+          <div className="order-2 flex w-full flex-wrap gap-6 text-sm lg:order-3">
+            <Checkbox name="men">Для мужчин</Checkbox>
+            <Checkbox name="women">Для девушек</Checkbox>
+          </div>
+
+          {/* 16 between the two rows of boxes, 24 from the field above them */}
+          <div className="order-3 w-full text-sm lg:order-4">
+            <Checkbox name="consent">
+              Я даю согласие на обработку персональных данных в соответствии с{" "}
+              <Link href={`/${locale}/privacy-policy`} className="underline">
+                политикой конфиденциальности
+              </Link>
+            </Checkbox>
+          </div>
+
           <button
             type="submit"
             disabled={!isValid}
-            className={`${buttonClass("secondaryGhost")} shrink-0 self-start whitespace-nowrap disabled:cursor-not-allowed lg:w-[180px]`}
+            className={`${buttonClass("secondaryGhost")} order-4 w-full shrink-0 self-stretch whitespace-nowrap disabled:cursor-not-allowed lg:order-2 lg:w-[180px] lg:self-start`}
           >
             Подписаться
           </button>
         </form>
-
-        <div className="mt-6 flex flex-wrap gap-6 text-sm">
-          <Checkbox name="men">Для мужчин</Checkbox>
-          <Checkbox name="women">Для девушек</Checkbox>
-        </div>
-
-        {/* 16 between the two rows of boxes, 24 from the field above them */}
-        <div className="mt-4 text-sm">
-          <Checkbox name="consent">
-            Я даю согласие на обработку персональных данных в соответствии с{" "}
-            <Link href={`/${locale}/privacy-policy`} className="underline">
-              политикой конфиденциальности
-            </Link>
-          </Checkbox>
-        </div>
       </div>
 
       {/* Taller than the band in the mockup, so it overflows and gets clipped */}

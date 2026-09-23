@@ -63,7 +63,7 @@ export function ArticleReactions({
   }
 
   return (
-    <div className="flex items-center justify-center gap-6 py-12">
+    <div className="flex items-center justify-center gap-6 py-4 lg:py-12">
       <ReactionButton
         label="Нравится"
         count={likes + (voted === "like" ? 1 : 0)}

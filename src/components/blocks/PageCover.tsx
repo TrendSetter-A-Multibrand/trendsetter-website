@@ -26,10 +26,10 @@ export function PageCover({
 }: PageCoverProps) {
   return (
     <section
-      className={`relative flex flex-col items-center justify-center overflow-hidden bg-neutral-800 ${
+      className={`relative flex flex-col items-center justify-center overflow-hidden bg-neutral-800 px-6 text-center lg:px-0 lg:text-left ${
         flush
-          ? "mt-[calc(-1*var(--header-h,0px))] h-[calc(400px+var(--header-h,0px))] pt-[var(--header-h,0px)]"
-          : "h-[400px]"
+          ? "mt-[calc(-1*var(--header-h,0px))] h-[calc(112px+var(--header-h,0px))] pt-[var(--header-h,0px)] lg:h-[calc(400px+var(--header-h,0px))]"
+          : "h-[112px] lg:h-[400px]"
       }`}
     >
       <Image
@@ -45,14 +45,14 @@ export function PageCover({
       {/* Blended, not solid: the same LINEAR_DODGE the wordmark over the home
           photo uses, so the picture reads through the letters. Every section
           title in the file is drawn this way. */}
-      <h1 className="relative font-mono text-5xl uppercase tracking-[5px] text-brand mix-blend-plus-lighter lg:text-[96px]/[125px]">
+      <h1 className="relative font-mono text-[32px] font-bold uppercase tracking-[6px] text-brand mix-blend-plus-lighter lg:text-[96px]/[125px] lg:font-normal lg:tracking-[5px]">
         [{title}]
       </h1>
 
       {subtitle && (
         // The two sit against each other in the file: the title's 125 line
         // leaves the air, and 154 of type centred in 400 is what it comes to
-        <p className="relative text-lg font-medium tracking-[1px] text-white lg:text-2xl/[29px]">
+        <p className="relative text-sm font-medium tracking-[1px] text-white lg:text-2xl/[29px]">
           {subtitle}
         </p>
       )}

@@ -138,8 +138,8 @@ export function Header({ locale }: { locale: Locale }) {
   // the nav. The fill is its own rather than the body's: stuck to the top of the
   // page the bar now travels over content.
   return (
-    <header className="flex h-16 items-center justify-between gap-6 bg-background px-6 lg:h-[88px] lg:px-10">
-      <Link href={`/${locale}`} className="w-40 shrink-0 text-brand lg:w-[273px]">
+    <header className="flex h-11 items-center justify-between gap-6 bg-background px-4 lg:h-[88px] lg:px-10">
+      <Link href={`/${locale}`} className="w-[168px] shrink-0 text-brand lg:w-[273px]">
         <Wordmark />
       </Link>
 
@@ -159,7 +159,7 @@ export function Header({ locale }: { locale: Locale }) {
           on the burger rather than on the row, so the closed field - a flex item
           of no width - does not add one of its own. */}
       <div className="flex shrink-0 items-center">
-        <Suspense fallback={<div className="h-12 w-6" />}>
+        <Suspense fallback={<div className="hidden h-12 w-6 sm:block" />}>
           <HeaderSearch locale={locale} onField={setField} />
         </Suspense>
         {/* The panel lays the whole site out at once, which the seven links in
@@ -171,7 +171,7 @@ export function Header({ locale }: { locale: Locale }) {
           type="button"
           aria-label="Меню"
           onClick={() => setMenuOpen(true)}
-          className="ml-6 min-[1921px]:hidden lg:ml-11"
+          className="ml-6 min-[1921px]:hidden lg:ml-11 [&>svg]:size-4 lg:[&>svg]:size-6"
         >
           <MenuIcon />
         </button>

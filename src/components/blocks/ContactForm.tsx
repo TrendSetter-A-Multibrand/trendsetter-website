@@ -19,7 +19,8 @@ type ContactFormProps = {
  * The red band that closes every legal page - the newsletter's sibling, drawn
  * 485 tall with the same smiley overflowing the right edge. A 1190 column holds
  * a 207 message box, three fields 386 across, and the button with its consent
- * note beside it. Heading is 20 mono, everything else Inter Tight 14.
+ * note beside it. Heading is 20 mono at 375, growing to 24 on lg; everything
+ * else Inter Tight 14. The band carries 16 of padding at 375.
  */
 export function ContactForm({
   locale = "ru_ru",
@@ -51,45 +52,48 @@ export function ContactForm({
   }, [sent]);
 
   return (
-    <section className="on-dark relative overflow-hidden bg-brand px-6 py-10 text-white lg:px-10">
+    <section className="on-dark relative overflow-hidden bg-brand p-4 text-white lg:px-10 lg:py-10">
       <div className="relative z-10 max-w-[1190px]">
-        <h2 className="font-mono text-2xl/[31px] uppercase tracking-[3px]">
+        <h2 className="font-mono text-xl uppercase tracking-[3px] lg:text-2xl/[31px]">
           [{heading}]
         </h2>
 
         <form onSubmit={handleSubmit} className="mt-6">
-          <textarea
-            name="message"
-            placeholder={placeholder}
-            className="on-light block h-[200px] w-full resize-none bg-white p-4 text-sm/[18px] tracking-[1px] text-ink outline-none placeholder:text-muted"
-          />
+          {/* At 375 the file puts the subject dropdown above the message box;
+              from sm it rejoins name/email in one row under the message, same
+              as before - `order` moves it there without moving it in the DOM. */}
+          <div className="flex flex-col gap-4 sm:grid sm:grid-cols-3">
+            <div className="sm:order-4">
+              <Dropdown
+                name="subject"
+                placeholder="Тема обращения"
+                options={subjects}
+              />
+            </div>
 
-          <div className="mt-4 grid gap-4 sm:grid-cols-3">
+            <textarea
+              name="message"
+              placeholder={placeholder}
+              className="on-light block h-[200px] w-full resize-none bg-white p-4 text-sm/[18px] tracking-[1px] text-ink outline-none placeholder:text-muted sm:order-1 sm:col-span-3"
+            />
+
             <input
               name="name"
               placeholder="Ваше имя"
-              className="h-12 border border-white bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-white/40"
+              className="h-12 border border-white bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-white/40 sm:order-2"
             />
             <input
               type="email"
               name="email"
               placeholder="E-mail"
-              className="h-12 border border-white bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-white/40"
-            />
-            {/* The library draws this as its own Dropdown rather than a native
-                select: white ground, and the list opens over the band instead
-                of pushing the button down */}
-            <Dropdown
-              name="subject"
-              placeholder="Тема обращения"
-              options={subjects}
+              className="h-12 border border-white bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-white/40 sm:order-3"
             />
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-6">
             <button
               type="submit"
-              className={`${buttonClass("secondaryGhost")} w-[180px] shrink-0`}
+              className={`${buttonClass("secondaryGhost")} w-full shrink-0 lg:w-[180px]`}
             >
               {sent ? "Отправлено" : "Отправить"}
             </button>

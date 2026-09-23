@@ -36,17 +36,17 @@ export function JournalCarousel({
   if (items.length === 0) return null;
 
   return (
-    <section className="px-6 pt-10 lg:px-10">
+    <section className="px-4 pt-10 lg:px-10">
       <SectionTitle
         heading={heading}
         trackRef={trackRef}
         controls="arrows"
-        className="mb-10"
+        className="mb-6 lg:mb-10"
       />
 
       <div
         ref={trackRef}
-        className="flex gap-10 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="-mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 sm:mx-0 sm:snap-none sm:gap-10 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
           // The photo is the click target, so the link is stretched over the
@@ -54,9 +54,9 @@ export function JournalCarousel({
           // lets clicks through to it rather than swallowing them.
           <div
             key={i}
-            className="on-dark group relative h-[430px] w-[85%] shrink-0 overflow-hidden sm:w-[calc(50%-20px)]"
+            className="on-dark group relative h-[430px] w-full shrink-0 snap-center overflow-hidden sm:w-[calc(50%-20px)] sm:snap-align-none"
           >
-            <CardImage src={item.image} sizes="(min-width: 640px) 900px, 85vw" />
+            <CardImage src={item.image} sizes="(min-width: 640px) 900px, 320px" />
             <CardScrim />
 
             <Link
@@ -65,7 +65,7 @@ export function JournalCarousel({
               className="absolute inset-0 z-10"
             />
 
-            <p className="absolute left-6 top-6 z-20 font-mono text-sm/[18px] font-medium uppercase tracking-[1px] text-white">
+            <p className="absolute left-4 top-4 z-20 font-mono text-sm/[18px] font-medium uppercase tracking-[1px] text-white lg:left-6 lg:top-6">
               {item.tags.map((tag, t) => (
                 <Fragment key={tag}>
                   {t > 0 && " "}
@@ -81,18 +81,21 @@ export function JournalCarousel({
 
             {/* Title and write-up both stand at the foot at rest, 16 apart; it is
                 the button that arrives on hover, lifting them by its own 48 and
-                the 24 above it. */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 p-6 text-white">
+                the 24 above it. Below lg the button starts open, since
+                `group-hover` never fires on touch. */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 p-4 text-white lg:p-6">
               <div className="flex flex-col gap-4">
                 <p className="text-xl/[26px] font-medium sm:text-2xl/[29px]">
                   {item.title}
                 </p>
-                {item.excerpt && <p className="text-base/5">{item.excerpt}</p>}
+                {item.excerpt && (
+                  <p className="text-[13px]/[15px] lg:text-base/5">{item.excerpt}</p>
+                )}
               </div>
 
-              <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-200 group-hover:grid-rows-[1fr]">
+              <div className="grid grid-rows-[1fr] transition-[grid-template-rows] duration-200 lg:grid-rows-[0fr] lg:group-hover:grid-rows-[1fr]">
                 <div className="overflow-hidden">
-                  <div className="pt-6">
+                  <div className="pt-4 lg:pt-6">
                     <span
                       className={`${buttonClass("whiteOpacity")} w-full backdrop-blur-[2px]`}
                     >

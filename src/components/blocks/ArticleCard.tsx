@@ -79,7 +79,7 @@ export function ArticleCard({
 
       <Link
         href={href}
-        className={`mt-4 text-2xl/[29px] font-medium ${
+        className={`mt-2 text-xl/[24px] font-medium lg:mt-4 lg:text-2xl/[29px] ${
           onBrand ? "text-white" : "text-ink"
         }`}
       >

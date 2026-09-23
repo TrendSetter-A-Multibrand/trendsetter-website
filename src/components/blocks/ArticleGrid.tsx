@@ -36,11 +36,11 @@ export function ArticleGrid({
   locale: string;
 }) {
   return (
-    <section className="flex flex-col gap-10">
+    <section className="flex flex-col gap-4 lg:gap-10">
       {toRows(articles).map((row, i) => (
-        <div key={i} className={row.onBrand ? "on-dark bg-brand py-10" : undefined}>
+        <div key={i} className={row.onBrand ? "on-dark bg-brand py-4 lg:py-10" : undefined}>
           <div
-            className={`grid gap-10 px-6 lg:px-10 ${
+            className={`grid gap-4 px-4 lg:gap-10 lg:px-10 ${
               row.cols === 3
                 ? "sm:grid-cols-2 lg:grid-cols-3"
                 : "sm:grid-cols-2"

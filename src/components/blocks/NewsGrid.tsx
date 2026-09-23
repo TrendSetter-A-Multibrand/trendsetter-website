@@ -36,25 +36,25 @@ export function NewsGrid({
   if (items.length === 0) return null;
 
   return (
-    <section className="px-6 pt-10 lg:px-10">
+    <section className="px-4 pt-10 lg:px-10">
       {/* The file leaves 40 from the heading to the row, and nothing above it */}
       <SectionTitle
         heading={heading}
         trackRef={trackRef}
         controls="bar"
-        className="mb-10"
+        className="mb-6 lg:mb-10"
       />
 
       <div
         ref={trackRef}
-        className="flex gap-10 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="-mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 sm:mx-0 sm:snap-none sm:gap-10 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
           // Photo and title lead to the piece, each tag to the news page cut
           // down to that tag - so three links, not one wrapping the card
           <div
             key={i}
-            className="group flex w-[70%] shrink-0 flex-col sm:w-[calc(50%-20px)] lg:w-[calc(25%-30px)]"
+            className="group flex w-full shrink-0 snap-center flex-col sm:w-[calc(50%-20px)] sm:snap-align-none lg:w-[calc(25%-30px)]"
           >
             {/* Square now, 430x430 four across */}
             <Link
@@ -63,7 +63,11 @@ export function NewsGrid({
               aria-hidden="true"
               className="relative aspect-square w-full overflow-hidden"
             >
-              <CardImage src={item.image} sizes="430px" label="Читать" />
+              <CardImage
+                src={item.image}
+                sizes="(min-width: 1024px) 430px, (min-width: 640px) 50vw, 320px"
+                label="Читать"
+              />
             </Link>
             <p className="mt-6 font-mono text-sm/[18px] font-medium uppercase tracking-[1px] text-brand">
               {item.tags.map((tag, t) => (
@@ -80,7 +84,7 @@ export function NewsGrid({
             </p>
             <Link
               href={item.href ?? "#"}
-              className="mt-4 text-2xl/[29px] font-medium"
+              className="mt-2 text-xl/[24px] font-medium lg:mt-4 lg:text-2xl/[29px]"
             >
               {item.title}
             </Link>

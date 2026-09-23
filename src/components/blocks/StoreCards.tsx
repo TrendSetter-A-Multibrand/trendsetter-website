@@ -30,9 +30,9 @@ export function StoreCards({
   const [routeFor, setRouteFor] = useState<Store | null>(null);
 
   return (
-    <section className="px-6 lg:px-10">
+    <section className="px-4 lg:px-10">
       {/* The library's Title with neither control, 40 above the row */}
-      {heading && <SectionTitle heading={heading} className="mb-10" />}
+      {heading && <SectionTitle heading={heading} className="mb-6 lg:mb-10" />}
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
         {stores.map((store, i) => (
@@ -51,13 +51,15 @@ export function StoreCards({
 
             {/* 192 in the file, but as a floor rather than a fixed height: a
                 longer address should push the card down, not spill out of it. */}
-            <div className="flex w-full flex-1 flex-col gap-4 bg-surface-active px-6 py-6 lg:min-h-[192px] lg:gap-6">
-              <p className="text-lg font-medium tracking-[1px] lg:text-2xl/none">
+            <div className="flex w-full flex-1 flex-col gap-4 bg-surface-active p-4 lg:min-h-[192px] lg:gap-6 lg:px-6 lg:py-6">
+              <p className="text-xl font-medium tracking-[1px] lg:text-2xl/none">
                 {store.name}
               </p>
 
-              {/* 20 tall and 16 apart, the same rows the sheet carries */}
-              <dl className="flex flex-1 flex-col gap-2 text-sm lg:gap-4 lg:text-base/5">
+              {/* 20 tall and 16 apart at every width now - matches the sheet's
+                  rows on lg+, where the sheet still lives; it hasn't followed
+                  the card down to 375 yet. */}
+              <dl className="flex flex-1 flex-col gap-4 text-base/5">
                 <DetailRow label="Адрес" value={store.address} />
                 <DetailRow label="Телефон" value={store.phone} />
                 <DetailRow label="Часы работы" value={store.hours} />
