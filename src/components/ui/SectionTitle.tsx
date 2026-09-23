@@ -8,7 +8,7 @@ import {
   type PointerEvent as ReactPointerEvent,
   type RefObject,
 } from "react";
-import { stepWidth } from "@/lib/useCarousel";
+import { holdSnap, settleSnap, stepWidth } from "@/lib/useCarousel";
 
 /** The red block's width in the file, and the one number the bar's maths needs. */
 const THUMB_WIDTH = 56;
@@ -125,12 +125,18 @@ export function SectionTitle({
 
   function handlePointerDown(e: ReactPointerEvent<HTMLDivElement>) {
     bar.current?.setPointerCapture(e.pointerId);
+    if (trackRef?.current) holdSnap(trackRef.current);
     scrollToPointer(e.clientX);
   }
 
   function handlePointerMove(e: ReactPointerEvent<HTMLDivElement>) {
     if (!bar.current?.hasPointerCapture(e.pointerId)) return;
     scrollToPointer(e.clientX);
+  }
+
+  /** `touch-none` on the bar means there is no native scroll here to snap it back. */
+  function handlePointerEnd() {
+    if (trackRef?.current) settleSnap(trackRef.current);
   }
 
   /** One card plus the gap after it, the same step the row walks itself along by. */
@@ -153,6 +159,8 @@ export function SectionTitle({
           ref={bar}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerEnd}
+          onPointerCancel={handlePointerEnd}
           className="relative flex h-6 flex-1 cursor-pointer touch-none select-none items-center"
         >
           <div className="h-0.5 w-full bg-ink" />
