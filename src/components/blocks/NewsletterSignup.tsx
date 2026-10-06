@@ -101,7 +101,7 @@ export function NewsletterSignup({
           <button
             type="submit"
             disabled={!isValid}
-            className={`${buttonClass("secondaryGhost")} order-4 w-full shrink-0 self-stretch whitespace-nowrap disabled:cursor-not-allowed lg:order-2 lg:w-[180px] lg:self-start`}
+            className={`${buttonClass("inverse")} order-4 w-full shrink-0 self-stretch whitespace-nowrap disabled:cursor-not-allowed lg:order-2 lg:w-[180px] lg:self-start`}
           >
             Подписаться
           </button>

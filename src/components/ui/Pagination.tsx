@@ -20,6 +20,11 @@ function pageWindow(page: number, pageCount: number): (number | "gap")[] {
   return out;
 }
 
+/* Arrow item of the Figma Pagination Item set: the same 52 plate as a number,
+   and at either end of the list it goes flat grey and stops answering. */
+const ARROW =
+  "flex size-[52px] items-center justify-center bg-surface-active text-ink transition-colors hover:bg-surface aria-disabled:pointer-events-none aria-disabled:bg-surface aria-disabled:text-muted";
+
 export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
   if (pageCount < 2) return null;
 
@@ -31,7 +36,8 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
       <Link
         href={hrefFor(Math.max(page - 1, 1))}
         aria-label="Предыдущая страница"
-        className="flex h-[52px] w-[52px] items-center justify-center text-ink"
+        aria-disabled={page <= 1 || undefined}
+        className={ARROW}
       >
         <Chevron direction="left" />
       </Link>
@@ -70,7 +76,8 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
       <Link
         href={hrefFor(Math.min(page + 1, pageCount))}
         aria-label="Следующая страница"
-        className="flex h-[52px] w-[52px] items-center justify-center text-ink"
+        aria-disabled={page >= pageCount || undefined}
+        className={ARROW}
       >
         <Chevron direction="right" />
       </Link>

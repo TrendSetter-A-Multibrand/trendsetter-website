@@ -97,7 +97,7 @@ export function JournalCarousel({
                 <div className="overflow-hidden">
                   <div className="pt-4 lg:pt-6">
                     <span
-                      className={`${buttonClass("whiteOpacity")} w-full backdrop-blur-[2px]`}
+                      className={`${buttonClass("onImageLight")} w-full backdrop-blur-[2px]`}
                     >
                       Читать
                     </span>

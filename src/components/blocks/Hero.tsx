@@ -57,7 +57,7 @@ export function Hero({
             file says so. The library has the pair as White Opacity and Primmary.
             375 stacks them full-width; the row comes back from lg. */}
         <div className="flex w-full flex-col gap-4 lg:w-auto lg:flex-row lg:flex-wrap lg:justify-center lg:gap-6">
-          <Link href={primaryCta.href} className={`w-full lg:w-auto ${buttonClass("whiteOpacity")}`}>
+          <Link href={primaryCta.href} className={`w-full lg:w-auto ${buttonClass("onImageLight")}`}>
             {primaryCta.label}
           </Link>
           <Link href={secondaryCta.href} className={`w-full lg:w-auto ${buttonClass("primary")}`}>

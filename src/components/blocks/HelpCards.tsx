@@ -64,7 +64,7 @@ export function HelpCards({
             <p className="mt-3 text-sm lg:mt-3.5 lg:text-base/5">{card.text}</p>
             <a
               href={card.href}
-              className={`${buttonClass("secondaryBlack")} mt-5 w-[180px] lg:mt-6`}
+              className={`${buttonClass("secondary")} mt-5 w-[180px] lg:mt-6`}
             >
               Подробнее
             </a>

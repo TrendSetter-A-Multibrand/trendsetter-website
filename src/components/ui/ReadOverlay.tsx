@@ -28,7 +28,7 @@ export function ReadOverlay({
       <span className="pointer-events-none absolute inset-x-6 bottom-6 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
         <span
           className={`${buttonClass(
-            broken ? "blackOpacity" : "whiteOpacity"
+            broken ? "onImage" : "onImageLight"
           )} backdrop-blur-[2px]`}
         >
           {label}

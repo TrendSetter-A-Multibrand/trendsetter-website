@@ -11,9 +11,11 @@
   --foreground: #252120;
   --brand: #a22325;
   --brand-hover: #bd2729;
+  --brand-pressed: #841b1d;
   --deep-blue: #1f3f70;
   --ink: #252120;
   --ink-hover: #3b3837;
+  --ink-pressed: #141110;
   --muted: #888888;
   --surface: #f7f7f7;
   --surface-active: #eeeeee;
@@ -26,9 +28,11 @@
   --color-foreground: var(--foreground);
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
+  --color-brand-pressed: var(--brand-pressed);
   --color-deep-blue: var(--deep-blue);
   --color-ink: var(--ink);
   --color-ink-hover: var(--ink-hover);
+  --color-ink-pressed: var(--ink-pressed);
   --color-muted: var(--muted);
   --color-surface: var(--surface);
   --color-surface-active: var(--surface-active);
