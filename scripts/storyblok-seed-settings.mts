@@ -27,6 +27,7 @@ const content = {
   ticker_cta: d.ticker.ctaLabel,
   ticker_link: d.ticker.href,
   ticker_tone: d.ticker.tone,
+  cookie_text: d.cookieText,
   nav: d.nav.map((item) =>
     block("nav_item", {
       label: item.label,

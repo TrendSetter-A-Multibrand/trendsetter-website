@@ -1,6 +1,7 @@
 import { BrandDirectory } from "@/components/blocks/BrandDirectory";
 import { fetchStories } from "@/lib/storyblok/fetchStory";
-import type { Brand } from "@/lib/brands";
+import { BRAND_CATEGORIES, type Brand } from "@/lib/brands";
+import { fetchDatasource } from "@/lib/storyblok/datasource";
 import { fetchEvents } from "@/lib/storyblok/events";
 
 type Availability = { store?: string; available?: boolean };
@@ -27,10 +28,13 @@ type StoreFields = { name?: string };
  * rather than drawn as a blank line.
  */
 export async function BrandsSection() {
-  const [brands, shops, events] = await Promise.all([
+  const [brands, shops, events, categories] = await Promise.all([
     fetchStories<BrandFields>("brand"),
     fetchStories<StoreFields>("store"),
     fetchEvents(),
+    // The chips over the list are the datasource the editor keeps, so a new
+    // category is a new entry there and nothing else
+    fetchDatasource("brand-categories", BRAND_CATEGORIES),
   ]);
 
   const nameByUuid = new Map(
@@ -56,5 +60,5 @@ export async function BrandsSection() {
     events: events.slice(0, 2),
   }));
 
-  return <BrandDirectory brands={list} />;
+  return <BrandDirectory brands={list} categories={categories} />;
 }

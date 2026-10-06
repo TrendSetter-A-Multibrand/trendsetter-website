@@ -4,9 +4,15 @@ import { useMemo, useState } from "react";
 import { FilterChip } from "@/components/ui/FilterChip";
 import { SearchField } from "@/components/ui/SearchField";
 import { BrandModal } from "@/components/blocks/BrandModal";
-import { BRAND_CATEGORIES, BRAND_INDEX, indexKey, type Brand } from "@/lib/brands";
+import { BRAND_INDEX, indexKey, type Brand } from "@/lib/brands";
 
-export function BrandDirectory({ brands }: { brands: Brand[] }) {
+export function BrandDirectory({
+  brands,
+  categories,
+}: {
+  brands: Brand[];
+  categories: string[];
+}) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [open, setOpen] = useState<Brand | null>(null);
@@ -61,7 +67,7 @@ export function BrandDirectory({ brands }: { brands: Brand[] }) {
 
         {/* Order pulled above the search row visually; scrolls sideways since chips can outrun the screen */}
         <div className="-order-1 -mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] [&>*]:shrink-0 [&::-webkit-scrollbar]:hidden lg:order-none lg:mx-0 lg:mt-[21px] lg:flex-wrap lg:overflow-visible lg:px-0">
-          {BRAND_CATEGORIES.map((category) => (
+          {categories.map((category) => (
             <FilterChip
               key={category}
               label={category}

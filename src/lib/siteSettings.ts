@@ -85,6 +85,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       href: str(content.ticker_link) || d.ticker.href,
       tone: TONES.includes(tone) ? tone : d.ticker.tone,
     },
+    cookieText: str(content.cookie_text) || d.cookieText,
     nav: nav(content),
     footer: {
       columns: columns(content),

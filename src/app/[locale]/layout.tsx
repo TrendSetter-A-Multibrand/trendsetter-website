@@ -41,7 +41,7 @@ export default async function LocaleLayout({
       </TopBar>
       <main className="flex flex-1 flex-col">{children}</main>
       <Footer locale={locale} settings={settings} />
-      <CookieNotice locale={locale} />
+      <CookieNotice locale={locale} text={settings.cookieText} />
     </>
   );
 }

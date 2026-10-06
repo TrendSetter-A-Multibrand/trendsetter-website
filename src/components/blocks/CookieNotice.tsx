@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { Fragment, useSyncExternalStore } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
 
@@ -39,7 +39,14 @@ function dismiss() {
  * centred in the bar itself - which is what the empty box on the left is for,
  * balancing the close button on the right.
  */
-export function CookieNotice({ locale }: { locale: Locale }) {
+export function CookieNotice({
+  locale,
+  text,
+}: {
+  locale: Locale;
+  /** The sentence as the editor wrote it: {braces} mark the link, a line break stays one. */
+  text: string;
+}) {
   const dismissed = useSyncExternalStore(subscribe, isDismissed, () => true);
   if (dismissed) return null;
 
@@ -53,16 +60,24 @@ export function CookieNotice({ locale }: { locale: Locale }) {
             underlines both words of the link and leaves them at the same
             weight as the rest of the sentence. */}
         <p className="text-center text-sm/4 uppercase tracking-[3px] text-white">
-          Мы используем{" "}
-          <Link
-            href={`/${locale}/cookies`}
-            className="underline underline-offset-2 transition-colors hover:text-white/70"
-          >
-            файлы cookies
-          </Link>
-          , чтобы сайт работал лучше и быстрее.
-          <br />
-          Надеемся, вы не против.
+          {text.split("\n").map((line, i) => (
+            <Fragment key={i}>
+              {i > 0 && <br />}
+              {line.split(/(\{[^}]*\})/).map((part, j) =>
+                part.startsWith("{") && part.endsWith("}") ? (
+                  <Link
+                    key={j}
+                    href={`/${locale}/cookies`}
+                    className="underline underline-offset-2 transition-colors hover:text-white/70"
+                  >
+                    {part.slice(1, -1)}
+                  </Link>
+                ) : (
+                  part
+                )
+              )}
+            </Fragment>
+          ))}
         </p>
 
         <button

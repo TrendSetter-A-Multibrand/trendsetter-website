@@ -24,6 +24,8 @@ export type SiteSettings = {
     href: string;
     tone: TickerTone;
   };
+  /** Words in {braces} become the link to the cookie policy. */
+  cookieText: string;
   nav: NavItem[];
   footer: {
     columns: FooterColumn[];
@@ -81,6 +83,8 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     href: "#",
     tone: "red",
   },
+  cookieText:
+    "Мы используем {файлы cookies}, чтобы сайт работал лучше и быстрее.\nНадеемся, вы не против.",
   nav: NAV_ITEMS,
   footer: {
     columns: FOOTER_COLUMNS,

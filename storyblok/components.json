@@ -650,45 +650,10 @@
       "categories": {
         "type": "options",
         "display_name": "Категории",
-        "options": [
-          {
-            "name": "Одежда",
-            "value": "Одежда"
-          },
-          {
-            "name": "Обувь",
-            "value": "Обувь"
-          },
-          {
-            "name": "Аксессуары",
-            "value": "Аксессуары"
-          },
-          {
-            "name": "Косметика",
-            "value": "Косметика"
-          },
-          {
-            "name": "Дом",
-            "value": "Дом"
-          },
-          {
-            "name": "Еда",
-            "value": "Еда"
-          },
-          {
-            "name": "Мужчинам",
-            "value": "Мужчинам"
-          },
-          {
-            "name": "Девушкам",
-            "value": "Девушкам"
-          },
-          {
-            "name": "Детям",
-            "value": "Детям"
-          }
-        ],
-        "pos": 3
+        "description": "Список категорий ведётся в Settings → Datasources → Категории брендов",
+        "pos": 3,
+        "source": "internal",
+        "datasource_slug": "brand-categories"
       },
       "description": {
         "type": "textarea",
@@ -1143,6 +1108,12 @@
           "social_link"
         ],
         "pos": 9
+      },
+      "cookie_text": {
+        "type": "textarea",
+        "display_name": "Плашка про cookie: текст",
+        "description": "Слова в {фигурных скобках} станут ссылкой на политику cookie. Перенос строки останется переносом",
+        "pos": 10
       }
     }
   },
