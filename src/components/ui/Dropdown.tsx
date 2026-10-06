@@ -19,6 +19,21 @@ import { cellClass, listClass } from "@/components/ui/List";
  * The choice rides in a hidden input, so the form around it needs to know
  * nothing about any of this.
  */
+export type DropdownOption = string | { value: string; short: string };
+
+const valueOf = (o: DropdownOption) => (typeof o === "string" ? o : o.value);
+
+/** One name below sm, another from it up - the director's subject is long. */
+function Label({ option }: { option: DropdownOption }) {
+  if (typeof option === "string") return <>{option}</>;
+  return (
+    <>
+      <span className="sm:hidden">{option.short}</span>
+      <span className="max-sm:hidden">{option.value}</span>
+    </>
+  );
+}
+
 export function Dropdown({
   name,
   placeholder,
@@ -26,10 +41,11 @@ export function Dropdown({
 }: {
   name: string;
   placeholder: string;
-  options: string[];
+  options: DropdownOption[];
 }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+  const chosen = options.find((o) => valueOf(o) === value);
   const [box, setBox] = useState<DOMRect | null>(null);
   const header = useRef<HTMLButtonElement>(null);
   const list = useRef<HTMLDivElement>(null);
@@ -82,7 +98,7 @@ export function Dropdown({
           open ? "border-b border-ink/15" : ""
         }`}
       >
-        {value || placeholder}
+        {chosen ? <Label option={chosen} /> : placeholder}
         <Chevron up={open} />
       </button>
 
@@ -95,17 +111,17 @@ export function Dropdown({
             style={{ left: box.left, top: box.bottom, width: box.width }}
           >
             {options.map((option, i) => (
-              <Fragment key={option}>
+              <Fragment key={valueOf(option)}>
                 {i > 0 && <Divider />}
                 <button
                   type="button"
                   onClick={() => {
-                    setValue(option);
+                    setValue(valueOf(option));
                     setOpen(false);
                   }}
                   className={cellClass("black")}
                 >
-                  {option}
+                  <Label option={option} />
                 </button>
               </Fragment>
             ))}

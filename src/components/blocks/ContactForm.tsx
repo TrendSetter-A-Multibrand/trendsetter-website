@@ -4,14 +4,15 @@ import { type FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/Button";
-import { Dropdown } from "@/components/ui/Dropdown";
+import { Dropdown, type DropdownOption } from "@/components/ui/Dropdown";
+import { DIRECTOR_SUBJECT, DIRECTOR_SUBJECT_SHORT } from "@/lib/contact";
 
 type ContactFormProps = {
   locale?: string;
   heading?: string;
   placeholder?: string;
   /** The list the file opens the dropdown with on О нас. */
-  subjects?: string[];
+  subjects?: DropdownOption[];
   imageSrc?: string;
 };
 
@@ -33,7 +34,7 @@ export function ContactForm({
     "Вакансии",
     "Контакты",
     "Обратная связь",
-    "Генеральному директору",
+    { value: DIRECTOR_SUBJECT, short: DIRECTOR_SUBJECT_SHORT },
   ],
   imageSrc = "/images/home/smile.svg",
 }: ContactFormProps) {

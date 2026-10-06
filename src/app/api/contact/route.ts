@@ -39,7 +39,7 @@ export async function POST(request: Request) {
   }
   const { name, email, subject, message } = parsed.value;
 
-  const to = recipientFor(subject);
+  const to = recipientFor();
   if (!to) {
     return Response.json({ error: "not configured" }, { status: 503 });
   }

@@ -10,7 +10,7 @@ export const CONTACT_SUBJECTS = [
   "Вакансии",
   "Контакты",
   "Обратная связь",
-  "Генеральному директору",
+  "Связаться с генеральным директором",
 ] as const;
 
 export type ContactSubject = (typeof CONTACT_SUBJECTS)[number];
@@ -56,13 +56,15 @@ export function parseContact(
 }
 
 /**
- * Recipient for a subject. CONTACT_TO_CEO catches the director's subject,
- * CONTACT_TO the rest; both are addresses from the mail manager, so they live
- * in the environment and not here.
+ * Every message goes to the one mailbox, CONTACT_TO (an address from the mail
+ * manager, so it lives in the environment). The subject line - "[Сайт] <тема>" -
+ * is what tells the readers, and later the summary, what kind of message it is
+ * and whether it is meant for the director.
  */
-export function recipientFor(subject: ContactSubject): string | undefined {
-  if (subject === "Генеральному директору") {
-    return process.env.CONTACT_TO_CEO || process.env.CONTACT_TO;
-  }
+export function recipientFor(): string | undefined {
   return process.env.CONTACT_TO;
 }
+
+/** The subject whose answer the director gives; the mobile list shortens it. */
+export const DIRECTOR_SUBJECT: ContactSubject = "Связаться с генеральным директором";
+export const DIRECTOR_SUBJECT_SHORT = "Связаться с ген. директором";
