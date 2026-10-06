@@ -100,7 +100,7 @@ const DRAW: Record<
   // `flush` is off - the photo runs under the header only on the home page.
   page_cover: (blok, locale) => (
     <>
-      <div className="py-5">
+      <div className="lg:py-5">
         <Breadcrumbs
           items={[
             { label: "Главная", href: `/${locale}` },
@@ -209,7 +209,7 @@ const DRAW: Record<
   // below is the block's own - 44 on lg, 16 at 375.
   faq: (blok, locale) => (
     <>
-      <div className="pt-5">
+      <div className="lg:pt-5">
         <Breadcrumbs
           items={[
             { label: "Главная", href: `/${locale}` },

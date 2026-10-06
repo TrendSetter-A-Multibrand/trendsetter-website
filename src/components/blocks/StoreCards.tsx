@@ -51,8 +51,8 @@ export function StoreCards({
 
             {/* 192 in the file, but as a floor rather than a fixed height: a
                 longer address should push the card down, not spill out of it. */}
-            <div className="flex w-full flex-1 flex-col gap-4 bg-surface-active p-4 lg:min-h-[192px] lg:gap-6 lg:px-6 lg:py-6">
-              <p className="text-xl font-medium tracking-[1px] lg:text-2xl/none">
+            <div className="flex w-full flex-1 flex-col gap-4 bg-surface-active p-6 lg:min-h-[192px] lg:gap-6">
+              <p className="text-xl/6 font-medium tracking-[1px] lg:text-2xl/none">
                 {store.name}
               </p>
 

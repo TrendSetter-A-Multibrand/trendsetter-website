@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { buttonClass } from "@/components/ui/Button";
 
 type NotFoundHeroProps = {
   heading?: string;
@@ -32,7 +33,8 @@ const BALLOONS = [
     body: { x: 0.514, y: 0.367 },
     box: "left-[28.47%] top-[31.64%] w-[17.29%]",
     tilt: "origin-top-left -rotate-[12.6deg]",
-    drift: "[--float-y:-10px] [animation-delay:-800ms] [animation-duration:3600ms]",
+    drift:
+      "[--float-y:-10px] [animation-delay:-800ms] [animation-duration:3600ms]",
   },
   {
     src: "/images/404/balloon-smile.png",
@@ -41,7 +43,8 @@ const BALLOONS = [
     body: { x: 0.499, y: 0.385 },
     box: "left-[33.33%] top-[28.8%] w-[33.33%]",
     tilt: "",
-    drift: "[--float-y:-16px] [animation-delay:-2100ms] [animation-duration:4600ms]",
+    drift:
+      "[--float-y:-16px] [animation-delay:-2100ms] [animation-duration:4600ms]",
     priority: true,
   },
   {
@@ -51,7 +54,8 @@ const BALLOONS = [
     body: { x: 0.514, y: 0.367 },
     box: "left-[53.27%] top-[24.18%] w-[17.29%]",
     tilt: "origin-top-left rotate-[7.19deg]",
-    drift: "[--float-y:-13px] [animation-delay:-1400ms] [animation-duration:4100ms]",
+    drift:
+      "[--float-y:-13px] [animation-delay:-1400ms] [animation-duration:4100ms]",
   },
 ];
 
@@ -111,58 +115,105 @@ export function NotFoundHero({
   }
 
   return (
-    <section className="flex h-[calc(100svh-var(--header-h,0px))] items-center justify-center overflow-hidden px-6 lg:px-10">
-      <div
-        ref={board}
-        onPointerMove={shy}
-        onPointerLeave={settle}
-        // The whole composition is percentages of a 1920x952 board, so it
-        // shrinks with the board - and on a phone that left the balloons the
-        // size of a thumbnail, with the heading landing on top of them. The
-        // board is drawn wider than the screen there and centred instead; the
-        // section clips the empty margins, and the balloons sit in the middle
-        // 40% of it, well inside what stays visible. `shrink-0` because a flex
-        // item is otherwise pulled straight back to the width of its container.
-        className="@container relative aspect-[1920/952] w-[200%] shrink-0 sm:w-[150%] lg:w-full"
-      >
-        {/* Sized off the board rather than the screen, like everything else
-            here: 36 on the file's 1840 is 1.96% of it, so the line keeps its
-            place above the balloons instead of landing on them when the board
-            is drawn wider than the screen */}
-        <h1 className="absolute inset-x-0 top-[21.5%] text-center font-mono text-[1.96cqw] uppercase tracking-[0.14em] text-ink">
+    <>
+      {/* Under lg the file stops drawing a board: heading, the three balloons
+          in a 343x162 frame, a button across the whole measure, and the news
+          row straight after. Positions are the file's, centre by centre, with
+          the two fours tilted -12.6 and 7.2. */}
+      <section className="px-4 pb-14 pt-8 lg:hidden">
+        <p className="text-center font-mono text-2xl/[31px] uppercase tracking-[1px] text-ink">
           [{heading}]
-        </h1>
-
-        {BALLOONS.map((balloon, i) => (
-          <div
-            key={balloon.box}
-            ref={(el) => {
-              balloons.current[i] = el;
-            }}
-            className={`absolute transition-transform duration-500 ease-out ${balloon.box}`}
-          >
-            <div
-              className={`animate-float will-change-[translate] ${balloon.tilt} ${balloon.drift}`}
-            >
-              <Image
-                src={balloon.src}
-                alt=""
-                width={balloon.width}
-                height={balloon.height}
-                priority={balloon.priority}
-                className="h-auto w-full"
-              />
-            </div>
+        </p>
+        <div className="relative mx-auto mt-8 h-[162px] w-[343px]">
+          <div className="absolute left-[29px] top-[-5px] w-[130px] -rotate-[12.6deg]">
+            <Image
+              src={BALLOONS[0].src}
+              alt=""
+              width={BALLOONS[0].width}
+              height={BALLOONS[0].height}
+              className="h-auto w-full"
+            />
           </div>
-        ))}
-
+          <div className="absolute left-[46px] top-0 w-[251px]">
+            <Image
+              src={BALLOONS[1].src}
+              alt=""
+              width={BALLOONS[1].width}
+              height={BALLOONS[1].height}
+              className="h-auto w-full"
+            />
+          </div>
+          <div className="absolute left-[184px] top-[-9px] w-[130px] rotate-[7.2deg]">
+            <Image
+              src={BALLOONS[2].src}
+              alt=""
+              width={BALLOONS[2].width}
+              height={BALLOONS[2].height}
+              className="h-auto w-full"
+            />
+          </div>
+        </div>
         <Link
           href={ctaHref}
-          className="absolute left-1/2 top-[75.5%] flex h-[49px] -translate-x-1/2 items-center whitespace-nowrap bg-brand px-[17px] text-sm font-medium uppercase tracking-[0.15em] text-white"
+          className={`${buttonClass("primary")} mt-8 w-full`}
         >
           {ctaLabel}
         </Link>
-      </div>
-    </section>
+      </section>
+
+      <section className="hidden h-[calc(100svh-var(--header-h,0px))] items-center justify-center overflow-hidden px-6 lg:flex lg:px-10">
+        <div
+          ref={board}
+          onPointerMove={shy}
+          onPointerLeave={settle}
+          // The whole composition is percentages of a 1920x952 board, so it
+          // shrinks with the board - and on a phone that left the balloons the
+          // size of a thumbnail, with the heading landing on top of them. The
+          // board is drawn wider than the screen there and centred instead; the
+          // section clips the empty margins, and the balloons sit in the middle
+          // 40% of it, well inside what stays visible. `shrink-0` because a flex
+          // item is otherwise pulled straight back to the width of its container.
+          className="@container relative aspect-[1920/952] w-[200%] shrink-0 sm:w-[150%] lg:w-full"
+        >
+          {/* Sized off the board rather than the screen, like everything else
+            here: 36 on the file's 1840 is 1.96% of it, so the line keeps its
+            place above the balloons instead of landing on them when the board
+            is drawn wider than the screen */}
+          <h1 className="absolute inset-x-0 top-[21.5%] text-center font-mono text-[1.96cqw] uppercase tracking-[0.14em] text-ink">
+            [{heading}]
+          </h1>
+
+          {BALLOONS.map((balloon, i) => (
+            <div
+              key={balloon.box}
+              ref={(el) => {
+                balloons.current[i] = el;
+              }}
+              className={`absolute transition-transform duration-500 ease-out ${balloon.box}`}
+            >
+              <div
+                className={`animate-float will-change-[translate] ${balloon.tilt} ${balloon.drift}`}
+              >
+                <Image
+                  src={balloon.src}
+                  alt=""
+                  width={balloon.width}
+                  height={balloon.height}
+                  priority={balloon.priority}
+                  className="h-auto w-full"
+                />
+              </div>
+            </div>
+          ))}
+
+          <Link
+            href={ctaHref}
+            className="absolute left-1/2 top-[75.5%] flex h-[49px] -translate-x-1/2 items-center whitespace-nowrap bg-brand px-[17px] text-sm font-medium uppercase tracking-[0.15em] text-white"
+          >
+            {ctaLabel}
+          </Link>
+        </div>
+      </section>
+    </>
   );
 }

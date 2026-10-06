@@ -105,7 +105,7 @@ export function Footer({ locale }: { locale: Locale }) {
           </a>
         </div>
 
-        <SocialLinks large className="h-fit justify-center sm:justify-start" />
+        <SocialLinks large className="h-fit justify-center max-sm:hidden sm:justify-start" />
       </div>
 
       {/* The file paints this white under SOFT_LIGHT, but Figma's soft light is
@@ -116,6 +116,10 @@ export function Footer({ locale }: { locale: Locale }) {
       <div className="mt-6 px-4 lg:mt-10 lg:px-10">
         <Wordmark className="text-[#453e3c]" />
       </div>
+
+      {/* At 375 the file puts the icons under the wordmark rather than beside
+          the columns */}
+      <SocialLinks large className="mt-6 justify-center px-4 sm:hidden" />
     </footer>
   );
 }

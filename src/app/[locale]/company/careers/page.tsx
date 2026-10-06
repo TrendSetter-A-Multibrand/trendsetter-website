@@ -41,7 +41,7 @@ export default async function CareersPage({
 
   return (
     <>
-      <div className="py-5">
+      <div className="lg:py-5">
         <Breadcrumbs
           items={[
             { label: "Главная", href: `/${locale}` },

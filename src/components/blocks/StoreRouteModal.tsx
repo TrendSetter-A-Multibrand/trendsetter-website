@@ -57,7 +57,7 @@ export function StoreRouteModal({
       role="dialog"
       aria-modal="true"
       aria-label={`Как добраться: ${store.name}`}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center pt-16 lg:items-center lg:p-4"
     >
       <button
         type="button"
@@ -72,7 +72,7 @@ export function StoreRouteModal({
             {/* The name is set plainly here. The brackets on this screen belong
                 to the categories under it, and two bracketed things one above
                 the other read as one list. */}
-            <p className="text-lg font-medium tracking-[1px] lg:text-2xl/none">
+            <p className="text-2xl/none font-medium tracking-[1px]">
               {store.name}
             </p>
 
@@ -81,7 +81,7 @@ export function StoreRouteModal({
                 {store.tags.map((tag) => (
                   <li
                     key={tag}
-                    className="font-mono text-sm/none font-medium uppercase tracking-[1px] text-brand"
+                    className="font-mono text-xs/[16px] font-medium uppercase tracking-[1px] text-brand"
                   >
                     [{tag}]
                   </li>
@@ -110,7 +110,7 @@ export function StoreRouteModal({
         <div className={`flex flex-col gap-6 lg:gap-10 ${GUTTER}`}>
           {/* 588 of shop beside whatever is left for the walk in */}
           <div className="flex flex-col gap-6 lg:flex-row">
-            <dl className="flex flex-col gap-2 text-sm lg:w-[588px] lg:shrink-0 lg:text-base/5">
+            <dl className="flex flex-col gap-2 text-base/5 lg:w-[588px] lg:shrink-0">
               <DetailRow label="Адрес" value={store.address} />
               <DetailRow label="Часы работы" value={store.hours} />
               <DetailRow label="Телефон" value={store.phone} />
@@ -119,10 +119,10 @@ export function StoreRouteModal({
             </dl>
 
             <div className="flex min-w-0 flex-1 flex-col gap-3 lg:gap-4">
-              <p className="text-lg font-medium tracking-[1px] lg:text-2xl/none">
+              <p className="text-2xl/none font-medium tracking-[1px]">
                 Как пройти:
               </p>
-              <div className="text-sm lg:text-base/5">
+              <div className="text-base/5">
                 {store.directions.map((line, i) => (
                   <p key={i}>{line}</p>
                 ))}
@@ -149,7 +149,7 @@ export function StoreRouteModal({
               ))}
             </div>
 
-            <p className="text-sm text-muted lg:text-base/5">
+            <p className="text-base/5 text-muted">
               Маршрут откроется в Яндекс Картах — там же будут пробки и переход в
               навигатор.
             </p>

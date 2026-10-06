@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { BrandsSection } from "@/components/blocks/BrandsSection";
+import { PageCover } from "@/components/blocks/PageCover";
 import { seo } from "@/lib/seo";
 
 
@@ -28,6 +29,15 @@ export default async function BrandsPage({
 
   return (
     <>
+      {/* Only the 375 frame has the cover; the desktop file opens on the crumbs */}
+      <div className="lg:hidden">
+        <PageCover
+          title="Бренды"
+          subtitle="Разбираемся, сравниваем, делимся"
+          imageSrc="/images/covers/articles.jpg"
+          flush={false}
+        />
+      </div>
       <Breadcrumbs
         items={[{ label: "Главная", href: `/${locale}` }, { label: "Бренды" }]}
       />

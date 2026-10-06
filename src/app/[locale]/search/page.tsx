@@ -4,6 +4,7 @@ import { ArticleCard } from "@/components/blocks/ArticleCard";
 import { RecommendedRow } from "@/components/blocks/RecommendedRow";
 import { NewsletterSignup } from "@/components/blocks/NewsletterSignup";
 import { FilterChip } from "@/components/ui/FilterChip";
+import { SearchField } from "@/components/ui/SearchField";
 import { Pagination } from "@/components/ui/Pagination";
 import { parseQuery, search } from "@/lib/articles";
 import { fetchArticles } from "@/lib/storyblok/articles";
@@ -56,9 +57,10 @@ export default async function SearchPage({
 
   return (
     <>
-      <section className="px-6 pt-10 lg:px-10">
-        {/* 42 tall, 8 apart; the search itself stays up in the header */}
-        <div className="flex flex-wrap gap-2">
+      <section className="flex flex-col px-6 pt-6 lg:block lg:px-10 lg:pt-10">
+        {/* 42 tall, 8 apart; the search itself stays up in the header. At 375
+            the file puts the heading first, centred, and the chips under it. */}
+        <div className="order-2 mt-6 flex flex-wrap gap-2 lg:mt-0">
           {SECTIONS.map((section) => (
             <FilterChip
               key={section.value}
@@ -69,25 +71,48 @@ export default async function SearchPage({
           ))}
         </div>
 
-        <h1 className="mt-10 font-mono text-xl uppercase tracking-[3px] lg:text-2xl/[31.2px]">
-          [Результаты поиска]
-        </h1>
+        {/* Header has no room for the field at 375, so the file draws it on the
+            page, under the chips; from lg it is back up in the header. */}
+        <form
+          action={`/${locale}/search`}
+          method="get"
+          className="order-3 mt-4 lg:hidden"
+        >
+          <SearchField name="q" defaultValue={query} placeholder="Поиск статьи" />
+        </form>
 
-        {/* 60 on an 80 line - the one place on the site type gets this big. The
-            file leaves nothing between it and the heading above, or between it
-            and the apology below: the three read as one block. */}
-        <p className="font-mono uppercase text-brand max-lg:text-4xl lg:text-[60px]/[80px] lg:tracking-[3px]">
-          {query}
-        </p>
+        <div className="order-1 text-center lg:text-left">
+          <h1 className="font-mono text-2xl/[31px] uppercase tracking-[1px] lg:mt-10 lg:text-[36px]/[44px] lg:tracking-[2px]">
+            [Результаты поиска]
+          </h1>
+
+          {/* 60 on an 80 line - the one place on the site type gets this big. The
+              file leaves nothing between it and the heading above, or between it
+              and the apology below: the three read as one block. */}
+          <p
+            className={`font-mono uppercase text-brand max-lg:text-[36px]/[47px] max-lg:tracking-[3px] lg:text-[60px]/[80px] lg:tracking-[3px] ${
+              matches.length === 0 ? "max-lg:hidden" : ""
+            }`}
+          >
+            {query}
+          </p>
+        </div>
 
         {matches.length === 0 && (
-          <p className="text-lg font-medium tracking-[1px] lg:text-2xl/[29px]">
-            Результатов не найдено. Попробуйте использовать другое слово.
-          </p>
+          <div className="order-4 max-lg:-mx-6 max-lg:mt-6 max-lg:border-t max-lg:border-ink/15 max-lg:px-6 max-lg:pt-2">
+            {/* At 375 the file moves the query down here, under a rule that
+                runs the full width, and sets the apology in mono 16. */}
+            <p className="text-center font-mono text-[36px]/[47px] uppercase tracking-[3px] text-brand lg:hidden">
+              {query}
+            </p>
+            <p className="mt-4 font-mono text-base/5 lg:mt-0 lg:font-sans lg:text-2xl/[29px] lg:font-medium lg:tracking-[1px]">
+              Результатов не найдено. Попробуйте использовать другое слово.
+            </p>
+          </div>
         )}
 
         {found.length > 0 && (
-          <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="order-4 mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {found.map((article, i) => (
               <ArticleCard
                 key={i}

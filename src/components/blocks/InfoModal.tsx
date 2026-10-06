@@ -43,7 +43,7 @@ export function InfoModal({
       role="dialog"
       aria-modal="true"
       aria-label={title}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center pt-16 lg:items-center lg:p-4"
     >
       <button
         type="button"
@@ -54,7 +54,7 @@ export function InfoModal({
 
       <div className="relative flex max-h-full w-full max-w-[1280px] flex-col gap-6 overflow-y-auto bg-white py-6 text-ink lg:gap-10 lg:py-10">
         <div className="flex items-center justify-between gap-6 px-6 lg:px-10">
-          <p className="text-lg font-medium tracking-[1px] lg:text-2xl/none">
+          <p className="text-2xl/none font-medium tracking-[1px]">
             {title}
           </p>
 

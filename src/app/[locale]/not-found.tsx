@@ -13,7 +13,7 @@ export default function NotFound() {
       <NotFoundHero />
       {/* The home page ends on the newsletter, which sits flush on the footer.
           Here the row is last, so it has to carry the air itself. */}
-      <div className="pb-16">
+      <div className="pb-16 max-lg:pb-10">
         <NewsRow locale={defaultLocale} />
       </div>
     </>

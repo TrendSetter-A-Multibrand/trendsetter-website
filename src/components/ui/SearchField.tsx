@@ -7,8 +7,13 @@ export function SearchField({
   placeholder,
   value,
   onChange,
+  name,
+  defaultValue,
 }: {
   placeholder: string;
+  /** For a field inside a plain form: it is sent under this name. */
+  name?: string;
+  defaultValue?: string;
   value?: string;
   onChange?: (value: string) => void;
 }) {
@@ -16,6 +21,8 @@ export function SearchField({
     <label className="flex h-12 w-full items-center border-b-2 border-ink lg:w-[280px]">
       <input
         type="search"
+        name={name}
+        defaultValue={defaultValue}
         placeholder={placeholder}
         value={value}
         onChange={onChange && ((e) => onChange(e.target.value))}
