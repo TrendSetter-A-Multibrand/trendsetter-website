@@ -11,6 +11,8 @@ import { isSubscribed, remember } from "@/lib/subscribers";
 type NewsletterSignupProps = {
   locale?: string;
   heading?: string;
+  /** What the 375 frame calls it. */
+  mobileHeading?: string;
   description?: string;
   imageSrc?: string;
 };
@@ -25,6 +27,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export function NewsletterSignup({
   locale = "ru_ru",
   heading = "Подпишитесь на наши новости",
+  mobileHeading = "Подпишитесь на новости",
   description = "Будьте в числе первых, кто узнает о новинках,\nраспрождажах и интересных новостях TRENDSETTER!",
   imageSrc = "/images/home/smile.svg",
 }: NewsletterSignupProps) {
@@ -61,7 +64,9 @@ export function NewsletterSignup({
     <section className="on-dark relative overflow-hidden bg-brand px-4 py-6 font-mono text-white lg:px-10 lg:py-10">
       <div className="relative z-10 max-w-[821px]">
         <h2 className="text-xl uppercase tracking-[3px] lg:text-2xl/[31.2px]">
-          [{heading}]
+          {/* The 375 frame calls it "Подпишитесь на новости" */}
+          <span className="lg:hidden">[{mobileHeading}]</span>
+          <span className="max-lg:hidden">[{heading}]</span>
         </h2>
 
         <p className="mt-4 whitespace-pre-line text-sm/[18px] lg:mt-6">{description}</p>

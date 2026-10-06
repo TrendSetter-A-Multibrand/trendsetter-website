@@ -21,7 +21,11 @@ export function TextWithPhoto({
         <h2 className="text-xl font-medium tracking-[0.24px] lg:text-2xl/[29px]">
           {title}
         </h2>
-        <p className="text-base tracking-[0.2px] lg:text-xl/[24.2px]">{body}</p>
+        {/* At 375 the file sets the copy in mono 14/18, centred; the heading
+            stays as it was. */}
+        <p className="text-center font-mono text-sm/[18px] lg:text-left lg:font-sans lg:text-xl/[24.2px] lg:tracking-[0.2px]">
+          {body}
+        </p>
       </div>
 
       <div className="relative aspect-square w-full overflow-hidden">
