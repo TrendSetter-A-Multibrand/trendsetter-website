@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/Button";
+import { useSiteSettings } from "@/components/layout/SettingsContext";
 
 type NotFoundHeroProps = {
   heading?: string;
@@ -64,10 +65,13 @@ const REACH = 300;
 const GIVE = 26;
 
 export function NotFoundHero({
-  heading = "Страница не найдена",
-  ctaLabel = "Вернуться на главную",
+  heading: headingProp,
+  ctaLabel: ctaLabelProp,
   ctaHref = "/",
 }: NotFoundHeroProps) {
+  const { notFound } = useSiteSettings();
+  const heading = headingProp ?? notFound.heading;
+  const ctaLabel = ctaLabelProp ?? notFound.cta;
   const board = useRef<HTMLDivElement>(null);
   const balloons = useRef<(HTMLDivElement | null)[]>([]);
   const anchors = useRef<{ x: number; y: number }[] | null>(null);

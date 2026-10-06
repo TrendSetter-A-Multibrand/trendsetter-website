@@ -1112,6 +1112,65 @@
         "display_name": "Магазины (телефон): заголовок над карточками",
         "description": "Скобки ставит сайт",
         "pos": 20
+      },
+      "not_found_heading": {
+        "type": "text",
+        "display_name": "Страница 404: заголовок",
+        "description": "Скобки ставит сайт",
+        "pos": 30
+      },
+      "not_found_cta": {
+        "type": "text",
+        "display_name": "Страница 404: надпись на кнопке",
+        "pos": 31
+      },
+      "search_heading": {
+        "type": "text",
+        "display_name": "Поиск: заголовок",
+        "description": "Скобки ставит сайт",
+        "pos": 32
+      },
+      "search_placeholder": {
+        "type": "text",
+        "display_name": "Поиск: подсказка в поле",
+        "pos": 33
+      },
+      "search_empty": {
+        "type": "text",
+        "display_name": "Поиск: когда ничего не найдено",
+        "pos": 34
+      },
+      "search_recommended": {
+        "type": "text",
+        "display_name": "Поиск: заголовок рекомендаций",
+        "pos": 35
+      },
+      "form_placeholder": {
+        "type": "text",
+        "display_name": "Форма «Свяжитесь с нами»: подсказка в поле сообщения",
+        "pos": 36
+      },
+      "form_subjects": {
+        "type": "textarea",
+        "display_name": "Форма «Свяжитесь с нами»: темы обращения",
+        "description": "По одной в строке, в том порядке, как в списке. Для телефона можно дать короткий вариант через вертикальную черту: Связаться с генеральным директором | Связаться с ген. директором. По теме письма в почте понятно, кому оно",
+        "pos": 37
+      },
+      "form_button": {
+        "type": "text",
+        "display_name": "Форма: надпись на кнопке",
+        "pos": 38
+      },
+      "form_sent": {
+        "type": "text",
+        "display_name": "Форма: надпись после отправки",
+        "pos": 39
+      },
+      "form_consent": {
+        "type": "textarea",
+        "display_name": "Форма: строка про согласие",
+        "description": "Слова в {фигурных скобках} станут ссылкой на пользовательское соглашение",
+        "pos": 40
       }
     }
   },

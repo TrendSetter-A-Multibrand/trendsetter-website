@@ -20,6 +20,22 @@ if (stories[0] && !process.argv.includes("--force")) {
 
 const icon = (path: string) => path.split("/").pop()!.replace(".svg", "");
 
+const extra = {
+  not_found_heading: d.notFound.heading,
+  not_found_cta: d.notFound.cta,
+  search_heading: d.search.heading,
+  search_placeholder: d.search.placeholder,
+  search_empty: d.search.empty,
+  search_recommended: d.search.recommended,
+  form_placeholder: d.form.placeholder,
+  form_subjects: d.form.subjects
+    .map((s) => (s.short ? `${s.value} | ${s.short}` : s.value))
+    .join(String.fromCharCode(10)),
+  form_button: d.form.button,
+  form_sent: d.form.sent,
+  form_consent: d.form.consent,
+};
+
 const content = {
   component: "site_settings",
   ticker_enabled: d.ticker.enabled,
@@ -35,6 +51,7 @@ const content = {
   brands_cover_title: d.covers.brands.title,
   brands_cover_subtitle: d.covers.brands.subtitle,
   stores_heading: d.storesHeading,
+  ...extra,
   nav: d.nav.map((item) =>
     block("nav_item", {
       label: item.label,

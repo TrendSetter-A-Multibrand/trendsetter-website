@@ -18,7 +18,25 @@ export type FooterColumn = { title: string; links: FooterLink[] };
 
 export type Cover = { title: string; subtitle: string; image: string };
 
+/** One choice in the form's subject list; `short` is what a phone shows. */
+export type SubjectOption = { value: string; short?: string };
+
 export type SiteSettings = {
+  notFound: { heading: string; cta: string };
+  search: {
+    heading: string;
+    placeholder: string;
+    empty: string;
+    recommended: string;
+  };
+  form: {
+    placeholder: string;
+    subjects: SubjectOption[];
+    button: string;
+    sent: string;
+    /** Words in {braces} become the link to the user agreement. */
+    consent: string;
+  };
   /** The band that opens each section page. */
   covers: { journal: Cover; news: Cover; brands: Cover };
   /** The title over the shop cards at 375. */
@@ -82,6 +100,32 @@ const FOOTER_COLUMNS: FooterColumn[] = [
 ];
 
 export const DEFAULT_SETTINGS: SiteSettings = {
+  notFound: { heading: "Страница не найдена", cta: "Вернуться на главную" },
+  search: {
+    heading: "Результаты поиска",
+    placeholder: "Поиск статьи",
+    empty: "Результатов не найдено. Попробуйте использовать другое слово.",
+    recommended: "Рекомендованные материалы",
+  },
+  form: {
+    placeholder: "Задайте вопрос или напишите ваши пожелания и предложения",
+    subjects: [
+      { value: "О нас" },
+      { value: "Пространство" },
+      { value: "Сотрудничество" },
+      { value: "Вакансии" },
+      { value: "Контакты" },
+      { value: "Обратная связь" },
+      {
+        value: "Связаться с генеральным директором",
+        short: "Связаться с ген. директором",
+      },
+    ],
+    button: "Отправить",
+    sent: "Отправлено",
+    consent:
+      "Нажимая на кнопку «Отправить», Вы соглашаетесь на обработку персональных данных в соответствии с {пользовательским соглашением}",
+  },
   covers: {
     journal: {
       title: "Журнал",

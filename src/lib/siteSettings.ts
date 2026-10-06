@@ -3,6 +3,7 @@ import {
   DEFAULT_SETTINGS,
   type Cover,
   type FooterColumn,
+  type SubjectOption,
   type SiteSettings,
 } from "@/lib/siteDefaults";
 import type { NavItem, SocialLink } from "@/lib/navigation";
@@ -74,6 +75,16 @@ function cover(content: Blok, key: string, fallback: Cover): Cover {
   };
 }
 
+/** One subject a line; "длинное | короткое" gives the phone its own wording. */
+function subjects(value: unknown, fallback: SubjectOption[]): SubjectOption[] {
+  const found = str(value)
+    .split("\n")
+    .map((line) => line.split("|").map((part) => part.trim()))
+    .filter(([long]) => long)
+    .map(([long, short]) => (short ? { value: long, short } : { value: long }));
+  return found.length ? found : fallback;
+}
+
 /** Read from the "settings" story; everything the editor left empty is a default. */
 export async function getSiteSettings(): Promise<SiteSettings> {
   let content: Blok | undefined;
@@ -89,6 +100,23 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   const tone = str(content.ticker_tone) as TickerTone;
 
   return {
+    notFound: {
+      heading: str(content.not_found_heading) || d.notFound.heading,
+      cta: str(content.not_found_cta) || d.notFound.cta,
+    },
+    search: {
+      heading: str(content.search_heading) || d.search.heading,
+      placeholder: str(content.search_placeholder) || d.search.placeholder,
+      empty: str(content.search_empty) || d.search.empty,
+      recommended: str(content.search_recommended) || d.search.recommended,
+    },
+    form: {
+      placeholder: str(content.form_placeholder) || d.form.placeholder,
+      subjects: subjects(content.form_subjects, d.form.subjects),
+      button: str(content.form_button) || d.form.button,
+      sent: str(content.form_sent) || d.form.sent,
+      consent: str(content.form_consent) || d.form.consent,
+    },
     covers: {
       journal: cover(content, "journal", d.covers.journal),
       news: cover(content, "news", d.covers.news),

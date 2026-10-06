@@ -6,6 +6,7 @@ import { TopBar } from "@/components/layout/TopBar";
 import { PromoTicker } from "@/components/blocks/PromoTicker";
 import { CookieNotice } from "@/components/blocks/CookieNotice";
 import { getSiteSettings, resolveHref } from "@/lib/siteSettings";
+import { SettingsProvider } from "@/components/layout/SettingsContext";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -27,7 +28,7 @@ export default async function LocaleLayout({
   const { ticker } = settings;
 
   return (
-    <>
+    <SettingsProvider settings={settings}>
       <TopBar>
         {ticker.enabled && (
           <PromoTicker
@@ -42,6 +43,6 @@ export default async function LocaleLayout({
       <main className="flex flex-1 flex-col">{children}</main>
       <Footer locale={locale} settings={settings} />
       <CookieNotice locale={locale} text={settings.cookieText} />
-    </>
+    </SettingsProvider>
   );
 }

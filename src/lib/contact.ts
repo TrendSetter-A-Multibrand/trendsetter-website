@@ -3,17 +3,8 @@
  * without a server: what a valid message looks like, and who each subject goes to.
  */
 
-export const CONTACT_SUBJECTS = [
-  "О нас",
-  "Пространство",
-  "Сотрудничество",
-  "Вакансии",
-  "Контакты",
-  "Обратная связь",
-  "Связаться с генеральным директором",
-] as const;
-
-export type ContactSubject = (typeof CONTACT_SUBJECTS)[number];
+/** The subject list is the editor's now, so any reasonable line is accepted. */
+export type ContactSubject = string;
 
 export type ContactMessage = {
   name: string;
@@ -46,12 +37,12 @@ export function parseContact(
   if (!EMAIL.test(email) || email.length > 254) {
     return { ok: false, error: "email" };
   }
-  if (!(CONTACT_SUBJECTS as readonly string[]).includes(subject)) {
+  if (subject.length < 1 || subject.length > 200) {
     return { ok: false, error: "subject" };
   }
   return {
     ok: true,
-    value: { name, email, subject: subject as ContactSubject, message },
+    value: { name, email, subject, message },
   };
 }
 
@@ -64,7 +55,3 @@ export function parseContact(
 export function recipientFor(): string | undefined {
   return process.env.CONTACT_TO;
 }
-
-/** The subject whose answer the director gives; the mobile list shortens it. */
-export const DIRECTOR_SUBJECT: ContactSubject = "Связаться с генеральным директором";
-export const DIRECTOR_SUBJECT_SHORT = "Связаться с ген. директором";

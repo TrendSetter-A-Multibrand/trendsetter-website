@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/Button";
 import { Dropdown, type DropdownOption } from "@/components/ui/Dropdown";
-import { DIRECTOR_SUBJECT, DIRECTOR_SUBJECT_SHORT } from "@/lib/contact";
+import { useSiteSettings } from "@/components/layout/SettingsContext";
 
 type ContactFormProps = {
   locale?: string;
@@ -26,18 +26,20 @@ type ContactFormProps = {
 export function ContactForm({
   locale = "ru_ru",
   heading = "Свяжитесь с нами",
-  placeholder = "Задайте вопрос или напишите ваши пожелания и предложения",
-  subjects = [
-    "О нас",
-    "Пространство",
-    "Сотрудничество",
-    "Вакансии",
-    "Контакты",
-    "Обратная связь",
-    { value: DIRECTOR_SUBJECT, short: DIRECTOR_SUBJECT_SHORT },
-  ],
+  placeholder: placeholderProp,
+  subjects: subjectsProp,
   imageSrc = "/images/home/smile.svg",
 }: ContactFormProps) {
+  // The wording, the subject list and the consent line are the editor's, from
+  // the settings; a block that passes its own keeps them.
+  const { form } = useSiteSettings();
+  const placeholder = placeholderProp ?? form.placeholder;
+  const subjects: DropdownOption[] =
+    subjectsProp ??
+    form.subjects.map((s) => (s.short ? { value: s.value, short: s.short } : s.value));
+  const consentFrom = form.consent.indexOf("{");
+  const consentTo = form.consent.indexOf("}", consentFrom);
+  const hasLink = consentFrom >= 0 && consentTo > consentFrom;
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -138,7 +140,7 @@ export function ContactForm({
               disabled={busy}
               className={`${buttonClass("inverse")} w-full shrink-0 lg:w-[180px]`}
             >
-              {sent ? "Отправлено" : "Отправить"}
+              {sent ? form.sent : form.button}
             </button>
             {error && (
               <p role="alert" className="w-full text-sm/[18px]">
@@ -146,11 +148,17 @@ export function ContactForm({
               </p>
             )}
             <p className="max-w-[986px] text-sm/[18px]">
-              Нажимая на кнопку «Отправить», Вы соглашаетесь на обработку
-              персональных данных в соответствии с{" "}
-              <Link href={`/${locale}/user-agreement`} className="underline">
-                пользовательским соглашением
-              </Link>
+              {hasLink ? (
+                <>
+                  {form.consent.slice(0, consentFrom)}
+                  <Link href={`/${locale}/user-agreement`} className="underline">
+                    {form.consent.slice(consentFrom + 1, consentTo)}
+                  </Link>
+                  {form.consent.slice(consentTo + 1)}
+                </>
+              ) : (
+                form.consent
+              )}
             </p>
           </div>
         </form>

@@ -8,6 +8,7 @@ import { SearchField } from "@/components/ui/SearchField";
 import { Pagination } from "@/components/ui/Pagination";
 import { parseQuery, search } from "@/lib/articles";
 import { fetchArticles } from "@/lib/storyblok/articles";
+import { getSiteSettings } from "@/lib/siteSettings";
 
 /**
  * Both halves of the mockup live here: the same head - chips, [РЕЗУЛЬТАТЫ
@@ -35,6 +36,7 @@ export default async function SearchPage({
 }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
+  const { search: copy } = await getSiteSettings();
 
   const { q = "", type = "all", page: rawPage } = await searchParams;
   const query = q.trim();
@@ -78,12 +80,12 @@ export default async function SearchPage({
           method="get"
           className="order-3 mt-4 lg:hidden"
         >
-          <SearchField name="q" defaultValue={query} placeholder="Поиск статьи" />
+          <SearchField name="q" defaultValue={query} placeholder={copy.placeholder} />
         </form>
 
         <div className="order-1 text-center lg:text-left">
           <h1 className="font-mono text-2xl/[31px] uppercase tracking-[1px] lg:mt-10 lg:text-[36px]/[44px] lg:tracking-[2px]">
-            [Результаты поиска]
+            [{copy.heading}]
           </h1>
 
           {/* 60 on an 80 line - the one place on the site type gets this big. The
@@ -106,7 +108,7 @@ export default async function SearchPage({
               {query}
             </p>
             <p className="mt-4 font-mono text-base/5 lg:mt-0 lg:font-sans lg:text-2xl/[29px] lg:font-medium lg:tracking-[1px]">
-              Результатов не найдено. Попробуйте использовать другое слово.
+              {copy.empty}
             </p>
           </div>
         )}
@@ -140,7 +142,11 @@ export default async function SearchPage({
         )
       ) : (
         <div className="mt-10 pb-10">
-          <RecommendedRow articles={all} locale={locale} />
+          <RecommendedRow
+            articles={all}
+            locale={locale}
+            heading={copy.recommended}
+          />
         </div>
       )}
 
