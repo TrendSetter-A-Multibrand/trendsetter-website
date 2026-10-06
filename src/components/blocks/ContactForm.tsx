@@ -33,14 +33,48 @@ export function ContactForm({
     "Вакансии",
     "Контакты",
     "Обратная связь",
+    "Генеральному директору",
   ],
   imageSrc = "/images/home/smile.svg",
 }: ContactFormProps) {
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSent(true);
+    if (busy) return;
+    const form = e.currentTarget;
+    setBusy(true);
+    setError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+      if (!res.ok) {
+        const { error: code } = (await res.json().catch(() => ({}))) as {
+          error?: string;
+        };
+        setError(
+          code === "subject"
+            ? "Выберите тему обращения"
+            : code === "email"
+              ? "Проверьте e-mail"
+              : code === "message"
+                ? "Напишите сообщение"
+                : "Не удалось отправить, попробуйте позже",
+        );
+        return;
+      }
+      form.reset();
+      setSent(true);
+    } catch {
+      setError("Не удалось отправить, попробуйте позже");
+    } finally {
+      setBusy(false);
+    }
   }
 
   useEffect(() => {
@@ -78,6 +112,13 @@ export function ContactForm({
             />
 
             <input
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="hidden"
+            />
+            <input
               name="name"
               placeholder="Ваше имя"
               className="h-12 border border-white bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-white/40 sm:order-2"
@@ -93,10 +134,16 @@ export function ContactForm({
           <div className="mt-6 flex flex-wrap items-center gap-6">
             <button
               type="submit"
-              className={`${buttonClass("secondaryGhost")} w-full shrink-0 lg:w-[180px]`}
+              disabled={busy}
+              className={`${buttonClass("inverse")} w-full shrink-0 lg:w-[180px]`}
             >
               {sent ? "Отправлено" : "Отправить"}
             </button>
+            {error && (
+              <p role="alert" className="w-full text-sm/[18px]">
+                {error}
+              </p>
+            )}
             <p className="max-w-[986px] text-sm/[18px]">
               Нажимая на кнопку «Отправить», Вы соглашаетесь на обработку
               персональных данных в соответствии с{" "}
