@@ -30,7 +30,7 @@ export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
           {/* The article's own tags, not a list of its own - and each one leads
               where the same tag under a card leads. 8 apart here, not the 16
               the section pages use. */}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 max-lg:hidden">
             {meta.tags.map((tag) => (
               <FilterChip
                 key={tag}
@@ -39,6 +39,22 @@ export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
               />
             ))}
           </div>
+
+          {/* At 375 the file drops the chips for the card's red tag line */}
+          <p className="flex flex-wrap gap-x-2 font-mono text-xs/[16px] font-medium uppercase tracking-[1px] text-brand lg:hidden">
+            {meta.tags.map((tag) => (
+              <Link
+                key={tag}
+                href={tagHref(
+                  locale,
+                  meta.sectionHref === "journal" ? "journal" : "news",
+                  tag,
+                )}
+              >
+                [{tag}]
+              </Link>
+            ))}
+          </p>
 
           <h1 className="font-mono text-2xl uppercase tracking-[3px] text-ink lg:text-[40px]/[48px] lg:tracking-[1px]">
             {meta.title}
