@@ -9,7 +9,7 @@ import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 export function TeamGrid({ members }: { members: TeamMember[] }) {
   return (
     <section className="px-6 pt-10 pb-10 lg:px-10">
-      <h2 className="font-mono text-xl uppercase tracking-[5px] lg:text-[30px]/[39px]">
+      <h2 className="font-mono text-xl uppercase tracking-[5px] lg:text-[36px]/[44px] lg:tracking-[2px]">
         [Команда]
       </h2>
 
@@ -29,7 +29,7 @@ export function TeamGrid({ members }: { members: TeamMember[] }) {
                 exists. The role is 1px wider than the 252 portrait it sits
                 under, so at 1920 it just fits and anywhere narrower it was
                 hanging off the side of the page. */}
-            <p className="mt-2 font-mono text-xs font-medium uppercase text-brand lg:mt-4 lg:text-sm/[18px] min-[1900px]:whitespace-nowrap">
+            <p className="mt-2 font-mono text-xs/[16px] font-medium uppercase text-brand lg:mt-4 min-[1900px]:whitespace-nowrap">
               [{member.role}]
             </p>
           </div>

@@ -36,7 +36,7 @@ export function BrandModal({
       role="dialog"
       aria-modal="true"
       aria-label={brand.name}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center pt-16 lg:items-center lg:p-4"
     >
       <button
         type="button"
@@ -63,7 +63,7 @@ export function BrandModal({
               <p className="text-2xl/[29px] font-medium uppercase tracking-[1px]">
                 {brand.name}
               </p>
-              <p className="flex flex-wrap gap-2 font-mono text-sm/[18px] font-medium uppercase tracking-[1px] text-brand">
+              <p className="flex flex-wrap gap-2 font-mono text-xs/[16px] font-medium uppercase tracking-[1px] text-brand">
                 {brand.categories.map((category) => (
                   <span key={category}>[{category}]</span>
                 ))}

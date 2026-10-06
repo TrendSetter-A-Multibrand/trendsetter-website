@@ -60,7 +60,7 @@ export function ArticleCard({
       </Link>
 
       <p
-        className={`mt-6 font-mono text-sm/[18px] font-medium uppercase tracking-[1px] ${
+        className={`mt-6 font-mono text-xs/[16px] font-medium uppercase tracking-[1px] ${
           onBrand ? "text-white" : "text-brand"
         }`}
       >

@@ -150,7 +150,7 @@ export function SectionTitle({
     <div
       className={`flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-10 ${className}`}
     >
-      <h2 className="min-w-0 font-mono text-xl/[26px] uppercase tracking-[3px] lg:whitespace-nowrap lg:text-2xl/[31.2px]">
+      <h2 className="min-w-0 font-mono text-xl/[26px] uppercase tracking-[3px] lg:whitespace-nowrap lg:text-[36px]/[44px] lg:tracking-[2px]">
         [{heading}]
       </h2>
 

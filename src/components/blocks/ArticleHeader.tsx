@@ -40,7 +40,7 @@ export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
             ))}
           </div>
 
-          <h1 className="font-mono text-2xl uppercase tracking-[3px] text-ink lg:text-[60px]/[80px]">
+          <h1 className="font-mono text-2xl uppercase tracking-[3px] text-ink lg:text-[40px]/[48px] lg:tracking-[1px]">
             {meta.title}
           </h1>
         </div>

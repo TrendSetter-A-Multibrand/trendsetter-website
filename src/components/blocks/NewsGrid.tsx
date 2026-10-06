@@ -69,7 +69,7 @@ export function NewsGrid({
                 label="Читать"
               />
             </Link>
-            <p className="mt-6 font-mono text-sm/[18px] font-medium uppercase tracking-[1px] text-brand">
+            <p className="mt-6 font-mono text-xs/[16px] font-medium uppercase tracking-[1px] text-brand">
               {item.tags.map((tag, t) => (
                 <Fragment key={tag}>
                   {t > 0 && " "}
