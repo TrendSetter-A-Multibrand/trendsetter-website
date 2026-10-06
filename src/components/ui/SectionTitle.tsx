@@ -18,6 +18,8 @@ const THUMB_WIDTH = 56;
  * either a 2px rule with a 56x24 red block riding it, or the two arrows - 24
  * square, 40 apart.
  *
+ * At 375 the file hides both - the rows swipe - so they start at lg.
+ *
  * Either, not both. The component holds all three layers and each screen hides
  * the ones it does not use: the news row and the article's related row are drawn
  * with the bar and no arrows, events and the journal with arrows and no bar, and
@@ -161,7 +163,7 @@ export function SectionTitle({
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerEnd}
           onPointerCancel={handlePointerEnd}
-          className="relative flex h-6 flex-1 cursor-pointer touch-none select-none items-center"
+          className="relative flex h-6 flex-1 cursor-pointer touch-none select-none items-center max-lg:hidden"
         >
           <div className="h-0.5 w-full bg-ink" />
           <div
@@ -173,7 +175,7 @@ export function SectionTitle({
       )}
 
       {controls === "arrows" && scrollable && (
-        <div className="flex shrink-0 gap-10">
+        <div className="flex shrink-0 gap-10 max-lg:hidden">
           <button type="button" aria-label="Назад" onClick={() => step(-1)}>
             <Arrow className="rotate-180" />
           </button>
