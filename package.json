@@ -13,6 +13,7 @@
     "storyblok:seed": "node --env-file=.env.local scripts/storyblok-seed-home.mjs",
     "storyblok:seed-legal": "node --env-file=.env.local scripts/storyblok-seed-legal.mts",
     "storyblok:seed-company": "node --env-file=.env.local scripts/storyblok-seed-company.mts",
+    "storyblok:seed-settings": "node --env-file=.env.local scripts/storyblok-seed-settings.mts",
     "storyblok:seed-stores": "node --env-file=.env.local scripts/storyblok-seed-stores.mts",
     "storyblok:seed-brands": "node --env-file=.env.local scripts/storyblok-seed-brands.mts",
     "storyblok:seed-events": "node --env-file=.env.local scripts/storyblok-seed-events.mts",

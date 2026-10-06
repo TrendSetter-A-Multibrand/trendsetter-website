@@ -1047,5 +1047,234 @@
         "pos": 1
       }
     }
+  },
+  {
+    "name": "site_settings",
+    "display_name": "Настройки сайта",
+    "is_root": true,
+    "is_nestable": false,
+    "schema": {
+      "ticker_enabled": {
+        "type": "boolean",
+        "display_name": "Показывать бегущую строку",
+        "pos": 0,
+        "default_value": true
+      },
+      "ticker_text": {
+        "type": "text",
+        "display_name": "Бегущая строка: текст",
+        "description": "Например, «Скоро открытие нового магазина»",
+        "pos": 1
+      },
+      "ticker_cta": {
+        "type": "text",
+        "display_name": "Бегущая строка: призыв",
+        "description": "Например, «Узнать подробнее»",
+        "pos": 2
+      },
+      "ticker_link": {
+        "type": "text",
+        "display_name": "Бегущая строка: ссылка",
+        "description": "Путь внутри сайта, например news или company/about, либо полный адрес https://… Пусто или # — ссылка никуда не ведёт",
+        "pos": 3
+      },
+      "ticker_tone": {
+        "type": "option",
+        "display_name": "Бегущая строка: цвет",
+        "pos": 4,
+        "options": [
+          {
+            "name": "Красный",
+            "value": "red"
+          },
+          {
+            "name": "Жёлтый",
+            "value": "yellow"
+          },
+          {
+            "name": "Зелёный",
+            "value": "green"
+          },
+          {
+            "name": "Синий",
+            "value": "blue"
+          }
+        ],
+        "default_value": "red",
+        "exclude_empty_option": true
+      },
+      "nav": {
+        "type": "bloks",
+        "display_name": "Меню в шапке",
+        "description": "Пункты сверху вниз, в том порядке, в каком идут в шапке и в боковом меню",
+        "restrict_components": true,
+        "component_whitelist": [
+          "nav_item"
+        ],
+        "pos": 5
+      },
+      "footer_columns": {
+        "type": "bloks",
+        "display_name": "Футер: колонки",
+        "description": "Колонки слева направо. Колонка «Сотрудничество» с почтой задаётся ниже",
+        "restrict_components": true,
+        "component_whitelist": [
+          "footer_column"
+        ],
+        "pos": 6
+      },
+      "footer_cooperation_title": {
+        "type": "text",
+        "display_name": "Футер: заголовок колонки с почтой",
+        "description": "Скобки ставит сайт",
+        "pos": 7
+      },
+      "footer_email": {
+        "type": "text",
+        "display_name": "Футер: почта",
+        "pos": 8
+      },
+      "socials": {
+        "type": "bloks",
+        "display_name": "Соцсети",
+        "description": "Квадратики в футере и в боковом меню",
+        "restrict_components": true,
+        "component_whitelist": [
+          "social_link"
+        ],
+        "pos": 9
+      }
+    }
+  },
+  {
+    "name": "nav_item",
+    "display_name": "Пункт меню",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "label": {
+        "type": "text",
+        "display_name": "Название",
+        "pos": 0
+      },
+      "slug": {
+        "type": "text",
+        "display_name": "Адрес",
+        "description": "Латиницей, без слэшей, например journal",
+        "pos": 1
+      },
+      "children": {
+        "type": "bloks",
+        "display_name": "Подпункты",
+        "description": "Не нужны — не добавляйте",
+        "restrict_components": true,
+        "component_whitelist": [
+          "nav_link"
+        ],
+        "pos": 2
+      }
+    }
+  },
+  {
+    "name": "nav_link",
+    "display_name": "Подпункт меню",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "label": {
+        "type": "text",
+        "display_name": "Название",
+        "pos": 0
+      },
+      "slug": {
+        "type": "text",
+        "display_name": "Адрес",
+        "description": "Латиницей, продолжение адреса пункта, например about даёт company/about",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "footer_column",
+    "display_name": "Колонка футера",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "description": "Скобки ставит сайт",
+        "pos": 0
+      },
+      "links": {
+        "type": "bloks",
+        "display_name": "Ссылки",
+        "restrict_components": true,
+        "component_whitelist": [
+          "footer_link"
+        ],
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "footer_link",
+    "display_name": "Ссылка в футере",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "label": {
+        "type": "text",
+        "display_name": "Название",
+        "pos": 0
+      },
+      "path": {
+        "type": "text",
+        "display_name": "Адрес",
+        "description": "Путь внутри сайта, например company/about, либо полный адрес https://…",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "social_link",
+    "display_name": "Соцсеть",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "label": {
+        "type": "text",
+        "display_name": "Название",
+        "description": "Telegram, VK, MAX",
+        "pos": 0
+      },
+      "href": {
+        "type": "text",
+        "display_name": "Ссылка",
+        "description": "Полный адрес https://… Пока нет — оставьте #",
+        "pos": 1
+      },
+      "icon": {
+        "type": "option",
+        "display_name": "Значок",
+        "pos": 2,
+        "options": [
+          {
+            "name": "Telegram",
+            "value": "telegram"
+          },
+          {
+            "name": "VK",
+            "value": "vk"
+          },
+          {
+            "name": "MAX",
+            "value": "max"
+          }
+        ],
+        "default_value": "telegram",
+        "exclude_empty_option": true
+      }
+    }
   }
 ]

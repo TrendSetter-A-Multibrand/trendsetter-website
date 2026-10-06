@@ -4,7 +4,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Locale } from "@/lib/i18n/locales";
-import { NAV_ITEMS, type NavItem } from "@/lib/navigation";
+import type { NavItem, SocialLink } from "@/lib/navigation";
 import { HeaderSearch } from "@/components/layout/HeaderSearch";
 import { SideMenu } from "@/components/layout/SideMenu";
 import { NavDropdown } from "@/components/layout/NavDropdown";
@@ -125,7 +125,15 @@ function useLinksOutOfTheField(
   }, [row, field]);
 }
 
-export function Header({ locale }: { locale: Locale }) {
+export function Header({
+  locale,
+  items,
+  socials,
+}: {
+  locale: Locale;
+  items: NavItem[];
+  socials: SocialLink[];
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const nav = useRef<HTMLElement>(null);
   // The field only exists once the boundary below has resolved, so the bar keeps
@@ -149,7 +157,7 @@ export function Header({ locale }: { locale: Locale }) {
         ref={nav}
         className="hidden h-full items-center gap-10 whitespace-nowrap font-mono text-sm font-medium uppercase tracking-[1px] xl:flex"
       >
-        {NAV_ITEMS.map((item) => (
+        {items.map((item) => (
           <NavEntry key={item.slug} locale={locale} item={item} />
         ))}
       </nav>
@@ -177,7 +185,13 @@ export function Header({ locale }: { locale: Locale }) {
         </button>
       </div>
 
-      <SideMenu locale={locale} open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <SideMenu
+        locale={locale}
+        items={items}
+        socials={socials}
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+      />
     </header>
   );
 }

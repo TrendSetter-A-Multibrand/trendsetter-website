@@ -4,6 +4,8 @@ export type NavItem = {
   children?: { label: string; slug: string }[];
 };
 
+export type SocialLink = { label: string; href: string; icon: string };
+
 export const NAV_ITEMS: NavItem[] = [
   {
     label: "Журнал",
@@ -36,7 +38,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Подарочные карты", slug: "gift-cards" },
 ];
 
-export const SOCIAL_LINKS = [
+export const SOCIAL_LINKS: SocialLink[] = [
   { label: "Telegram", href: "#", icon: "/images/social/telegram.svg" },
   { label: "VK", href: "#", icon: "/images/social/vk.svg" },
   // The national messenger, not a placeholder for one. No link yet.

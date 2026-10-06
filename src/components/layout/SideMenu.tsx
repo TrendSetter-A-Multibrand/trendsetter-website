@@ -4,7 +4,7 @@ import { useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
-import { NAV_ITEMS } from "@/lib/navigation";
+import type { NavItem, SocialLink } from "@/lib/navigation";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 
 /** Never fires: the answer only ever changes from false to true, at hydration. */
@@ -12,10 +12,14 @@ const noSubscribe = () => () => {};
 
 export function SideMenu({
   locale,
+  items,
+  socials,
   open,
   onClose,
 }: {
   locale: Locale;
+  items: NavItem[];
+  socials: SocialLink[];
   open: boolean;
   onClose: () => void;
 }) {
@@ -72,7 +76,7 @@ export function SideMenu({
         </div>
 
         <nav className="flex flex-1 flex-col">
-          {NAV_ITEMS.map((item) => (
+          {items.map((item) => (
             <div key={item.slug} className="border-b border-black/10 py-4">
               <Link
                 href={`/${locale}/${item.slug}`}
@@ -99,7 +103,7 @@ export function SideMenu({
           ))}
         </nav>
 
-          <SocialLinks className="pt-6" />
+          <SocialLinks links={socials} className="pt-6" />
         </div>
       </div>
     </div>,

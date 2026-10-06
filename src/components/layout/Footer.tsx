@@ -1,26 +1,8 @@
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
-import { NAV_ITEMS } from "@/lib/navigation";
+import { resolveHref, type SiteSettings } from "@/lib/siteSettings";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { SocialLinks } from "@/components/ui/SocialLinks";
-
-const MENU_LINKS = [
-  { label: "Журнал", slug: "journal" },
-  { label: "Бренды", slug: "brands" },
-  { label: "Магазины", slug: "stores" },
-  { label: "Коллаборации", slug: "company/collaborations" },
-  { label: "Компания", slug: "company" },
-];
-
-const LEGAL_LINKS = [
-  { label: "Часто задаваемые вопросы", slug: "faq" },
-  { label: "Пользовательское соглашение", slug: "user-agreement" },
-  { label: "Политика обработки cookie", slug: "cookies" },
-  { label: "Согласие на обработку персональных данных", slug: "personal-data-consent" },
-  { label: "Политика обработки персональных данных", slug: "privacy-policy" },
-];
-
-const CONTACT_EMAIL = "trader@calledagarment.com";
 
 /**
  * The same 24 on a 31 line the section titles carry - the library sets all of
@@ -60,52 +42,46 @@ function FooterColumn({
   );
 }
 
-export function Footer({ locale }: { locale: Locale }) {
-  // Коллаборации live in the Меню column here, as the library draws it, so the
-  // section's own list drops them rather than printing the link twice. Six links
-  // is also what makes the column 269 and the footer 525.
-  const companyLinks = (
-    NAV_ITEMS.find((item) => item.slug === "company")?.children ?? []
-  ).filter((item) => item.slug !== "collaborations");
+export function Footer({
+  locale,
+  settings,
+}: {
+  locale: Locale;
+  settings: SiteSettings;
+}) {
+  const { columns, cooperationTitle, email } = settings.footer;
 
   return (
     <footer className="on-dark bg-ink py-6 text-white lg:py-10">
       {/* Columns sit at 40 / 221 / 670 / 901 in the library, so their widths are
           the file's, not a regular grid. The tiles close the row at 1840. */}
       <div className="footer-columns grid gap-6 px-4 sm:grid-cols-2 lg:gap-10 lg:px-10 xl:grid-cols-4">
-        <FooterColumn
-          title="Меню"
-          links={MENU_LINKS.map((item) => ({
-            label: item.label,
-            href: `/${locale}/${item.slug}`,
-          }))}
-        />
-        <FooterColumn
-          title="Покупателям"
-          links={LEGAL_LINKS.map((item) => ({
-            label: item.label,
-            href: `/${locale}/${item.slug}`,
-          }))}
-        />
-        <FooterColumn
-          title="Компания"
-          links={companyLinks.map((item) => ({
-            label: item.label,
-            href: `/${locale}/company/${item.slug}`,
-          }))}
-        />
+        {columns.map((column) => (
+          <FooterColumn
+            key={column.title}
+            title={column.title}
+            links={column.links.map((link) => ({
+              label: link.label,
+              href: resolveHref(locale, link.path),
+            }))}
+          />
+        ))}
 
         <div>
-          <FooterHeading>Сотрудничество</FooterHeading>
+          <FooterHeading>{cooperationTitle}</FooterHeading>
           <a
-            href={`mailto:${CONTACT_EMAIL}`}
+            href={`mailto:${email}`}
             className="text-sm/[19px] uppercase tracking-[1px] text-white/40 transition-colors hover:text-white"
           >
-            {CONTACT_EMAIL}
+            {email}
           </a>
         </div>
 
-        <SocialLinks large className="h-fit justify-center max-sm:hidden sm:justify-start" />
+        <SocialLinks
+          links={settings.socials}
+          large
+          className="h-fit justify-center max-sm:hidden sm:justify-start"
+        />
       </div>
 
       {/* The file paints this white under SOFT_LIGHT, but Figma's soft light is
@@ -119,7 +95,11 @@ export function Footer({ locale }: { locale: Locale }) {
 
       {/* At 375 the file puts the icons under the wordmark rather than beside
           the columns */}
-      <SocialLinks large className="mt-6 justify-center px-4 sm:hidden" />
+      <SocialLinks
+        links={settings.socials}
+        large
+        className="mt-6 justify-center px-4 sm:hidden"
+      />
     </footer>
   );
 }

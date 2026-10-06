@@ -1,21 +1,24 @@
-import { SOCIAL_LINKS } from "@/lib/navigation";
+import { SOCIAL_LINKS, type SocialLink } from "@/lib/navigation";
 
 /**
  * Brand-red squares with the glyphs exported from Figma. The glyphs are drawn
  * as CSS masks so their colour follows the text colour of the tile.
  */
 export function SocialLinks({
+  links = SOCIAL_LINKS,
   className,
   /** Tiles are 40 either way; the footer sets 24 between them and a 24 glyph,
       the side menu 12 and 16. */
   large,
 }: {
+  /** What the editor wrote in the settings; the built-in three until then. */
+  links?: SocialLink[];
   className?: string;
   large?: boolean;
 }) {
   return (
     <div className={`flex ${large ? "gap-6" : "gap-3"} ${className ?? ""}`}>
-      {SOCIAL_LINKS.map((social) => (
+      {links.map((social) => (
         <a
           key={social.label}
           href={social.href}
