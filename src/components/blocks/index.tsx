@@ -17,6 +17,8 @@ import { PhotoCards } from "@/components/blocks/PhotoCards";
 import { TeamGrid } from "@/components/blocks/TeamGrid";
 import { SpaceCards } from "@/components/blocks/SpaceCards";
 import { ContactDetails } from "@/components/blocks/ContactDetails";
+import { HelpCards } from "@/components/blocks/HelpCards";
+import { resolveHref } from "@/lib/siteSettings";
 
 /** As much of a Storyblok link field as we read. */
 type Link = { url?: string; cached_url?: string };
@@ -123,6 +125,45 @@ const DRAW: Record<
     <p className="px-4 pt-4 text-center font-mono text-sm lg:px-10 lg:pt-10 lg:text-2xl/[31.2px]">
       {text(blok.text)}
     </p>
+  ),
+
+  // Air between two blocks that carry none of their own; the editor picks how much.
+  spacer: (blok) => {
+    const SIZES: Record<string, string> = {
+      "16": "h-4",
+      "24": "h-6",
+      "40": "h-10",
+      "64": "h-16",
+    };
+    return <div aria-hidden="true" className={SIZES[text(blok.size) ?? "40"] ?? "h-10"} />;
+  },
+
+  // A heading and its paragraph across the whole measure - what Вакансии opens
+  // on. 40 over it and 40 under it, so what follows needs no air of its own.
+  text_section: (blok) => (
+    <section className="px-6 py-10 lg:px-10">
+      <h2 className="text-2xl font-medium lg:text-[32px]/[38.72px]">
+        {text(blok.title)}
+      </h2>
+      <p className="mt-6 text-base lg:text-2xl/[29px]">{text(blok.body)}</p>
+    </section>
+  ),
+
+  // Cards that lead somewhere: a title, a line, a link and one of three icons.
+  help_cards: (blok, locale) => (
+    <div className="py-10">
+      <HelpCards
+        locale={locale}
+        cards={nested(blok.cards).map((card) => ({
+          title: text(card.title) ?? "",
+          text: text(card.text) ?? "",
+          href: resolveHref(locale, text(card.link) ?? "#"),
+          icon: (["support", "phone", "faq"].includes(text(card.icon) ?? "")
+            ? text(card.icon)
+            : "support") as "support" | "phone" | "faq",
+        }))}
+      />
+    </div>
   ),
 
   text_with_photo: (blok) => (

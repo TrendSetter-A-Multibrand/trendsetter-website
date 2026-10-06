@@ -34,6 +34,12 @@ const extra = {
   form_button: d.form.button,
   form_sent: d.form.sent,
   form_consent: d.form.consent,
+  search_filter_all: d.search.filters.all,
+  search_filter_news: d.search.filters.news,
+  search_filter_journal: d.search.filters.journal,
+  form_subject_placeholder: d.form.subjectPlaceholder,
+  form_name_placeholder: d.form.namePlaceholder,
+  form_email_placeholder: d.form.emailPlaceholder,
 };
 
 const content = {

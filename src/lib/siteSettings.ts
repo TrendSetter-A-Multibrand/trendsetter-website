@@ -109,12 +109,23 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       placeholder: str(content.search_placeholder) || d.search.placeholder,
       empty: str(content.search_empty) || d.search.empty,
       recommended: str(content.search_recommended) || d.search.recommended,
+      filters: {
+        all: str(content.search_filter_all) || d.search.filters.all,
+        news: str(content.search_filter_news) || d.search.filters.news,
+        journal: str(content.search_filter_journal) || d.search.filters.journal,
+      },
     },
     form: {
       placeholder: str(content.form_placeholder) || d.form.placeholder,
       subjects: subjects(content.form_subjects, d.form.subjects),
       button: str(content.form_button) || d.form.button,
       sent: str(content.form_sent) || d.form.sent,
+      subjectPlaceholder:
+        str(content.form_subject_placeholder) || d.form.subjectPlaceholder,
+      namePlaceholder:
+        str(content.form_name_placeholder) || d.form.namePlaceholder,
+      emailPlaceholder:
+        str(content.form_email_placeholder) || d.form.emailPlaceholder,
       consent: str(content.form_consent) || d.form.consent,
     },
     covers: {

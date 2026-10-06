@@ -103,7 +103,7 @@ export function ContactForm({
             <div className="sm:order-4">
               <Dropdown
                 name="subject"
-                placeholder="Тема обращения"
+                placeholder={form.subjectPlaceholder}
                 options={subjects}
               />
             </div>
@@ -123,13 +123,13 @@ export function ContactForm({
             />
             <input
               name="name"
-              placeholder="Ваше имя"
+              placeholder={form.namePlaceholder}
               className="h-12 border border-white bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-white/40 sm:order-2"
             />
             <input
               type="email"
               name="email"
-              placeholder="E-mail"
+              placeholder={form.emailPlaceholder}
               className="h-12 border border-white bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-white/40 sm:order-3"
             />
           </div>

@@ -27,7 +27,10 @@
           "photo_cards",
           "team_grid",
           "space_cards",
-          "contact_details"
+          "contact_details",
+          "text_section",
+          "help_cards",
+          "spacer"
         ],
         "pos": 0
       },
@@ -1171,6 +1174,36 @@
         "display_name": "Форма: строка про согласие",
         "description": "Слова в {фигурных скобках} станут ссылкой на пользовательское соглашение",
         "pos": 40
+      },
+      "search_filter_all": {
+        "type": "text",
+        "display_name": "Поиск: название фильтра «Все»",
+        "pos": 50
+      },
+      "search_filter_news": {
+        "type": "text",
+        "display_name": "Поиск: название фильтра «Новости»",
+        "pos": 51
+      },
+      "search_filter_journal": {
+        "type": "text",
+        "display_name": "Поиск: название фильтра «Журнал»",
+        "pos": 52
+      },
+      "form_subject_placeholder": {
+        "type": "text",
+        "display_name": "Форма: подсказка в списке тем",
+        "pos": 53
+      },
+      "form_name_placeholder": {
+        "type": "text",
+        "display_name": "Форма: подсказка в поле имени",
+        "pos": 54
+      },
+      "form_email_placeholder": {
+        "type": "text",
+        "display_name": "Форма: подсказка в поле e-mail",
+        "pos": 55
       }
     }
   },
@@ -1301,6 +1334,121 @@
           }
         ],
         "default_value": "telegram",
+        "exclude_empty_option": true
+      }
+    }
+  },
+  {
+    "name": "text_section",
+    "display_name": "Заголовок и текст",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 0
+      },
+      "body": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "description": "Пустая строка разделяет абзацы",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "help_cards",
+    "display_name": "Карточки-ссылки",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "cards": {
+        "type": "bloks",
+        "display_name": "Карточки",
+        "description": "В ряду до трёх",
+        "restrict_components": true,
+        "component_whitelist": [
+          "help_card"
+        ],
+        "pos": 0
+      }
+    }
+  },
+  {
+    "name": "help_card",
+    "display_name": "Карточка-ссылка",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 0
+      },
+      "text": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "pos": 1
+      },
+      "link": {
+        "type": "text",
+        "display_name": "Ссылка",
+        "description": "Путь внутри сайта, например company/feedback, либо полный адрес https://…",
+        "pos": 2
+      },
+      "icon": {
+        "type": "option",
+        "display_name": "Значок",
+        "pos": 3,
+        "options": [
+          {
+            "name": "Поддержка",
+            "value": "support"
+          },
+          {
+            "name": "Телефон",
+            "value": "phone"
+          },
+          {
+            "name": "Вопросы",
+            "value": "faq"
+          }
+        ],
+        "default_value": "support",
+        "exclude_empty_option": true
+      }
+    }
+  },
+  {
+    "name": "spacer",
+    "display_name": "Отступ",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "size": {
+        "type": "option",
+        "display_name": "Высота",
+        "pos": 0,
+        "options": [
+          {
+            "name": "16",
+            "value": "16"
+          },
+          {
+            "name": "24",
+            "value": "24"
+          },
+          {
+            "name": "40",
+            "value": "40"
+          },
+          {
+            "name": "64",
+            "value": "64"
+          }
+        ],
+        "default_value": "40",
         "exclude_empty_option": true
       }
     }

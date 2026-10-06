@@ -20,10 +20,10 @@ import { getSiteSettings } from "@/lib/siteSettings";
  * is wired up and can answer a real query.
  */
 const SECTIONS = [
-  { label: "Все", value: "all" },
-  { label: "Новости", value: "news" },
-  { label: "Журнал", value: "journal" },
-];
+  { key: "all", value: "all" },
+  { key: "news", value: "news" },
+  { key: "journal", value: "journal" },
+] as const;
 
 const PER_PAGE = 8;
 
@@ -66,7 +66,7 @@ export default async function SearchPage({
           {SECTIONS.map((section) => (
             <FilterChip
               key={section.value}
-              label={section.label}
+              label={copy.filters[section.key]}
               active={section.value === type}
               href={hrefFor(section.value)}
             />

@@ -28,12 +28,16 @@ export type SiteSettings = {
     placeholder: string;
     empty: string;
     recommended: string;
+    filters: { all: string; news: string; journal: string };
   };
   form: {
     placeholder: string;
     subjects: SubjectOption[];
     button: string;
     sent: string;
+    subjectPlaceholder: string;
+    namePlaceholder: string;
+    emailPlaceholder: string;
     /** Words in {braces} become the link to the user agreement. */
     consent: string;
   };
@@ -106,6 +110,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     placeholder: "Поиск статьи",
     empty: "Результатов не найдено. Попробуйте использовать другое слово.",
     recommended: "Рекомендованные материалы",
+    filters: { all: "Все", news: "Новости", journal: "Журнал" },
   },
   form: {
     placeholder: "Задайте вопрос или напишите ваши пожелания и предложения",
@@ -123,6 +128,9 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     ],
     button: "Отправить",
     sent: "Отправлено",
+    subjectPlaceholder: "Тема обращения",
+    namePlaceholder: "Ваше имя",
+    emailPlaceholder: "E-mail",
     consent:
       "Нажимая на кнопку «Отправить», Вы соглашаетесь на обработку персональных данных в соответствии с {пользовательским соглашением}",
   },
