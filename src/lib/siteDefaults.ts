@@ -16,7 +16,13 @@ import type { TickerTone } from "../components/blocks/PromoTicker.tsx";
 export type FooterLink = { label: string; path: string };
 export type FooterColumn = { title: string; links: FooterLink[] };
 
+export type Cover = { title: string; subtitle: string; image: string };
+
 export type SiteSettings = {
+  /** The band that opens each section page. */
+  covers: { journal: Cover; news: Cover; brands: Cover };
+  /** The title over the shop cards at 375. */
+  storesHeading: string;
   ticker: {
     enabled: boolean;
     text: string;
@@ -76,6 +82,24 @@ const FOOTER_COLUMNS: FooterColumn[] = [
 ];
 
 export const DEFAULT_SETTINGS: SiteSettings = {
+  covers: {
+    journal: {
+      title: "Журнал",
+      subtitle: "Разбираемся, сравниваем, считаем",
+      image: "/images/covers/journal.jpg",
+    },
+    news: {
+      title: "Новости",
+      subtitle: "Главное в новостном потоке",
+      image: "/images/covers/news.jpg",
+    },
+    brands: {
+      title: "Бренды",
+      subtitle: "Разбираемся, сравниваем, делимся",
+      image: "/images/covers/articles.jpg",
+    },
+  },
+  storesHeading: "Наши магазины",
   ticker: {
     enabled: true,
     text: "Скоро открытие нового магазина",

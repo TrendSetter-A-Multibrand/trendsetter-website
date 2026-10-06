@@ -3,6 +3,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { BrandsSection } from "@/components/blocks/BrandsSection";
 import { PageCover } from "@/components/blocks/PageCover";
 import { seo } from "@/lib/seo";
+import { getSiteSettings } from "@/lib/siteSettings";
 
 
 export async function generateMetadata({
@@ -26,15 +27,16 @@ export default async function BrandsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const { covers } = await getSiteSettings();
 
   return (
     <>
       {/* Only the 375 frame has the cover; the desktop file opens on the crumbs */}
       <div className="lg:hidden">
         <PageCover
-          title="Бренды"
-          subtitle="Разбираемся, сравниваем, делимся"
-          imageSrc="/images/covers/articles.jpg"
+          title={covers.brands.title}
+          subtitle={covers.brands.subtitle}
+          imageSrc={covers.brands.image}
           flush={false}
         />
       </div>

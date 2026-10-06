@@ -11,12 +11,34 @@
 import { BRAND_CATEGORIES } from "../src/lib/brands.ts";
 import { api } from "./mapi.mjs";
 
+/** The tags an article can carry, as they stood in the schema before this list moved here. */
+const ARTICLE_TAGS = [
+  "Мода",
+  "Тренды",
+  "Красота",
+  "Косметика",
+  "Комьюнити",
+  "Общество",
+  "Впечатления",
+  "Дом",
+  "Люди",
+  "Истории",
+  "Мастерская",
+  "Стиль",
+  "Интервью",
+  "Культура",
+  "Книги",
+  "Кино",
+  "Сериалы",
+];
+
 const SOURCES = [
   {
     slug: "brand-categories",
     name: "Категории брендов",
     entries: BRAND_CATEGORIES,
   },
+  { slug: "article-tags", name: "Теги статей", entries: ARTICLE_TAGS },
 ];
 
 for (const source of SOURCES) {

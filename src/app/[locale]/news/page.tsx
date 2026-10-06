@@ -6,6 +6,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import { byTag, inSection, tagsOf } from "@/lib/articles";
 import { fetchArticles } from "@/lib/storyblok/articles";
 import { seo } from "@/lib/seo";
+import { getSiteSettings } from "@/lib/siteSettings";
 
 // Same layout as the journal page - only the cover, the filters and where a
 // tag leads differ. Articles still open under /journal: there is no separate
@@ -35,6 +36,7 @@ export default async function NewsPage({
 }) {
   const { locale } = await params;
   const { tag } = await searchParams;
+  const { covers } = await getSiteSettings();
 
   const all = inSection(await fetchArticles(locale), "news");
   // The chips are the tags the cards on this page carry, not a list of their own
@@ -44,9 +46,9 @@ export default async function NewsPage({
   return (
     <>
       <PageCover
-        title="Новости"
-        subtitle="Главное в новостном потоке"
-        imageSrc="/images/covers/news.jpg"
+        title={covers.news.title}
+        subtitle={covers.news.subtitle}
+        imageSrc={covers.news.image}
       />
       <ArticleFilters
         filters={filters}

@@ -1,6 +1,7 @@
 import { fetchStory } from "@/lib/storyblok/fetchStory";
 import {
   DEFAULT_SETTINGS,
+  type Cover,
   type FooterColumn,
   type SiteSettings,
 } from "@/lib/siteDefaults";
@@ -63,6 +64,16 @@ function socials(content: Blok): SocialLink[] {
   return found.length ? found : DEFAULT_SETTINGS.socials;
 }
 
+/** An asset field arrives as an object even when empty; the filename is the answer. */
+function cover(content: Blok, key: string, fallback: Cover): Cover {
+  const image = content[`${key}_cover_image`] as { filename?: string } | undefined;
+  return {
+    title: str(content[`${key}_cover_title`]) || fallback.title,
+    subtitle: str(content[`${key}_cover_subtitle`]) || fallback.subtitle,
+    image: image?.filename || fallback.image,
+  };
+}
+
 /** Read from the "settings" story; everything the editor left empty is a default. */
 export async function getSiteSettings(): Promise<SiteSettings> {
   let content: Blok | undefined;
@@ -78,6 +89,12 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   const tone = str(content.ticker_tone) as TickerTone;
 
   return {
+    covers: {
+      journal: cover(content, "journal", d.covers.journal),
+      news: cover(content, "news", d.covers.news),
+      brands: cover(content, "brands", d.covers.brands),
+    },
+    storesHeading: str(content.stores_heading) || d.storesHeading,
     ticker: {
       enabled: flag(content.ticker_enabled, d.ticker.enabled),
       text: str(content.ticker_text) || d.ticker.text,

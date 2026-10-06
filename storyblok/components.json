@@ -781,78 +781,10 @@
       "tags": {
         "type": "options",
         "display_name": "Теги",
+        "description": "Ими же фильтруются страницы раздела и поиск. Список ведётся в Settings → Datasources → Теги статей",
         "pos": 3,
-        "options": [
-          {
-            "name": "Мода",
-            "value": "Мода"
-          },
-          {
-            "name": "Тренды",
-            "value": "Тренды"
-          },
-          {
-            "name": "Красота",
-            "value": "Красота"
-          },
-          {
-            "name": "Косметика",
-            "value": "Косметика"
-          },
-          {
-            "name": "Комьюнити",
-            "value": "Комьюнити"
-          },
-          {
-            "name": "Общество",
-            "value": "Общество"
-          },
-          {
-            "name": "Впечатления",
-            "value": "Впечатления"
-          },
-          {
-            "name": "Дом",
-            "value": "Дом"
-          },
-          {
-            "name": "Люди",
-            "value": "Люди"
-          },
-          {
-            "name": "Истории",
-            "value": "Истории"
-          },
-          {
-            "name": "Мастерская",
-            "value": "Мастерская"
-          },
-          {
-            "name": "Стиль",
-            "value": "Стиль"
-          },
-          {
-            "name": "Интервью",
-            "value": "Интервью"
-          },
-          {
-            "name": "Культура",
-            "value": "Культура"
-          },
-          {
-            "name": "Книги",
-            "value": "Книги"
-          },
-          {
-            "name": "Кино",
-            "value": "Кино"
-          },
-          {
-            "name": "Сериалы",
-            "value": "Сериалы"
-          }
-        ],
-        "description": "Ими же фильтруются страницы раздела и поиск"
+        "source": "internal",
+        "datasource_slug": "article-tags"
       },
       "hero": {
         "type": "asset",
@@ -1114,6 +1046,72 @@
         "display_name": "Плашка про cookie: текст",
         "description": "Слова в {фигурных скобках} станут ссылкой на политику cookie. Перенос строки останется переносом",
         "pos": 10
+      },
+      "journal_cover_title": {
+        "type": "text",
+        "display_name": "Обложка «Журнал»: заголовок",
+        "description": "Скобки ставит сайт",
+        "pos": 11
+      },
+      "journal_cover_subtitle": {
+        "type": "text",
+        "display_name": "Обложка «Журнал»: подпись",
+        "pos": 12
+      },
+      "journal_cover_image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Обложка «Журнал»: фото",
+        "description": "Пусто — прежнее фото",
+        "pos": 13
+      },
+      "news_cover_title": {
+        "type": "text",
+        "display_name": "Обложка «Новости»: заголовок",
+        "description": "Скобки ставит сайт",
+        "pos": 14
+      },
+      "news_cover_subtitle": {
+        "type": "text",
+        "display_name": "Обложка «Новости»: подпись",
+        "pos": 15
+      },
+      "news_cover_image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Обложка «Новости»: фото",
+        "description": "Пусто — прежнее фото",
+        "pos": 16
+      },
+      "brands_cover_title": {
+        "type": "text",
+        "display_name": "Обложка «Бренды (телефон)»: заголовок",
+        "description": "Скобки ставит сайт",
+        "pos": 17
+      },
+      "brands_cover_subtitle": {
+        "type": "text",
+        "display_name": "Обложка «Бренды (телефон)»: подпись",
+        "pos": 18
+      },
+      "brands_cover_image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Обложка «Бренды (телефон)»: фото",
+        "description": "Пусто — прежнее фото",
+        "pos": 19
+      },
+      "stores_heading": {
+        "type": "text",
+        "display_name": "Магазины (телефон): заголовок над карточками",
+        "description": "Скобки ставит сайт",
+        "pos": 20
       }
     }
   },

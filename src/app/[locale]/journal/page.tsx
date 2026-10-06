@@ -6,6 +6,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import { byTag, inSection, tagsOf } from "@/lib/articles";
 import { fetchArticles } from "@/lib/storyblok/articles";
 import { seo } from "@/lib/seo";
+import { getSiteSettings } from "@/lib/siteSettings";
 
 
 export async function generateMetadata({
@@ -33,6 +34,7 @@ export default async function JournalPage({
   const { locale } = await params;
   const { tag } = await searchParams;
 
+  const { covers } = await getSiteSettings();
   const all = inSection(await fetchArticles(locale), "journal");
   // The chips are the tags the cards on this page carry, not a list of their own
   const filters = tagsOf(all);
@@ -41,9 +43,9 @@ export default async function JournalPage({
   return (
     <>
       <PageCover
-        title="Журнал"
-        subtitle="Разбираемся, сравниваем, считаем"
-        imageSrc="/images/covers/journal.jpg"
+        title={covers.journal.title}
+        subtitle={covers.journal.subtitle}
+        imageSrc={covers.journal.image}
       />
       <ArticleFilters
         filters={filters}

@@ -28,6 +28,13 @@ const content = {
   ticker_link: d.ticker.href,
   ticker_tone: d.ticker.tone,
   cookie_text: d.cookieText,
+  journal_cover_title: d.covers.journal.title,
+  journal_cover_subtitle: d.covers.journal.subtitle,
+  news_cover_title: d.covers.news.title,
+  news_cover_subtitle: d.covers.news.subtitle,
+  brands_cover_title: d.covers.brands.title,
+  brands_cover_subtitle: d.covers.brands.subtitle,
+  stores_heading: d.storesHeading,
   nav: d.nav.map((item) =>
     block("nav_item", {
       label: item.label,

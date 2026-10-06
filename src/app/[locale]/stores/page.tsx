@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { StoresSection } from "@/components/blocks/StoresSection";
 import { seo } from "@/lib/seo";
+import { getSiteSettings } from "@/lib/siteSettings";
 
 
 export async function generateMetadata({
@@ -10,6 +11,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const { storesHeading } = await getSiteSettings();
   return seo({
     title: "Магазины",
     description:
@@ -25,6 +27,7 @@ export default async function StoresPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const { storesHeading } = await getSiteSettings();
 
   return (
     <div className="pb-6 lg:pb-10">
@@ -38,7 +41,7 @@ export default async function StoresPage({
         {/* Only the 375 frame carries a title; the desktop one goes straight to
             the cards */}
         <h2 className="mb-4 px-4 font-mono text-xl/[26px] uppercase tracking-[3px] lg:hidden">
-          [Наши магазины]
+          [{storesHeading}]
         </h2>
         <StoresSection />
       </div>
