@@ -1,7 +1,8 @@
 /**
  * A showcase article that uses every block an article can hold, so the editor
  * can open it, see what each block looks like on the page and copy the one she
- * wants. It is left unpublished: it exists in the editor, not on the site.
+ * wants. It is published, so the designer can look at it on the site too; pass
+ * --draft to take it off the site again and leave it in the editor only.
  *
  * npm run storyblok:seed-article-demo
  */
@@ -25,8 +26,11 @@ const body = [
   block("article_divider", { style: "line" }),
   block("article_text_image", { subtitle: "Текст и фото: фото справа, половина ширины", body: TEXT, image: P("news/1.jpg"), caption: "Подпись под фото", image_side: "right", image_width: "half", image_ratio: "square" }),
   block("article_text_image", { subtitle: "Текст и фото: фото слева", body: TEXT, image: P("news/2.jpg"), caption: "Подпись под фото", image_side: "left", image_width: "half", image_ratio: "landscape" }),
-  block("article_text_image", { subtitle: "Маленькое фото: треть ширины", body: TEXT, image: P("news/3.jpg"), image_side: "right", image_width: "third", image_ratio: "portrait" }),
-  block("article_text_photos", { subtitle: "Текст и несколько фото рядом", body: TEXT, images: many(3), side: "left", ratio: "landscape" }),
+  block("article_text_image", { subtitle: "Маленькое фото справа: треть ширины", body: TEXT, image: P("news/3.jpg"), image_side: "right", image_width: "third", image_ratio: "portrait" }),
+  block("article_text_image", { subtitle: "Маленькое фото слева: треть ширины", body: TEXT, image: P("news/4.jpg"), caption: "Подпись", image_side: "left", image_width: "third", image_ratio: "square" }),
+  block("article_text_image", { subtitle: "Фото как в оригинале", body: TEXT, image: P("journal/1.jpg"), image_side: "right", image_width: "half", image_ratio: "auto" }),
+  block("article_text_photos", { subtitle: "Текст и несколько фото: колонка слева", body: TEXT, images: many(3), side: "left", ratio: "landscape" }),
+  block("article_text_photos", { subtitle: "Текст и несколько фото: колонка справа", body: TEXT, images: many(2), side: "right", ratio: "square" }),
   block("article_divider", { style: "dots" }),
   block("article_photo", { image: P("journal/1.jpg"), caption: "Фото на всю ширину экрана", size: "full", align: "center", ratio: "panorama" }),
   block("article_photo", { image: P("journal/2.jpg"), caption: "Фото во всю ширину статьи, как в оригинале", size: "wide", align: "center", ratio: "auto" }),
@@ -36,12 +40,23 @@ const body = [
   block("article_images", { images: many(2), ratio: "square", caption: "Ряд из двух" }),
   block("article_images", { images: many(3), ratio: "portrait", caption: "Ряд из трёх вертикальных" }),
   block("article_images", { images: many(4), ratio: "square" }),
+  block("article_images", { images: many(1), ratio: "landscape", caption: "Ряд из одной фотографии" }),
+  block("article_images", { images: many(6), ratio: "landscape", caption: "Шесть фото: переносятся на второй ряд" }),
+  block("article_photo", { image: P("news/3.jpg"), caption: "Одно фото: во всю ширину статьи, вертикальное", size: "wide", align: "center", ratio: "portrait" }),
+  block("article_photo", { image: P("journal/2.jpg"), caption: "Среднее фото справа, квадрат", size: "medium", align: "right", ratio: "square" }),
+  block("article_photo", { image: P("news/4.jpg"), caption: "Среднее фото слева, панорама", size: "medium", align: "left", ratio: "panorama" }),
+  block("article_photo", { image: P("news/1.jpg"), caption: "Мини-фото по центру", size: "small", align: "center", ratio: "portrait" }),
   block("article_photo_row", { ratio: "landscape", items: many(3).map((image, i) => block("article_photo_item", { image, caption: `Своя подпись ${i + 1}` })) }),
-  block("article_gallery_scroll", { images: many(6), ratio: "landscape", size: "medium", caption: "Лента с прокруткой: листайте вбок" }),
+  block("article_photo_row", { ratio: "portrait", items: many(4).map((image, i) => block("article_photo_item", { image, caption: `Подпись ${i + 1}` })) }),
+  block("article_photo_row", { ratio: "square", items: many(2).map((image, i) => block("article_photo_item", { image, caption: `Две подписи: ${i + 1}` })) }),
+  block("article_gallery_scroll", { images: many(6), ratio: "landscape", size: "medium", caption: "Лента с прокруткой: средние фото, листайте вбок" }),
+  block("article_gallery_scroll", { images: many(6), ratio: "square", size: "small", caption: "Лента с прокруткой: маленькие квадраты" }),
+  block("article_gallery_scroll", { images: many(5), ratio: "portrait", size: "large", caption: "Лента с прокруткой: большие вертикальные" }),
   block("article_gallery_mosaic", { images: many(5), layout: "feature-left", caption: "Мозаика: большая слева" }),
   block("article_gallery_mosaic", { images: many(3), layout: "feature-right" }),
   block("article_gallery_mosaic", { images: many(6), layout: "grid", caption: "Ровная сетка" }),
   block("article_pullquote", { text: "Короткая фраза крупно, с красной линией слева.", author: "Кто-то важный" }),
+  block("article_pullquote", { text: "Выноска без подписи автора." }),
   block("article_quote", { subtitle: "Цитата на красной полосе", body: "Она идёт на всю ширину экрана и подходит для самой главной мысли статьи." }),
   block("article_video", { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", caption: "Видео с YouTube или RuTube" }),
   block("article_spacer", { size: "l" }),
@@ -69,8 +84,7 @@ const done = await putStory(
 );
 console.log(`${done}  journal/primer-blokov  (блоков ${body.length})`);
 
-// Not for visitors: leave it where only the editor sees it
-if (!process.argv.includes("--publish")) {
+if (process.argv.includes("--draft")) {
   const { stories } = await api("/stories?with_slug=journal/primer-blokov");
   await api(`/stories/${stories[0].id}/unpublish`);
   console.log("снята с публикации - видна только в редакторе");

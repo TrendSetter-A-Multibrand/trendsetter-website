@@ -5,8 +5,8 @@ import { QuoteMarks } from "@/components/ui/QuoteMarks";
 
 // The mobile h1 is 24px, so a 24px subtitle would tie with it; no subtitle is
 // in the file at this width, so 18px/24px here is an interpolation.
-const SUBTITLE = "text-lg/6 font-medium text-inherit lg:text-4xl/11";
-const BODY = "text-sm/[16px] tracking-[1px] text-inherit lg:text-[30px]/9 lg:tracking-normal";
+const SUBTITLE = "text-balance text-lg/6 font-medium text-inherit lg:text-4xl/11";
+const BODY = "text-pretty text-sm/[16px] tracking-[1px] text-inherit lg:text-[30px]/9 lg:tracking-normal";
 const QUOTE_LEAD = "text-xl/6 font-medium lg:text-[32px]/[38.72px] lg:tracking-[0.32px]";
 const QUOTE_BODY = "text-base/5 lg:text-2xl/[29px] lg:tracking-[0.24px]";
 const CAPTION = "mt-3 text-sm text-ink/70 lg:mt-4 lg:text-base";
@@ -55,7 +55,17 @@ function Photo({
       style={fill ? undefined : { aspectRatio: ratioOf(ratio, src) }}
     >
       <ImagePlaceholder />
-      {src && <Image src={src} alt="" fill sizes={sizes} className="object-cover" />}
+      {/* A hairline of pure black at 10% keeps a pale photo from dissolving into
+          the white page; inset so it never adds to the box */}
+      {src && (
+        <Image
+          src={src}
+          alt=""
+          fill
+          sizes={sizes}
+          className="object-cover outline outline-1 -outline-offset-1 outline-black/10"
+        />
+      )}
     </div>
   );
 }
@@ -86,12 +96,12 @@ const Paragraphs = ({ body }: { body: string[] }) =>
     </p>
   ));
 
-/** How many photos stand in a row: up to four, then they wrap. */
+/** How many photos stand in a row: up to four, then they wrap. Two across even on a phone. */
 const COLUMNS: Record<number, string> = {
   1: "",
-  2: "sm:grid-cols-2",
-  3: "sm:grid-cols-3",
-  4: "sm:grid-cols-2 lg:grid-cols-4",
+  2: "grid-cols-2",
+  3: "grid-cols-2 sm:grid-cols-3",
+  4: "grid-cols-2 lg:grid-cols-4",
 };
 
 const GAP = "gap-4 lg:gap-10";
@@ -333,7 +343,7 @@ function Block({ block }: { block: ArticleBlock }) {
       return (
         <blockquote className="m-0 px-4 lg:px-10">
           <div className="border-l-4 border-brand pl-4 lg:pl-10">
-            <p className="text-2xl/8 font-medium lg:text-[40px]/[48px]">{block.text}</p>
+            <p className="text-balance text-2xl/8 font-medium lg:text-[40px]/[48px]">{block.text}</p>
             {block.author && (
               <footer className="mt-4 font-mono text-sm uppercase tracking-[1px] text-muted lg:text-base">
                 {block.author}
@@ -349,7 +359,7 @@ function Block({ block }: { block: ArticleBlock }) {
           {block.body.map((p, i) => (
             <p
               key={i}
-              className={`text-xl/7 font-medium lg:text-[40px]/[48px] ${i > 0 ? "mt-4 lg:mt-8" : ""}`}
+              className={`text-pretty text-xl/7 font-medium lg:text-[40px]/[48px] ${i > 0 ? "mt-4 lg:mt-8" : ""}`}
             >
               {p}
             </p>
