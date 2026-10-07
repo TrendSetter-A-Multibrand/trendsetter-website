@@ -1,5 +1,5 @@
 import type { Article } from "@/lib/articles";
-import type { ArticleBlock, ArticleMeta } from "@/lib/article";
+import type { ArticleBlock, ArticleMeta, PhotoText } from "@/lib/article";
 import { eventDate } from "@/lib/events";
 import { fetchEvents } from "@/lib/storyblok/events";
 import { fetchStories, fetchStory, type Block } from "@/lib/storyblok/fetchStory";
@@ -50,6 +50,14 @@ const asset = (value: unknown) => (value as { filename?: string } | undefined)?.
 const pick = <T extends string>(value: unknown, allowed: readonly T[], fallback: T): T =>
   allowed.includes(value as T) ? (value as T) : fallback;
 
+/** The optional text over or under a group of photos. */
+function photoText(blok: Block): PhotoText | undefined {
+  const subtitle = str(blok.text_title) || undefined;
+  const body = paragraphs(blok.text_body as string);
+  if (!subtitle && body.length === 0) return undefined;
+  return { subtitle, body, position: pick(blok.text_position, ["above", "below"] as const, "below") };
+}
+
 const RATIOS = ["auto", "square", "landscape", "portrait", "panorama"] as const;
 const SIDES = ["left", "right"] as const;
 
@@ -78,6 +86,7 @@ export function articleBlock(blok: Block): ArticleBlock | null {
         images: filenames(blok.images),
         ratio: pick(blok.ratio, RATIOS, "square"),
         caption,
+        text: photoText(blok),
       };
     case "article_quote":
       return { kind: "quote", subtitle, body: paragraphs(blok.body as string) };
@@ -113,6 +122,7 @@ export function articleBlock(blok: Block): ArticleBlock | null {
         size: pick(blok.size, ["full", "wide", "medium", "small"] as const, "wide"),
         align: pick(blok.align, ["left", "center", "right"] as const, "center"),
         ratio: pick(blok.ratio, RATIOS, "auto"),
+        text: photoText(blok),
       };
     case "article_text_photos":
       return {
@@ -130,9 +140,12 @@ export function articleBlock(blok: Block): ArticleBlock | null {
           .map((item) => ({
             image: asset(item.image),
             caption: str(item.caption) || undefined,
+            title: str(item.title) || undefined,
+            body: paragraphs(item.text as string),
           }))
           .filter((item) => item.image),
         ratio: pick(blok.ratio, RATIOS, "landscape"),
+        text: photoText(blok),
       };
     case "article_gallery_scroll":
       return {
@@ -141,6 +154,7 @@ export function articleBlock(blok: Block): ArticleBlock | null {
         ratio: pick(blok.ratio, RATIOS, "landscape"),
         size: pick(blok.size, ["small", "medium", "large"] as const, "medium"),
         caption,
+        text: photoText(blok),
       };
     case "article_gallery_mosaic":
       return {
@@ -148,6 +162,7 @@ export function articleBlock(blok: Block): ArticleBlock | null {
         images: filenames(blok.images),
         layout: pick(blok.layout, ["feature-left", "feature-right", "grid"] as const, "feature-left"),
         caption,
+        text: photoText(blok),
       };
     case "article_video":
       return { kind: "video", url: str(blok.url), caption };

@@ -2,11 +2,12 @@ import Image from "next/image";
 import type { ArticleBlock, PhotoRatio } from "@/lib/article";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { QuoteMarks } from "@/components/ui/QuoteMarks";
+import { GalleryStrip } from "@/components/blocks/GalleryStrip";
 
 // The mobile h1 is 24px, so a 24px subtitle would tie with it; no subtitle is
 // in the file at this width, so 18px/24px here is an interpolation.
-const SUBTITLE = "text-balance text-lg/6 font-medium text-inherit lg:text-4xl/11";
-const BODY = "text-pretty text-sm/[16px] tracking-[1px] text-inherit lg:text-[30px]/9 lg:tracking-normal";
+const SUBTITLE = "text-lg/6 font-medium text-inherit lg:text-4xl/11";
+const BODY = "text-sm/[16px] tracking-[1px] text-inherit lg:text-[30px]/9 lg:tracking-normal";
 const QUOTE_LEAD = "text-xl/6 font-medium lg:text-[32px]/[38.72px] lg:tracking-[0.32px]";
 const QUOTE_BODY = "text-base/5 lg:text-2xl/[29px] lg:tracking-[0.24px]";
 const CAPTION = "mt-3 text-sm text-ink/70 lg:mt-4 lg:text-base";
@@ -55,17 +56,7 @@ function Photo({
       style={fill ? undefined : { aspectRatio: ratioOf(ratio, src) }}
     >
       <ImagePlaceholder />
-      {/* A hairline of pure black at 10% keeps a pale photo from dissolving into
-          the white page; inset so it never adds to the box */}
-      {src && (
-        <Image
-          src={src}
-          alt=""
-          fill
-          sizes={sizes}
-          className="object-cover outline outline-1 -outline-offset-1 outline-black/10"
-        />
-      )}
+      {src && <Image src={src} alt="" fill sizes={sizes} className="object-cover" />}
     </div>
   );
 }
@@ -116,7 +107,7 @@ function embedUrl(url: string) {
 }
 
 /** Renders one article block; the quote band goes full-bleed. */
-function Block({ block }: { block: ArticleBlock }) {
+function BlockBody({ block }: { block: ArticleBlock }) {
   switch (block.kind) {
     case "images": {
       const count = Math.min(block.images.length, 4);
@@ -217,13 +208,28 @@ function Block({ block }: { block: ArticleBlock }) {
       return (
         <div className={`grid px-4 lg:px-10 ${GAP} ${COLUMNS[count] ?? COLUMNS[4]}`}>
           {block.items.map((item, i) => (
-            <Figure
-              key={i}
-              src={item.image}
-              caption={item.caption}
-              ratio={block.ratio}
-              sizes={count >= 3 ? "31vw" : "47vw"}
-            />
+            <div key={i}>
+              <Figure
+                src={item.image}
+                caption={item.caption}
+                ratio={block.ratio}
+                sizes={count >= 3 ? "31vw" : "47vw"}
+              />
+              {/* Words of its own under the photo: what makes a row of them
+                  a row of little articles rather than a row of pictures */}
+              {(item.title || item.body.length > 0) && (
+                <div className="mt-4 lg:mt-6">
+                  {item.title && (
+                    <h3 className="text-lg/6 font-medium lg:text-2xl/7">{item.title}</h3>
+                  )}
+                  {item.body.map((p, j) => (
+                    <p key={j} className="mt-2 text-sm/[16px] tracking-[1px] lg:text-base/6 lg:tracking-normal">
+                      {p}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </div>
       );
@@ -237,15 +243,15 @@ function Block({ block }: { block: ArticleBlock }) {
       }[block.size];
       return (
         <div>
-          <div
-            className={`flex snap-x snap-mandatory overflow-x-auto px-4 [scrollbar-width:none] lg:px-10 [&::-webkit-scrollbar]:hidden scroll-px-4 lg:scroll-px-10 ${GAP}`}
+          <GalleryStrip
+            className={`flex overflow-x-auto px-4 [scrollbar-width:none] lg:px-10 [&::-webkit-scrollbar]:hidden scroll-px-4 lg:scroll-px-10 ${GAP}`}
           >
             {block.images.map((src, i) => (
               <div key={i} className={`shrink-0 snap-start ${card}`}>
                 <Photo src={src} ratio={block.ratio} sizes="(min-width: 1024px) 40vw, 80vw" />
               </div>
             ))}
-          </div>
+          </GalleryStrip>
           {block.caption && <p className={`px-4 lg:px-10 ${CAPTION}`}>{block.caption}</p>}
         </div>
       );
@@ -343,7 +349,7 @@ function Block({ block }: { block: ArticleBlock }) {
       return (
         <blockquote className="m-0 px-4 lg:px-10">
           <div className="border-l-4 border-brand pl-4 lg:pl-10">
-            <p className="text-balance text-2xl/8 font-medium lg:text-[40px]/[48px]">{block.text}</p>
+            <p className="text-2xl/8 font-medium lg:text-[40px]/[48px]">{block.text}</p>
             {block.author && (
               <footer className="mt-4 font-mono text-sm uppercase tracking-[1px] text-muted lg:text-base">
                 {block.author}
@@ -359,7 +365,7 @@ function Block({ block }: { block: ArticleBlock }) {
           {block.body.map((p, i) => (
             <p
               key={i}
-              className={`text-pretty text-xl/7 font-medium lg:text-[40px]/[48px] ${i > 0 ? "mt-4 lg:mt-8" : ""}`}
+              className={`text-xl/7 font-medium lg:text-[40px]/[48px] ${i > 0 ? "mt-4 lg:mt-8" : ""}`}
             >
               {p}
             </p>
@@ -427,6 +433,30 @@ function Block({ block }: { block: ArticleBlock }) {
         </div>
       );
   }
+}
+
+/**
+ * A text the editor put over or under a group of photos, set like a text block
+ * of its own so the groups can read as text-and-pictures, not pictures alone.
+ */
+function Block({ block }: { block: ArticleBlock }) {
+  // The pull quote has a `text` too, but that one is a string, not a PhotoText
+  const text = "text" in block && typeof block.text === "object" ? block.text : undefined;
+  if (!text) return <BlockBody block={block} />;
+
+  const words = (
+    <div className="px-4 lg:px-10">
+      {text.subtitle && <h2 className={SUBTITLE}>{text.subtitle}</h2>}
+      <Paragraphs body={text.body} />
+    </div>
+  );
+  return (
+    <div className="flex flex-col gap-4 lg:gap-10">
+      {text.position === "above" && words}
+      <BlockBody block={block} />
+      {text.position === "below" && words}
+    </div>
+  );
 }
 
 export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {

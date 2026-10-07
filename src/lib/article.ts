@@ -8,6 +8,13 @@ import { findEvent, type Event } from "@/lib/events";
 export type PhotoRatio = "auto" | "square" | "landscape" | "portrait" | "panorama";
 export type PhotoSide = "left" | "right";
 
+/** A text that sits above or below a group of photos, like a text block of its own. */
+export type PhotoText = {
+  subtitle?: string;
+  body: string[];
+  position: "above" | "below";
+};
+
 export type ArticleBlock =
   | { kind: "text"; subtitle?: string; body: string[] }
   | {
@@ -21,7 +28,7 @@ export type ArticleBlock =
       width?: "half" | "third";
       ratio?: PhotoRatio;
     }
-  | { kind: "images"; images: string[]; ratio?: PhotoRatio; caption?: string }
+  | { kind: "images"; images: string[]; ratio?: PhotoRatio; caption?: string; text?: PhotoText }
   /** The red band, quote marks either side of it. The file dropped the two
       running lines this replaces. */
   | { kind: "quote"; subtitle?: string; body: string[] }
@@ -41,6 +48,7 @@ export type ArticleBlock =
       size: "full" | "wide" | "medium" | "small";
       align: "left" | "center" | "right";
       ratio: PhotoRatio;
+      text?: PhotoText;
     }
   /** Text on one side, a column of photos on the other. */
   | {
@@ -54,8 +62,9 @@ export type ArticleBlock =
   /** A row where every photo has its own caption. */
   | {
       kind: "photo-row";
-      items: { image: string; caption?: string }[];
+      items: { image: string; caption?: string; title?: string; body: string[] }[];
       ratio: PhotoRatio;
+      text?: PhotoText;
     }
   /** A strip that scrolls sideways, the next photo peeking in. */
   | {
@@ -64,6 +73,7 @@ export type ArticleBlock =
       ratio: PhotoRatio;
       size: "small" | "medium" | "large";
       caption?: string;
+      text?: PhotoText;
     }
   /** One big photo with the rest beside it, or an even grid. */
   | {
@@ -71,6 +81,7 @@ export type ArticleBlock =
       images: string[];
       layout: "feature-left" | "feature-right" | "grid";
       caption?: string;
+      text?: PhotoText;
     }
   | { kind: "video"; url: string; caption?: string };
 

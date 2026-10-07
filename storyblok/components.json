@@ -1036,6 +1036,35 @@
         "type": "text",
         "display_name": "Подпись под рядом",
         "pos": 2
+      },
+      "text_title": {
+        "type": "text",
+        "display_name": "Текст рядом: подзаголовок",
+        "description": "Необязательно. Текст встанет над или под фотографиями",
+        "pos": 20
+      },
+      "text_body": {
+        "type": "textarea",
+        "display_name": "Текст рядом: текст",
+        "description": "Пустая строка разделяет абзацы",
+        "pos": 21
+      },
+      "text_position": {
+        "type": "option",
+        "display_name": "Текст рядом: где",
+        "pos": 22,
+        "options": [
+          {
+            "name": "Под фотографиями",
+            "value": "below"
+          },
+          {
+            "name": "Над фотографиями",
+            "value": "above"
+          }
+        ],
+        "default_value": "below",
+        "exclude_empty_option": true
       }
     }
   },
@@ -1789,6 +1818,35 @@
         ],
         "default_value": "auto",
         "exclude_empty_option": true
+      },
+      "text_title": {
+        "type": "text",
+        "display_name": "Текст рядом: подзаголовок",
+        "description": "Необязательно. Текст встанет над или под фотографиями",
+        "pos": 20
+      },
+      "text_body": {
+        "type": "textarea",
+        "display_name": "Текст рядом: текст",
+        "description": "Пустая строка разделяет абзацы",
+        "pos": 21
+      },
+      "text_position": {
+        "type": "option",
+        "display_name": "Текст рядом: где",
+        "pos": 22,
+        "options": [
+          {
+            "name": "Под фотографиями",
+            "value": "below"
+          },
+          {
+            "name": "Над фотографиями",
+            "value": "above"
+          }
+        ],
+        "default_value": "below",
+        "exclude_empty_option": true
       }
     }
   },
@@ -1881,6 +1939,18 @@
         "type": "text",
         "display_name": "Подпись",
         "pos": 1
+      },
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок под фото",
+        "description": "Необязательно",
+        "pos": 2
+      },
+      "text": {
+        "type": "textarea",
+        "display_name": "Текст под фото",
+        "description": "Необязательно. Пустая строка разделяет абзацы",
+        "pos": 3
       }
     }
   },
@@ -1927,6 +1997,35 @@
           }
         ],
         "default_value": "landscape",
+        "exclude_empty_option": true
+      },
+      "text_title": {
+        "type": "text",
+        "display_name": "Текст рядом: подзаголовок",
+        "description": "Необязательно. Текст встанет над или под фотографиями",
+        "pos": 20
+      },
+      "text_body": {
+        "type": "textarea",
+        "display_name": "Текст рядом: текст",
+        "description": "Пустая строка разделяет абзацы",
+        "pos": 21
+      },
+      "text_position": {
+        "type": "option",
+        "display_name": "Текст рядом: где",
+        "pos": 22,
+        "options": [
+          {
+            "name": "Под фотографиями",
+            "value": "below"
+          },
+          {
+            "name": "Над фотографиями",
+            "value": "above"
+          }
+        ],
+        "default_value": "below",
         "exclude_empty_option": true
       }
     }
@@ -1997,6 +2096,35 @@
         "type": "text",
         "display_name": "Подпись под лентой",
         "pos": 3
+      },
+      "text_title": {
+        "type": "text",
+        "display_name": "Текст рядом: подзаголовок",
+        "description": "Необязательно. Текст встанет над или под фотографиями",
+        "pos": 20
+      },
+      "text_body": {
+        "type": "textarea",
+        "display_name": "Текст рядом: текст",
+        "description": "Пустая строка разделяет абзацы",
+        "pos": 21
+      },
+      "text_position": {
+        "type": "option",
+        "display_name": "Текст рядом: где",
+        "pos": 22,
+        "options": [
+          {
+            "name": "Под фотографиями",
+            "value": "below"
+          },
+          {
+            "name": "Над фотографиями",
+            "value": "above"
+          }
+        ],
+        "default_value": "below",
+        "exclude_empty_option": true
       }
     }
   },
@@ -2037,6 +2165,35 @@
         "type": "text",
         "display_name": "Подпись под мозаикой",
         "pos": 2
+      },
+      "text_title": {
+        "type": "text",
+        "display_name": "Текст рядом: подзаголовок",
+        "description": "Необязательно. Текст встанет над или под фотографиями",
+        "pos": 20
+      },
+      "text_body": {
+        "type": "textarea",
+        "display_name": "Текст рядом: текст",
+        "description": "Пустая строка разделяет абзацы",
+        "pos": 21
+      },
+      "text_position": {
+        "type": "option",
+        "display_name": "Текст рядом: где",
+        "pos": 22,
+        "options": [
+          {
+            "name": "Под фотографиями",
+            "value": "below"
+          },
+          {
+            "name": "Над фотографиями",
+            "value": "above"
+          }
+        ],
+        "default_value": "below",
+        "exclude_empty_option": true
       }
     }
   },
