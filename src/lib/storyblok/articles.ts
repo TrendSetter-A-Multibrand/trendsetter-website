@@ -44,6 +44,118 @@ const filenames = (images: unknown) =>
     .map((image) => image.filename)
     .filter((filename): filename is string => Boolean(filename));
 
+
+const str = (value: unknown) => (typeof value === "string" ? value.trim() : "");
+const asset = (value: unknown) => (value as { filename?: string } | undefined)?.filename ?? "";
+const pick = <T extends string>(value: unknown, allowed: readonly T[], fallback: T): T =>
+  allowed.includes(value as T) ? (value as T) : fallback;
+
+const RATIOS = ["auto", "square", "landscape", "portrait", "panorama"] as const;
+const SIDES = ["left", "right"] as const;
+
+/** One block of an article body as the editor filled it, in the shape the page draws. */
+export function articleBlock(blok: Block): ArticleBlock | null {
+  const subtitle = str(blok.subtitle) || undefined;
+  const caption = str(blok.caption) || undefined;
+
+  switch (blok.component) {
+    case "article_text":
+      return { kind: "text", subtitle, body: paragraphs(blok.body as string) };
+    case "article_text_image":
+      return {
+        kind: "text-image",
+        subtitle,
+        body: paragraphs(blok.body as string),
+        image: asset(blok.image),
+        caption,
+        side: pick(blok.image_side, SIDES, "right"),
+        width: pick(blok.image_width, ["half", "third"] as const, "half"),
+        ratio: pick(blok.image_ratio, RATIOS, "square"),
+      };
+    case "article_images":
+      return {
+        kind: "images",
+        images: filenames(blok.images),
+        ratio: pick(blok.ratio, RATIOS, "square"),
+        caption,
+      };
+    case "article_quote":
+      return { kind: "quote", subtitle, body: paragraphs(blok.body as string) };
+    case "article_lead":
+      return { kind: "lead", body: paragraphs(blok.body as string) };
+    case "article_list":
+      return {
+        kind: "list",
+        subtitle,
+        ordered: blok.ordered === true || blok.ordered === "true",
+        items: str(blok.items)
+          .split("\n")
+          .map((item) => item.trim())
+          .filter(Boolean),
+      };
+    case "article_text_columns":
+      return { kind: "text-columns", subtitle, body: paragraphs(blok.body as string) };
+    case "article_pullquote":
+      return {
+        kind: "pullquote",
+        text: str(blok.text),
+        author: str(blok.author) || undefined,
+      };
+    case "article_divider":
+      return { kind: "divider", style: pick(blok.style, ["line", "dots"] as const, "line") };
+    case "article_spacer":
+      return { kind: "spacer", size: pick(blok.size, ["s", "m", "l"] as const, "m") };
+    case "article_photo":
+      return {
+        kind: "photo",
+        image: asset(blok.image),
+        caption,
+        size: pick(blok.size, ["full", "wide", "medium", "small"] as const, "wide"),
+        align: pick(blok.align, ["left", "center", "right"] as const, "center"),
+        ratio: pick(blok.ratio, RATIOS, "auto"),
+      };
+    case "article_text_photos":
+      return {
+        kind: "text-photos",
+        subtitle,
+        body: paragraphs(blok.body as string),
+        images: filenames(blok.images),
+        side: pick(blok.side, SIDES, "right"),
+        ratio: pick(blok.ratio, RATIOS, "square"),
+      };
+    case "article_photo_row":
+      return {
+        kind: "photo-row",
+        items: ((blok.items as Block[] | undefined) ?? [])
+          .map((item) => ({
+            image: asset(item.image),
+            caption: str(item.caption) || undefined,
+          }))
+          .filter((item) => item.image),
+        ratio: pick(blok.ratio, RATIOS, "landscape"),
+      };
+    case "article_gallery_scroll":
+      return {
+        kind: "gallery-scroll",
+        images: filenames(blok.images),
+        ratio: pick(blok.ratio, RATIOS, "landscape"),
+        size: pick(blok.size, ["small", "medium", "large"] as const, "medium"),
+        caption,
+      };
+    case "article_gallery_mosaic":
+      return {
+        kind: "gallery-mosaic",
+        images: filenames(blok.images),
+        layout: pick(blok.layout, ["feature-left", "feature-right", "grid"] as const, "feature-left"),
+        caption,
+      };
+    case "article_video":
+      return { kind: "video", url: str(blok.url), caption };
+    default:
+      return null;
+  }
+}
+
 /**
  * Every article, in the shape the cards and the grids want. One list for all of
  * them: which section a piece shows under is a field, not a path, so the rows
@@ -80,34 +192,7 @@ export async function fetchArticlePage(
   const event = events.find((candidate) => candidate.uuid === content.event);
 
   const blocks = (content.body ?? [])
-    .map((blok): ArticleBlock | null => {
-      switch (blok.component) {
-        case "article_text":
-          return {
-            kind: "text",
-            subtitle: (blok.subtitle as string) || undefined,
-            body: paragraphs(blok.body as string),
-          };
-        case "article_text_image":
-          return {
-            kind: "text-image",
-            subtitle: (blok.subtitle as string) || undefined,
-            body: paragraphs(blok.body as string),
-            image: (blok.image as { filename?: string })?.filename ?? "",
-            caption: (blok.caption as string) || undefined,
-          };
-        case "article_images":
-          return { kind: "images", images: filenames(blok.images) };
-        case "article_quote":
-          return {
-            kind: "quote",
-            subtitle: (blok.subtitle as string) || undefined,
-            body: paragraphs(blok.body as string),
-          };
-        default:
-          return null;
-      }
-    })
+    .map((blok): ArticleBlock | null => articleBlock(blok))
     .filter((blok): blok is ArticleBlock => blok !== null);
 
   return {

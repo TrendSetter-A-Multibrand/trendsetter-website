@@ -837,9 +837,21 @@
         "restrict_components": true,
         "component_whitelist": [
           "article_text",
+          "article_lead",
+          "article_text_columns",
+          "article_list",
           "article_text_image",
+          "article_text_photos",
+          "article_photo",
           "article_images",
-          "article_quote"
+          "article_photo_row",
+          "article_gallery_scroll",
+          "article_gallery_mosaic",
+          "article_quote",
+          "article_pullquote",
+          "article_video",
+          "article_divider",
+          "article_spacer"
         ]
       },
       "excerpt": {
@@ -903,13 +915,76 @@
         "filetypes": [
           "images"
         ],
-        "display_name": "Фото справа",
+        "display_name": "Фото",
         "pos": 2
       },
       "caption": {
         "type": "text",
         "display_name": "Подпись под фото",
         "pos": 3
+      },
+      "image_side": {
+        "type": "option",
+        "display_name": "Фото",
+        "pos": 10,
+        "options": [
+          {
+            "name": "Справа от текста",
+            "value": "right"
+          },
+          {
+            "name": "Слева от текста",
+            "value": "left"
+          }
+        ],
+        "default_value": "right",
+        "exclude_empty_option": true
+      },
+      "image_width": {
+        "type": "option",
+        "display_name": "Размер фото",
+        "pos": 11,
+        "options": [
+          {
+            "name": "Половина ширины",
+            "value": "half"
+          },
+          {
+            "name": "Маленькое: треть ширины",
+            "value": "third"
+          }
+        ],
+        "default_value": "half",
+        "exclude_empty_option": true
+      },
+      "image_ratio": {
+        "type": "option",
+        "display_name": "Форма фото",
+        "pos": 12,
+        "options": [
+          {
+            "name": "Как в оригинале",
+            "value": "auto"
+          },
+          {
+            "name": "Квадрат",
+            "value": "square"
+          },
+          {
+            "name": "Горизонтальное 3:2",
+            "value": "landscape"
+          },
+          {
+            "name": "Вертикальное 2:3",
+            "value": "portrait"
+          },
+          {
+            "name": "Панорама 21:9",
+            "value": "panorama"
+          }
+        ],
+        "default_value": "square",
+        "exclude_empty_option": true
       }
     }
   },
@@ -925,8 +1000,42 @@
           "images"
         ],
         "display_name": "Фотографии",
-        "description": "Две или три в ряд",
+        "description": "От одной до четырёх в ряд; больше — перенесутся на следующий ряд",
         "pos": 0
+      },
+      "ratio": {
+        "type": "option",
+        "display_name": "Форма фото",
+        "pos": 1,
+        "options": [
+          {
+            "name": "Как в оригинале",
+            "value": "auto"
+          },
+          {
+            "name": "Квадрат",
+            "value": "square"
+          },
+          {
+            "name": "Горизонтальное 3:2",
+            "value": "landscape"
+          },
+          {
+            "name": "Вертикальное 2:3",
+            "value": "portrait"
+          },
+          {
+            "name": "Панорама 21:9",
+            "value": "panorama"
+          }
+        ],
+        "default_value": "square",
+        "exclude_empty_option": true
+      },
+      "caption": {
+        "type": "text",
+        "display_name": "Подпись под рядом",
+        "pos": 2
       }
     }
   },
@@ -1450,6 +1559,503 @@
         ],
         "default_value": "40",
         "exclude_empty_option": true
+      }
+    }
+  },
+  {
+    "name": "article_lead",
+    "display_name": "Крупный абзац",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "body": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "description": "Крупнее обычного текста: для вступления. Пустая строка разделяет абзацы",
+        "pos": 0
+      }
+    }
+  },
+  {
+    "name": "article_list",
+    "display_name": "Список",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "subtitle": {
+        "type": "text",
+        "display_name": "Подзаголовок",
+        "pos": 0
+      },
+      "ordered": {
+        "type": "boolean",
+        "display_name": "Нумерованный",
+        "description": "Без галочки — с точками",
+        "pos": 1
+      },
+      "items": {
+        "type": "textarea",
+        "display_name": "Пункты",
+        "description": "Каждый пункт с новой строки",
+        "pos": 2
+      }
+    }
+  },
+  {
+    "name": "article_text_columns",
+    "display_name": "Текст в две колонки",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "subtitle": {
+        "type": "text",
+        "display_name": "Подзаголовок",
+        "pos": 0
+      },
+      "body": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "description": "Пустая строка разделяет абзацы. На телефоне колонки сольются в одну",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "article_pullquote",
+    "display_name": "Выноска",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "text": {
+        "type": "textarea",
+        "display_name": "Цитата",
+        "description": "Короткая фраза крупно, с красной линией слева",
+        "pos": 0
+      },
+      "author": {
+        "type": "text",
+        "display_name": "Кто сказал",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "article_divider",
+    "display_name": "Разделитель",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "style": {
+        "type": "option",
+        "display_name": "Вид",
+        "pos": 0,
+        "options": [
+          {
+            "name": "Тонкая линия",
+            "value": "line"
+          },
+          {
+            "name": "Три точки",
+            "value": "dots"
+          }
+        ],
+        "default_value": "line",
+        "exclude_empty_option": true
+      }
+    }
+  },
+  {
+    "name": "article_spacer",
+    "display_name": "Отступ",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "size": {
+        "type": "option",
+        "display_name": "Высота",
+        "description": "Воздух между блоками, кроме обычного расстояния",
+        "pos": 0,
+        "options": [
+          {
+            "name": "Без дополнительного",
+            "value": "s"
+          },
+          {
+            "name": "Средний",
+            "value": "m"
+          },
+          {
+            "name": "Большой",
+            "value": "l"
+          }
+        ],
+        "default_value": "m",
+        "exclude_empty_option": true
+      }
+    }
+  },
+  {
+    "name": "article_photo",
+    "display_name": "Одно фото",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Фото",
+        "pos": 0
+      },
+      "caption": {
+        "type": "text",
+        "display_name": "Подпись",
+        "pos": 1
+      },
+      "size": {
+        "type": "option",
+        "display_name": "Ширина",
+        "description": "Среднее и маленькое можно поставить слева, по центру или справа",
+        "pos": 2,
+        "options": [
+          {
+            "name": "На всю ширину экрана",
+            "value": "full"
+          },
+          {
+            "name": "Во всю ширину статьи",
+            "value": "wide"
+          },
+          {
+            "name": "Среднее: 60%",
+            "value": "medium"
+          },
+          {
+            "name": "Маленькое: треть",
+            "value": "small"
+          }
+        ],
+        "default_value": "wide",
+        "exclude_empty_option": true
+      },
+      "align": {
+        "type": "option",
+        "display_name": "Где стоит",
+        "pos": 3,
+        "options": [
+          {
+            "name": "По центру",
+            "value": "center"
+          },
+          {
+            "name": "Слева",
+            "value": "left"
+          },
+          {
+            "name": "Справа",
+            "value": "right"
+          }
+        ],
+        "default_value": "center",
+        "exclude_empty_option": true
+      },
+      "ratio": {
+        "type": "option",
+        "display_name": "Форма",
+        "description": "«Как в оригинале» — ничего не обрезать",
+        "pos": 4,
+        "options": [
+          {
+            "name": "Как в оригинале",
+            "value": "auto"
+          },
+          {
+            "name": "Квадрат",
+            "value": "square"
+          },
+          {
+            "name": "Горизонтальное 3:2",
+            "value": "landscape"
+          },
+          {
+            "name": "Вертикальное 2:3",
+            "value": "portrait"
+          },
+          {
+            "name": "Панорама 21:9",
+            "value": "panorama"
+          }
+        ],
+        "default_value": "auto",
+        "exclude_empty_option": true
+      }
+    }
+  },
+  {
+    "name": "article_text_photos",
+    "display_name": "Текст и несколько фото",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "subtitle": {
+        "type": "text",
+        "display_name": "Подзаголовок",
+        "pos": 0
+      },
+      "body": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "description": "Пустая строка разделяет абзацы",
+        "pos": 1
+      },
+      "images": {
+        "type": "multiasset",
+        "display_name": "Фотографии",
+        "description": "Встанут друг под другом рядом с текстом",
+        "pos": 2
+      },
+      "side": {
+        "type": "option",
+        "display_name": "Фото",
+        "pos": 3,
+        "options": [
+          {
+            "name": "Справа от текста",
+            "value": "right"
+          },
+          {
+            "name": "Слева от текста",
+            "value": "left"
+          }
+        ],
+        "default_value": "right",
+        "exclude_empty_option": true
+      },
+      "ratio": {
+        "type": "option",
+        "display_name": "Форма фото",
+        "pos": 4,
+        "options": [
+          {
+            "name": "Как в оригинале",
+            "value": "auto"
+          },
+          {
+            "name": "Квадрат",
+            "value": "square"
+          },
+          {
+            "name": "Горизонтальное 3:2",
+            "value": "landscape"
+          },
+          {
+            "name": "Вертикальное 2:3",
+            "value": "portrait"
+          },
+          {
+            "name": "Панорама 21:9",
+            "value": "panorama"
+          }
+        ],
+        "default_value": "square",
+        "exclude_empty_option": true
+      }
+    }
+  },
+  {
+    "name": "article_photo_item",
+    "display_name": "Фото с подписью",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Фото",
+        "pos": 0
+      },
+      "caption": {
+        "type": "text",
+        "display_name": "Подпись",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "article_photo_row",
+    "display_name": "Ряд фото с подписями",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "items": {
+        "type": "bloks",
+        "display_name": "Фото",
+        "description": "Одна-четыре в ряд, у каждой своя подпись",
+        "restrict_components": true,
+        "component_whitelist": [
+          "article_photo_item"
+        ],
+        "pos": 0
+      },
+      "ratio": {
+        "type": "option",
+        "display_name": "Форма фото",
+        "pos": 1,
+        "options": [
+          {
+            "name": "Как в оригинале",
+            "value": "auto"
+          },
+          {
+            "name": "Квадрат",
+            "value": "square"
+          },
+          {
+            "name": "Горизонтальное 3:2",
+            "value": "landscape"
+          },
+          {
+            "name": "Вертикальное 2:3",
+            "value": "portrait"
+          },
+          {
+            "name": "Панорама 21:9",
+            "value": "panorama"
+          }
+        ],
+        "default_value": "landscape",
+        "exclude_empty_option": true
+      }
+    }
+  },
+  {
+    "name": "article_gallery_scroll",
+    "display_name": "Лента с прокруткой",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "images": {
+        "type": "multiasset",
+        "display_name": "Фотографии",
+        "description": "Листаются вбок, следующая фото выглядывает из-за края",
+        "pos": 0
+      },
+      "ratio": {
+        "type": "option",
+        "display_name": "Форма фото",
+        "pos": 1,
+        "options": [
+          {
+            "name": "Как в оригинале",
+            "value": "auto"
+          },
+          {
+            "name": "Квадрат",
+            "value": "square"
+          },
+          {
+            "name": "Горизонтальное 3:2",
+            "value": "landscape"
+          },
+          {
+            "name": "Вертикальное 2:3",
+            "value": "portrait"
+          },
+          {
+            "name": "Панорама 21:9",
+            "value": "panorama"
+          }
+        ],
+        "default_value": "landscape",
+        "exclude_empty_option": true
+      },
+      "size": {
+        "type": "option",
+        "display_name": "Размер фото",
+        "pos": 2,
+        "options": [
+          {
+            "name": "Маленькие",
+            "value": "small"
+          },
+          {
+            "name": "Средние",
+            "value": "medium"
+          },
+          {
+            "name": "Большие",
+            "value": "large"
+          }
+        ],
+        "default_value": "medium",
+        "exclude_empty_option": true
+      },
+      "caption": {
+        "type": "text",
+        "display_name": "Подпись под лентой",
+        "pos": 3
+      }
+    }
+  },
+  {
+    "name": "article_gallery_mosaic",
+    "display_name": "Мозаика из фото",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "images": {
+        "type": "multiasset",
+        "display_name": "Фотографии",
+        "description": "Первая — большая, следующие две рядом; остальные идут сеткой ниже. Меньше трёх — просто сетка",
+        "pos": 0
+      },
+      "layout": {
+        "type": "option",
+        "display_name": "Раскладка",
+        "pos": 1,
+        "options": [
+          {
+            "name": "Большая слева",
+            "value": "feature-left"
+          },
+          {
+            "name": "Большая справа",
+            "value": "feature-right"
+          },
+          {
+            "name": "Ровная сетка",
+            "value": "grid"
+          }
+        ],
+        "default_value": "feature-left",
+        "exclude_empty_option": true
+      },
+      "caption": {
+        "type": "text",
+        "display_name": "Подпись под мозаикой",
+        "pos": 2
+      }
+    }
+  },
+  {
+    "name": "article_video",
+    "display_name": "Видео",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "url": {
+        "type": "text",
+        "display_name": "Ссылка на видео",
+        "description": "YouTube или RuTube, например https://www.youtube.com/watch?v=… Другие ссылки покажутся обычной ссылкой",
+        "pos": 0
+      },
+      "caption": {
+        "type": "text",
+        "display_name": "Подпись",
+        "pos": 1
       }
     }
   }

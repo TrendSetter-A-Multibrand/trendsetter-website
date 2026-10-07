@@ -4,6 +4,10 @@ import { findEvent, type Event } from "@/lib/events";
  * The article body is a sequence of blocks, which is the shape Storyblok will
  * hand us later. Each variant matches one layout in the mockup.
  */
+/** The shape of a photo's box: `auto` keeps the picture's own proportions. */
+export type PhotoRatio = "auto" | "square" | "landscape" | "portrait" | "panorama";
+export type PhotoSide = "left" | "right";
+
 export type ArticleBlock =
   | { kind: "text"; subtitle?: string; body: string[] }
   | {
@@ -12,11 +16,63 @@ export type ArticleBlock =
       body: string[];
       image: string;
       caption?: string;
+      side?: PhotoSide;
+      /** `third` is the small photo: a third of the measure, the text the rest. */
+      width?: "half" | "third";
+      ratio?: PhotoRatio;
     }
-  | { kind: "images"; images: string[] }
+  | { kind: "images"; images: string[]; ratio?: PhotoRatio; caption?: string }
   /** The red band, quote marks either side of it. The file dropped the two
       running lines this replaces. */
-  | { kind: "quote"; subtitle?: string; body: string[] };
+  | { kind: "quote"; subtitle?: string; body: string[] }
+  /** A large opening paragraph, bigger than the body copy. */
+  | { kind: "lead"; body: string[] }
+  | { kind: "list"; subtitle?: string; ordered: boolean; items: string[] }
+  | { kind: "text-columns"; subtitle?: string; body: string[] }
+  /** A short quote with a red rule beside it - quieter than the band. */
+  | { kind: "pullquote"; text: string; author?: string }
+  | { kind: "divider"; style: "line" | "dots" }
+  | { kind: "spacer"; size: "s" | "m" | "l" }
+  /** One photo by itself, in one of four widths and any of three places. */
+  | {
+      kind: "photo";
+      image: string;
+      caption?: string;
+      size: "full" | "wide" | "medium" | "small";
+      align: "left" | "center" | "right";
+      ratio: PhotoRatio;
+    }
+  /** Text on one side, a column of photos on the other. */
+  | {
+      kind: "text-photos";
+      subtitle?: string;
+      body: string[];
+      images: string[];
+      side: PhotoSide;
+      ratio: PhotoRatio;
+    }
+  /** A row where every photo has its own caption. */
+  | {
+      kind: "photo-row";
+      items: { image: string; caption?: string }[];
+      ratio: PhotoRatio;
+    }
+  /** A strip that scrolls sideways, the next photo peeking in. */
+  | {
+      kind: "gallery-scroll";
+      images: string[];
+      ratio: PhotoRatio;
+      size: "small" | "medium" | "large";
+      caption?: string;
+    }
+  /** One big photo with the rest beside it, or an even grid. */
+  | {
+      kind: "gallery-mosaic";
+      images: string[];
+      layout: "feature-left" | "feature-right" | "grid";
+      caption?: string;
+    }
+  | { kind: "video"; url: string; caption?: string };
 
 export type ArticleMeta = {
   section: string;
