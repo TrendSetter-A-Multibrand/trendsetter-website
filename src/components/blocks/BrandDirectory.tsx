@@ -4,7 +4,11 @@ import { useMemo, useState } from "react";
 import { FilterChip } from "@/components/ui/FilterChip";
 import { SearchField } from "@/components/ui/SearchField";
 import { BrandModal } from "@/components/blocks/BrandModal";
-import { BRAND_INDEX, indexKey, type Brand } from "@/lib/brands";
+import { alphabetLetters, filterBrands, indexKey, type Brand } from "@/lib/brands";
+
+// The letter filter is gone from the design; brands stay grouped by first letter
+const ALPHABET = "en";
+const LETTERS = alphabetLetters(ALPHABET);
 
 export function BrandDirectory({
   brands,
@@ -18,19 +22,12 @@ export function BrandDirectory({
   const [open, setOpen] = useState<Brand | null>(null);
 
   const groups = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    const matching = brands.filter(
-      (brand) =>
-        brand.name.toLowerCase().includes(needle) &&
-        selected.every((category) => brand.categories.includes(category))
-    );
-    return BRAND_INDEX.map((letter) => ({
-      letter,
-      brands: matching.filter((brand) => indexKey(brand.name) === letter),
+    const matching = filterBrands(brands, { query, categories: selected });
+    return LETTERS.map((key) => ({
+      letter: key,
+      brands: matching.filter((brand) => indexKey(brand.name, ALPHABET) === key),
     })).filter((group) => group.brands.length > 0);
   }, [brands, query, selected]);
-
-  const filled = new Set(groups.map((group) => group.letter));
 
   function toggle(category: string) {
     setSelected((current) =>
@@ -45,22 +42,7 @@ export function BrandDirectory({
       {/* Wrapper lets the divider bleed to the screen edge on mobile, like ArticleFilters */}
       <div className="-mx-4 flex flex-col gap-3 border-b border-ink/15 px-4 pb-4 lg:mx-0 lg:block lg:border-b-0 lg:px-0 lg:pb-0">
         <div className="flex flex-wrap items-center justify-between gap-6 lg:h-[50px]">
-          <div className="hidden flex-wrap gap-4 font-mono text-xl leading-none lg:flex">
-            {BRAND_INDEX.map((letter) =>
-              filled.has(letter) ? (
-                <a key={letter} href={`#brands-${letter}`} className="hover:text-brand">
-                  {letter}
-                </a>
-              ) : (
-                <span key={letter} className="text-ink/30">
-                  {letter}
-                </span>
-              )
-            )}
-          </div>
-
-          {/* The rule sits on the bottom of the 50px row, the letters centred in it */}
-          <div className="w-full lg:w-auto lg:self-end">
+          <div className="w-full lg:ml-auto lg:w-auto lg:self-end">
             <SearchField placeholder="Найти бренд" value={query} onChange={setQuery} />
           </div>
         </div>
@@ -79,8 +61,9 @@ export function BrandDirectory({
       </div>
 
       <div className="mt-4 flex flex-col gap-4 pb-4 lg:mt-[50px] lg:gap-12 lg:pb-16">
+        {groups.length === 0 && <p className="font-mono text-sm uppercase">Ничего не найдено</p>}
         {groups.map((group) => (
-          <section key={group.letter} id={`brands-${group.letter}`}>
+          <section key={group.letter}>
             <h2 className="mb-4 font-mono text-[32px]/[40px] font-bold tracking-[6px] lg:mb-[52px] lg:font-sans lg:text-[58px]/none lg:tracking-normal">
               {group.letter}
             </h2>

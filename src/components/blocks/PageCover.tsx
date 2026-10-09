@@ -7,6 +7,8 @@ type PageCoverProps = {
   imageSrc: string;
   /** False where breadcrumbs sit between the header and the band. */
   flush?: boolean;
+  /** The brands page draws a shorter band (290) than the sections' 400. */
+  short?: boolean;
 };
 
 /**
@@ -23,13 +25,16 @@ export function PageCover({
   subtitle,
   imageSrc,
   flush = true,
+  short = false,
 }: PageCoverProps) {
   return (
     <section
       className={`relative flex flex-col items-center justify-center overflow-hidden bg-neutral-800 px-6 text-center lg:px-0 lg:text-left ${
         flush
           ? "mt-[calc(-1*var(--header-h,0px))] h-[calc(112px+var(--header-h,0px))] pt-[var(--header-h,0px)] lg:h-[calc(400px+var(--header-h,0px))]"
-          : "h-[112px] lg:h-[400px]"
+          : short
+            ? "h-[112px] lg:h-[290px]"
+            : "h-[112px] lg:h-[400px]"
       }`}
     >
       <Image

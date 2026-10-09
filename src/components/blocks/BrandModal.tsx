@@ -1,18 +1,24 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Image from "next/image";
 import type { Brand } from "@/lib/brands";
-import { useLocale } from "@/lib/i18n/useLocale";
-import { CardImage } from "@/components/ui/CardImage";
 import { Divider } from "@/components/ui/Divider";
 import { Marker } from "@/components/ui/Marker";
+import { ModalPhoto } from "@/components/ui/ModalSheet";
 import { SectionTitle } from "@/components/ui/SectionTitle";
-import { EventCard } from "@/components/blocks/EventCard";
+
+/**
+ * Test photo shown while a brand has no `image` in Storyblok - taken from the
+ * home news cards. Тестовая, заменить на фото бренда из Storyblok: flip the flag
+ * to false (or delete both lines) once the brands have their own.
+ */
+const TEST_BRAND_PHOTO = "/images/home/news/1.jpg";
+const USE_TEST_BRAND_PHOTO = true;
 
 /**
  * The library's Modal: a 1280 sheet centred over the dimmed page, 40 of air at
- * the head and the foot and 40 between its four blocks. Everything inside keeps
+ * the head and the foot and 40 between its blocks. Everything inside keeps
  * 40 off the edges except the photo, which runs the full width of the sheet.
  */
 export function BrandModal({
@@ -22,9 +28,6 @@ export function BrandModal({
   brand: Brand;
   onClose: () => void;
 }) {
-  const locale = useLocale();
-  const events = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
@@ -49,14 +52,16 @@ export function BrandModal({
         <div className="flex items-center justify-between gap-6 px-6 lg:px-10">
           <div className="flex min-w-0 flex-1 items-center gap-6">
             {/* 160x55, and the logo keeps its own colours */}
-            <div className="relative hidden h-[55px] w-40 shrink-0 lg:block">
-              <Image
-                src={brand.logo}
-                alt=""
-                fill
-                className="object-contain object-left"
-              />
-            </div>
+            {brand.showLogo && brand.logo && (
+              <div className="relative hidden h-[55px] w-40 shrink-0 lg:block">
+                <Image
+                  src={brand.logo}
+                  alt=""
+                  fill
+                  className="object-contain object-left"
+                />
+              </div>
+            )}
 
             <div className="flex min-w-0 flex-col gap-2">
               {/* Inter Tight 24 on a 29 line, not the mono it reads as */}
@@ -85,11 +90,12 @@ export function BrandModal({
         </div>
 
         <div className="flex flex-col gap-6">
-          {/* 400 tall and the full 1280 across - the one block that ignores the
-              sheet's own margins */}
-          <div className="relative h-[400px] w-full shrink-0">
-            <CardImage src={brand.image} sizes="1280px" />
-          </div>
+          {/* The full 1280 across - the one block that ignores the sheet's own
+              margins */}
+          <ModalPhoto
+            fixed
+            src={brand.image || (USE_TEST_BRAND_PHOTO ? TEST_BRAND_PHOTO : undefined)}
+          />
 
           <p className="px-6 text-base/5 lg:px-10">{brand.description}</p>
 
@@ -116,33 +122,6 @@ export function BrandModal({
             ))}
           </ul>
         </section>
-
-        {brand.events.length > 0 && (
-          <section className="flex flex-col gap-6">
-            <SectionTitle
-              heading="Предстоящие мероприятия"
-              trackRef={events}
-              controls="bar"
-              className="px-6 lg:px-10"
-            />
-
-            {/* Two across the sheet at 580, 40 between them */}
-            <div
-              ref={events}
-              className="flex gap-10 overflow-x-auto px-6 [scrollbar-width:none] lg:px-10 [&::-webkit-scrollbar]:hidden"
-            >
-              {brand.events.map((event, i) => (
-                <EventCard
-                  key={i}
-                  item={event}
-                  href={`/${locale}/journal/${event.slug}`}
-                  sizes="(min-width: 1024px) 580px, 85vw"
-                  className="h-[430px] w-[85%] lg:w-[calc(50%-20px)]"
-                />
-              ))}
-            </div>
-          </section>
-        )}
       </div>
     </div>
   );

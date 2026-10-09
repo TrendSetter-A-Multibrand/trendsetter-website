@@ -31,17 +31,18 @@ export default async function BrandsPage({
 
   return (
     <>
-      {/* Only the 375 frame has the cover; the desktop file opens on the crumbs */}
-      <div className="lg:hidden">
-        <PageCover
-          title={covers.brands.title}
-          subtitle={covers.brands.subtitle}
-          imageSrc={covers.brands.image}
-          flush={false}
+      {/* Crumbs, then the cover, then the letters and search (BrandsSection) */}
+      <div className="lg:py-5">
+        <Breadcrumbs
+          items={[{ label: "Главная", href: `/${locale}` }, { label: "Бренды" }]}
         />
       </div>
-      <Breadcrumbs
-        items={[{ label: "Главная", href: `/${locale}` }, { label: "Бренды" }]}
+      <PageCover
+        title={covers.brands.title}
+        subtitle={covers.brands.subtitle}
+        imageSrc={covers.brands.image}
+        flush={false}
+        short
       />
       <BrandsSection />
     </>
