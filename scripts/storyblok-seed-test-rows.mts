@@ -2,7 +2,7 @@
  * Fifteen test records for each row that scrolls, and nothing else.
  *
  * The home page has three: Последние новости (articles with section=news),
- * Ближайшие события (articles with a placement_event) and Журнал (articles with
+ * Ближайшие события (news_event stories) and Журнал (articles with
  * section=journal). The
  * shops and the brands stand in a plain row of three and do not scroll, so they
  * are left alone.
@@ -16,8 +16,8 @@
  * test-event-NN, and the titles are numbered, so it is easy to see in the row
  * and easy to take out again.
  *
- * A test event is an article too: journal/test-event-NN carries a placement_event,
- * so its card leads to a page that exists, and it shows in Новости as well. The
+ * A test event is a news_event story: journal/test-event-NN has the event's fields
+ * in its root, so its card leads to a page that exists, and it shows in Новости as well. The
  * old events/test-event-NN stories are only cleaned out by --clean, never written.
  *
  * npm run storyblok:seed-test-rows
@@ -164,7 +164,7 @@ async function article(
   console.log(`${done}  journal/${slug}`);
 }
 
-/** A test event: an article in Новости with a «Ближайшие события» placement. */
+/** A test event: a news_event story, shown in Новости and in the events row. */
 async function event(n: number, parent: number) {
   const slug = `test-event-${two(n)}`;
   const date = eventDate(n);
@@ -174,8 +174,7 @@ async function event(n: number, parent: number) {
     slug,
     title,
     {
-      component: "article",
-      section: "news",
+      component: "news_event",
       title,
       tags: TAGS[(n - 1) % TAGS.length],
       excerpt: "Тестовое описание события для проверки ряда на главной.",
@@ -184,15 +183,11 @@ async function event(n: number, parent: number) {
       published_at: "2026-09-22 12:00",
       reading_minutes: "5",
       views: "715",
-      placements: [
-        block("placement_event", {
-          date,
-          location: PLACES[(n - 1) % PLACES.length],
-          card_title: title,
-          cta_label: "Подробнее",
-          signup_enabled: true,
-        }),
-      ],
+      date,
+      location: PLACES[(n - 1) % PLACES.length],
+      card_title: title,
+      cta_label: "Подробнее",
+      signup_enabled: true,
       body: body(),
     },
     parent,

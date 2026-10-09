@@ -28,4 +28,39 @@ describe("readCapacity", () => {
     const c = readCapacity(story({ component: "placement_event", date: "2026-11-01 18:00" }));
     expect(c).toMatchObject({ title: "Мастер-класс", date: "2026-11-01 18:00" });
   });
+
+  it("news_event даёт вместимость из полей корня", () => {
+    const c = readCapacity({
+      name: "Событие",
+      content: {
+        component: "news_event",
+        title: "Заголовок",
+        date: "2026-11-01 18:00",
+        seats: 8,
+        signup_enabled: false,
+      },
+    });
+    expect(c).toEqual({
+      seats: 8,
+      signupEnabled: false,
+      date: "2026-11-01 18:00",
+      title: "Заголовок",
+    });
+  });
+
+  it("обычная статья без placement_event - null, запись даёт 404", () => {
+    expect(
+      readCapacity({
+        content: { component: "article", date: "2026-11-01 18:00", seats: 8, event: "x" },
+      }),
+    ).toBeNull();
+  });
+
+  it("у news_event placement_event в теле не читается", () => {
+    expect(
+      readCapacity({
+        content: { component: "news_event", body: [{ component: "placement_event", seats: 3 }] },
+      })?.seats,
+    ).toBeNull();
+  });
 });

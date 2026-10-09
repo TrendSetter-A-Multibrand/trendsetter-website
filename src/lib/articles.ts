@@ -31,6 +31,8 @@ export type Article = {
   image?: string;
   /** Which of the two sections it belongs to - what the search chips filter on. */
   section?: "journal" | "news";
+  /** An event is its own kind of story and is never listed as an article. */
+  kind?: "event";
 };
 
 /**
@@ -141,23 +143,23 @@ export function tagsOf(articles: Article[]) {
 
 /**
  * The articles of one section, in the order they were written. Новости also
- * takes whatever is placed there or among the events, and shows each under the
+ * takes whatever is placed there, and shows each under the
  * card the editor drew for it, where there is one.
  */
 export function inSection(
   articles: Article[],
   section: NonNullable<Article["section"]>,
 ) {
+  // Events live in their own row and on their own page, not in the lists
+  // (TRANSITION: remove the placements.event half after convert)
+  const plain = articles.filter(
+    (article) => article.kind !== "event" && !article.placements?.event,
+  );
   if (section !== "news") {
-    return articles.filter((article) => article.section === section);
+    return plain.filter((article) => article.section === section);
   }
-  return articles
-    .filter(
-      (article) =>
-        article.section === "news" ||
-        article.placements?.news ||
-        article.placements?.event,
-    )
+  return plain
+    .filter((article) => article.section === "news" || article.placements?.news)
     .map((article) => {
       const card = article.placements?.news;
       if (!card) return article;

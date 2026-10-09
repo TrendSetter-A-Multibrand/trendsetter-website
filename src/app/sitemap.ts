@@ -31,10 +31,12 @@ async function published(contentType: string) {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [pages, articles] = await Promise.all([
+  const [pages, stories, events] = await Promise.all([
     published("page"),
     published("article"),
+    published("news_event"),
   ]);
+  const articles = [...stories, ...events];
 
   const entries: MetadataRoute.Sitemap = [];
 

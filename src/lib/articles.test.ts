@@ -190,19 +190,27 @@ describe("inSection: размещения", () => {
     }),
   ];
 
-  it("новости включают события и статьи с размещением в новостях", () => {
+  it("новости включают статьи с размещением в новостях, но не события", () => {
     expect(inSection(all, "news").map((a) => a.title)).toEqual([
       "Новость",
-      "Событие",
       "Короткий",
     ]);
   });
 
+  it("событие (kind) не попадает ни в новости, ни в журнал", () => {
+    const list = [
+      article({ title: "Новость", section: "news" }),
+      article({ title: "Событие", section: "news", kind: "event" }),
+      article({ title: "Событие в журнале", section: "journal", kind: "event" }),
+    ];
+    expect(inSection(list, "news").map((a) => a.title)).toEqual(["Новость"]);
+    expect(inSection(list, "journal")).toEqual([]);
+  });
+
   it("в новостях карточка берётся из размещения, в журнале остаётся своя", () => {
-    expect(inSection(all, "news")[2]).toMatchObject({ image: "/card.jpg", excerpt: "Лид" });
+    expect(inSection(all, "news")[1]).toMatchObject({ image: "/card.jpg", excerpt: "Лид" });
     expect(inSection(all, "journal").map((a) => a.title)).toEqual([
       "Журнальная",
-      "Событие",
       "С карточкой",
     ]);
   });

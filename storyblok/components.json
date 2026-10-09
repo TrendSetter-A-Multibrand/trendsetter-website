@@ -742,7 +742,7 @@
   },
   {
     "name": "event",
-    "display_name": "Мероприятие",
+    "display_name": "Мероприятие (устарело)",
     "is_root": true,
     "is_nestable": false,
     "schema": {
@@ -953,10 +953,201 @@
         "pos": 11,
         "restrict_components": true,
         "component_whitelist": [
-          "placement_news",
-          "placement_event",
-          "placement_space"
+          "placement_news"
         ]
+      }
+    }
+  },
+  {
+    "name": "news_event",
+    "display_name": "Событие",
+    "is_root": true,
+    "is_nestable": false,
+    "schema": {
+      "tab-content": {
+        "type": "tab",
+        "display_name": "Контент",
+        "keys": [
+          "title",
+          "tags",
+          "hero",
+          "author",
+          "published_at",
+          "reading_minutes",
+          "views",
+          "excerpt",
+          "body"
+        ],
+        "pos": 0
+      },
+      "tab-event": {
+        "type": "tab",
+        "display_name": "Событие",
+        "keys": [
+          "date",
+          "location",
+          "card_title",
+          "card_image",
+          "card_description",
+          "cta_label",
+          "signup_enabled",
+          "seats",
+          "space_sections"
+        ],
+        "pos": 1
+      },
+      "tab-seo": {
+        "type": "tab",
+        "display_name": "SEO",
+        "keys": [
+          "meta_title",
+          "meta_description"
+        ],
+        "pos": 2
+      },
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 1
+      },
+      "tags": {
+        "type": "options",
+        "display_name": "Теги",
+        "description": "Ими же фильтруются страницы раздела и поиск. Список ведётся в Settings → Datasources → Теги статей",
+        "pos": 3,
+        "source": "internal",
+        "datasource_slug": "article-tags"
+      },
+      "hero": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Обложка",
+        "pos": 4
+      },
+      "author": {
+        "type": "text",
+        "display_name": "Автор",
+        "pos": 5
+      },
+      "published_at": {
+        "type": "datetime",
+        "display_name": "Дата публикации",
+        "pos": 6
+      },
+      "reading_minutes": {
+        "type": "number",
+        "display_name": "Время чтения, минут",
+        "pos": 7
+      },
+      "views": {
+        "type": "number",
+        "display_name": "Просмотры",
+        "description": "Пока вводится руками; позже будет считаться само",
+        "pos": 8
+      },
+      "body": {
+        "type": "bloks",
+        "display_name": "Текст статьи",
+        "pos": 10,
+        "restrict_components": true,
+        "component_whitelist": [
+          "article_text",
+          "article_lead",
+          "article_text_columns",
+          "article_list",
+          "article_text_image",
+          "article_text_photos",
+          "article_photo",
+          "article_images",
+          "article_photo_row",
+          "article_gallery_scroll",
+          "article_gallery_mosaic",
+          "article_quote",
+          "article_pullquote",
+          "article_video",
+          "article_divider",
+          "article_spacer"
+        ]
+      },
+      "excerpt": {
+        "type": "textarea",
+        "display_name": "Краткое описание",
+        "description": "Показывается под заголовком на карточке в ряду «Журнал»",
+        "pos": 2
+      },
+      "date": {
+        "type": "datetime",
+        "display_name": "Когда",
+        "description": "Дата и время начала (по Москве)",
+        "pos": 0,
+        "required": true
+      },
+      "location": {
+        "type": "text",
+        "display_name": "Место",
+        "description": "Например «ТЦ „Атриум“»",
+        "pos": 1
+      },
+      "card_title": {
+        "type": "text",
+        "display_name": "Короткое название",
+        "description": "Печатается на карточке капсом. Пусто — заголовок",
+        "pos": 2
+      },
+      "card_image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Фото карточки",
+        "description": "Пусто — обложка",
+        "pos": 3
+      },
+      "card_description": {
+        "type": "textarea",
+        "display_name": "Описание",
+        "description": "На карточке и в окне события. Пусто — краткое описание",
+        "pos": 4
+      },
+      "cta_label": {
+        "type": "text",
+        "display_name": "Надпись на кнопке",
+        "default_value": "Подробнее",
+        "pos": 5
+      },
+      "signup_enabled": {
+        "type": "boolean",
+        "display_name": "Запись открыта",
+        "default_value": true,
+        "pos": 6
+      },
+      "seats": {
+        "type": "number",
+        "display_name": "Всего мест",
+        "description": "Пусто — без ограничения и без счётчика",
+        "pos": 7
+      },
+      "space_sections": {
+        "type": "options",
+        "display_name": "Разделы Пространства",
+        "description": "Где событие показывается в Пространстве",
+        "pos": 8,
+        "source": "internal",
+        "datasource_slug": "space-sections"
+      },
+      "meta_title": {
+        "type": "text",
+        "display_name": "Заголовок для поиска",
+        "description": "Что показывает Яндекс и Google в выдаче и что видно во вкладке браузера. Если пусто — берётся заголовок страницы",
+        "pos": 90
+      },
+      "meta_description": {
+        "type": "textarea",
+        "display_name": "Описание для поиска",
+        "description": "Два-три предложения под ссылкой в выдаче. Если пусто — общее описание сайта",
+        "pos": 91
       }
     }
   },

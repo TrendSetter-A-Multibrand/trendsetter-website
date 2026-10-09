@@ -11,7 +11,7 @@ export type EventCapacity = {
 
 type Node = Record<string, unknown>;
 
-/** The first placement_event block anywhere in the article's content. */
+/** TRANSITION: remove after convert. The first placement_event block in an article. */
 function findPlacement(node: unknown): Node | null {
   if (Array.isArray(node)) {
     for (const item of node) {
@@ -36,9 +36,16 @@ export function readCapacity(story: {
   name?: string;
   content?: unknown;
 }): EventCapacity | null {
-  const block = findPlacement(story.content);
-  if (!block) return null;
   const content = (story.content ?? {}) as Node;
+  // The event's fields sit in the root of a news_event; an article is no event
+  // (TRANSITION: until converted, one with a placement_event still is).
+  const block =
+    content.component === "news_event"
+      ? content
+      : content.component === "article"
+        ? findPlacement(content)
+        : null;
+  if (!block) return null;
 
   const seats = Number(text(block.seats) || block.seats);
   const flag = block.signup_enabled;
@@ -59,7 +66,7 @@ export function readCapacity(story: {
 /**
  * Read fresh (never from cache): the seat count and the on/off switch must be
  * what the editor has now. By uuid; null when there is no such story or it has
- * no placement_event block.
+ * is not an event.
  */
 export async function fetchEventCapacity(
   uuid: string,

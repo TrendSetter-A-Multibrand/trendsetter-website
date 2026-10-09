@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { articleBlock } from "@/lib/storyblok/articles";
+import { articleBlock, pageMeta } from "@/lib/storyblok/articles";
 
 const blok = (component: string, fields: Record<string, unknown> = {}) => ({
   _uid: "1",
@@ -43,5 +43,32 @@ describe("articleBlock", () => {
 
   it("ignores a block it does not know", () => {
     expect(articleBlock(blok("something_else"))).toBeNull();
+  });
+});
+
+describe("pageMeta", () => {
+  const base = { uuid: "u", slug: "s", name: "Имя" };
+  const eventFields = { date: "2026-11-01 18:00", location: "Атриум", seats: 5 };
+
+  it("статья не даёт event, даже с заполненными полями события", () => {
+    const meta = pageMeta(
+      {
+        ...base,
+        content: { component: "article", title: "Статья", event: "some-uuid", ...eventFields },
+      },
+      "ru_ru",
+    );
+    expect(meta.event).toBeUndefined();
+    expect(meta.sectionHref).toBe("journal");
+  });
+
+  it("news_event даёт event и раздел Новости", () => {
+    const meta = pageMeta(
+      { ...base, content: { component: "news_event", title: "Событие", ...eventFields } },
+      "ru_ru",
+    );
+    expect(meta.event).toMatchObject({ date: "2026-11-01 18:00", seats: 5, title: "Событие" });
+    expect(meta.section).toBe("Новости");
+    expect(meta.sectionHref).toBe("news");
   });
 });

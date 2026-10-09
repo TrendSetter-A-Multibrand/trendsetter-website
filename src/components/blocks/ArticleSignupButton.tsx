@@ -5,6 +5,7 @@ import { buttonClass } from "@/components/ui/Button";
 import { EventSignupModal } from "@/components/blocks/EventSignupModal";
 import { useSiteSettings } from "@/components/layout/SettingsContext";
 import type { Event } from "@/lib/events";
+import { signupShut } from "@/lib/eventSignup";
 
 /**
  * «Записаться» in the article's header, under the views and reading time (a
@@ -20,7 +21,7 @@ export function ArticleSignupButton({
 }) {
   const { eventSignup } = useSiteSettings();
   const [open, setOpen] = useState(false);
-  if (!event?.signupEnabled) return null;
+  if (!event || signupShut(event)) return null;
 
   return (
     <div className="mt-4 lg:mt-6">

@@ -1,7 +1,7 @@
 import type { Article } from "@/lib/articles";
 import type { ArticleBlock, ArticleMeta, PhotoText } from "@/lib/article";
 import { eventDate, eventFromPlacement } from "@/lib/events";
-import { eventFromLegacy, type LegacyEvent } from "@/lib/legacyEvents";
+import { eventFromStory, type NewsEventFields } from "@/lib/storyblok/events";
 import { parsePlacements } from "@/lib/storyblok/placements";
 import { fetchStories, fetchStory, type Block } from "@/lib/storyblok/fetchStory";
 
@@ -9,6 +9,7 @@ import { fetchStories, fetchStory, type Block } from "@/lib/storyblok/fetchStory
 export const JOURNAL = "journal";
 
 export type ArticleFields = {
+  component?: string;
   section?: "journal" | "news";
   title?: string;
   excerpt?: string;
@@ -177,77 +178,92 @@ export function articleBlock(blok: Block): ArticleBlock | null {
  * Every article, in the shape the cards and the grids want. One list for all of
  * them: which section a piece shows under is a field, not a path, so the rows
  * and the two section pages all read the same stories and sift them.
+ *
+ * Events are not in it: a news_event is read only by fetchEvents (the events
+ * row, Пространство) and by its own page, and never shows in Новости, Журнал,
+ * the search or the related row.
  */
 export async function fetchArticles(locale: string): Promise<Article[]> {
   const stories = await fetchStories<ArticleFields>("article");
 
-  return stories.map(({ content, slug, uuid }) => ({
-    uuid,
-    placements: parsePlacements(content.placements, {
+  return stories
+    .map(({ content, slug, uuid }): Article => ({
+      uuid,
+      placements: parsePlacements(content.placements, {
+        title: content.title ?? "",
+        image: content.hero?.filename || undefined,
+        excerpt: content.excerpt || undefined,
+      }),
+      tags: content.tags ?? [],
       title: content.title ?? "",
-      image: content.hero?.filename || undefined,
       excerpt: content.excerpt || undefined,
-    }),
-    tags: content.tags ?? [],
-    title: content.title ?? "",
-    excerpt: content.excerpt || undefined,
-    href: `/${locale}/${JOURNAL}/${slug}`,
-    image: content.hero?.filename || undefined,
-    section: content.section ?? "journal",
-  }));
+      href: `/${locale}/${JOURNAL}/${slug}`,
+      image: content.hero?.filename || undefined,
+      section: content.section ?? "journal",
+    }))
+    // TRANSITION: remove after convert - an article with a placement_event is an event
+    .filter((article) => !article.placements?.event);
 }
 
 /**
- * One article by its slug, with the invitation to sign up attached where the
- * article has a «Ближайшие события» placement - the card and the page are read
- * from the same fields, so they cannot disagree about when it is.
+ * The part of an article page that is not its body, from the story as
+ * Storyblok gives it. Only a news_event is an event and carries the invitation
+ * to sign up; an article never does, whatever else is filled in it.
  */
+export function pageMeta(
+  story: {
+    uuid: string;
+    slug: string;
+    name: string;
+    content: ArticleFields & Partial<NewsEventFields>;
+  },
+  locale: string,
+): ArticleMeta {
+  const { content } = story;
+  const isEvent = content.component === "news_event";
+  const section = isEvent ? "news" : (content.section ?? "journal");
+
+  let event: ArticleMeta["event"];
+  if (isEvent) {
+    event = eventFromStory(story, locale) ?? undefined;
+  } else {
+    // TRANSITION: remove after convert
+    const placement = parsePlacements(content.placements, {
+      title: content.title ?? story.name,
+      image: content.hero?.filename || undefined,
+      excerpt: content.excerpt || undefined,
+    })?.event;
+    if (placement) event = eventFromPlacement(story, placement, locale);
+  }
+
+  return {
+    section: LABELS[section],
+    sectionHref: section,
+    title: content.title ?? story.name,
+    author: content.author ?? "",
+    publishedAt: written(content.published_at ?? ""),
+    views: Number(content.views) || 0,
+    readingMinutes: Number(content.reading_minutes) || 0,
+    heroImage: content.hero?.filename ?? "",
+    tags: content.tags ?? [],
+    excerpt: content.excerpt || undefined,
+    event,
+  };
+}
+
+/** One article or event by its slug, with the meta its page is drawn from. */
 export async function fetchArticlePage(
   slug: string,
   locale: string
 ): Promise<{ meta: ArticleMeta; blocks: ArticleBlock[] } | null> {
-  const story = await fetchStory<ArticleFields>(`${JOURNAL}/${slug}`);
+  const story = await fetchStory<ArticleFields & Partial<NewsEventFields>>(`${JOURNAL}/${slug}`);
   if (!story) return null;
 
   const { content } = story;
-  const section = content.section ?? "journal";
-
-  const placement = parsePlacements(content.placements, {
-    title: content.title ?? story.name,
-    image: content.hero?.filename || undefined,
-    excerpt: content.excerpt || undefined,
-  })?.event;
-  let event = placement
-    ? eventFromPlacement(story, placement, locale)
-    : undefined;
-  // Not migrated yet: the old `event` field still points at the event's story
-  if (!event && content.event) {
-    const legacy = (await fetchStories<LegacyEvent>("event")).find(
-      (e) => e.uuid === content.event,
-    );
-    if (legacy) {
-      event = eventFromLegacy(legacy, `/${locale}/${JOURNAL}/${slug}`, true);
-    }
-  }
 
   const blocks = (content.body ?? [])
     .map((blok): ArticleBlock | null => articleBlock(blok))
     .filter((blok): blok is ArticleBlock => blok !== null);
 
-  return {
-    meta: {
-      section: LABELS[section],
-      sectionHref: section,
-      title: content.title ?? story.name,
-      author: content.author ?? "",
-      publishedAt: written(content.published_at ?? ""),
-      views: Number(content.views) || 0,
-      readingMinutes: Number(content.reading_minutes) || 0,
-      heroImage: content.hero?.filename ?? "",
-      tags: content.tags ?? [],
-      excerpt: content.excerpt || undefined,
-      event,
-    },
-    blocks,
-  };
+  return { meta: pageMeta(story, locale), blocks };
 }

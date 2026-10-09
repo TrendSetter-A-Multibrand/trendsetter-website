@@ -24,7 +24,7 @@
     "storyblok:seed-articles": "node --env-file=.env.local scripts/storyblok-seed-articles.mts",
     "storyblok:seed-interviews": "node --env-file=.env.local scripts/storyblok-seed-interviews.mts",
     "storyblok:seed-test-rows": "node --env-file=.env.local scripts/storyblok-seed-test-rows.mts",
-    "storyblok:migrate-placements": "node --env-file=.env.local scripts/storyblok-migrate-placements.mts",
+    "storyblok:convert-events": "node --env-file=.env.local scripts/storyblok-convert-events.mts",
     "storyblok:seed-collabs": "node --env-file=.env.local scripts/storyblok-seed-collabs.mts"
   },
   "dependencies": {
