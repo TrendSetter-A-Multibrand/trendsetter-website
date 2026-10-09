@@ -9,7 +9,6 @@ import { RelatedArticles } from "@/components/blocks/RelatedArticles";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { fetchArticlePage, fetchArticles } from "@/lib/storyblok/articles";
 import { seo } from "@/lib/seo";
-import { ArticleEventCta } from "@/components/blocks/ArticleEventCta";
 
 export async function generateMetadata({
   params,
@@ -17,7 +16,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const article = await fetchArticlePage(slug);
+  const article = await fetchArticlePage(slug, locale);
   if (!article) return {};
 
   // The piece's own photograph is what a link to it should carry, not the site's
@@ -39,7 +38,7 @@ export default async function ArticlePage({
   if (!isLocale(locale)) notFound();
 
   const [article, articles] = await Promise.all([
-    fetchArticlePage(slug),
+    fetchArticlePage(slug, locale),
     fetchArticles(locale),
   ]);
   if (!article) notFound();
@@ -63,7 +62,6 @@ export default async function ArticlePage({
           sizes="100vw"
           className="object-cover"
         />
-        {meta.event && <ArticleEventCta event={meta.event} />}
       </div>
 
       {/* The file stacks the blocks 40 apart, and the hero at the same distance; 16 on mobile */}

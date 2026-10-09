@@ -3,6 +3,7 @@ import type { Locale } from "@/lib/i18n/locales";
 import type { ArticleMeta } from "@/lib/article";
 import { FilterChip } from "@/components/ui/FilterChip";
 import { tagHref } from "@/lib/articles";
+import { ArticleSignupButton } from "@/components/blocks/ArticleSignupButton";
 
 const META_LABEL =
   "text-xs tracking-[1px] text-muted lg:font-mono lg:text-sm/[18px] lg:font-medium lg:uppercase lg:text-ink lg:tracking-normal";
@@ -56,7 +57,7 @@ export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
             ))}
           </p>
 
-          <h1 className="font-mono text-2xl uppercase tracking-[3px] text-ink lg:text-[40px]/[48px] lg:tracking-[1px]">
+          <h1 className="font-mono text-2xl normal-case tracking-[1px] text-ink lg:text-[40px]/[48px]">
             {meta.title}
           </h1>
         </div>
@@ -64,33 +65,37 @@ export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
         {/* 160 wide, and the values are Inter Tight 12 in grey under mono labels.
             On mobile the column collapses to two stacked rows with the label and
             value inline, wrapping onto a second line for a long author name. */}
-        <dl className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 shrink-0 lg:block lg:w-40">
-          <div className="flex items-baseline gap-1 lg:block">
-            <dt className={META_LABEL}>
-              Автор<span className="lg:hidden">:</span>
-            </dt>
-            <dd className={META_VALUE}>{meta.author}</dd>
-          </div>
+        <div className="flex shrink-0 flex-col lg:w-40">
+          <dl className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 lg:block">
+            <div className="flex items-baseline gap-1 lg:block">
+              <dt className={META_LABEL}>
+                Автор<span className="lg:hidden">:</span>
+              </dt>
+              <dd className={META_VALUE}>{meta.author}</dd>
+            </div>
 
-          <div className="lg:mt-4">
-            <dt className={`${META_LABEL} max-lg:hidden`}>Дата публикации</dt>
-            <dd className={META_VALUE}>{meta.publishedAt}</dd>
-          </div>
+            <div className="lg:mt-4">
+              <dt className={`${META_LABEL} max-lg:hidden`}>Дата публикации</dt>
+              <dd className={META_VALUE}>{meta.publishedAt}</dd>
+            </div>
 
-          <div className="hidden lg:mt-4 lg:block">
-            <dt className="sr-only">Просмотры и время чтения</dt>
-            <dd className="flex items-center gap-4 text-sm/[17px] tracking-[1px] text-muted">
-              <span className="flex items-center gap-1">
-                <EyeIcon />
-                {meta.views}
-              </span>
-              <span className="flex items-center gap-1">
-                <BookIcon />
-                {meta.readingMinutes} мин
-              </span>
-            </dd>
-          </div>
-        </dl>
+            <div className="hidden lg:mt-4 lg:block">
+              <dt className="sr-only">Просмотры и время чтения</dt>
+              <dd className="flex items-center gap-4 text-sm/[17px] tracking-[1px] text-muted">
+                <span className="flex items-center gap-1">
+                  <EyeIcon />
+                  {meta.views}
+                </span>
+                <span className="flex items-center gap-1">
+                  <BookIcon />
+                  {meta.readingMinutes} мин
+                </span>
+              </dd>
+            </div>
+          </dl>
+
+          <ArticleSignupButton event={meta.event} locale={locale} />
+        </div>
       </div>
     </section>
   );
