@@ -1,26 +1,26 @@
 import { FilterChip } from "@/components/ui/FilterChip";
 import { SearchField } from "@/components/ui/SearchField";
-import { sameTag, tagHref } from "@/lib/articles";
+import { sameTag, toggleTagHref } from "@/lib/articles";
 
 type ArticleFiltersProps = {
   filters: string[];
   locale: string;
   section: "journal" | "news";
-  /** Which one is on, straight off the address. */
-  activeTag?: string;
+  /** Which ones are on, straight off the address. */
+  activeTags?: string[];
   searchPlaceholder?: string;
 };
 
 /**
  * Pill filters on the left, an underlined search field 280px wide on the right.
- * Each pill is the same link a tag under a card is, so both ways of narrowing
- * the page end up on the same address.
+ * Each pill links to the current set with its tag switched on or off, so several
+ * can be chosen at once; "Все" clears the set.
  */
 export function ArticleFilters({
   filters,
   locale,
   section,
-  activeTag,
+  activeTags = [],
   searchPlaceholder = "Поиск статьи",
 }: ArticleFiltersProps) {
   return (
@@ -38,15 +38,15 @@ export function ArticleFilters({
             home page. */}
         <FilterChip
           label="Все"
-          active={!activeTag}
+          active={activeTags.length === 0}
           href={`/${locale}/${section}`}
         />
         {filters.map((filter) => (
           <FilterChip
             key={filter}
             label={filter}
-            active={!!activeTag && sameTag(filter, activeTag)}
-            href={tagHref(locale, section, filter)}
+            active={activeTags.some((tag) => sameTag(filter, tag))}
+            href={toggleTagHref(locale, section, activeTags, filter)}
           />
         ))}
       </div>

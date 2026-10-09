@@ -1,4 +1,28 @@
+import type { EventPlacement } from "@/lib/events";
+
+/** The card an article wears in Новости, over its own title, photo and lead. */
+export type NewsPlacement = {
+  cardTitle: string;
+  cardImage?: string;
+  cardExcerpt?: string;
+};
+
+/**
+ * Where an article shows besides its main section. Each is the first block of
+ * its kind the editor added, with the empty fields already taken from the
+ * article - see parsePlacements.
+ */
+export type Placements = {
+  news?: NewsPlacement;
+  event?: EventPlacement;
+  /** Only ever set together with `event`. */
+  space?: { spaceSections: string[] };
+};
+
 export type Article = {
+  /** The story's uuid - what an event or a Пространство card points at. */
+  uuid?: string;
+  placements?: Placements;
   tags: string[];
   title: string;
   /** Under the title on a journal card; not every piece carries one. */
@@ -34,6 +58,45 @@ export function byTag(articles: Article[], tag?: string) {
   return articles.filter((article) =>
     article.tags.some((own) => sameTag(own, tag)),
   );
+}
+
+/** `?tag=a&tag=b` arrives as a string, an array or nothing; make it a list. */
+export function tagsFromParam(value: string | string[] | undefined) {
+  const list = Array.isArray(value) ? value : value ? [value] : [];
+  return list.map((t) => t.trim()).filter(Boolean);
+}
+
+/** Articles carrying ANY of the tags; an empty set is everything. */
+export function byTags(articles: Article[], tags: string[]) {
+  if (!tags.length) return articles;
+  return articles.filter((article) =>
+    article.tags.some((own) => tags.some((tag) => sameTag(own, tag))),
+  );
+}
+
+/** The empty-state line for a set of tags that matched nothing. */
+export function noTagMatches(tags: string[]) {
+  const quoted = tags.map((t) => `«${t}»`).join(", ");
+  return `По ${tags.length > 1 ? "тегам" : "тегу"} ${quoted} пока ничего нет.`;
+}
+
+/**
+ * Where a filter chip leads: the section with `tag` switched in or out of the
+ * current set. Switching the last tag off lands on the bare section.
+ */
+export function toggleTagHref(
+  locale: string,
+  section: Article["section"],
+  current: string[],
+  tag: string,
+) {
+  const path = section === "journal" ? "journal" : "news";
+  const next = current.some((own) => sameTag(own, tag))
+    ? current.filter((own) => !sameTag(own, tag))
+    : [...current, tag];
+  if (!next.length) return `/${locale}/${path}`;
+  const query = next.map((t) => `tag=${encodeURIComponent(t)}`).join("&");
+  return `/${locale}/${path}?${query}`;
 }
 
 /**
@@ -76,10 +139,33 @@ export function tagsOf(articles: Article[]) {
   return seen;
 }
 
-/** The articles of one section, in the order they were written. */
+/**
+ * The articles of one section, in the order they were written. Новости also
+ * takes whatever is placed there or among the events, and shows each under the
+ * card the editor drew for it, where there is one.
+ */
 export function inSection(
   articles: Article[],
   section: NonNullable<Article["section"]>,
 ) {
-  return articles.filter((article) => article.section === section);
+  if (section !== "news") {
+    return articles.filter((article) => article.section === section);
+  }
+  return articles
+    .filter(
+      (article) =>
+        article.section === "news" ||
+        article.placements?.news ||
+        article.placements?.event,
+    )
+    .map((article) => {
+      const card = article.placements?.news;
+      if (!card) return article;
+      return {
+        ...article,
+        title: card.cardTitle || article.title,
+        image: card.cardImage || article.image,
+        excerpt: card.cardExcerpt || article.excerpt,
+      };
+    });
 }
