@@ -38,10 +38,12 @@ export function Dropdown({
   name,
   placeholder,
   options,
+  invalid,
 }: {
   name: string;
   placeholder: string;
   options: DropdownOption[];
+  invalid?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
@@ -94,6 +96,7 @@ export function Dropdown({
         onClick={() => setOpen(!open)}
         aria-haspopup="true"
         aria-expanded={open}
+        data-invalid={invalid || undefined}
         className={`flex h-12 w-full items-center justify-between gap-2 bg-white px-4 text-left font-sans text-sm/4 font-normal tracking-[1px] text-ink ${
           open ? "border-b border-ink/15" : ""
         }`}

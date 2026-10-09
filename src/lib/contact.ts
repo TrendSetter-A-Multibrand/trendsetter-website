@@ -15,35 +15,61 @@ export type ContactMessage = {
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** Returns the cleaned message, or the reason it was refused. */
+export const MESSAGE_MAX = 2000;
+
+export type ContactField = keyof ContactMessage;
+
+/** What the form says under the button, per field (Russian, as the site is). */
+export const CONTACT_ERRORS: Record<ContactField, string> = {
+  name: "Укажите имя",
+  email: "Проверьте e-mail",
+  subject: "Выберите тему обращения",
+  message: "Напишите сообщение",
+};
+
+/** The order the fields are checked in, and so which error is "first". */
+const ORDER: ContactField[] = ["message", "name", "email", "subject"];
+
+/**
+ * The one source of the form's rules, for the browser and the server alike.
+ * Returns the cleaned message, or every field that failed. `error` is the first
+ * failing field's name - the shape the API has always answered with.
+ */
 export function parseContact(
   raw: unknown,
-): { ok: true; value: ContactMessage } | { ok: false; error: string } {
+):
+  | { ok: true; value: ContactMessage }
+  | {
+      ok: false;
+      error: string;
+      errors: Partial<Record<ContactField, string>>;
+    } {
   if (typeof raw !== "object" || raw === null) {
-    return { ok: false, error: "bad body" };
+    return { ok: false, error: "bad body", errors: {} };
   }
   const r = raw as Record<string, unknown>;
   const str = (v: unknown) => (typeof v === "string" ? v.trim() : "");
 
-  const name = str(r.name);
-  const email = str(r.email);
-  const subject = str(r.subject);
-  const message = str(r.message);
-
-  if (message.length < 5 || message.length > 5000) {
-    return { ok: false, error: "message" };
-  }
-  if (name.length > 200) return { ok: false, error: "name" };
-  if (!EMAIL.test(email) || email.length > 254) {
-    return { ok: false, error: "email" };
-  }
-  if (subject.length < 1 || subject.length > 200) {
-    return { ok: false, error: "subject" };
-  }
-  return {
-    ok: true,
-    value: { name, email, subject, message },
+  const value: ContactMessage = {
+    name: str(r.name),
+    email: str(r.email),
+    subject: str(r.subject),
+    message: str(r.message),
   };
+
+  const bad: Record<ContactField, boolean> = {
+    name: value.name.length < 1 || value.name.length > 200,
+    email: !EMAIL.test(value.email) || value.email.length > 254,
+    subject: value.subject.length < 1 || value.subject.length > 200,
+    message: value.message.length < 1 || value.message.length > MESSAGE_MAX,
+  };
+
+  const failed = ORDER.filter((field) => bad[field]);
+  if (failed.length === 0) return { ok: true, value };
+
+  const errors: Partial<Record<ContactField, string>> = {};
+  for (const field of failed) errors[field] = CONTACT_ERRORS[field];
+  return { ok: false, error: failed[0], errors };
 }
 
 /**

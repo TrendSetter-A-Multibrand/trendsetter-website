@@ -6,6 +6,12 @@ import Link from "next/link";
 import { buttonClass } from "@/components/ui/Button";
 import { Dropdown, type DropdownOption } from "@/components/ui/Dropdown";
 import { useSiteSettings } from "@/components/layout/SettingsContext";
+import {
+  CONTACT_ERRORS,
+  MESSAGE_MAX,
+  parseContact,
+  type ContactField,
+} from "@/lib/contact";
 
 type ContactFormProps = {
   locale?: string;
@@ -43,31 +49,40 @@ export function ContactForm({
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [invalid, setInvalid] = useState<ContactField[]>([]);
+  const bad = (field: ContactField) => invalid.includes(field) || undefined;
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (busy) return;
     const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form));
+    // The same rules the server applies; nothing leaves the page if they fail.
+    // The subject lives in the dropdown's hidden input, so `required` could not
+    // catch it - this does.
+    const parsed = parseContact(data);
+    if (!parsed.ok) {
+      setInvalid(Object.keys(parsed.errors) as ContactField[]);
+      setError(Object.values(parsed.errors)[0] ?? "Не удалось отправить, попробуйте позже");
+      return;
+    }
+    setInvalid([]);
     setBusy(true);
     setError("");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        body: JSON.stringify(data),
       });
       if (!res.ok) {
         const { error: code } = (await res.json().catch(() => ({}))) as {
           error?: string;
         };
+        const field = code && code in CONTACT_ERRORS ? (code as ContactField) : null;
+        setInvalid(field ? [field] : []);
         setError(
-          code === "subject"
-            ? "Выберите тему обращения"
-            : code === "email"
-              ? "Проверьте e-mail"
-              : code === "message"
-                ? "Напишите сообщение"
-                : "Не удалось отправить, попробуйте позже",
+          field ? CONTACT_ERRORS[field] : "Не удалось отправить, попробуйте позже",
         );
         return;
       }
@@ -95,7 +110,7 @@ export function ContactForm({
           [{heading}]
         </h2>
 
-        <form onSubmit={handleSubmit} className="mt-6">
+        <form onSubmit={handleSubmit} noValidate className="mt-6">
           {/* At 375 the file puts the subject dropdown above the message box;
               from sm it rejoins name/email in one row under the message, same
               as before - `order` moves it there without moving it in the DOM. */}
@@ -105,12 +120,15 @@ export function ContactForm({
                 name="subject"
                 placeholder={form.subjectPlaceholder}
                 options={subjects}
+                invalid={!!bad("subject")}
               />
             </div>
 
             <textarea
               name="message"
               placeholder={placeholder}
+              maxLength={MESSAGE_MAX}
+              aria-invalid={bad("message")}
               className="on-light block h-[200px] w-full resize-none bg-white p-4 text-sm/[18px] tracking-[1px] text-ink outline-none placeholder:text-muted sm:order-1 sm:col-span-3"
             />
 
@@ -124,12 +142,14 @@ export function ContactForm({
             <input
               name="name"
               placeholder={form.namePlaceholder}
+              aria-invalid={bad("name")}
               className="h-12 border border-white bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-white/40 sm:order-2"
             />
             <input
               type="email"
               name="email"
               placeholder={form.emailPlaceholder}
+              aria-invalid={bad("email")}
               className="h-12 border border-white bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-white/40 sm:order-3"
             />
           </div>
