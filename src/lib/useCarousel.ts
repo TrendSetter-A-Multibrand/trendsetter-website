@@ -41,12 +41,18 @@ export function settleSnap(el: HTMLElement) {
   if (!type || type === "none") return;
 
   const box = el.getBoundingClientRect();
-  const mid = box.left + el.clientWidth / 2;
+  // A row that snaps by a card's left edge settles on that edge, not the middle
+  const byStart =
+    !!el.firstElementChild &&
+    getComputedStyle(el.firstElementChild).scrollSnapAlign?.startsWith("start");
+  const mid = byStart
+    ? box.left + (parseFloat(getComputedStyle(el).paddingLeft) || 0)
+    : box.left + el.clientWidth / 2;
 
   let delta = Infinity;
   for (const child of el.children) {
     const r = (child as HTMLElement).getBoundingClientRect();
-    const d = r.left + r.width / 2 - mid;
+    const d = (byStart ? r.left : r.left + r.width / 2) - mid;
     if (Math.abs(d) < Math.abs(delta)) delta = d;
   }
   if (!Number.isFinite(delta)) return;

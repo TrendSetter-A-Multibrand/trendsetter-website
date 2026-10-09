@@ -28,7 +28,12 @@ function withGeometry({ content, width }: { content: number; width: number }) {
 
 const events = (count: number): SiteEvent[] =>
   Array.from({ length: count }, (_, i) => ({
+    uuid: `event-${i + 1}`,
     slug: `event-${i + 1}`,
+    href: `/ru/journal/event-${i + 1}`,
+    date: "2026-09-08 18:00",
+    signupEnabled: true,
+    spaceSections: [],
     day: "8",
     month: "сентября",
     time: "18:00",

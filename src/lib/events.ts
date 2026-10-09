@@ -5,7 +5,18 @@
  * article cannot end up disagreeing about when the thing happens.
  */
 export type Event = {
+  /** The article the event is: the card and the page are one record. */
+  uuid: string;
   slug: string;
+  /** Where the card leads - the article's own page. */
+  href: string;
+  /** As the editor typed it, "2026-07-27 18:00": a wall clock with no zone. */
+  date: string;
+  /** The editor's «ВСЕГО мест»; absent means no limit and no counter. */
+  seats?: number;
+  signupEnabled: boolean;
+  /** Keys of the Пространство sections the event is shown under. */
+  spaceSections: string[];
   day: string;
   month: string;
   time: string;
@@ -16,7 +27,10 @@ export type Event = {
   image?: string;
 };
 
-export const EVENTS: Event[] = [
+const STATIC_EVENTS: Pick<
+  Event,
+  "slug" | "day" | "month" | "time" | "title" | "location" | "description" | "ctaLabel" | "image"
+>[] = [
   {
     slug: "master-class-ceramics",
     day: "27",
@@ -63,6 +77,22 @@ export const EVENTS: Event[] = [
   },
 ];
 
+const STATIC_DATES: Record<string, string> = {
+  "master-class-ceramics": "2026-07-27 18:00",
+  "book-club": "2026-08-03 19:00",
+  "capsule-show": "2026-08-10 17:30",
+  "styling-workshop": "2026-08-16 12:00",
+};
+
+export const EVENTS: Event[] = STATIC_EVENTS.map((event) => ({
+  ...event,
+  uuid: event.slug,
+  href: `/ru/journal/${event.slug}`,
+  date: STATIC_DATES[event.slug] ?? "",
+  signupEnabled: true,
+  spaceSections: [],
+}));
+
 export const findEvent = (slug: string) =>
   EVENTS.find((event) => event.slug === slug);
 
@@ -106,5 +136,73 @@ export function eventDate(value: string) {
     /** For a date read as a sentence: «22 сентября 2026». */
     monthFull: MONTHS[index] ?? "",
     time: time.slice(0, 5),
+  };
+}
+
+/** The zone the editor's wall clock is read in: the space is in Moscow. */
+export const EVENT_TZ = "Europe/Moscow";
+
+/**
+ * The moment as a wall clock in EVENT_TZ, "2026-07-27 18:00" - the same shape
+ * the editor's date has, so the two compare as text with no zone arithmetic.
+ */
+function wallClock(moment: Date) {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: EVENT_TZ,
+      hourCycle: "h23",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+      .formatToParts(moment)
+      .map((part) => [part.type, part.value]),
+  );
+  return `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}`;
+}
+
+/** An event whose start has not come yet, by Moscow time. No date, no event. */
+export function isUpcoming(event: Pick<Event, "date">, now: Date = new Date()) {
+  const start = event.date.replace("T", " ").slice(0, 16);
+  return start !== "" && start > wallClock(now);
+}
+
+/** What the editor filled in an article's «Ближайшие события» placement. */
+export type EventPlacement = {
+  date: string;
+  location: string;
+  cardTitle: string;
+  cardImage?: string;
+  cardDescription?: string;
+  ctaLabel: string;
+  signupEnabled: boolean;
+  seats?: number;
+};
+
+/** The event an article is, in the shape the cards and the page want. */
+export function eventFromPlacement(
+  article: { uuid: string; slug: string },
+  placement: EventPlacement & { spaceSections?: string[] },
+  locale: string,
+): Event {
+  const { day, month, time } = eventDate(placement.date);
+  return {
+    uuid: article.uuid,
+    slug: article.slug,
+    href: `/${locale}/journal/${article.slug}`,
+    date: placement.date,
+    seats: placement.seats,
+    signupEnabled: placement.signupEnabled,
+    spaceSections: placement.spaceSections ?? [],
+    day,
+    month,
+    time,
+    title: placement.cardTitle,
+    location: placement.location,
+    description: placement.cardDescription,
+    ctaLabel: placement.ctaLabel,
+    image: placement.cardImage,
   };
 }

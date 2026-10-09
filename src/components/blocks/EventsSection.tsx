@@ -6,7 +6,13 @@ import { fetchEvents } from "@/lib/storyblok/events";
  * along by itself, so with fewer events than fit it has nothing to walk - which
  * is fine, and with none it draws only its heading.
  */
-export async function EventsSection({ heading }: { heading?: string }) {
-  const events = await fetchEvents();
+export async function EventsSection({
+  heading,
+  locale,
+}: {
+  heading?: string;
+  locale: string;
+}) {
+  const events = await fetchEvents(locale);
   return <EventsCarousel heading={heading} items={events} />;
 }

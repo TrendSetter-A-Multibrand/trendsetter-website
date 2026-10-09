@@ -36,7 +36,7 @@ export function JournalCarousel({
   if (items.length === 0) return null;
 
   return (
-    <section className="px-4 pt-10 lg:px-10">
+    <section className="px-4 pt-10 lg:px-10 lg:pt-[120px]">
       <SectionTitle
         heading={heading}
         trackRef={trackRef}

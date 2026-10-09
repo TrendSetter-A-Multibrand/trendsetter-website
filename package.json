@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "db:migrate": "node --env-file=.env.local scripts/db-migrate.mts",
     "storyblok:push": "node --env-file=.env.local scripts/storyblok-push.mjs",
     "storyblok:seed": "node --env-file=.env.local scripts/storyblok-seed-home.mjs",
     "storyblok:seed-legal": "node --env-file=.env.local scripts/storyblok-seed-legal.mts",
@@ -22,10 +23,13 @@
     "storyblok:seed-events": "node --env-file=.env.local scripts/storyblok-seed-events.mts",
     "storyblok:seed-articles": "node --env-file=.env.local scripts/storyblok-seed-articles.mts",
     "storyblok:seed-interviews": "node --env-file=.env.local scripts/storyblok-seed-interviews.mts",
-    "storyblok:seed-test-rows": "node --env-file=.env.local scripts/storyblok-seed-test-rows.mts"
+    "storyblok:seed-test-rows": "node --env-file=.env.local scripts/storyblok-seed-test-rows.mts",
+    "storyblok:migrate-placements": "node --env-file=.env.local scripts/storyblok-migrate-placements.mts",
+    "storyblok:seed-collabs": "node --env-file=.env.local scripts/storyblok-seed-collabs.mts"
   },
   "dependencies": {
     "next": "16.2.12",
+    "postgres": "^3.4.9",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },

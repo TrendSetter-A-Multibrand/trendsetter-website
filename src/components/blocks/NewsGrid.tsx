@@ -36,8 +36,8 @@ export function NewsGrid({
   if (items.length === 0) return null;
 
   return (
-    <section className="px-4 pt-10 lg:px-10">
-      {/* The file leaves 40 from the heading to the row, and nothing above it */}
+    <section className="px-4 pt-10 lg:px-10 lg:pt-[120px]">
+      {/* The file leaves 40 from the heading to the row, and 120 above the block */}
       <SectionTitle
         heading={heading}
         trackRef={trackRef}

@@ -1,13 +1,14 @@
 import type { Article } from "@/lib/articles";
 import type { ArticleBlock, ArticleMeta, PhotoText } from "@/lib/article";
-import { eventDate } from "@/lib/events";
-import { fetchEvents } from "@/lib/storyblok/events";
+import { eventDate, eventFromPlacement } from "@/lib/events";
+import { eventFromLegacy, type LegacyEvent } from "@/lib/legacyEvents";
+import { parsePlacements } from "@/lib/storyblok/placements";
 import { fetchStories, fetchStory, type Block } from "@/lib/storyblok/fetchStory";
 
 /** Where every article lives, whichever section it shows under. */
 export const JOURNAL = "journal";
 
-type ArticleFields = {
+export type ArticleFields = {
   section?: "journal" | "news";
   title?: string;
   excerpt?: string;
@@ -18,6 +19,7 @@ type ArticleFields = {
   reading_minutes?: string;
   views?: string;
   event?: string;
+  placements?: Block[];
   body?: Block[];
 };
 
@@ -179,7 +181,13 @@ export function articleBlock(blok: Block): ArticleBlock | null {
 export async function fetchArticles(locale: string): Promise<Article[]> {
   const stories = await fetchStories<ArticleFields>("article");
 
-  return stories.map(({ content, slug }) => ({
+  return stories.map(({ content, slug, uuid }) => ({
+    uuid,
+    placements: parsePlacements(content.placements, {
+      title: content.title ?? "",
+      image: content.hero?.filename || undefined,
+      excerpt: content.excerpt || undefined,
+    }),
     tags: content.tags ?? [],
     title: content.title ?? "",
     excerpt: content.excerpt || undefined,
@@ -191,11 +199,12 @@ export async function fetchArticles(locale: string): Promise<Article[]> {
 
 /**
  * One article by its slug, with the invitation to sign up attached where the
- * story points at an event - which is a pointer at the event's own story, so the
- * card in Ближайшие события and the page cannot disagree about when it is.
+ * article has a «Ближайшие события» placement - the card and the page are read
+ * from the same fields, so they cannot disagree about when it is.
  */
 export async function fetchArticlePage(
-  slug: string
+  slug: string,
+  locale: string
 ): Promise<{ meta: ArticleMeta; blocks: ArticleBlock[] } | null> {
   const story = await fetchStory<ArticleFields>(`${JOURNAL}/${slug}`);
   if (!story) return null;
@@ -203,8 +212,23 @@ export async function fetchArticlePage(
   const { content } = story;
   const section = content.section ?? "journal";
 
-  const events = content.event ? await fetchEvents() : [];
-  const event = events.find((candidate) => candidate.uuid === content.event);
+  const placement = parsePlacements(content.placements, {
+    title: content.title ?? story.name,
+    image: content.hero?.filename || undefined,
+    excerpt: content.excerpt || undefined,
+  })?.event;
+  let event = placement
+    ? eventFromPlacement(story, placement, locale)
+    : undefined;
+  // Not migrated yet: the old `event` field still points at the event's story
+  if (!event && content.event) {
+    const legacy = (await fetchStories<LegacyEvent>("event")).find(
+      (e) => e.uuid === content.event,
+    );
+    if (legacy) {
+      event = eventFromLegacy(legacy, `/${locale}/${JOURNAL}/${slug}`, true);
+    }
+  }
 
   const blocks = (content.body ?? [])
     .map((blok): ArticleBlock | null => articleBlock(blok))

@@ -15,7 +15,8 @@ import { TextWithPhoto } from "@/components/blocks/TextWithPhoto";
 import { MissionBand } from "@/components/blocks/MissionBand";
 import { PhotoCards } from "@/components/blocks/PhotoCards";
 import { TeamGrid } from "@/components/blocks/TeamGrid";
-import { SpaceCards } from "@/components/blocks/SpaceCards";
+import { SpaceCardsSection } from "@/components/blocks/SpaceCardsSection";
+import { isLinksOnlyPage, type SpaceCardInput } from "@/lib/space";
 import { ContactDetails } from "@/components/blocks/ContactDetails";
 import { HelpCards } from "@/components/blocks/HelpCards";
 import { resolveHref } from "@/lib/siteSettings";
@@ -83,7 +84,7 @@ const paragraphs = (body: unknown) =>
  */
 const DRAW: Record<
   string,
-  (blok: Block, locale: Locale) => React.ReactNode
+  (blok: Block, locale: Locale, path?: string) => React.ReactNode
 > = {
   // The file calls the red button the first one; Hero has had them the other way
   // round since it was built, where `primaryCta` is the pale one on the left.
@@ -197,12 +198,17 @@ const DRAW: Record<
     />
   ),
 
-  space_cards: (blok) => (
-    <SpaceCards
+  space_cards: (blok, locale, path) => (
+    <SpaceCardsSection
+      locale={locale}
+      linksOnly={isLinksOnlyPage(path)}
       cards={nested(blok.cards).map((card) => ({
         title: text(card.title) ?? "",
         body: text(card.body) ?? "",
         image: image(card.image),
+        href: href(card.link, locale),
+        sectionKey: text(card.section_key),
+        availability: nested(card.availability) as SpaceCardInput["availability"],
       }))}
     />
   ),
@@ -219,7 +225,9 @@ const DRAW: Record<
   news_row: (blok, locale) => (
     <NewsRow heading={text(blok.heading)} locale={locale} />
   ),
-  events_row: (blok) => <EventsSection heading={text(blok.heading)} />,
+  events_row: (blok, locale) => (
+    <EventsSection heading={text(blok.heading)} locale={locale} />
+  ),
   journal_row: (blok, locale) => (
     <JournalRow heading={text(blok.heading)} locale={locale} />
   ),
@@ -228,7 +236,7 @@ const DRAW: Record<
   // so the Магазины page can sit it flush under the breadcrumbs, and the red
   // band runs to the page edges, so its 40 has to sit outside it.
   stores_row: (blok) => (
-    <div className="pt-6 lg:pt-10">
+    <div className="pt-6 lg:pt-[120px]">
       <StoresSection heading={text(blok.heading)} />
     </div>
   ),
@@ -284,11 +292,25 @@ const DRAW: Record<
   ),
 };
 
-/** The sections of a story, in the order the editor put them. */
-export function Blocks({ body, locale }: { body: Block[]; locale: Locale }) {
+/**
+ * The sections of a story, in the order the editor put them. `path` is the
+ * page's own slug without the locale, for the few blocks that draw differently
+ * on one page (the Collaborations cards are only links).
+ */
+export function Blocks({
+  body,
+  locale,
+  path,
+}: {
+  body: Block[];
+  locale: Locale;
+  path?: string;
+}) {
   return body.map((blok) => {
     const draw = DRAW[blok.component];
     if (!draw) return null;
-    return <Fragment key={blok._uid}>{draw(blok, locale)}</Fragment>;
+    // "Скрыть блок на сайте": the block stays in Storyblok, not on the page
+    if (blok.hidden === true || blok.hidden === "true") return null;
+    return <Fragment key={blok._uid}>{draw(blok, locale, path)}</Fragment>;
   });
 }

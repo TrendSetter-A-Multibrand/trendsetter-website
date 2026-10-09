@@ -1,4 +1,4 @@
-import { buttonClass } from "@/components/ui/Button";
+import { EventCardCta } from "@/components/blocks/EventCardCta";
 import { CardImage } from "@/components/ui/CardImage";
 import { CardScrim } from "@/components/ui/CardScrim";
 import type { Event } from "@/lib/events";
@@ -92,11 +92,7 @@ export function EventCard({ item, href, sizes, className = "" }: EventCardProps)
         {item.description && (
           <p className="text-base/5">{item.description}</p>
         )}
-        {item.ctaLabel && (
-          <a href={href} className={`${buttonClass("primary")} w-full`}>
-            {item.ctaLabel}
-          </a>
-        )}
+        <EventCardCta item={item} href={href} />
       </div>
     </article>
   );

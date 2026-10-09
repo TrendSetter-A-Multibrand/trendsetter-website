@@ -2,7 +2,8 @@
  * Fifteen test records for each row that scrolls, and nothing else.
  *
  * The home page has three: Последние новости (articles with section=news),
- * Ближайшие события (events) and Журнал (articles with section=journal). The
+ * Ближайшие события (articles with a placement_event) and Журнал (articles with
+ * section=journal). The
  * shops and the brands stand in a plain row of three and do not scroll, so they
  * are left alone.
  *
@@ -15,9 +16,9 @@
  * test-event-NN, and the titles are numbered, so it is easy to see in the row
  * and easy to take out again.
  *
- * A test event's card leads to /journal/test-event-NN, which is not written -
- * these are for measuring the row, not for reading. The real seed pairs an
- * event with an article; this one does not.
+ * A test event is an article too: journal/test-event-NN carries a placement_event,
+ * so its card leads to a page that exists, and it shows in Новости as well. The
+ * old events/test-event-NN stories are only cleaned out by --clean, never written.
  *
  * npm run storyblok:seed-test-rows
  * npm run storyblok:seed-test-rows -- --clean
@@ -99,6 +100,8 @@ function eventDate(n: number) {
 const KINDS = [
   { prefix: "test-news-", folder: "journal" },
   { prefix: "test-journal-", folder: "journal" },
+  { prefix: "test-event-", folder: "journal" },
+  // Where the test events lived before an event became an article
   { prefix: "test-event-", folder: "events" },
 ];
 
@@ -161,6 +164,7 @@ async function article(
   console.log(`${done}  journal/${slug}`);
 }
 
+/** A test event: an article in Новости with a «Ближайшие события» placement. */
 async function event(n: number, parent: number) {
   const slug = `test-event-${two(n)}`;
   const date = eventDate(n);
@@ -170,27 +174,39 @@ async function event(n: number, parent: number) {
     slug,
     title,
     {
-      component: "event",
+      component: "article",
+      section: "news",
       title,
-      location: PLACES[(n - 1) % PLACES.length],
-      date,
-      description: "Тестовое описание события для проверки ряда на главной.",
-      cta_label: "Подробнее",
-      image: { filename: IMAGES[(n - 1) % IMAGES.length] },
+      tags: TAGS[(n - 1) % TAGS.length],
+      excerpt: "Тестовое описание события для проверки ряда на главной.",
+      hero: { filename: IMAGES[(n - 1) % IMAGES.length] },
+      author: "Имя Фамилия (тест)",
+      published_at: "2026-09-22 12:00",
+      reading_minutes: "5",
+      views: "715",
+      placements: [
+        block("placement_event", {
+          date,
+          location: PLACES[(n - 1) % PLACES.length],
+          card_title: title,
+          cta_label: "Подробнее",
+          signup_enabled: true,
+        }),
+      ],
+      body: body(),
     },
     parent,
-    `events/${slug}`
+    `journal/${slug}`
   );
-  console.log(`${done}  events/${slug}  ${date}`);
+  console.log(`${done}  journal/${slug}  ${date}`);
 }
 
 async function seed() {
   const journal = await folder("journal", "Журнал");
-  const events = await folder("events", "Мероприятия");
 
   for (let n = 1; n <= COUNT; n++) await article(n, "news", journal);
   for (let n = 1; n <= COUNT; n++) await article(n, "journal", journal);
-  for (let n = 1; n <= COUNT; n++) await event(n, events);
+  for (let n = 1; n <= COUNT; n++) await event(n, journal);
 
   console.log(
     `\nзасеяно по ${COUNT} в каждый ряд: новости, журнал, события` +

@@ -87,7 +87,7 @@ export default async function StoryPage({
 
   return (
     <>
-      <Blocks body={story.content.body ?? []} locale={locale} />
+      <Blocks body={story.content.body ?? []} locale={locale} path={path} />
       {draft && <StoryblokBridge />}
     </>
   );

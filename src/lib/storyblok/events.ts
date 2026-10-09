@@ -1,42 +1,57 @@
-import { eventDate, type Event } from "@/lib/events";
+import { eventFromPlacement, type Event } from "@/lib/events";
+import { DEMO_SEATS, isSignupDemo } from "@/lib/eventSignup";
+import { eventFromLegacy, legacyHref, type LegacyEvent } from "@/lib/legacyEvents";
 import { fetchStories } from "@/lib/storyblok/fetchStory";
-
-type EventFields = {
-  title?: string;
-  location?: string;
-  date?: string;
-  description?: string;
-  cta_label?: string;
-  image?: { filename?: string };
-};
+import type { ArticleFields } from "@/lib/storyblok/articles";
+import { parsePlacements } from "@/lib/storyblok/placements";
 
 /**
- * The events the space holds, in the shape the cards want. Read in one place
- * because two of them ask - the row on the home page and the foot of a brand's
- * sheet - and neither should have to know how a date is spelled.
+ * The events the space holds, in the shape the cards want: the articles that
+ * carry a «Ближайшие события» placement, soonest first. The card and the article
+ * it opens are one record, so the card leads to the article's own page and the
+ * two cannot disagree about the date. Read in one place because two of them ask
+ * - the row on the home page and the foot of a brand's sheet.
  *
- * Where a card leads is still worked out from the slug, the way it was: an event
- * and the article about it share one. When articles become stories the event will
- * point at one, the way a brand points at a shop, and this goes.
+ * Until the placements are migrated the space holds only the old event stories;
+ * with no article carrying a placement the row falls back to them, a card
+ * leading to the article of the same slug as before, so the home page never
+ * goes empty between the code and the content.
  */
-export async function fetchEvents(): Promise<(Event & { uuid: string })[]> {
-  const stories = await fetchStories<EventFields>("event");
+async function fetchLegacyEvents(locale: string): Promise<Event[]> {
+  const [stories, articles] = await Promise.all([
+    fetchStories<LegacyEvent>("event"),
+    fetchStories<ArticleFields>("article"),
+  ]);
+  // Only to show the sheet with no database yet: the stand-in count the demo
+  // sign-up answers with. Never set on a real site.
+  const demo = isSignupDemo();
+  return stories.map((story) => ({
+    ...eventFromLegacy(story, legacyHref(story, articles, locale), demo),
+    ...(demo ? { seats: DEMO_SEATS } : {}),
+  }));
+}
 
-  return stories.map(({ content, slug, uuid }) => {
-    const { day, month, time } = eventDate(content.date ?? "");
+export async function fetchEvents(locale: string): Promise<Event[]> {
+  const stories = await fetchStories<ArticleFields>("article");
 
-    return {
-      // What an article points at, so the two cannot disagree about the date
-      uuid,
-      slug,
-      day,
-      month,
-      time,
-      title: content.title ?? "",
-      location: content.location ?? "",
-      description: content.description || undefined,
-      ctaLabel: content.cta_label ?? "",
-      image: content.image?.filename || undefined,
-    };
-  });
+  const fromArticles = stories
+    .flatMap((story) => {
+      const { content } = story;
+      const placement = parsePlacements(content.placements, {
+        title: content.title ?? "",
+        image: content.hero?.filename || undefined,
+        excerpt: content.excerpt || undefined,
+      });
+      if (!placement?.event) return [];
+      return [
+        eventFromPlacement(
+          story,
+          { ...placement.event, spaceSections: placement.space?.spaceSections },
+          locale,
+        ),
+      ];
+    })
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  return fromArticles.length > 0 ? fromArticles : fetchLegacyEvents(locale);
 }

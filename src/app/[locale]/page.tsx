@@ -6,6 +6,7 @@ import { StoryblokBridge } from "@/components/layout/StoryblokBridge";
 import { Blocks } from "@/components/blocks";
 import { fetchStory, type Block } from "@/lib/storyblok/fetchStory";
 import { seo } from "@/lib/seo";
+import { getSiteSettings } from "@/lib/siteSettings";
 
 type Seo = { meta_title?: string; meta_description?: string };
 
@@ -16,12 +17,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const story = await fetchStory<Seo>("home");
+  const { homeDescription } = await getSiteSettings();
 
   // No title of its own: the home page is the name of the site, and the template
   // would otherwise write it out twice.
   return seo({
     title: story?.content.meta_title || undefined,
-    description: story?.content.meta_description,
+    description: story?.content.meta_description || homeDescription,
     locale,
   });
 }

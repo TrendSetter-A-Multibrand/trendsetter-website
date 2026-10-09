@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { eventDate } from "@/lib/events";
+import { eventDate, isUpcoming } from "@/lib/events";
 
 describe("eventDate", () => {
   it("разбирает то, что Storyblok кладёт в поле даты", () => {
@@ -62,5 +62,26 @@ describe("eventDate", () => {
       monthFull: "",
       time: "",
     });
+  });
+});
+
+describe("isUpcoming", () => {
+  // 15:00 UTC is 18:00 in Moscow
+  const now = new Date("2026-07-27T15:00:00Z");
+
+  it("reads the editor's date as Moscow wall time", () => {
+    expect(isUpcoming({ date: "2026-07-27 18:01" }, now)).toBe(true);
+    expect(isUpcoming({ date: "2026-07-27 17:59" }, now)).toBe(false);
+    expect(isUpcoming({ date: "2026-07-27 18:00" }, now)).toBe(false);
+  });
+
+  it("moves the day with Moscow, not with UTC", () => {
+    const late = new Date("2026-07-27T21:30:00Z"); // 00:30 on the 28th in Moscow
+    expect(isUpcoming({ date: "2026-07-28 09:00" }, late)).toBe(true);
+    expect(isUpcoming({ date: "2026-07-27 23:00" }, late)).toBe(false);
+  });
+
+  it("is false without a date", () => {
+    expect(isUpcoming({ date: "" }, now)).toBe(false);
   });
 });

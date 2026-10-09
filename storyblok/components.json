@@ -444,6 +444,12 @@
         "component_whitelist": [
           "team_member"
         ]
+      },
+      "hidden": {
+        "type": "boolean",
+        "display_name": "Скрыть блок на сайте",
+        "description": "Блок остаётся здесь, но на странице его нет",
+        "pos": 1
       }
     }
   },
@@ -513,6 +519,25 @@
         "display_name": "Описание",
         "pos": 3,
         "description": "Текст модального окна, которое открывается по клику на карточку. Пустая строка между абзацами"
+      },
+      "section_key": {
+        "type": "option",
+        "display_name": "Раздел Пространства",
+        "description": "К какому из трёх разделов относится карточка — по нему в окне показываются события",
+        "pos": 4,
+        "source": "internal",
+        "datasource_slug": "space-sections",
+        "exclude_empty_option": false
+      },
+      "availability": {
+        "type": "bloks",
+        "display_name": "Наличие в магазинах",
+        "description": "По одной строке на каждый магазин",
+        "pos": 5,
+        "restrict_components": true,
+        "component_whitelist": [
+          "brand_store"
+        ]
       }
     }
   },
@@ -644,6 +669,12 @@
         "display_name": "Логотип",
         "pos": 1
       },
+      "show_logo": {
+        "type": "boolean",
+        "display_name": "Показывать логотип",
+        "default_value": true,
+        "pos": 1
+      },
       "color": {
         "type": "text",
         "display_name": "Цвет бренда",
@@ -668,14 +699,14 @@
         "filetypes": [
           "images"
         ],
-        "display_name": "Фото в карточке",
-        "description": "Во всю ширину карточки, 400 высотой",
+        "display_name": "Фото в модалке",
+        "description": "Во всю ширину окна, 400 высотой. Без фото в окне подставляется тестовая картинка",
         "pos": 5
       },
       "availability": {
         "type": "bloks",
         "display_name": "Наличие в магазинах",
-        "description": "По строке на магазин: какой и есть ли бренд в нём",
+        "description": "По одной строке на каждый магазин",
         "restrict_components": true,
         "component_whitelist": [
           "brand_store"
@@ -703,8 +734,8 @@
       },
       "available": {
         "type": "boolean",
-        "display_name": "Бренд есть в этом магазине",
-        "description": "Снятая галочка рисует красный маркер вместо зелёного",
+        "display_name": "В наличии",
+        "description": "Снятая галочка рисует красный маркер вместо зелёного. Магазин без строки показывается как «в наличии»",
         "pos": 1
       }
     }
@@ -759,6 +790,48 @@
     "is_root": true,
     "is_nestable": false,
     "schema": {
+      "tab-content": {
+        "type": "tab",
+        "display_name": "Контент",
+        "keys": [
+          "title",
+          "tags",
+          "hero",
+          "author",
+          "published_at",
+          "reading_minutes",
+          "views",
+          "excerpt",
+          "body"
+        ],
+        "pos": 0
+      },
+      "tab-placement": {
+        "type": "tab",
+        "display_name": "Размещение",
+        "keys": [
+          "section",
+          "placements"
+        ],
+        "pos": 1
+      },
+      "tab-seo": {
+        "type": "tab",
+        "display_name": "SEO",
+        "keys": [
+          "meta_title",
+          "meta_description"
+        ],
+        "pos": 2
+      },
+      "tab-legacy": {
+        "type": "tab",
+        "display_name": "Устаревшее",
+        "keys": [
+          "event"
+        ],
+        "pos": 3
+      },
       "section": {
         "type": "option",
         "display_name": "Раздел",
@@ -774,7 +847,8 @@
           }
         ],
         "default_value": "journal",
-        "exclude_empty_option": true
+        "exclude_empty_option": true,
+        "description": "Основной раздел статьи. Дополнительно её можно разместить в Новостях, событиях и Пространстве — вкладка «Размещение», поле ниже"
       },
       "title": {
         "type": "text",
@@ -820,14 +894,14 @@
       },
       "event": {
         "type": "option",
-        "display_name": "Мероприятие",
+        "display_name": "Мероприятие (устарело)",
         "source": "internal_stories",
         "folder_slug": "events",
         "filter_content_type": [
           "event"
         ],
         "use_uuid": true,
-        "description": "Если статья про мероприятие — выберите его, и на обложке появится приглашение записаться",
+        "description": "Не заполнять, будет удалено после миграции",
         "pos": 9
       },
       "body": {
@@ -871,6 +945,123 @@
         "display_name": "Описание для поиска",
         "description": "Два-три предложения под ссылкой в выдаче. Если пусто — общее описание сайта",
         "pos": 91
+      },
+      "placements": {
+        "type": "bloks",
+        "display_name": "Дополнительное размещение",
+        "description": "Добавляйте варианты по одному; берётся первый блок каждого типа. Пустое поле берёт значение из самой статьи",
+        "pos": 11,
+        "restrict_components": true,
+        "component_whitelist": [
+          "placement_news",
+          "placement_event",
+          "placement_space"
+        ]
+      }
+    }
+  },
+  {
+    "name": "placement_news",
+    "display_name": "Размещение: Новости",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "card_title": {
+        "type": "text",
+        "display_name": "Заголовок карточки",
+        "description": "Пусто — заголовок статьи",
+        "pos": 0
+      },
+      "card_image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Фото карточки",
+        "description": "Пусто — обложка статьи",
+        "pos": 1
+      },
+      "card_excerpt": {
+        "type": "textarea",
+        "display_name": "Описание карточки",
+        "description": "Пусто — краткое описание статьи",
+        "pos": 2
+      }
+    }
+  },
+  {
+    "name": "placement_event",
+    "display_name": "Размещение: Ближайшие события",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "date": {
+        "type": "datetime",
+        "display_name": "Когда",
+        "description": "Дата и время начала (по Москве)",
+        "pos": 0,
+        "required": true
+      },
+      "location": {
+        "type": "text",
+        "display_name": "Место",
+        "description": "Например «ТЦ „Атриум“»",
+        "pos": 1
+      },
+      "card_title": {
+        "type": "text",
+        "display_name": "Короткое название",
+        "description": "Печатается на карточке капсом. Пусто — заголовок статьи",
+        "pos": 2
+      },
+      "card_image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Фото карточки",
+        "description": "Пусто — обложка статьи",
+        "pos": 3
+      },
+      "card_description": {
+        "type": "textarea",
+        "display_name": "Описание",
+        "description": "На карточке и в окне события. Пусто — краткое описание статьи",
+        "pos": 4
+      },
+      "cta_label": {
+        "type": "text",
+        "display_name": "Надпись на кнопке",
+        "default_value": "Подробнее",
+        "pos": 5
+      },
+      "signup_enabled": {
+        "type": "boolean",
+        "display_name": "Запись открыта",
+        "default_value": true,
+        "pos": 6
+      },
+      "seats": {
+        "type": "number",
+        "display_name": "Всего мест",
+        "description": "Пусто — без ограничения и без счётчика",
+        "pos": 7
+      }
+    }
+  },
+  {
+    "name": "placement_space",
+    "display_name": "Размещение: Пространство",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "space_sections": {
+        "type": "options",
+        "display_name": "Разделы Пространства",
+        "description": "Работает только вместе с блоком «Размещение: Ближайшие события»",
+        "pos": 0,
+        "source": "internal",
+        "datasource_slug": "space-sections"
       }
     }
   },
@@ -1188,6 +1379,12 @@
         "description": "Слова в {фигурных скобках} станут ссылкой на политику cookie. Перенос строки останется переносом",
         "pos": 10
       },
+      "home_meta_description": {
+        "type": "textarea",
+        "display_name": "Главная: описание для поиска и превью ссылки",
+        "description": "Что видно под ссылкой на главную в выдаче и в мессенджерах. Если у самой страницы «Главная» своё описание — берётся оно",
+        "pos": 10
+      },
       "journal_cover_title": {
         "type": "text",
         "display_name": "Обложка «Журнал»: заголовок",
@@ -1342,6 +1539,54 @@
         "type": "text",
         "display_name": "Форма: подсказка в поле e-mail",
         "pos": 55
+      },
+      "event_signup_button": {
+        "type": "text",
+        "display_name": "Запись на событие: кнопка в статье",
+        "description": "«Записаться»",
+        "pos": 60
+      },
+      "event_seats_left": {
+        "type": "text",
+        "display_name": "Запись на событие: «Осталось мест»",
+        "description": "{n} — число свободных мест",
+        "pos": 61
+      },
+      "event_seats_none": {
+        "type": "text",
+        "display_name": "Запись на событие: «Мест не осталось»",
+        "pos": 62
+      },
+      "event_signup_closed": {
+        "type": "text",
+        "display_name": "Запись на событие: «Регистрация закрыта»",
+        "pos": 63
+      },
+      "event_signup_placeholder": {
+        "type": "text",
+        "display_name": "Запись на событие: подсказка в поле e-mail",
+        "pos": 64
+      },
+      "event_signup_submit": {
+        "type": "text",
+        "display_name": "Запись на событие: кнопка в окне",
+        "pos": 65
+      },
+      "event_signup_done": {
+        "type": "text",
+        "display_name": "Запись на событие: надпись после записи",
+        "pos": 66
+      },
+      "event_signup_already": {
+        "type": "text",
+        "display_name": "Запись на событие: «Вы уже записаны»",
+        "pos": 67
+      },
+      "event_signup_consent": {
+        "type": "textarea",
+        "display_name": "Запись на событие: строка про согласие",
+        "description": "Слова в {фигурных скобках} станут ссылкой на согласие на обработку персональных данных",
+        "pos": 68
       }
     }
   },
@@ -1371,6 +1616,12 @@
           "nav_link"
         ],
         "pos": 2
+      },
+      "hidden": {
+        "type": "boolean",
+        "display_name": "Скрыть временно",
+        "description": "Пункт остаётся здесь, но на сайте его нет",
+        "pos": 3
       }
     }
   },
@@ -1390,6 +1641,12 @@
         "display_name": "Адрес",
         "description": "Латиницей, продолжение адреса пункта, например about даёт company/about",
         "pos": 1
+      },
+      "hidden": {
+        "type": "boolean",
+        "display_name": "Скрыть временно",
+        "description": "Подпункт остаётся здесь, но на сайте его нет",
+        "pos": 2
       }
     }
   },
@@ -1432,6 +1689,12 @@
         "display_name": "Адрес",
         "description": "Путь внутри сайта, например company/about, либо полный адрес https://…",
         "pos": 1
+      },
+      "hidden": {
+        "type": "boolean",
+        "display_name": "Скрыть временно",
+        "description": "Ссылка остаётся здесь, но на сайте её нет",
+        "pos": 2
       }
     }
   },

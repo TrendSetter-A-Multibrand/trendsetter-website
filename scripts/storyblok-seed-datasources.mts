@@ -9,6 +9,7 @@
  * npm run storyblok:seed-datasources
  */
 import { BRAND_CATEGORIES } from "../src/lib/brands.ts";
+import { SPACE_CARDS } from "../src/lib/company.ts";
 import { api } from "./mapi.mjs";
 
 /** The tags an article can carry, as they stood in the schema before this list moved here. */
@@ -39,6 +40,11 @@ const SOURCES = [
     entries: BRAND_CATEGORIES,
   },
   { slug: "article-tags", name: "Теги статей", entries: ARTICLE_TAGS },
+  {
+    slug: "space-sections",
+    name: "Разделы Пространства",
+    entries: SPACE_CARDS.map((card) => card.title),
+  },
 ];
 
 for (const source of SOURCES) {

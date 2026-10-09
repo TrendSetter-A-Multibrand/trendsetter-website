@@ -5,7 +5,6 @@ import { EventCard } from "@/components/blocks/EventCard";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useCarousel } from "@/lib/useCarousel";
 import type { Event } from "@/lib/events";
-import { useLocale } from "@/lib/i18n/useLocale";
 
 type EventsCarouselProps = {
   heading?: string;
@@ -16,7 +15,6 @@ export function EventsCarousel({
   heading = "Ближайшие события",
   items,
 }: EventsCarouselProps) {
-  const locale = useLocale();
   const trackRef = useRef<HTMLDivElement>(null);
   useCarousel(trackRef, { autoplay: true });
 
@@ -25,7 +23,7 @@ export function EventsCarousel({
   if (items.length === 0) return null;
 
   return (
-    <section className="px-4 pt-10 lg:px-10">
+    <section className="px-4 pt-10 lg:px-10 lg:pt-[120px]">
       <SectionTitle
         heading={heading}
         trackRef={trackRef}
@@ -42,7 +40,7 @@ export function EventsCarousel({
           <EventCard
             key={i}
             item={item}
-            href={`/${locale}/journal/${item.slug}`}
+            href={item.href}
             sizes="(min-width: 1024px) 587px, (min-width: 640px) 50vw, 320px"
             className="h-[300px] w-full snap-center sm:h-[430px] sm:w-[calc(50%-20px)] sm:snap-align-none lg:w-[calc(33.333%-26.667px)]"
           />

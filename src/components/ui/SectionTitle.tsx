@@ -12,6 +12,8 @@ import { holdSnap, settleSnap, stepWidth } from "@/lib/useCarousel";
 
 /** The red block's width in the file, and the one number the bar's maths needs. */
 const THUMB_WIDTH = 56;
+/** The sheet's variant (970:7759): a 1px rule and a 52 wide block. */
+const THIN_THUMB_WIDTH = 52;
 
 /**
  * The library's Title, which every scrolling row wears: the heading, and then
@@ -45,6 +47,7 @@ export function SectionTitle({
   heading,
   trackRef,
   controls,
+  thin = false,
   className = "",
 }: {
   heading: string;
@@ -52,9 +55,12 @@ export function SectionTitle({
   trackRef?: RefObject<HTMLElement | null>;
   /** Which of the file's two controls this row is drawn with, if either. */
   controls?: "bar" | "arrows";
+  /** The bar as a sheet draws it: 1px rule, 52 block. The rows keep 2px and 56. */
+  thin?: boolean;
   /** Each section keeps its own air around the row. */
   className?: string;
 }) {
+  const thumbWidth = thin ? THIN_THUMB_WIDTH : THUMB_WIDTH;
   const bar = useRef<HTMLDivElement>(null);
   const thumb = useRef<HTMLDivElement>(null);
 
@@ -94,9 +100,9 @@ export function SectionTitle({
     const maxScroll = track.scrollWidth - track.clientWidth;
     const progress = maxScroll > 0 ? track.scrollLeft / maxScroll : 0;
     thumb.current.style.transform = `translateX(${
-      progress * (bar.current.clientWidth - THUMB_WIDTH)
+      progress * (bar.current.clientWidth - thumbWidth)
     }px)`;
-  }, [trackRef]);
+  }, [trackRef, thumbWidth]);
 
   // Keyed on `scrollable` as well, so the block is put where the row already
   // stands the moment the bar appears rather than starting from the left
@@ -119,8 +125,8 @@ export function SectionTitle({
     if (!track || !bar.current) return;
 
     const rect = bar.current.getBoundingClientRect();
-    const usable = rect.width - THUMB_WIDTH;
-    const offset = clientX - rect.left - THUMB_WIDTH / 2;
+    const usable = rect.width - thumbWidth;
+    const offset = clientX - rect.left - thumbWidth / 2;
     const progress = usable > 0 ? Math.min(1, Math.max(0, offset / usable)) : 0;
     track.scrollLeft = progress * (track.scrollWidth - track.clientWidth);
   }
@@ -165,10 +171,10 @@ export function SectionTitle({
           onPointerCancel={handlePointerEnd}
           className="relative flex h-6 flex-1 cursor-pointer touch-none select-none items-center max-lg:hidden"
         >
-          <div className="h-0.5 w-full bg-ink" />
+          <div className={`w-full bg-ink ${thin ? "h-px" : "h-0.5"}`} />
           <div
             ref={thumb}
-            style={{ width: THUMB_WIDTH }}
+            style={{ width: thumbWidth }}
             className="absolute left-0 h-6 cursor-grab bg-brand active:cursor-grabbing"
           />
         </div>
