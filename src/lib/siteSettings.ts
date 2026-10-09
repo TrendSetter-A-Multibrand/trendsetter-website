@@ -2,11 +2,11 @@ import { fetchStory } from "@/lib/storyblok/fetchStory";
 import {
   DEFAULT_SETTINGS,
   type Cover,
-  type FooterColumn,
   type SubjectOption,
   type SiteSettings,
 } from "@/lib/siteDefaults";
-import type { NavItem, SocialLink } from "@/lib/navigation";
+import type { SocialLink } from "@/lib/navigation";
+import { columns, nav, visibleColumns, visibleNav } from "@/lib/menuSettings";
 import type { TickerTone } from "@/components/blocks/PromoTicker";
 
 export { DEFAULT_SETTINGS };
@@ -23,34 +23,6 @@ const ICONS = ["telegram", "vk", "max"];
 /** Storyblok keeps a checkbox as a boolean, but an old story may have a string. */
 const flag = (value: unknown, fallback: boolean) =>
   value === undefined || value === "" ? fallback : value === true || value === "true";
-
-function nav(content: Blok): NavItem[] {
-  const items = list(content.nav)
-    .map((item) => {
-      const children = list(item.children)
-        .map((child) => ({ label: str(child.label), slug: str(child.slug) }))
-        .filter((child) => child.label && child.slug);
-      return {
-        label: str(item.label),
-        slug: str(item.slug),
-        ...(children.length ? { children } : {}),
-      };
-    })
-    .filter((item) => item.label && item.slug);
-  return items.length ? items : DEFAULT_SETTINGS.nav;
-}
-
-function columns(content: Blok): FooterColumn[] {
-  const found = list(content.footer_columns)
-    .map((column) => ({
-      title: str(column.title),
-      links: list(column.links)
-        .map((link) => ({ label: str(link.label), path: str(link.path) }))
-        .filter((link) => link.label && link.path),
-    }))
-    .filter((column) => column.title);
-  return found.length ? found : DEFAULT_SETTINGS.footer.columns;
-}
 
 function socials(content: Blok): SocialLink[] {
   const found = list(content.socials)
@@ -94,7 +66,16 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     // A page without its menu is worse than a menu a day behind
     content = undefined;
   }
-  if (!content) return DEFAULT_SETTINGS;
+  if (!content) {
+    return {
+      ...DEFAULT_SETTINGS,
+      nav: visibleNav(DEFAULT_SETTINGS.nav),
+      footer: {
+        ...DEFAULT_SETTINGS.footer,
+        columns: visibleColumns(DEFAULT_SETTINGS.footer.columns),
+      },
+    };
+  }
 
   const d = DEFAULT_SETTINGS;
   const tone = str(content.ticker_tone) as TickerTone;
@@ -128,6 +109,18 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         str(content.form_email_placeholder) || d.form.emailPlaceholder,
       consent: str(content.form_consent) || d.form.consent,
     },
+    eventSignup: {
+      button: str(content.event_signup_button) || d.eventSignup.button,
+      seatsLeft: str(content.event_seats_left) || d.eventSignup.seatsLeft,
+      seatsNone: str(content.event_seats_none) || d.eventSignup.seatsNone,
+      closed: str(content.event_signup_closed) || d.eventSignup.closed,
+      placeholder:
+        str(content.event_signup_placeholder) || d.eventSignup.placeholder,
+      submit: str(content.event_signup_submit) || d.eventSignup.submit,
+      done: str(content.event_signup_done) || d.eventSignup.done,
+      already: str(content.event_signup_already) || d.eventSignup.already,
+      consent: str(content.event_signup_consent) || d.eventSignup.consent,
+    },
     covers: {
       journal: cover(content, "journal", d.covers.journal),
       news: cover(content, "news", d.covers.news),
@@ -142,6 +135,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       tone: TONES.includes(tone) ? tone : d.ticker.tone,
     },
     cookieText: str(content.cookie_text) || d.cookieText,
+    homeDescription: str(content.home_meta_description) || d.homeDescription,
     nav: nav(content),
     footer: {
       columns: columns(content),

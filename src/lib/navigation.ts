@@ -1,7 +1,9 @@
+/** `hidden` takes an entry off the site for now without losing it. */
 export type NavItem = {
   label: string;
   slug: string;
-  children?: { label: string; slug: string }[];
+  hidden?: boolean;
+  children?: { label: string; slug: string; hidden?: boolean }[];
 };
 
 export type SocialLink = { label: string; href: string; icon: string };
@@ -11,9 +13,9 @@ export const NAV_ITEMS: NavItem[] = [
     label: "Журнал",
     slug: "journal",
     children: [
-      { label: "Люди", slug: "people" },
-      { label: "Находки", slug: "finds" },
-      { label: "Сообщество", slug: "community" },
+      { label: "Люди", slug: "people", hidden: true },
+      { label: "Находки", slug: "finds", hidden: true },
+      { label: "Сообщество", slug: "community", hidden: true },
     ],
   },
   { label: "Новости", slug: "news" },
@@ -28,14 +30,14 @@ export const NAV_ITEMS: NavItem[] = [
       { label: "О нас", slug: "about" },
       { label: "Пространство", slug: "space" },
       { label: "Коллаборации", slug: "collaborations" },
-      { label: "Сотрудничество", slug: "cooperation" },
-      { label: "Вакансии", slug: "careers" },
+      { label: "Сотрудничество", slug: "cooperation", hidden: true },
+      { label: "Вакансии", slug: "careers", hidden: true },
       { label: "Контакты", slug: "contacts" },
-      { label: "Обратная связь", slug: "feedback" },
+      { label: "Обратная связь", slug: "feedback", hidden: true },
     ],
   },
-  { label: "Система лояльности", slug: "loyalty" },
-  { label: "Подарочные карты", slug: "gift-cards" },
+  { label: "Система лояльности", slug: "loyalty", hidden: true },
+  { label: "Подарочные карты", slug: "gift-cards", hidden: true },
 ];
 
 export const SOCIAL_LINKS: SocialLink[] = [
