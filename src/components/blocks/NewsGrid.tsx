@@ -43,7 +43,7 @@ export function NewsGrid({
 
   return (
     <section
-      className={`px-4 lg:px-10 ${underHero ? "pt-0" : "pt-4 lg:pt-[120px]"}`}
+      className={`px-4 lg:px-10 ${underHero ? "pt-0" : "pt-4 lg:pt-20"}`}
     >
       {/* The file leaves 40 from the heading to the row, and 120 above the block */}
       <SectionTitle

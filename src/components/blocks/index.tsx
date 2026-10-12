@@ -244,7 +244,7 @@ const DRAW: Record<
   // so the Магазины page can sit it flush under the breadcrumbs, and the red
   // band runs to the page edges, so its 40 has to sit outside it.
   stores_row: (blok) => (
-    <div className="pt-6 lg:pt-[120px]">
+    <div className="pt-6 lg:pb-10 lg:pt-[120px]">
       <StoresSection heading={text(blok.heading)} />
     </div>
   ),
