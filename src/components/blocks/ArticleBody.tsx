@@ -83,7 +83,7 @@ function Figure({
 
 const Paragraphs = ({ body }: { body: string[] }) =>
   body.map((p, i) => (
-    <p key={i} className={`mt-4 lg:mt-8 ${BODY}`}>
+    <p key={i} className={`mt-4 ${BODY}`}>
       {p}
     </p>
   ));
@@ -380,10 +380,10 @@ function BlockBody({ block }: { block: ArticleBlock }) {
         <div className="px-4 lg:px-10">
           {block.subtitle && <h2 className={SUBTITLE}>{block.subtitle}</h2>}
           <List
-            className={`mt-4 pl-6 lg:mt-8 lg:pl-10 ${block.ordered ? "list-decimal" : "list-disc"} marker:text-brand ${BODY}`}
+            className={`mt-4 pl-6 lg:pl-10 ${block.ordered ? "list-decimal" : "list-disc"} marker:text-brand ${BODY}`}
           >
             {block.items.map((item, i) => (
-              <li key={i} className={i > 0 ? "mt-2 lg:mt-4" : ""}>
+              <li key={i} className={i > 0 ? "mt-2" : ""}>
                 {item}
               </li>
             ))}
@@ -398,7 +398,7 @@ function BlockBody({ block }: { block: ArticleBlock }) {
           {block.subtitle && <h2 className={SUBTITLE}>{block.subtitle}</h2>}
           <div className="lg:columns-2 lg:gap-10">
             {block.body.map((p, i) => (
-              <p key={i} className={`mt-4 break-inside-avoid-column lg:mt-8 ${BODY} ${i === 0 ? "lg:mt-8" : ""}`}>
+              <p key={i} className={`mt-4 break-inside-avoid-column ${BODY}`}>
                 {p}
               </p>
             ))}
@@ -464,7 +464,17 @@ export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
   return (
     <div className="flex flex-col gap-4 lg:gap-10">
       {blocks.map((block, i) => (
-        <Block key={i} block={block} />
+        // Plain paragraphs that follow each other read as one text: 16 apart, not the 40 between blocks
+        <div
+          key={i}
+          className={
+            block.kind === "text" && !block.subtitle && blocks[i - 1]?.kind === "text"
+              ? "lg:-mt-6"
+              : undefined
+          }
+        >
+          <Block block={block} />
+        </div>
       ))}
     </div>
   );
