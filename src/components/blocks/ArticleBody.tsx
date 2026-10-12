@@ -6,12 +6,12 @@ import { GalleryStrip } from "@/components/blocks/GalleryStrip";
 
 // The mobile h1 is 24px, so a 24px subtitle would tie with it; no subtitle is
 // in the file at this width, so 18px/24px here is an interpolation.
-const SUBTITLE = "text-lg/6 font-medium text-inherit lg:text-4xl/11";
-// Designer's comment on the article: Inter Tight 16-18, line height ~1.6, no tracking.
-const BODY = "text-base/[1.6] tracking-normal text-inherit lg:text-lg/[1.6]";
+const SUBTITLE = "text-lg/6 font-medium tracking-[1px] text-inherit lg:text-2xl/[29px]";
+// Designer's comment on the article (Figma, 12.10): the copy is Inter Tight 14/19, no tracking.
+const BODY = "text-sm/[19px] tracking-normal text-inherit";
 const QUOTE_LEAD = "text-xl/6 font-medium lg:text-[32px]/[38.72px] lg:tracking-[0.32px]";
 const QUOTE_BODY = "text-base/5 lg:text-2xl/[29px] lg:tracking-[0.24px]";
-const CAPTION = "mt-3 text-sm text-ink/70 lg:mt-4 lg:text-base";
+const CAPTION = "mt-2 text-xs/4 text-muted";
 
 /** The proportions each box is cut to; `auto` is worked out from the photo. */
 const RATIOS: Record<Exclude<PhotoRatio, "auto">, string> = {
