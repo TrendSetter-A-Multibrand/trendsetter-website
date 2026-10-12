@@ -1,22 +1,15 @@
-"use client";
-
-import { useState } from "react";
-import { Drop } from "@/components/ui/Drop";
 import type { LegalSection } from "@/lib/legal";
 
 /**
  * The long-form legal template, shared by the user agreement, the cookie policy,
  * the consent and the privacy policy - all four are drawn identically.
  *
- * Sizes off the file: the title is 60 mono with 3 of tracking, section headings
- * 32, the body Inter Tight 20 on a 24 line. A hairline at 15% opens the title
- * and closes every section. At 375 the title and the section headings converge
- * on one plain 24px, no caps, while the body drops to 14 on a 16 line with a
- * point of tracking; the desktop numbers above are untouched.
- *
- * The sections are drops, at the designer's asking - these pages run to a couple
- * of hundred clauses and nobody reads them from the top. The lead-in has no
- * heading of its own and so stays open above them.
+ * Sizes off the file: the title is 60/80 mono with 3 of tracking, section
+ * headings 24 caps with 3 of tracking, the body Inter Tight 16 on a 20 line.
+ * Nothing folds: in the file every section is drawn open - heading, a hairline
+ * at 15%, the text - and the one under the title opens the page. At 375 the
+ * title and the section headings converge on one plain 24px, no caps, while the
+ * body drops to 14 on a 16 line with a point of tracking.
  */
 export function LegalArticle({
   title,
@@ -25,11 +18,9 @@ export function LegalArticle({
   title: string;
   sections: LegalSection[];
 }) {
-  const [open, setOpen] = useState<number | null>(null);
-
   return (
     <article className="px-4 pb-10 lg:px-10">
-      <h1 className="pt-4 font-mono text-2xl/[30px] tracking-[1px] lg:pt-10 lg:uppercase lg:tracking-[3px] lg:text-[60px]/[78px]">
+      <h1 className="pt-4 font-mono text-2xl/[30px] tracking-[1px] lg:pt-10 lg:uppercase lg:tracking-[3px] lg:text-[60px]/[80px]">
         {title}
       </h1>
 
@@ -37,20 +28,17 @@ export function LegalArticle({
 
       {sections.map((section, i) =>
         section.heading ? (
-          <Drop
-            key={i}
-            open={open === i}
-            onToggle={() => setOpen(open === i ? null : i)}
-            title={
-              <h2 className="font-mono text-2xl/[30px] tracking-[1px] lg:uppercase lg:tracking-[3px] lg:text-[32px]/[41px]">
-                [{section.heading}]
-              </h2>
-            }
-          >
-            <Paragraphs section={section} />
-          </Drop>
+          <section key={i} className="mt-6 lg:mt-10">
+            <h2 className="font-mono text-2xl/[30px] tracking-[1px] lg:uppercase lg:tracking-[3px]">
+              [{section.heading}]
+            </h2>
+            <div className="mt-4 h-px bg-ink/15 lg:mt-6" />
+            <div className="mt-4 lg:mt-6">
+              <Paragraphs section={section} />
+            </div>
+          </section>
         ) : (
-          // The lead-in: no heading in the file, so nothing to drop it behind
+          // The lead-in: no heading in the file, so nothing to open
           <div key={i} className="mt-9">
             <Paragraphs section={section} />
           </div>
@@ -62,7 +50,7 @@ export function LegalArticle({
 
 function Paragraphs({ section }: { section: LegalSection }) {
   return (
-    <div className="space-y-6 text-sm/[16px] tracking-[1px] lg:tracking-normal lg:text-xl/6">
+    <div className="space-y-6 text-sm/[16px] tracking-[1px] lg:tracking-normal lg:text-base/5">
       {section.paragraphs.map((paragraph, j) => (
         <p key={j}>{paragraph}</p>
       ))}

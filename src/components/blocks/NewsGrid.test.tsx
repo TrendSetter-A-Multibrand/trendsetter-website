@@ -47,4 +47,12 @@ describe("ряд «Последние новости»", () => {
     expect(screen.getByText(/Свежее/)).not.toBeNull();
     expect(screen.queryByText(/Последние новости/)).toBeNull();
   });
+
+  it("под пустым состоянием 404 не держит отступ над заголовком", () => {
+    const { container } = render(<NewsGrid items={items(2)} underHero />);
+
+    const section = container.firstChild as HTMLElement;
+    expect(section.className).toContain("pt-0");
+    expect(section.className).not.toContain("lg:pt-[120px]");
+  });
 });

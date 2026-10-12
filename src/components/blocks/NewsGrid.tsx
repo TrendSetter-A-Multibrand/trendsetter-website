@@ -18,11 +18,17 @@ type NewsItem = {
 type NewsGridProps = {
   heading?: string;
   items: NewsItem[];
+  /**
+   * The 404 draws the row straight under the empty state: no air above the
+   * heading, and at 375 a 320 card on a 16 gap so the next one peeks out.
+   */
+  underHero?: boolean;
 };
 
 export function NewsGrid({
   heading = "Последние новости",
   items,
+  underHero,
 }: NewsGridProps) {
   const locale = useLocale();
   const trackRef = useRef<HTMLDivElement>(null);
@@ -36,25 +42,27 @@ export function NewsGrid({
   if (items.length === 0) return null;
 
   return (
-    <section className="px-4 pt-10 lg:px-10 lg:pt-[120px]">
+    <section
+      className={`px-4 lg:px-10 ${underHero ? "pt-0" : "pt-4 lg:pt-[120px]"}`}
+    >
       {/* The file leaves 40 from the heading to the row, and 120 above the block */}
       <SectionTitle
         heading={heading}
         trackRef={trackRef}
         controls="bar"
-        className="mb-6 lg:mb-10"
+        className={`${underHero ? "mb-6" : "mb-4"} lg:mb-10`}
       />
 
       <div
         ref={trackRef}
-        className="-mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 sm:mx-0 sm:snap-none sm:gap-10 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 max-sm:scroll-pl-4 sm:mx-0 sm:snap-none sm:gap-10 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
           // Photo and title lead to the piece, each tag to the news page cut
           // down to that tag - so three links, not one wrapping the card
           <div
             key={i}
-            className="group flex w-full shrink-0 snap-center flex-col sm:w-[calc(50%-20px)] sm:snap-align-none lg:w-[calc(25%-30px)]"
+            className="group flex w-[320px] shrink-0 snap-start flex-col sm:w-[calc(50%-20px)] sm:snap-align-none lg:w-[calc(25%-30px)]"
           >
             {/* Square now, 430x430 four across */}
             <Link

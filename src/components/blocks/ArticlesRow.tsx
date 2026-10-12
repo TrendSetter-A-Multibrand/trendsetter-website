@@ -11,12 +11,20 @@ import { inSection } from "@/lib/articles";
 export async function NewsRow({
   heading,
   locale,
+  underHero,
 }: {
   heading?: string;
   locale: string;
+  underHero?: boolean;
 }) {
   const articles = await fetchArticles(locale);
-  return <NewsGrid heading={heading} items={inSection(articles, "news")} />;
+  return (
+    <NewsGrid
+      heading={heading}
+      items={inSection(articles, "news")}
+      underHero={underHero}
+    />
+  );
 }
 
 export async function JournalRow({
