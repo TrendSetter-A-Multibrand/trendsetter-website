@@ -32,7 +32,7 @@ export function RelatedArticles({
   if (articles.length === 0) return null;
 
   return (
-    <section className="px-4 py-4 lg:px-10 lg:py-16">
+    <section className="px-4 py-4 lg:px-10 lg:pb-10 lg:pt-0">
       <SectionTitle
         heading={heading}
         trackRef={row}

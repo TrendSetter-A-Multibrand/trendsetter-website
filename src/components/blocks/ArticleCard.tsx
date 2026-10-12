@@ -8,9 +8,11 @@ type ArticleCardProps = {
   article: Article;
   /** Needed for the tag links; every page that shows a card knows it. */
   locale: string;
-  /** Cards on the red band carry white text instead of red tags on dark type. */
+  /** Cards on the red band (lg only) carry white text instead of red tags on dark type. */
   onBrand?: boolean;
   sizes?: string;
+  /** The section lists draw the photo 430 tall on lg whatever the card's width. */
+  tall?: boolean;
   /** Search results pick the matched words out of the title in red. */
   highlight?: string[];
 };
@@ -44,6 +46,7 @@ export function ArticleCard({
   locale,
   onBrand,
   sizes,
+  tall,
   highlight,
 }: ArticleCardProps) {
   const href = article.href ?? "#";
@@ -54,14 +57,16 @@ export function ArticleCard({
         href={href}
         tabIndex={-1}
         aria-hidden="true"
-        className="relative aspect-square overflow-hidden"
+        className={`relative aspect-square overflow-hidden ${
+          tall ? "lg:aspect-auto lg:h-[430px]" : ""
+        }`}
       >
         <CardImage src={article.image} sizes={sizes} label="Читать" />
       </Link>
 
       <p
         className={`mt-6 font-mono text-xs/[16px] font-medium uppercase tracking-[1px] ${
-          onBrand ? "text-white" : "text-brand"
+          onBrand ? "text-brand lg:text-white" : "text-brand"
         }`}
       >
         {article.tags.map((tag, i) => (
@@ -80,7 +85,7 @@ export function ArticleCard({
       <Link
         href={href}
         className={`mt-2 text-xl/[24px] font-medium lg:mt-4 lg:text-2xl/[29px] ${
-          onBrand ? "text-white" : "text-ink"
+          onBrand ? "text-ink lg:text-white" : "text-ink"
         }`}
       >
         {highlight?.length ? mark(article.title, highlight) : article.title}

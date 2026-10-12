@@ -7,14 +7,14 @@ import { ArticleSignupButton } from "@/components/blocks/ArticleSignupButton";
 
 const META_LABEL =
   "text-xs tracking-[1px] text-muted lg:font-mono lg:text-sm/[18px] lg:font-medium lg:uppercase lg:text-ink lg:tracking-normal";
-const META_VALUE = "text-xs/[15px] tracking-[1px] text-muted lg:mt-1";
+const META_VALUE = "text-xs/[15px] tracking-[1px] text-muted lg:mt-1 lg:text-sm/[18px] lg:tracking-normal";
 
 type ArticleHeaderProps = {
   locale: Locale;
   meta: ArticleMeta;
 };
 
-/** Title on the left, a 160px meta column pinned to the right content edge. */
+/** Title on the left, one row of meta pinned to the right content edge. */
 export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
   return (
     <section className="px-4 pt-4 pb-5 lg:px-10 lg:pt-6 lg:pb-0">
@@ -26,7 +26,7 @@ export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
         </Link>
       </nav>
 
-      <div className="mt-4 flex flex-col gap-4 lg:mt-5 lg:flex-row lg:gap-40">
+      <div className="mt-4 flex flex-col gap-4 lg:mt-5 lg:flex-row lg:items-end lg:gap-10">
         <div className="flex flex-1 flex-col gap-4 lg:gap-10">
           {/* The article's own tags, not a list of its own - and each one leads
               where the same tag under a card leads. 8 apart here, not the 16
@@ -62,11 +62,12 @@ export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
           </h1>
         </div>
 
-        {/* 160 wide, and the values are Inter Tight 12 in grey under mono labels.
-            On mobile the column collapses to two stacked rows with the label and
+        {/* One row at the title's baseline edge, gap 16, the values Inter Tight 14
+            in grey under mono labels; the sign-up button hangs under it, so the
+            row and the button stack in a column. On mobile the row collapses to two stacked rows with the label and
             value inline, wrapping onto a second line for a long author name. */}
-        <div className="flex shrink-0 flex-col lg:w-40">
-          <dl className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 lg:block">
+        <div className="flex shrink-0 flex-col lg:items-end">
+          <dl className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 lg:flex lg:items-end lg:gap-4">
             <div className="flex items-baseline gap-1 lg:block">
               <dt className={META_LABEL}>
                 Автор<span className="lg:hidden">:</span>
@@ -74,23 +75,27 @@ export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
               <dd className={META_VALUE}>{meta.author}</dd>
             </div>
 
-            <div className="lg:mt-4">
+            <div>
               <dt className={`${META_LABEL} max-lg:hidden`}>Дата публикации</dt>
               <dd className={META_VALUE}>{meta.publishedAt}</dd>
             </div>
 
-            <div className="hidden lg:mt-4 lg:block">
-              <dt className="sr-only">Просмотры и время чтения</dt>
-              <dd className="flex items-center gap-4 text-sm/[17px] tracking-[1px] text-muted">
-                <span className="flex items-center gap-1">
-                  <EyeIcon />
-                  {meta.views}
-                </span>
-                <span className="flex items-center gap-1">
+            {/* Reading time and views: the icon rides the label row, its figure under it */}
+            <div className="hidden items-start gap-4 lg:flex">
+              <div className="flex flex-col items-center">
+                <dt className="flex h-[18px] items-center text-ink">
                   <BookIcon />
-                  {meta.readingMinutes} мин
-                </span>
-              </dd>
+                  <span className="sr-only">Время чтения</span>
+                </dt>
+                <dd className={META_VALUE}>{meta.readingMinutes} мин</dd>
+              </div>
+              <div className="flex flex-col items-center">
+                <dt className="flex h-[18px] items-center text-ink">
+                  <EyeIcon />
+                  <span className="sr-only">Просмотры</span>
+                </dt>
+                <dd className={META_VALUE}>{meta.views}</dd>
+              </div>
             </div>
           </dl>
 

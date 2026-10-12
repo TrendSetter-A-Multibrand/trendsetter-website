@@ -36,11 +36,11 @@ export function ArticleGrid({
   locale: string;
 }) {
   return (
-    <section className="flex flex-col gap-4 lg:gap-10">
+    <section className="flex flex-col gap-6 lg:gap-10">
       {toRows(articles).map((row, i) => (
-        <div key={i} className={row.onBrand ? "on-dark bg-brand py-4 lg:py-10" : undefined}>
+        <div key={i} className={row.onBrand ? "lg:font-light lg:[&_.font-medium]:font-normal lg:bg-brand lg:py-10" : undefined}>
           <div
-            className={`grid gap-4 px-4 lg:gap-10 lg:px-10 ${
+            className={`grid gap-6 px-4 lg:gap-10 lg:px-10 ${
               row.cols === 3
                 ? "sm:grid-cols-2 lg:grid-cols-3"
                 : "sm:grid-cols-2"
@@ -52,6 +52,7 @@ export function ArticleGrid({
                 article={article}
                 locale={locale}
                 onBrand={row.onBrand}
+                tall
                 sizes={
                   row.cols === 3
                     ? "(min-width: 1024px) 31vw, (min-width: 640px) 47vw, 92vw"
