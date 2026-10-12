@@ -23,17 +23,17 @@ export function EventsCarousel({
   if (items.length === 0) return null;
 
   return (
-    <section className="px-4 pt-10 lg:px-10 lg:pt-[120px]">
+    <section className="px-4 pt-4 lg:px-10 lg:pt-[120px]">
       <SectionTitle
         heading={heading}
         trackRef={trackRef}
         controls="arrows"
-        className="mb-6 lg:mb-10"
+        className="mb-4 lg:mb-10"
       />
 
       <div
         ref={trackRef}
-        className="-mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 sm:mx-0 sm:snap-none sm:gap-10 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto max-sm:scroll-pl-4 px-4 sm:mx-0 sm:snap-none sm:gap-10 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
           // 586.7 across at 1920, three of them with 40 between
@@ -42,7 +42,7 @@ export function EventsCarousel({
             item={item}
             href={item.href}
             sizes="(min-width: 1024px) 587px, (min-width: 640px) 50vw, 320px"
-            className="h-[300px] w-full snap-center sm:h-[430px] sm:w-[calc(50%-20px)] sm:snap-align-none lg:w-[calc(33.333%-26.667px)]"
+            className="h-[300px] w-[320px] snap-start sm:h-[430px] sm:w-[calc(50%-20px)] sm:snap-align-none lg:w-[calc(33.333%-26.667px)]"
           />
         ))}
       </div>

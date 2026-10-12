@@ -13,7 +13,7 @@ export function MissionBand({
   body: string;
 }) {
   return (
-    <section className="on-dark relative overflow-hidden bg-brand px-6 py-10 text-white lg:px-10">
+    <section className="on-dark relative overflow-hidden bg-brand px-4 py-8 text-white lg:px-10 lg:py-10">
       {/* The file blends the wordmark onto the band under SCREEN. Over a flat
           red that resolves to a lighter red and nothing else, so paint the
           colour it arrives at rather than asking the browser to blend. */}

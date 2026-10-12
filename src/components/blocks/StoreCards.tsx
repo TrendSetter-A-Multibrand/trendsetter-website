@@ -16,6 +16,9 @@ import { StoreRouteModal } from "@/components/blocks/StoreRouteModal";
  * the map itself - now lives in the sheet a card opens, so the card is the way
  * in rather than a row to select.
  *
+ * At 375 they are 320 wide in a row that scrolls, 16 apart, the next one
+ * showing past the edge (417 tall with the photo; the file's 2610:32816).
+ *
  * 1840 across: three 587 columns 40 apart. The photo keeps the 273/192 the shop
  * cards have always had, and the grey body under it is 192 tall.
  */
@@ -32,15 +35,15 @@ export function StoreCards({
   return (
     <section className="px-4 lg:px-10">
       {/* The library's Title with neither control, 40 above the row */}
-      {heading && <SectionTitle heading={heading} className="mb-6 lg:mb-10" />}
+      {heading && <SectionTitle heading={heading} className="mb-4 lg:mb-10" />}
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+      <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 [scrollbar-width:none] max-sm:scroll-pl-4 sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 lg:grid-cols-3 lg:gap-10 [&::-webkit-scrollbar]:hidden">
         {stores.map((store, i) => (
           <button
             key={i}
             type="button"
             onClick={() => setRouteFor(store)}
-            className="group flex h-full flex-col text-left"
+            className="group flex h-full w-[320px] shrink-0 snap-start flex-col text-left sm:w-auto"
           >
             <div className="relative aspect-[273/192] w-full overflow-hidden">
               <CardImage

@@ -84,7 +84,12 @@ const paragraphs = (body: unknown) =>
  */
 const DRAW: Record<
   string,
-  (blok: Block, locale: Locale, path?: string) => React.ReactNode
+  (
+    blok: Block,
+    locale: Locale,
+    path?: string,
+    previous?: Block,
+  ) => React.ReactNode
 > = {
   // The file calls the red button the first one; Hero has had them the other way
   // round since it was built, where `primaryCta` is the pale one on the left.
@@ -179,8 +184,11 @@ const DRAW: Record<
     <MissionBand heading={text(blok.heading)} body={text(blok.body) ?? ""} />
   ),
 
-  photo_cards: (blok) => (
+  // On the red when it follows the mission band, as on О нас; on its own, as on
+  // Вакансии, it stays on white.
+  photo_cards: (blok, _locale, _path, previous) => (
     <PhotoCards
+      onBrand={previous?.component === "mission_band"}
       cards={nested(blok.cards).map((card) => ({
         title: text(card.title) ?? "",
         body: text(card.body) ?? "",
@@ -281,7 +289,7 @@ const DRAW: Record<
   ),
 
   newsletter: (blok, locale) => (
-    <div className="mt-6 lg:mt-10">
+    <div className="mt-4 lg:mt-10">
       <NewsletterSignup
         locale={locale}
         heading={text(blok.heading)}
@@ -306,11 +314,11 @@ export function Blocks({
   locale: Locale;
   path?: string;
 }) {
-  return body.map((blok) => {
+  return body.map((blok, i) => {
     const draw = DRAW[blok.component];
     if (!draw) return null;
     // "Скрыть блок на сайте": the block stays in Storyblok, not on the page
     if (blok.hidden === true || blok.hidden === "true") return null;
-    return <Fragment key={blok._uid}>{draw(blok, locale, path)}</Fragment>;
+    return <Fragment key={blok._uid}>{draw(blok, locale, path, body[i - 1])}</Fragment>;
   });
 }

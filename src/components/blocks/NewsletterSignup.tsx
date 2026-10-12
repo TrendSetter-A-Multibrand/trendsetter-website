@@ -14,6 +14,8 @@ type NewsletterSignupProps = {
   /** What the 375 frame calls it. */
   mobileHeading?: string;
   description?: string;
+  /** And what it writes under it. */
+  mobileDescription?: string;
   imageSrc?: string;
 };
 
@@ -27,8 +29,9 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export function NewsletterSignup({
   locale = "ru_ru",
   heading = "Подпишитесь на наши новости",
-  mobileHeading = "Подпишитесь на новости",
+  mobileHeading = "Подписка на новости",
   description = "Будьте в числе первых, кто узнает о новинках,\nраспрождажах и интересных новостях TRENDSETTER!",
+  mobileDescription = "Узнавайте о новинках, секретных распродажах и событиях TRENDSETTER первыми.",
   imageSrc = "/images/home/smile.svg",
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState("");
@@ -61,15 +64,21 @@ export function NewsletterSignup({
   }, [submitted]);
 
   return (
-    <section className="on-dark relative overflow-hidden bg-brand px-4 py-6 font-mono text-white lg:px-10 lg:py-10">
+    <section className="on-dark relative overflow-hidden bg-brand p-4 font-mono text-white lg:px-10 lg:py-10">
       <div className="relative z-10 max-w-[821px]">
         <h2 className="text-xl uppercase tracking-[3px] lg:text-2xl/[31.2px]">
-          {/* The 375 frame calls it "Подпишитесь на новости" */}
+          {/* The 375 frame calls it "Подписка на новости" */}
           <span className="lg:hidden">[{mobileHeading}]</span>
           <span className="max-lg:hidden">[{heading}]</span>
         </h2>
 
-        <p className="mt-4 whitespace-pre-line text-sm/[18px] lg:mt-6">{description}</p>
+        {/* 375: Inter Tight 13/15, tracked 1, at 90% */}
+        <p className="mt-4 font-sans text-[13px]/[15px] tracking-[1px] opacity-90 lg:hidden">
+          {mobileDescription}
+        </p>
+        <p className="mt-6 whitespace-pre-line text-sm/[18px] max-lg:hidden">
+          {description}
+        </p>
 
         {/* 821 across: a 641 field with its 180 button hard against it on lg.
             Below lg the frame orders these field → checkboxes → consent →
@@ -88,13 +97,15 @@ export function NewsletterSignup({
             className="order-1 h-12 min-w-0 flex-1 border border-white bg-transparent px-4 font-sans text-sm tracking-[1px] placeholder:text-white/40 focus:outline-none"
           />
 
-          <div className="order-2 flex w-full flex-wrap gap-6 text-sm lg:order-3">
+          <div className="order-2 flex w-full flex-wrap gap-6 font-sans text-[13px]/[15px] tracking-[1px] lg:order-3 lg:font-mono lg:text-sm lg:tracking-normal">
             <Checkbox name="men">Для мужчин</Checkbox>
             <Checkbox name="women">Для девушек</Checkbox>
           </div>
 
           {/* 16 between the two rows of boxes, 24 from the field above them */}
-          <div className="order-3 w-full text-sm lg:order-4">
+          {/* One line wherever there is room: past the 821 the rest of the column
+              keeps to, and clear of the smiley (which shows from 1700) */}
+          <div className="order-3 w-full font-sans text-[13px]/[15px] tracking-[1px] lg:order-4 lg:font-mono lg:text-sm lg:tracking-normal max-wide:min-[1100px]:w-max max-wide:min-[1100px]:whitespace-nowrap min-[1800px]:w-max min-[1800px]:whitespace-nowrap">
             <Checkbox name="consent">
               Я даю согласие на обработку персональных данных в соответствии с{" "}
               <Link href={`/${locale}/privacy-policy`} className="underline">
@@ -105,8 +116,7 @@ export function NewsletterSignup({
 
           <button
             type="submit"
-            disabled={!isValid}
-            className={`${buttonClass("inverse")} order-4 w-full shrink-0 self-stretch whitespace-nowrap disabled:cursor-not-allowed lg:order-2 lg:w-[180px] lg:self-start`}
+            className={`${buttonClass("inverse")} order-4 w-full shrink-0 self-stretch whitespace-nowrap lg:order-2 lg:w-[180px] lg:self-start`}
           >
             Подписаться
           </button>

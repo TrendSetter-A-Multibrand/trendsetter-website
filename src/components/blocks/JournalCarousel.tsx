@@ -36,17 +36,17 @@ export function JournalCarousel({
   if (items.length === 0) return null;
 
   return (
-    <section className="px-4 pt-10 lg:px-10 lg:pt-[120px]">
+    <section className="px-4 pt-4 lg:px-10 lg:pt-[120px]">
       <SectionTitle
         heading={heading}
         trackRef={trackRef}
         controls="arrows"
-        className="mb-6 lg:mb-10"
+        className="mb-4 lg:mb-10"
       />
 
       <div
         ref={trackRef}
-        className="-mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 sm:mx-0 sm:snap-none sm:gap-10 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto max-sm:scroll-pl-4 px-4 sm:mx-0 sm:snap-none sm:gap-10 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
           // The photo is the click target, so the link is stretched over the
@@ -54,7 +54,7 @@ export function JournalCarousel({
           // lets clicks through to it rather than swallowing them.
           <div
             key={i}
-            className="on-dark group relative h-[430px] w-full shrink-0 snap-center overflow-hidden sm:w-[calc(50%-20px)] sm:snap-align-none"
+            className="on-dark group relative h-[352px] w-[320px] shrink-0 snap-start sm:h-[430px] overflow-hidden sm:w-[calc(50%-20px)] sm:snap-align-none"
           >
             <CardImage src={item.image} sizes="(min-width: 640px) 900px, 320px" />
             <CardScrim />

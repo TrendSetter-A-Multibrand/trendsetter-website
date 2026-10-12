@@ -8,7 +8,7 @@ import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
  */
 export function TeamGrid({ members }: { members: TeamMember[] }) {
   return (
-    <section className="px-6 pt-10 pb-10 lg:px-10">
+    <section className="px-4 pt-10 pb-10 lg:px-10">
       <h2 className="font-mono text-xl uppercase tracking-[5px] lg:text-[36px]/[44px] lg:tracking-[2px]">
         [Команда]
       </h2>
@@ -16,7 +16,7 @@ export function TeamGrid({ members }: { members: TeamMember[] }) {
       {/* Capped rather than stretched to the column: the mockup's portraits are
           251 with 62 between them, which leaves air on the right rather than
           growing the circles */}
-      <div className="mt-10 grid grid-cols-2 gap-x-10 gap-y-10 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-[62px] lg:max-w-[1818px]">
+      <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 lg:mt-10 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-[62px] lg:gap-y-10 lg:max-w-[1818px]">
         {members.map((member, i) => (
           <div key={i} className="text-center">
             <div className="relative aspect-square w-full">

@@ -2,8 +2,8 @@ import Image from "next/image";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
 /**
- * Two 900 columns 40 apart: a heading and its copy on the left, a square photo
- * on the right. The text is centred against the photo rather than sitting at
+ * Two 900 columns 40 apart: a heading and its copy on the left, a 900x400 photo
+ * on the right (343x240 at 375, under the copy). The text is centred against the photo rather than sitting at
  * its top, which is what the file draws whatever the length of the copy.
  */
 export function TextWithPhoto({
@@ -16,9 +16,9 @@ export function TextWithPhoto({
   image?: string;
 }) {
   return (
-    <section className="grid gap-10 px-6 py-10 lg:grid-cols-2 lg:px-10">
-      <div className="flex flex-col justify-center gap-10">
-        <h2 className="text-xl font-medium tracking-[0.24px] lg:text-2xl/[29px]">
+    <section className="grid gap-4 px-4 py-10 lg:grid-cols-2 lg:gap-10 lg:px-10">
+      <div className="flex flex-col justify-center gap-4 lg:gap-10">
+        <h2 className="text-[28px]/[39px] font-medium tracking-[0.24px] lg:text-2xl/[29px]">
           {title}
         </h2>
         {/* At 375 the file sets the copy in mono 14/18, centred; the heading
@@ -28,7 +28,7 @@ export function TextWithPhoto({
         </p>
       </div>
 
-      <div className="relative aspect-square w-full overflow-hidden">
+      <div className="relative aspect-[343/240] w-full overflow-hidden lg:aspect-[9/4]">
         <ImagePlaceholder />
         {image && (
           <Image
