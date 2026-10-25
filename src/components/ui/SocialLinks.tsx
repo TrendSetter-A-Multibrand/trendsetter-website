@@ -1,43 +1,37 @@
 import { SOCIAL_LINKS, type SocialLink } from "@/lib/navigation";
 
 /**
- * Brand-red squares with the glyphs exported from Figma. The glyphs are drawn
- * as CSS masks so their colour follows the text colour of the tile.
+ * The file's Social link: a 44 box with a 1px rule and the network's name in
+ * Caption, 16 of air either side. Light - a Sage rule, for the menu; Dark - a
+ * white rule on the Sage footer, filling white under the pointer. Light fills
+ * Sage under the pointer.
  */
 export function SocialLinks({
   links = SOCIAL_LINKS,
   className,
-  /** Tiles are 40 either way; the footer sets 24 between them and a 24 glyph,
-      the side menu 12 and 16. */
-  large,
+  surface = "light",
 }: {
   /** What the editor wrote in the settings; the built-in three until then. */
   links?: SocialLink[];
   className?: string;
+  surface?: "light" | "dark";
+  /** Kept for the callers that still pass it; the new links are one size. */
   large?: boolean;
 }) {
+  const tone =
+    surface === "dark"
+      ? "border-white text-white hover:bg-white hover:text-ink"
+      : "border-ink text-ink hover:bg-ink hover:text-white";
   return (
-    <div className={`flex ${large ? "gap-6" : "gap-3"} ${className ?? ""}`}>
+    <div className={`flex gap-2 ${className ?? ""}`}>
       {links.map((social) => (
         <a
           key={social.label}
           href={social.href}
           aria-label={social.label}
-          className="flex h-10 w-10 items-center justify-center bg-brand text-white"
+          className={`type-caption flex h-11 items-center justify-center border px-4 transition-colors duration-150 ${tone}`}
         >
-          <span
-            className={`block bg-current ${large ? "h-6 w-6" : "h-4 w-4"}`}
-            style={{
-              maskImage: `url(${social.icon})`,
-              maskSize: "contain",
-              maskRepeat: "no-repeat",
-              maskPosition: "center",
-              WebkitMaskImage: `url(${social.icon})`,
-              WebkitMaskSize: "contain",
-              WebkitMaskRepeat: "no-repeat",
-              WebkitMaskPosition: "center",
-            }}
-          />
+          {social.label}
         </a>
       ))}
     </div>

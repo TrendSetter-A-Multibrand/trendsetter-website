@@ -1,15 +1,16 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Divider } from "@/components/ui/Divider";
-import { cellClass, listClass } from "@/components/ui/List";
+import { ChevronIcon } from "@/components/ui/Icons";
 
 /**
- * The library's Dropdown, standing in for a native select: a white 48-tall
- * header carrying the choice and a chevron, and a List that opens under it over
- * the page rather than pushing it down. The rule under the header appears only
- * while it is open, which is how the two states are drawn.
+ * The file's Select, standing in for a native one: a 44-tall header carrying the
+ * choice and a 20 chevron, and a white panel that opens under it over the page
+ * rather than pushing it down. On the red planes of the forms it is drawn the
+ * way the other fields are - a white 1px rule on the red, the placeholder at 75%
+ * white, a 2px rule while open - and on a light ground it is white with a Sage
+ * rule.
  *
  * The list is painted from the body and placed against the header's own box.
  * A native select's popup is not part of the page either, and it has to be that
@@ -39,12 +40,15 @@ export function Dropdown({
   placeholder,
   options,
   invalid,
+  surface = "red",
 }: {
   name: string;
   placeholder: string;
   options: DropdownOption[];
   invalid?: boolean;
+  surface?: "light" | "red";
 }) {
+  const red = surface === "red";
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   const chosen = options.find((o) => valueOf(o) === value);
@@ -97,12 +101,16 @@ export function Dropdown({
         aria-haspopup="true"
         aria-expanded={open}
         data-invalid={invalid || undefined}
-        className={`flex h-12 w-full items-center justify-between gap-2 bg-white px-4 text-left font-sans text-sm/4 font-normal tracking-[1px] text-ink ${
-          open ? "border-b border-ink/15" : ""
+        className={`type-body flex h-11 w-full items-center justify-between gap-3 border pl-4 pr-3 text-left transition-[border-color] duration-150 ${
+          red
+            ? `border-white bg-transparent ${chosen ? "text-white" : "text-white/75"}`
+            : `border-ink bg-white ${chosen ? "text-ink" : "text-text-2"}`
+        } ${open ? `border-2 pl-[15px] pr-[11px] ${red ? "" : "border-brand"}` : ""} ${
+          invalid ? "border-[3px] pl-[13px] pr-[9px]" : ""
         }`}
       >
         {chosen ? <Label option={chosen} /> : placeholder}
-        <Chevron up={open} />
+        <ChevronIcon size={20} className={`transition-transform duration-150 ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open &&
@@ -110,43 +118,25 @@ export function Dropdown({
         createPortal(
           <div
             ref={list}
-            className={`${listClass} fixed z-40 bg-white`}
+            className="fixed z-40 flex flex-col gap-1 border border-line bg-white py-2"
             style={{ left: box.left, top: box.bottom, width: box.width }}
           >
-            {options.map((option, i) => (
-              <Fragment key={valueOf(option)}>
-                {i > 0 && <Divider />}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setValue(valueOf(option));
-                    setOpen(false);
-                  }}
-                  className={cellClass("black")}
-                >
-                  <Label option={option} />
-                </button>
-              </Fragment>
+            {options.map((option) => (
+              <button
+                key={valueOf(option)}
+                type="button"
+                onClick={() => {
+                  setValue(valueOf(option));
+                  setOpen(false);
+                }}
+                className="type-body px-4 py-2 text-left text-ink transition-colors duration-150 hover:text-brand"
+              >
+                <Label option={option} />
+              </button>
             ))}
           </div>,
           document.body
         )}
     </div>
-  );
-}
-
-/** 24 square, the 12-wide stroke of the file's own arrow inside it. */
-function Chevron({ up }: { up: boolean }) {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-      className={`shrink-0 transition-transform ${up ? "rotate-180" : ""}`}
-    >
-      <path d="m6 10 6 6 6-6" stroke="currentColor" strokeWidth="2" />
-    </svg>
   );
 }

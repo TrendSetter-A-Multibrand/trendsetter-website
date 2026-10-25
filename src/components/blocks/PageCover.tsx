@@ -1,66 +1,25 @@
-import Image from "next/image";
-
 type PageCoverProps = {
   title: string;
-  /** One line under the title, white, in the mockup's sans. */
+  /** One line under the title, in Text-2. */
   subtitle?: string;
-  imageSrc: string;
-  /** False where breadcrumbs sit between the header and the band. */
+  /** The covers used to carry a photo; the new file's section header has none. Kept so callers need not change. */
+  imageSrc?: string;
   flush?: boolean;
-  /** The brands page draws a shorter band (290) than the sections' 400. */
   short?: boolean;
 };
 
 /**
- * 400px band opening a section: the name in brand red, 96px mono with 5px of
- * tracking, and a line of white under it. The photo is knocked back 50%, which
- * is what the designer wrote against every cover in the file.
- *
- * Where it opens a page it reaches up behind the header - the photo, rather than
- * the page's own white, is what shows while the bar slides in and out - and pads
- * the title back down to keep it centred in the 400 that are left below it.
+ * The file's Section header, "Band": no ground and no photo - the section's name
+ * in H1 with a Body L line of Text-2 under it, set at the foot of a low band
+ * that is the same height on every section (224 on a desktop, 40 left either
+ * side; on a phone it takes what it needs, 16 either side). The subtitle is one
+ * line. The page's crumbs sit above it.
  */
-export function PageCover({
-  title,
-  subtitle,
-  imageSrc,
-  flush = true,
-  short = false,
-}: PageCoverProps) {
+export function PageCover({ title, subtitle }: PageCoverProps) {
   return (
-    <section
-      className={`relative flex flex-col items-center justify-center overflow-hidden bg-neutral-800 px-6 text-center lg:px-0 lg:text-left ${
-        flush
-          ? "mt-[calc(-1*var(--header-h,0px))] h-[calc(112px+var(--header-h,0px))] pt-[var(--header-h,0px)] lg:h-[calc(400px+var(--header-h,0px))]"
-          : short
-            ? "h-[112px] lg:h-[290px]"
-            : "h-[112px] lg:h-[400px]"
-      }`}
-    >
-      <Image
-        src={imageSrc}
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover"
-      />
-      <div className="absolute inset-0 bg-black/50" />
-
-      {/* Blended, not solid: the same LINEAR_DODGE the wordmark over the home
-          photo uses, so the picture reads through the letters. Every section
-          title in the file is drawn this way. */}
-      <h1 className="relative font-mono text-[32px] font-bold uppercase tracking-[6px] text-brand mix-blend-plus-lighter lg:text-[96px]/[125px] lg:font-normal lg:tracking-[5px]">
-        [{title}]
-      </h1>
-
-      {subtitle && (
-        // The two sit against each other in the file: the title's 125 line
-        // leaves the air, and 154 of type centred in 400 is what it comes to
-        <p className="relative text-sm font-medium tracking-[1px] text-white lg:text-2xl/[29px]">
-          {subtitle}
-        </p>
-      )}
+    <section className="flex flex-col justify-end gap-3 px-4 py-6 md:h-56 md:gap-4 md:px-10 md:py-8">
+      <h1 className="type-h1 text-ink">{title}</h1>
+      {subtitle && <p className="type-body-l text-text-2">{subtitle}</p>}
     </section>
   );
 }

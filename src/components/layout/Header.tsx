@@ -8,43 +8,35 @@ import type { NavItem, SocialLink } from "@/lib/navigation";
 import { HeaderSearch } from "@/components/layout/HeaderSearch";
 import { SideMenu } from "@/components/layout/SideMenu";
 import { NavDropdown } from "@/components/layout/NavDropdown";
+import { useMenu } from "@/components/layout/MenuContext";
 import { Wordmark } from "@/components/ui/Wordmark";
+import { BurgerIcon, ChevronIcon } from "@/components/ui/Icons";
+import { iconButtonClass } from "@/components/ui/iconButton";
 
 /**
- * The brackets are drawn outside the label, so hovering never reflows the row.
- * The file leaves 2 between bracket and word and a bracket is 9 wide, which is
- * the 11 they sit at once they are home.
- *
- * Red of their own, not the label's. Inheriting it, they spent the first frames
- * of their arrival black, because the word itself is still crossing from black
- * to red underneath them - and a bracket that fades up already the wrong colour
- * is the one thing about them the eye catches.
+ * The file's Nav link. The brackets are drawn outside the label, so hovering
+ * never reflows the row: they sit 0.8em off the word, hidden by opacity rather
+ * than removed, and slide in from 0.4em further out as the word turns Red.
+ * 350 ms, ease-in-out, both ways; the section you are in wears them for good.
  */
 const BRACKETS =
-  "relative transition-colors " +
+  "relative transition-colors duration-[350ms] ease-in-out " +
   "before:absolute before:-left-[11px] before:text-brand before:content-['['] " +
   "after:absolute after:-right-[11px] after:text-brand after:content-[']'] " +
-  "before:transition before:duration-[350ms] before:ease-in-out " +
-  "after:transition after:duration-[350ms] after:ease-in-out " +
-  "motion-reduce:before:transition-none motion-reduce:after:transition-none";
+  "before:transition-[opacity,translate] before:duration-[350ms] before:ease-in-out " +
+  "after:transition-[opacity,translate] after:duration-[350ms] after:ease-in-out";
 
-/** Out past the word and not yet there: the file opens the gap from 2 to 8. */
+/** Out past the word and not yet there */
 const BRACKETS_AWAY =
   "before:-translate-x-[6px] before:opacity-0 after:translate-x-[6px] after:opacity-0";
 
-/**
- * Closed on the word at full strength. They come in fading up as they close -
- * the three frames of the file, in order - and go out the same way round. 350ms
- * either direction: 700 the round trip, which is the figure that was given.
- *
- * They hold while the pointer is anywhere on the entry, the panel below it
- * included, because the panel hangs inside this same group.
- */
+/** They hold while the pointer is anywhere on the entry, the panel included. */
 const BRACKETS_HOME =
   "group-hover:before:translate-x-0 group-hover:before:opacity-100 " +
-  "group-hover:after:translate-x-0 group-hover:after:opacity-100";
+  "group-hover:after:translate-x-0 group-hover:after:opacity-100 " +
+  "group-focus-within:before:translate-x-0 group-focus-within:before:opacity-100 " +
+  "group-focus-within:after:translate-x-0 group-focus-within:after:opacity-100";
 
-/** The section you are in wears them for good, as the mockup shows it. */
 const BRACKETS_STAY =
   "before:translate-x-0 before:opacity-100 after:translate-x-0 after:opacity-100";
 
@@ -53,35 +45,66 @@ const BRACKETS_STAY =
  * sitting on the item, so `:hover` would still be true and the panel would hang
  * around over the new page - hence the dismissed flag, cleared once the pointer
  * leaves the item.
+ *
+ * On a touch screen there is no hover: the first tap on an entry with a panel
+ * opens it and the second goes to the page. A tap anywhere else closes it.
  */
 function NavEntry({ locale, item }: { locale: Locale; item: NavItem }) {
   const [dismissed, setDismissed] = useState(false);
+  const [touchOpen, setTouchOpen] = useState(false);
+  const pointer = useRef<string>("mouse");
+  const entry = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const href = `/${locale}/${item.slug}`;
   const current = pathname === href || pathname.startsWith(`${href}/`);
 
+  useEffect(() => {
+    if (!touchOpen) return;
+    const away = (e: PointerEvent) => {
+      if (!entry.current?.contains(e.target as Node)) setTouchOpen(false);
+    };
+    document.addEventListener("pointerdown", away);
+    return () => document.removeEventListener("pointerdown", away);
+  }, [touchOpen]);
+
   return (
     <div
+      ref={entry}
       className="group relative flex h-full items-center"
       onMouseLeave={() => setDismissed(false)}
     >
       <Link
         href={href}
         aria-current={current ? "page" : undefined}
-        onClick={() => setDismissed(true)}
-        className={`${BRACKETS} group-hover:text-brand ${
-          current
+        aria-haspopup={item.children ? "true" : undefined}
+        onPointerDown={(e) => (pointer.current = e.pointerType)}
+        onClick={(e) => {
+          if (item.children && pointer.current === "touch" && !touchOpen) {
+            e.preventDefault();
+            setTouchOpen(true);
+            return;
+          }
+          setDismissed(true);
+          setTouchOpen(false);
+        }}
+        className={`type-mono-button flex items-center gap-1 ${BRACKETS} group-hover:text-brand group-focus-within:text-brand ${
+          current || touchOpen
             ? `text-brand ${BRACKETS_STAY}`
-            : `${BRACKETS_AWAY} ${BRACKETS_HOME}`
+            : `text-ink ${BRACKETS_AWAY} ${BRACKETS_HOME}`
         }`}
       >
         {item.label}
+        {item.children && <ChevronIcon size={16} />}
       </Link>
       {item.children && !dismissed && (
         <NavDropdown
           locale={locale}
           item={item}
-          onNavigate={() => setDismissed(true)}
+          open={touchOpen}
+          onNavigate={() => {
+            setDismissed(true);
+            setTouchOpen(false);
+          }}
         />
       )}
     </div>
@@ -125,6 +148,13 @@ function useLinksOutOfTheField(
   }, [row, field]);
 }
 
+/**
+ * The file's Header. Desktop: 80 tall, white, a Line rule underneath, the logo
+ * in Red at 176, the menu centred with 48 between entries, the search at the
+ * right. Where the menu does not fit in a row (under 1280) it folds into the
+ * burger. On a phone the bar is 64 with a 136 logo; the sections are in the tab
+ * bar, and the burger and the search stay beside the logo.
+ */
 export function Header({
   locale,
   items,
@@ -134,54 +164,43 @@ export function Header({
   items: NavItem[];
   socials: SocialLink[];
 }) {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { open, setOpen } = useMenu();
   const nav = useRef<HTMLElement>(null);
   // The field only exists once the boundary below has resolved, so the bar keeps
   // it in state rather than looking for it once and giving up.
   const [field, setField] = useState<HTMLElement | null>(null);
   useLinksOutOfTheField(nav, field);
 
-  // 88px tall in the mockup, with a 273px wordmark. Nothing separates the three
-  // groups but the space left over, which is what puts equal air either side of
-  // the nav. The fill is its own rather than the body's: stuck to the top of the
-  // page the bar now travels over content.
   return (
-    <header className="flex h-11 items-center justify-between gap-6 bg-background px-4 lg:h-[88px] lg:px-10">
-      <Link href={`/${locale}`} className="w-[168px] shrink-0 text-brand lg:w-[273px]">
+    <header className="flex h-16 items-center justify-between gap-6 border-b border-line bg-white px-4 md:h-[var(--nav-h)] md:px-10">
+      <Link
+        href={`/${locale}`}
+        className="w-[136px] shrink-0 text-brand md:w-[176px]"
+      >
         <Wordmark />
       </Link>
 
-      {/* 757 of links, plus a 273 logo and the icons - it does not fit until
-          1280, and under that the burger carries the whole menu */}
       <nav
         ref={nav}
-        className="hidden h-full items-center gap-10 whitespace-nowrap font-mono text-sm font-medium uppercase tracking-[1px] xl:flex"
+        className="hidden h-full flex-1 items-center justify-center gap-12 whitespace-nowrap xl:flex"
       >
         {items.map((item) => (
           <NavEntry key={item.slug} locale={locale} item={item} />
         ))}
       </nav>
 
-      {/* 92 across closed, 384 with the field out: two 24px icons 44 apart, and
-          a 320 field whose rule runs under the magnifier as well. The gap lives
-          on the burger rather than on the row, so the closed field - a flex item
-          of no width - does not add one of its own. */}
-      <div className="flex shrink-0 items-center">
-        <Suspense fallback={<div className="hidden h-12 w-6 sm:block" />}>
+      <div className="flex shrink-0 items-center gap-1">
+        <Suspense fallback={<div className="size-11" />}>
           <HeaderSearch locale={locale} onField={setField} />
         </Suspense>
-        {/* The panel lays the whole site out at once, which the seven links in
-            the bar do not - so it is kept everywhere the page fills the window.
-            Past 1920 the page is a fixed column in the middle of the monitor and
-            the panel slides out beside it rather than at an edge, which reads as
-            floating; at those widths the bar's own links carry the menu. */}
         <button
           type="button"
           aria-label="Меню"
-          onClick={() => setMenuOpen(true)}
-          className="ml-6 min-[1921px]:hidden lg:ml-11 [&>svg]:size-4 lg:[&>svg]:size-6"
+          aria-expanded={open}
+          onClick={() => setOpen(true)}
+          className={`${iconButtonClass()} xl:hidden`}
         >
-          <MenuIcon />
+          <BurgerIcon />
         </button>
       </div>
 
@@ -189,22 +208,9 @@ export function Header({
         locale={locale}
         items={items}
         socials={socials}
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
+        open={open}
+        onClose={() => setOpen(false)}
       />
     </header>
-  );
-}
-
-/** Three full-width 2px rules, 8px apart. */
-function MenuIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M0 4h24M0 12h24M0 20h24"
-        stroke="currentColor"
-        strokeWidth="2"
-      />
-    </svg>
   );
 }

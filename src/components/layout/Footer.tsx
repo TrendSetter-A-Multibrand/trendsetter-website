@@ -3,45 +3,19 @@ import type { Locale } from "@/lib/i18n/locales";
 import { resolveHref, type SiteSettings } from "@/lib/siteSettings";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { SocialLinks } from "@/components/ui/SocialLinks";
+import { FooterGroup } from "@/components/layout/FooterGroup";
+
+const LINK =
+  "type-body-s text-line transition-colors duration-150 hover:text-white hover:underline";
 
 /**
- * The same 24 on a 31 line the section titles carry - the library sets all of
- * them from one style, and the 22 measured off the old export was simply wrong.
- * 24 of air under it to the first link.
+ * The file's Footer: Sage, the groups of links in a row (two by two under 1000,
+ * accordions on a phone), a Text-2 rule, the social links on Sage and the ©
+ * line, and the logo in white across the full width at the foot. The groups and
+ * their links are the editor's, from the settings; the cooperation address the
+ * settings keep sits in the row as one more group. On a phone the foot keeps the
+ * tab bar's height in Sage rather than leaving a white strip under it.
  */
-function FooterHeading({ children }: { children: string }) {
-  return (
-    <h2 className="mb-6 font-mono text-xl/[26px] uppercase tracking-[3px] lg:text-2xl/[31px]">
-      [{children}]
-    </h2>
-  );
-}
-
-function FooterColumn({
-  title,
-  links,
-}: {
-  title: string;
-  links: { label: string; href: string }[];
-}) {
-  return (
-    <div>
-      <FooterHeading>{title}</FooterHeading>
-      {/* Inter Tight, not the mono the headings above them use - the tracking
-          reads like mono but the letterforms are proportional */}
-      <ul className="flex flex-col gap-5 text-sm/[19px] uppercase tracking-[1px] text-white/40">
-        {links.map((link) => (
-          <li key={link.href}>
-            <Link href={link.href} className="transition-colors hover:text-white">
-              {link.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 export function Footer({
   locale,
   settings,
@@ -52,54 +26,39 @@ export function Footer({
   const { columns, cooperationTitle, email } = settings.footer;
 
   return (
-    <footer className="on-dark bg-ink py-6 text-white lg:py-10">
-      {/* Columns sit at 40 / 221 / 670 / 901 in the library, so their widths are
-          the file's, not a regular grid. The tiles close the row at 1840. */}
-      <div className="footer-columns grid gap-6 px-4 sm:grid-cols-2 lg:gap-10 lg:px-10 xl:grid-cols-4">
-        {columns.map((column) => (
-          <FooterColumn
-            key={column.title}
-            title={column.title}
-            links={column.links.map((link) => ({
-              label: link.label,
-              href: resolveHref(locale, link.path),
-            }))}
-          />
-        ))}
+    <footer className="on-dark bg-ink pt-6 text-white max-md:pb-[calc(var(--tabbar-h)+env(safe-area-inset-bottom))]">
+      <div className="px-4 md:px-10">
+        <div className="grid pb-6 md:grid-cols-2 md:gap-x-6 md:gap-y-10 md:pb-16 min-[1000px]:grid-flow-col min-[1000px]:auto-cols-fr min-[1000px]:grid-cols-none">
+          {columns.map((column) => (
+            <FooterGroup key={column.title} title={column.title}>
+              <ul className="flex flex-col gap-1">
+                {column.links.map((link) => (
+                  <li key={link.path}>
+                    <Link href={resolveHref(locale, link.path)} className={LINK}>
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </FooterGroup>
+          ))}
 
-        <div>
-          <FooterHeading>{cooperationTitle}</FooterHeading>
-          <a
-            href={`mailto:${email}`}
-            className="text-sm/[19px] uppercase tracking-[1px] text-white/40 transition-colors hover:text-white"
-          >
-            {email}
-          </a>
+          <FooterGroup title={cooperationTitle}>
+            <a href={`mailto:${email}`} className={LINK}>
+              {email}
+            </a>
+          </FooterGroup>
         </div>
 
-        <SocialLinks
-          links={settings.socials}
-          large
-          className="h-fit justify-center max-sm:hidden sm:justify-start"
-        />
+        <div className="flex flex-wrap items-center justify-between gap-4 py-6 md:justify-start md:border-t md:border-text-2">
+          <SocialLinks links={settings.socials} surface="dark" />
+          <p className="type-caption text-line">© 2026 TRENDSETTER</p>
+        </div>
       </div>
 
-      {/* The file paints this white under SOFT_LIGHT, but Figma's soft light is
-          the Photoshop formula and CSS uses the W3C one - over #252120 they land
-          on #453e3c and #605a58. The backdrop here is flat, so the blend buys
-          nothing: paint the colour Figma arrives at and be exact. */}
-      {/* 40 under the columns, and 40 to the foot of the page */}
-      <div className="mt-6 px-4 lg:mt-10 lg:px-10">
-        <Wordmark className="text-[#453e3c]" />
+      <div className="overflow-hidden px-4 md:px-10">
+        <Wordmark className="text-white" />
       </div>
-
-      {/* At 375 the file puts the icons under the wordmark rather than beside
-          the columns */}
-      <SocialLinks
-        links={settings.socials}
-        large
-        className="mt-6 justify-center px-4 sm:hidden"
-      />
     </footer>
   );
 }

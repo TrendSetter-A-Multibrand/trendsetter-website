@@ -12,12 +12,14 @@ export function Checkbox({
   name,
   defaultChecked = true,
   surface = "red",
+  required,
 }: {
   children: React.ReactNode;
   name: string;
   defaultChecked?: boolean;
   /** Which ground it stands on; the red band is where it is used today. */
   surface?: "light" | "red";
+  required?: boolean;
 }) {
   const red = surface === "red";
   return (
@@ -26,6 +28,7 @@ export function Checkbox({
         type="checkbox"
         name={name}
         defaultChecked={defaultChecked}
+        required={required}
         className="peer sr-only"
       />
       <span

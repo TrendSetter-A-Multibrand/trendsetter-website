@@ -1,151 +1,76 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type PointerEvent as ReactPointerEvent,
-  type RefObject,
-} from "react";
-import { holdSnap, settleSnap, stepWidth } from "@/lib/useCarousel";
-
-/** The red block's width in the file, and the one number the bar's maths needs. */
-const THUMB_WIDTH = 56;
-/** The sheet's variant (970:7759): a 1px rule and a 52 wide block. */
-const THIN_THUMB_WIDTH = 52;
+import { useCallback, useEffect, useState, type RefObject } from "react";
+import { stepWidth } from "@/lib/useCarousel";
+import { LinkArrow } from "@/components/ui/LinkArrow";
+import { ArrowIcon, ArrowLeftIcon } from "@/components/ui/Icons";
+import { iconButtonClass } from "@/components/ui/iconButton";
 
 /**
- * The library's Title, which every scrolling row wears: the heading, and then
- * either a 2px rule with a 56x24 red block riding it, or the two arrows - 24
- * square, 40 apart.
+ * The file's Section head, which every titled section and scrolling row wears:
+ * "[ЗАГОЛОВОК]" in Label, a 1px Sage rule running out to the edge - the only
+ * rule the section has - and then, if the section wants them, a "Смотреть все"
+ * link and the arrows of a carousel. 24 between the parts on a desktop, 12 on a
+ * phone; the arrows are for a desktop only, because on a phone the row swipes.
  *
- * At 375 the file hides both - the rows swipe - so they start at lg.
+ * The row the arrows drive is passed in rather than owned, because each section
+ * lays its own cards out. They step it by one card and the gap after it, and
+ * each goes to 30% at its end of the row. They are not drawn while the whole row
+ * fits, since an arrow that cannot move is worse than none.
  *
- * Either, not both. The component holds all three layers and each screen hides
- * the ones it does not use: the news row and the article's related row are drawn
- * with the bar and no arrows, events and the journal with arrows and no bar, and
- * the shops section with neither. So `controls` says which one this row gets.
- *
- * The row it drives is passed in rather than owned, because each section lays
- * its own cards out. Everything here reads that element's scroll position, so
- * dragging the row, dragging the block, the arrows and the row walking on by
- * itself all end up in the same place.
- *
- * The file draws twelve positions of the block. Scroll position is continuous,
- * so the block simply rides it instead.
- *
- * Neither control is drawn while the row fits the width it is given. A control
- * that cannot move is worse than no control - the block sits at the left end of
- * its rule and the arrows do nothing when clicked - and that is not a rare
- * state: four news cards measure the row exactly, so the space holding four
- * news and no more is enough to produce it. The answer is measured rather than
- * counted, because either side of it can change: the space gains a card, or the
- * window grows.
+ * The file has no scroll bar any more, so `controls="bar"` - the old red block
+ * on a rule - now draws the arrows too.
  */
 export function SectionTitle({
   heading,
   trackRef,
   controls,
-  thin = false,
+  href,
+  linkLabel = "Смотреть все",
   className = "",
 }: {
   heading: string;
-  /** Only a row that scrolls has one; the shops and markets titles do not. */
+  /** Only a row that scrolls has one. */
   trackRef?: RefObject<HTMLElement | null>;
-  /** Which of the file's two controls this row is drawn with, if either. */
+  /** Draw the carousel arrows for this row. */
   controls?: "bar" | "arrows";
-  /** The bar as a sheet draws it: 1px rule, 52 block. The rows keep 2px and 56. */
+  /** The "Смотреть все" link, when the section has a page of its own. */
+  href?: string;
+  linkLabel?: string;
+  /** Kept for the callers that still pass it; the rule is one thickness now. */
   thin?: boolean;
   /** Each section keeps its own air around the row. */
   className?: string;
 }) {
-  const thumbWidth = thin ? THIN_THUMB_WIDTH : THUMB_WIDTH;
-  const bar = useRef<HTMLDivElement>(null);
-  const thumb = useRef<HTMLDivElement>(null);
-
-  /**
-   * True until measured, so the server draws the control the file draws and
-   * hydration has nothing to disagree about; the first measurement takes it
-   * away where there is nothing to scroll.
-   */
+  // True until measured, so the server draws what the file draws and hydration
+  // has nothing to disagree about; the first measurement takes it away where
+  // there is nothing to scroll.
   const [scrollable, setScrollable] = useState(true);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
 
   const measure = useCallback(() => {
     const track = trackRef?.current;
-    if (track) setScrollable(track.scrollWidth > track.clientWidth);
+    if (!track) return;
+    setScrollable(track.scrollWidth > track.clientWidth + 1);
+    setAtStart(track.scrollLeft <= 1);
+    setAtEnd(track.scrollLeft + track.clientWidth >= track.scrollWidth - 1);
   }, [trackRef]);
 
-  /** After every render: a card added or removed changes the content width. */
+  // After every render: a card added or removed changes the content width
   useEffect(measure);
 
-  /** And on resize: the window changes the width the row has to fill. */
   useEffect(() => {
     const track = trackRef?.current;
     if (!track || !controls) return;
-
     const observer = new ResizeObserver(measure);
     observer.observe(track);
-    return () => observer.disconnect();
-  }, [trackRef, controls, measure]);
-
-  /**
-   * Written straight to the DOM: through state this would re-render every card
-   * in the row on every scroll frame.
-   */
-  const sync = useCallback(() => {
-    const track = trackRef?.current;
-    if (!track || !bar.current || !thumb.current) return;
-
-    const maxScroll = track.scrollWidth - track.clientWidth;
-    const progress = maxScroll > 0 ? track.scrollLeft / maxScroll : 0;
-    thumb.current.style.transform = `translateX(${
-      progress * (bar.current.clientWidth - thumbWidth)
-    }px)`;
-  }, [trackRef, thumbWidth]);
-
-  // Keyed on `scrollable` as well, so the block is put where the row already
-  // stands the moment the bar appears rather than starting from the left
-  useEffect(() => {
-    const track = trackRef?.current;
-    if (!track || controls !== "bar" || !scrollable) return;
-    sync();
-    track.addEventListener("scroll", sync, { passive: true });
-    const observer = new ResizeObserver(sync);
-    observer.observe(track);
+    track.addEventListener("scroll", measure, { passive: true });
     return () => {
-      track.removeEventListener("scroll", sync);
       observer.disconnect();
+      track.removeEventListener("scroll", measure);
     };
-  }, [trackRef, sync, controls, scrollable]);
-
-  function scrollToPointer(clientX: number) {
-    if (!trackRef) return;
-    const track = trackRef.current;
-    if (!track || !bar.current) return;
-
-    const rect = bar.current.getBoundingClientRect();
-    const usable = rect.width - thumbWidth;
-    const offset = clientX - rect.left - thumbWidth / 2;
-    const progress = usable > 0 ? Math.min(1, Math.max(0, offset / usable)) : 0;
-    track.scrollLeft = progress * (track.scrollWidth - track.clientWidth);
-  }
-
-  function handlePointerDown(e: ReactPointerEvent<HTMLDivElement>) {
-    bar.current?.setPointerCapture(e.pointerId);
-    if (trackRef?.current) holdSnap(trackRef.current);
-    scrollToPointer(e.clientX);
-  }
-
-  function handlePointerMove(e: ReactPointerEvent<HTMLDivElement>) {
-    if (!bar.current?.hasPointerCapture(e.pointerId)) return;
-    scrollToPointer(e.clientX);
-  }
-
-  /** `touch-none` on the bar means there is no native scroll here to snap it back. */
-  function handlePointerEnd() {
-    if (trackRef?.current) settleSnap(trackRef.current);
-  }
+  }, [trackRef, controls, measure]);
 
   /** One card plus the gap after it, the same step the row walks itself along by. */
   function step(direction: 1 | -1) {
@@ -154,58 +79,41 @@ export function SectionTitle({
     track.scrollBy({ left: direction * stepWidth(track), behavior: "smooth" });
   }
 
-  return (
-    <div
-      className={`flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-10 ${className}`}
-    >
-      <h2 className="min-w-0 font-mono text-xl/[26px] uppercase tracking-[3px] lg:whitespace-nowrap lg:text-[36px]/[44px] lg:tracking-[2px]">
-        [{heading}]
-      </h2>
+  const arrows = Boolean(controls) && scrollable;
 
-      {controls === "bar" && scrollable && (
-        <div
-          ref={bar}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerEnd}
-          onPointerCancel={handlePointerEnd}
-          className="relative flex h-6 flex-1 cursor-pointer touch-none select-none items-center max-lg:hidden"
-        >
-          <div className={`w-full bg-ink ${thin ? "h-px" : "h-0.5"}`} />
-          <div
-            ref={thumb}
-            style={{ width: thumbWidth }}
-            className="absolute left-0 h-6 cursor-grab bg-brand active:cursor-grabbing"
-          />
-        </div>
+  return (
+    <div className={`flex items-center gap-3 md:gap-6 ${className}`}>
+      <h2 className="type-label min-w-0 whitespace-nowrap text-ink">[{heading}]</h2>
+      <div className="h-px min-w-4 flex-1 bg-ink" />
+
+      {href && (
+        <LinkArrow href={href} context="plain" className="shrink-0">
+          {linkLabel}
+        </LinkArrow>
       )}
 
-      {controls === "arrows" && scrollable && (
-        <div className="flex shrink-0 gap-10 max-lg:hidden">
-          <button type="button" aria-label="Назад" onClick={() => step(-1)}>
-            <Arrow className="rotate-180" />
+      {arrows && (
+        <div className="flex shrink-0 gap-2 max-md:hidden">
+          <button
+            type="button"
+            aria-label="Назад"
+            disabled={atStart}
+            onClick={() => step(-1)}
+            className={iconButtonClass("outline")}
+          >
+            <ArrowLeftIcon />
           </button>
-          <button type="button" aria-label="Вперёд" onClick={() => step(1)}>
-            <Arrow />
+          <button
+            type="button"
+            aria-label="Вперёд"
+            disabled={atEnd}
+            onClick={() => step(1)}
+            className={iconButtonClass("outline")}
+          >
+            <ArrowIcon />
           </button>
         </div>
       )}
     </div>
-  );
-}
-
-/** 24 square, the stroke running the full width of it. */
-function Arrow({ className }: { className?: string }) {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-      className={className}
-    >
-      <path d="M0 12h22M13 3l9 9-9 9" stroke="currentColor" strokeWidth="2" />
-    </svg>
   );
 }

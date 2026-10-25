@@ -43,7 +43,7 @@
   --control-s: 36px;
   --control-m: 44px;
   --control-l: 56px;
-  --header-h: 80px;
+  --nav-h: 80px;
   --tabbar-h: 60px;
 
   /* Motion: TS · Motion */
@@ -86,6 +86,7 @@
   --font-sans: var(--font-inter-tight);
   --font-mono: var(--font-geist-mono);
   --animate-marquee: marquee 24s linear infinite;
+  --animate-ticker: marquee 40s linear infinite;
   --animate-topbar-in: topbar-in 0.4s cubic-bezier(0, 0, 0.8, 1);
   --animate-float: float 4s ease-in-out infinite alternate;
 }

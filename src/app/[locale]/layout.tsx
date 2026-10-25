@@ -3,6 +3,8 @@ import { isLocale, locales } from "@/lib/i18n/locales";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { TopBar } from "@/components/layout/TopBar";
+import { TabBar } from "@/components/layout/TabBar";
+import { MenuProvider } from "@/components/layout/MenuContext";
 import { PromoTicker } from "@/components/blocks/PromoTicker";
 import { CookieNotice } from "@/components/blocks/CookieNotice";
 import { getSiteSettings, resolveHref } from "@/lib/siteSettings";
@@ -29,20 +31,31 @@ export default async function LocaleLayout({
 
   return (
     <SettingsProvider settings={settings}>
-      <TopBar>
-        {ticker.enabled && (
-          <PromoTicker
-            text={ticker.text}
-            ctaLabel={ticker.ctaLabel}
-            href={resolveHref(locale, ticker.href)}
-            tone={ticker.tone}
+      <MenuProvider>
+        <TopBar>
+          {ticker.enabled && (
+            <PromoTicker
+              text={ticker.text}
+              ctaLabel={ticker.ctaLabel}
+              href={resolveHref(locale, ticker.href)}
+              tone={ticker.tone}
+            />
+          )}
+          <Header
+            locale={locale}
+            items={settings.nav}
+            socials={settings.socials}
           />
-        )}
-        <Header locale={locale} items={settings.nav} socials={settings.socials} />
-      </TopBar>
-      <main className="flex flex-1 flex-col">{children}</main>
-      <Footer locale={locale} settings={settings} />
-      <CookieNotice locale={locale} text={settings.cookieText} />
+        </TopBar>
+        {/* On a phone the tab bar is fixed over the foot of the page, so the page
+          keeps its height in reserve */}
+        <div className="flex flex-1 flex-col">
+          <main className="flex flex-1 flex-col">{children}</main>
+          <Footer locale={locale} settings={settings} />
+        </div>
+        <TabBar locale={locale} />
+        <CookieNotice locale={locale} text={settings.cookieText} />
+      </MenuProvider>
     </SettingsProvider>
   );
 }

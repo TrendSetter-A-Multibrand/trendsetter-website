@@ -5,16 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
+import { fieldClass } from "@/components/ui/fieldClass";
 import { NoticeModal } from "@/components/ui/NoticeModal";
 import { isSubscribed, remember } from "@/lib/subscribers";
 
 type NewsletterSignupProps = {
   locale?: string;
+  /** The promo line, lower case, five words at most. */
   heading?: string;
-  /** What the 375 frame calls it. */
+  /** Kept so a block in Storyblok that still sends it keeps working; the new file has one headline for both widths. */
   mobileHeading?: string;
   description?: string;
-  /** And what it writes under it. */
   mobileDescription?: string;
   imageSrc?: string;
 };
@@ -22,16 +23,17 @@ type NewsletterSignupProps = {
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
- * The red band under the shops, 303 tall: everything set 40 from the left in
- * mono, the field and its button flush together at 700 + 180, and the smiley
- * sitting to the right of them, taller than the band and clipped by it.
+ * The file's Red plane form, Subscribe: "[Рассылка]" in Label, the promo line in
+ * H1, a lead in Body L, then the field and its white button side by side (one
+ * over the other on a phone) and a single consent checkbox. 128 above and below
+ * on a desktop, 64 and 24 on a phone, text in a 898 column. The smiley is
+ * turned 12 degrees and cut by the right edge from 1200 up; below that it sits
+ * under the form, to the right.
  */
 export function NewsletterSignup({
   locale = "ru_ru",
-  heading = "Подпишитесь на наши новости",
-  mobileHeading = "Подписка на новости",
-  description = "Будьте в числе первых, кто узнает о новинках,\nраспрождажах и интересных новостях TRENDSETTER!",
-  mobileDescription = "Узнавайте о новинках, секретных распродажах и событиях TRENDSETTER первыми.",
+  heading = "новое — первыми",
+  description = "Пишем о новых поставках, событиях и выпусках журнала — только то, что стоит внимания.",
   imageSrc = "/images/home/smile.svg",
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState("");
@@ -64,73 +66,52 @@ export function NewsletterSignup({
   }, [submitted]);
 
   return (
-    <section className="on-dark relative overflow-hidden bg-brand p-4 font-mono text-white lg:px-10 lg:py-10">
-      <div className="relative z-10 max-w-[821px]">
-        <h2 className="text-xl uppercase tracking-[3px] lg:text-2xl/[31.2px]">
-          {/* The 375 frame calls it "Подписка на новости" */}
-          <span className="lg:hidden">[{mobileHeading}]</span>
-          <span className="max-lg:hidden">[{heading}]</span>
-        </h2>
+    <section className="on-dark relative overflow-hidden bg-brand px-4 pb-6 pt-16 text-white md:px-10 md:py-32">
+      <div className="relative z-10 flex max-w-[898px] flex-col gap-6 md:gap-8">
+        <h2 className="type-label">[Рассылка]</h2>
+        <p className="type-h1">{heading}</p>
+        <p className="type-body-l max-w-[520px] whitespace-pre-line">{description}</p>
 
-        {/* 375: Inter Tight 13/15, tracked 1, at 90% */}
-        <p className="mt-4 font-sans text-[13px]/[15px] tracking-[1px] opacity-90 lg:hidden">
-          {mobileDescription}
-        </p>
-        <p className="mt-6 whitespace-pre-line text-sm/[18px] max-lg:hidden">
-          {description}
-        </p>
-
-        {/* 821 across: a 641 field with its 180 button hard against it on lg.
-            Below lg the frame orders these field → checkboxes → consent →
-            button (submit last), not field+button first - `order` carries that
-            without duplicating the row markup per breakpoint. */}
         <form
           onSubmit={handleSubmit}
-          className="mt-4 flex w-full flex-wrap gap-4 lg:mt-6 lg:gap-x-0 lg:gap-y-6"
+          className="flex w-full max-w-[640px] flex-col gap-4"
         >
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Ваш E-mail адрес здесь"
-            className="order-1 h-12 min-w-0 flex-1 border border-white bg-transparent px-4 font-sans text-sm tracking-[1px] placeholder:text-white/40 focus:outline-none"
-          />
-
-          <div className="order-2 flex w-full flex-wrap gap-6 font-sans text-[13px]/[15px] tracking-[1px] lg:order-3 lg:font-mono lg:text-sm lg:tracking-normal">
-            <Checkbox name="men">Для мужчин</Checkbox>
-            <Checkbox name="women">Для девушек</Checkbox>
+          <div className="flex flex-col gap-3 md:flex-row">
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Электронная почта"
+              aria-label="Электронная почта"
+              className={`${fieldClass("input", "red")} md:flex-1`}
+            />
+            <button
+              type="submit"
+              className={`${buttonClass("inverse", "L")} w-full shrink-0 md:w-auto`}
+            >
+              Подписаться
+            </button>
           </div>
 
-          {/* 16 between the two rows of boxes, 24 from the field above them */}
-          {/* One line wherever there is room: past the 821 the rest of the column
-              keeps to, and clear of the smiley (which shows from 1700) */}
-          <div className="order-3 w-full font-sans text-[13px]/[15px] tracking-[1px] lg:order-4 lg:font-mono lg:text-sm lg:tracking-normal max-wide:min-[1100px]:w-max max-wide:min-[1100px]:whitespace-nowrap min-[1800px]:w-max min-[1800px]:whitespace-nowrap">
-            <Checkbox name="consent">
-              Я даю согласие на обработку персональных данных в соответствии с{" "}
-              <Link href={`/${locale}/privacy-policy`} className="underline">
-                политикой конфиденциальности
-              </Link>
-            </Checkbox>
-          </div>
-
-          <button
-            type="submit"
-            className={`${buttonClass("inverse")} order-4 w-full shrink-0 self-stretch whitespace-nowrap lg:order-2 lg:w-[180px] lg:self-start`}
-          >
-            Подписаться
-          </button>
+          <Checkbox name="consent" surface="red" defaultChecked={false} required>
+            Согласен(на) на обработку персональных данных{" "}
+            <Link href={`/${locale}/privacy-policy`} className="underline">
+              политика
+            </Link>
+          </Checkbox>
         </form>
       </div>
 
-      {/* Taller than the band in the mockup, so it overflows and gets clipped */}
-      <div className="pointer-events-none absolute inset-y-0 right-6 hidden items-center wide:right-[289px] wide:flex">
-        {/* tilted ~10deg counter-clockwise in the mockup; the roll keeps that as its resting angle */}
+      {/* The smiley: 12 degrees clockwise, 440 across, hanging off the right
+          edge. Under 1200 there is no room beside the text, so it sits under the
+          form at the right instead. On send it rolls out of the band. */}
+      <div className="pointer-events-none relative mt-6 flex justify-end min-[1200px]:absolute min-[1200px]:right-[-30px] min-[1200px]:top-1/2 min-[1200px]:mt-0 min-[1200px]:-translate-y-[45%]">
         <div
-          className={`relative h-60 w-60 transition-transform duration-700 ease-in sm:h-80 sm:w-80 lg:h-[420px] lg:w-[420px] ${
+          className={`relative size-[237px] transition-transform duration-700 ease-in min-[1200px]:size-[440px] ${
             submitted
               ? "translate-x-[100vw] rotate-[890deg]"
-              : "-rotate-[10deg] translate-x-0"
+              : "rotate-12 translate-x-0"
           }`}
         >
           <Image src={imageSrc} alt="" fill className="object-contain" />
