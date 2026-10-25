@@ -1,11 +1,7 @@
-import { EventsCarousel } from "@/components/blocks/EventsCarousel";
+import { EventsList } from "@/components/blocks/EventsList";
 import { fetchEvents } from "@/lib/storyblok/events";
 
-/**
- * The events the space holds, drawn by the same row as before. The row walks
- * along by itself, so with fewer events than fit it has nothing to walk - which
- * is fine, and with none it draws only its heading.
- */
+/** The events the space holds, as the file's Event rows. */
 export async function EventsSection({
   heading,
   locale,
@@ -14,5 +10,5 @@ export async function EventsSection({
   locale: string;
 }) {
   const events = await fetchEvents(locale);
-  return <EventsCarousel heading={heading} items={events} />;
+  return <EventsList heading={heading} events={events} />;
 }

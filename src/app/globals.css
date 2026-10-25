@@ -88,6 +88,8 @@
   --animate-marquee: marquee 24s linear infinite;
   --animate-ticker: marquee 40s linear infinite;
   --animate-topbar-in: topbar-in 0.4s cubic-bezier(0, 0, 0.8, 1);
+  --animate-season-left: season-left 80s linear infinite;
+  --animate-season-right: season-right 70s linear infinite;
   --animate-float: float 4s ease-in-out infinite alternate;
 }
 
@@ -110,6 +112,22 @@
    plain rule at the foot of this file instead, which lands after every utility. */
 @theme {
   --breakpoint-wide: 1700px;
+}
+
+/* The season wall: the strip is two copies of the phrase, so sliding it by half
+   its own width lands it exactly where it began */
+@keyframes season-left {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes season-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 @keyframes marquee {
@@ -351,6 +369,18 @@ body {
   line-height: 1.2;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+/* The season wall's giant lowercase line */
+@utility type-season {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 500;
+  font-size: 173px;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  text-transform: lowercase;
+  @media (max-width: 767px) {
+    font-size: 72px;
+  }
 }
 /* Article text */
 @utility type-prose {

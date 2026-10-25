@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PageCover } from "@/components/blocks/PageCover";
 import { ArticleFilters } from "@/components/blocks/ArticleFilters";
+import { EditorialGrid } from "@/components/blocks/EditorialGrid";
 import { ArticleGrid } from "@/components/blocks/ArticleGrid";
 import { Pagination } from "@/components/ui/Pagination";
 import { byTags, inSection, noTagMatches, tagsFromParam, tagsOf } from "@/lib/articles";
@@ -46,11 +47,9 @@ export default async function NewsPage({
 
   return (
     <>
-      <div className="lg:py-5">
-        <Breadcrumbs
-          items={[{ label: "Главная", href: `/${locale}` }, { label: covers.news.title }]}
-        />
-      </div>
+      <Breadcrumbs
+        items={[{ label: "Главная", href: `/${locale}` }, { label: covers.news.title }]}
+      />
       <PageCover
         title={covers.news.title}
         subtitle={covers.news.subtitle}
@@ -65,7 +64,23 @@ export default async function NewsPage({
       />
       {articles.length > 0 ? (
         <>
-          <ArticleGrid articles={articles} locale={locale} />
+          {/* The editorial grid opens an unfiltered page: one lead, three side
+              items; the listing carries on under it. A tag turns that off - a
+              narrowed list has no "main" piece. */}
+          {tags.length === 0 ? (
+            <>
+              <section className="px-4 md:px-10">
+                <EditorialGrid articles={articles} locale={locale} />
+              </section>
+              {articles.length > 4 && (
+                <div className="mt-12 md:mt-16">
+                  <ArticleGrid articles={articles.slice(4)} locale={locale} />
+                </div>
+              )}
+            </>
+          ) : (
+            <ArticleGrid articles={articles} locale={locale} />
+          )}
           {/* 222 is the mockup's number and stands for the whole section; a tag
               narrows this to one screen, so the pager has nothing to say */}
           {tags.length === 0 && (
@@ -73,7 +88,7 @@ export default async function NewsPage({
           )}
         </>
       ) : (
-        <p className="px-4 pb-16 text-lg lg:px-10 lg:text-2xl/[29px]">
+        <p className="type-body-l px-4 pb-16 md:px-10">
           {noTagMatches(tags)}
         </p>
       )}

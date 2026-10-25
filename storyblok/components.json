@@ -30,7 +30,9 @@
           "contact_details",
           "text_section",
           "help_cards",
-          "spacer"
+          "spacer",
+          "categories_row",
+          "season_wall"
         ],
         "pos": 0
       },
@@ -87,6 +89,18 @@
         "type": "multilink",
         "display_name": "Светлая кнопка — куда ведёт",
         "pos": 5
+      },
+      "lead": {
+        "type": "textarea",
+        "display_name": "Лид под заголовком",
+        "description": "Одно-два предложения; если пусто, сайт ставит свой текст",
+        "pos": 6
+      },
+      "descriptor": {
+        "type": "textarea",
+        "display_name": "Категории над заголовком",
+        "description": "По одной в строке, без скобок и номеров: их ставит сайт",
+        "pos": 7
       }
     }
   },
@@ -2681,6 +2695,111 @@
         "type": "text",
         "display_name": "Подпись",
         "pos": 1
+      }
+    }
+  },
+  {
+    "name": "category_tile",
+    "display_name": "Плитка категории",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "label": {
+        "type": "text",
+        "display_name": "Название",
+        "description": "Номер и скобки ставит сайт",
+        "pos": 0
+      },
+      "link": {
+        "type": "multilink",
+        "display_name": "Куда ведёт",
+        "pos": 1
+      },
+      "image": {
+        "type": "asset",
+        "display_name": "Фото",
+        "pos": 2,
+        "filetypes": [
+          "images"
+        ]
+      }
+    }
+  },
+  {
+    "name": "categories_row",
+    "display_name": "Плитки категорий",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "heading": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "description": "Квадратные скобки вокруг него ставит сайт, писать их не нужно",
+        "pos": 0
+      },
+      "tiles": {
+        "type": "bloks",
+        "display_name": "Плитки",
+        "pos": 1,
+        "description": "Шесть в ряд на компьютере; на телефоне ряд листается",
+        "restrict_components": true,
+        "component_whitelist": [
+          "category_tile"
+        ]
+      }
+    }
+  },
+  {
+    "name": "season_wall",
+    "display_name": "Стена сезона",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "dark": {
+        "type": "text",
+        "display_name": "Фраза тёмным",
+        "description": "Например «осень»; повторяется по строке",
+        "pos": 0
+      },
+      "red": {
+        "type": "text",
+        "display_name": "Фраза красным",
+        "description": "Например «в магазинах»",
+        "pos": 1
+      },
+      "label": {
+        "type": "text",
+        "display_name": "Метка карточки",
+        "description": "Скобки ставит сайт; по умолчанию «Сезон»",
+        "pos": 2
+      },
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок карточки",
+        "pos": 3
+      },
+      "text": {
+        "type": "textarea",
+        "display_name": "Текст карточки",
+        "pos": 4
+      },
+      "link_label": {
+        "type": "text",
+        "display_name": "Надпись ссылки",
+        "pos": 5
+      },
+      "link": {
+        "type": "multilink",
+        "display_name": "Куда ведёт ссылка",
+        "pos": 6
+      },
+      "image": {
+        "type": "asset",
+        "display_name": "Фото 1:1",
+        "pos": 7,
+        "filetypes": [
+          "images"
+        ]
       }
     }
   }

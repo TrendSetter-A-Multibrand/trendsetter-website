@@ -4,6 +4,8 @@ import type { Block } from "@/lib/storyblok/fetchStory";
 import { Hero } from "@/components/blocks/Hero";
 import { EventsSection } from "@/components/blocks/EventsSection";
 import { NewsRow, JournalRow } from "@/components/blocks/ArticlesRow";
+import { SeasonWall } from "@/components/blocks/SeasonWall";
+import { CategoriesRow } from "@/components/blocks/CategoriesRow";
 import { StoresSection } from "@/components/blocks/StoresSection";
 import { NewsletterSignup } from "@/components/blocks/NewsletterSignup";
 import { LegalArticle } from "@/components/blocks/LegalArticle";
@@ -91,15 +93,16 @@ const DRAW: Record<
     previous?: Block,
   ) => React.ReactNode
 > = {
-  // The file calls the red button the first one; Hero has had them the other way
-  // round since it was built, where `primaryCta` is the pale one on the left.
+  // The red button is the first one, the underlined link beside it the second.
   hero: (blok, locale) => (
     <Hero
       locale={locale}
       tagline={text(blok.tagline)}
       imageSrc={image(blok.image)}
-      primaryCta={cta(blok.secondary_label, blok.secondary_link, locale)}
-      secondaryCta={cta(blok.primary_label, blok.primary_link, locale)}
+      lead={text(blok.lead)}
+      descriptor={lines(blok.descriptor).length ? lines(blok.descriptor) : undefined}
+      primaryCta={cta(blok.primary_label, blok.primary_link, locale)}
+      secondaryCta={cta(blok.secondary_label, blok.secondary_link, locale)}
     />
   ),
 
@@ -244,9 +247,36 @@ const DRAW: Record<
   // so the Магазины page can sit it flush under the breadcrumbs, and the red
   // band runs to the page edges, so its 40 has to sit outside it.
   stores_row: (blok) => (
-    <div className="pt-6 lg:pb-10 lg:pt-[120px]">
+    <div className="pt-16 md:pt-32">
       <StoresSection heading={text(blok.heading)} />
     </div>
+  ),
+
+  // The giant lowercase wall that changes with the season; 128 of air above it
+  season_wall: (blok, locale) => (
+    <div className="mt-16 md:mt-32">
+      <SeasonWall
+        dark={text(blok.dark)}
+        red={text(blok.red)}
+        label={text(blok.label)}
+        title={text(blok.title) ?? ""}
+        text={text(blok.text)}
+        linkLabel={text(blok.link_label)}
+        href={href(blok.link, locale)}
+        image={image(blok.image)}
+      />
+    </div>
+  ),
+
+  categories_row: (blok, locale) => (
+    <CategoriesRow
+      heading={text(blok.heading)}
+      items={nested(blok.tiles).map((tile) => ({
+        label: text(tile.label) ?? "",
+        href: href(tile.link, locale) ?? "#",
+        image: image(tile.image),
+      }))}
+    />
   ),
   legal_article: (blok) => (
     <LegalArticle
@@ -289,7 +319,7 @@ const DRAW: Record<
   ),
 
   newsletter: (blok, locale) => (
-    <div className="mt-4 lg:mt-10">
+    <div className="mt-16 md:mt-32">
       <NewsletterSignup
         locale={locale}
         heading={text(blok.heading)}

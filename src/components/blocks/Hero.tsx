@@ -2,77 +2,105 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
 import { buttonClass } from "@/components/ui/Button";
-import { Wordmark } from "@/components/ui/Wordmark";
+import { LinkArrow } from "@/components/ui/LinkArrow";
 
 type HeroProps = {
   locale: Locale;
   tagline?: string;
+  /** A sentence under the headline. */
+  lead?: string;
+  /** The categories in brackets above it, one per entry. */
+  descriptor?: string[];
+  /** The red button. */
   primaryCta?: { label: string; href: string };
+  /** The underlined link beside it. */
   secondaryCta?: { label: string; href: string };
   imageSrc?: string;
 };
 
+/**
+ * The headline was written in capitals for the old design. The new one sets it in
+ * sentence case, so a line typed wholly in capitals is brought down to one.
+ */
+function sentenceCase(text: string) {
+  if (text !== text.toUpperCase() || text === text.toLowerCase()) return text;
+  const lower = text.toLowerCase();
+  return lower.charAt(0).toUpperCase() + lower.slice(1);
+}
+
+const DESCRIPTOR = ["Одежда", "Дом", "Еда", "Мастерская", "Ателье"];
+
+/**
+ * The file's Home hero. A desktop screen is split: the text on the left six
+ * columns - the categories in brackets at the top, then at the foot the headline
+ * in Display, a lead in Body L held to 420 and the two actions - and the photo
+ * on the right, running off the edge of the screen. The block is the window less
+ * the bar above it, 920 at most, so the first screen ends exactly at the fold.
+ *
+ * On a phone the photo comes first, edge to edge (240 tall), then the headline,
+ * the lead and the red button across the full width, then the link, and last the
+ * categories as one line that swipes between two rules.
+ */
 export function Hero({
   locale,
   tagline = "Доверьте поиск нам, а выбор — себе",
-  primaryCta = { label: "Читать журнал", href: `/${locale}/journal` },
-  secondaryCta = { label: "Найти магазин", href: `/${locale}/stores` },
+  lead = "Отбираем одежду, вещи для дома и косметику известных брендов — и привозим их в магазины рядом с вами.",
+  descriptor = DESCRIPTOR,
+  primaryCta = { label: "Найти магазин", href: `/${locale}/stores` },
+  secondaryCta = { label: "Читать журнал", href: `/${locale}/journal` },
   imageSrc = "/images/home/hero.jpg",
 }: HeroProps) {
-  // The section is pulled up behind the header, so that the photo - and not the
-  // page's own white - is what shows while the bar slides in and out. The copy
-  // is padded back down to stay centred in what is left below the bar.
+  const tags = descriptor.map((word, i) => `[${i + 1}] ${word}`);
+
   return (
-    <section className="on-dark relative mt-[calc(-1*var(--header-h,0px))] flex h-[524px] flex-col justify-end overflow-hidden bg-neutral-800 lg:h-[100svh]">
-      {imageSrc ? (
-        <Image
-          src={imageSrc}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-neutral-700 to-neutral-900" />
-      )}
-
-      {/* The mockup knocks the photo back hard. Measured against the file we
-          ship - which is the untouched export, no darkening of its own - the
-          closest single black layer is 49%; anything lighter and the white type
-          over it sits differently. */}
-      <div className="absolute inset-0 bg-black/[0.49]" />
-
-      {/* The 375 frame pins the buttons to the foot of the image, 16 up from
-          the edge, with the tagline riding well above them rather than
-          stacked close - the file's own gap here is 160. lg keeps the group
-          centred in the frame instead, as it always has. */}
-      <div className="absolute inset-0 flex flex-col items-center justify-end gap-[160px] px-4 pb-4 pt-[var(--header-h,0px)] text-center lg:justify-center lg:gap-6 lg:px-10 lg:pb-0">
-        {/* Geist Mono 36 on a 46.8 line, 3 of tracking */}
-        <p className="max-w-5xl font-mono text-2xl uppercase text-white sm:text-2xl lg:text-[36px]/[46.8px] lg:tracking-[3px]">
-          {tagline}
+    <section className="flex flex-col md:h-[min(920px,calc(100svh-var(--header-h,116px)))] md:min-h-[560px] md:flex-row">
+      <div className="flex flex-col md:w-1/2 md:justify-between md:py-12 md:pl-10 md:pr-[63px] min-[1200px]:w-[46.3%]">
+        {/* Desktop: a row at the top of the column */}
+        <p className="type-caption hidden gap-4 whitespace-nowrap text-ink md:flex">
+          {tags.map((tag) => (
+            <span key={tag}>{tag}</span>
+          ))}
         </p>
 
-        {/* 24 apart; the labels are Inter Tight, not the mono they read as - the
-            file says so. The library has the pair as White Opacity and Primmary.
-            375 stacks them full-width; the row comes back from lg. */}
-        <div className="flex w-full flex-col gap-4 lg:w-auto lg:flex-row lg:flex-wrap lg:justify-center lg:gap-6">
-          <Link href={primaryCta.href} className={`w-full lg:w-auto ${buttonClass("onImageLight")}`}>
-            {primaryCta.label}
-          </Link>
-          <Link href={secondaryCta.href} className={`w-full lg:w-auto ${buttonClass("primary")}`}>
-            {secondaryCta.label}
-          </Link>
+        {/* The photo leads on a phone */}
+        <div className="relative h-60 w-full md:hidden">
+          {imageSrc && (
+            <Image src={imageSrc} alt="" fill priority sizes="100vw" className="object-cover" />
+          )}
+        </div>
+
+        <div className="flex flex-col gap-6 px-4 pt-6 md:gap-8 md:p-0">
+          <h1 className="type-display text-ink">{sentenceCase(tagline)}</h1>
+          <p className="type-body-l max-w-[420px] text-ink">{lead}</p>
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
+            <Link
+              href={primaryCta.href}
+              className={`${buttonClass("primary", "L")} w-full md:w-auto`}
+            >
+              {primaryCta.label}
+            </Link>
+            <LinkArrow href={secondaryCta.href} className="self-start">
+              {secondaryCta.label}
+            </LinkArrow>
+          </div>
+
+          {/* Phone: the categories as a swiping line between two rules */}
+          <p className="type-caption -mx-4 flex gap-4 overflow-x-auto whitespace-nowrap border-y border-line px-4 py-3 text-ink [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
+            {tags.map((tag) => (
+              <span key={tag} className="shrink-0">
+                {tag}
+              </span>
+            ))}
+          </p>
         </div>
       </div>
 
-      {/* LINEAR_DODGE in the mockup - lets the photo read through the letters.
-          24 of air all round it, which is what makes the wordmark 1872 at 1920.
-          The 375 frame carries no bottom wordmark, so it goes sr-only below lg -
-          still the page's one <h1>, read by a screen reader rather than removed. */}
-      <h1 className="sr-only w-full px-4 pb-4 mix-blend-plus-lighter lg:relative lg:not-sr-only lg:px-6 lg:pb-6">
-        <Wordmark className="text-brand" />
-      </h1>
+      {/* Desktop photo: fills the right half and runs to the edge */}
+      <div className="relative hidden flex-1 md:block">
+        {imageSrc && (
+          <Image src={imageSrc} alt="" fill priority sizes="50vw" className="object-cover" />
+        )}
+      </div>
     </section>
   );
 }

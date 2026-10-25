@@ -1,5 +1,5 @@
 import { NewsGrid } from "@/components/blocks/NewsGrid";
-import { JournalCarousel } from "@/components/blocks/JournalCarousel";
+import { JournalSection } from "@/components/blocks/EditorialGrid";
 import { fetchArticles } from "@/lib/storyblok/articles";
 import { inSection } from "@/lib/articles";
 
@@ -36,6 +36,10 @@ export async function JournalRow({
 }) {
   const articles = await fetchArticles(locale);
   return (
-    <JournalCarousel heading={heading} items={inSection(articles, "journal")} />
+    <JournalSection
+      heading={heading}
+      articles={inSection(articles, "journal")}
+      locale={locale}
+    />
   );
 }
