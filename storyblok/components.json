@@ -801,6 +801,7 @@
           "published_at",
           "reading_minutes",
           "views",
+          "hide_views",
           "excerpt",
           "body"
         ],
@@ -892,6 +893,12 @@
         "description": "Пока вводится руками; позже будет считаться само",
         "pos": 8
       },
+      "hide_views": {
+        "type": "boolean",
+        "display_name": "Скрыть счётчик просмотров",
+        "description": "Включите, пока цифра маленькая: глаз и число пропадут из шапки статьи",
+        "pos": 9
+      },
       "event": {
         "type": "option",
         "display_name": "Мероприятие (устарело)",
@@ -975,6 +982,7 @@
           "published_at",
           "reading_minutes",
           "views",
+          "hide_views",
           "excerpt",
           "body"
         ],
@@ -1046,6 +1054,12 @@
         "display_name": "Просмотры",
         "description": "Пока вводится руками; позже будет считаться само",
         "pos": 8
+      },
+      "hide_views": {
+        "type": "boolean",
+        "display_name": "Скрыть счётчик просмотров",
+        "description": "Включите, пока цифра маленькая: глаз и число пропадут из шапки статьи",
+        "pos": 9
       },
       "body": {
         "type": "bloks",

@@ -89,13 +89,15 @@ export function ArticleHeader({ locale, meta }: ArticleHeaderProps) {
                 </dt>
                 <dd className={META_VALUE}>{meta.readingMinutes} мин</dd>
               </div>
-              <div className="flex flex-col items-center">
-                <dt className="flex h-[18px] items-center text-ink">
-                  <EyeIcon />
-                  <span className="sr-only">Просмотры</span>
-                </dt>
-                <dd className={META_VALUE}>{meta.views}</dd>
-              </div>
+              {meta.showViews && (
+                <div className="flex flex-col items-center">
+                  <dt className="flex h-[18px] items-center text-ink">
+                    <EyeIcon />
+                    <span className="sr-only">Просмотры</span>
+                  </dt>
+                  <dd className={META_VALUE}>{meta.views}</dd>
+                </div>
+              )}
             </div>
           </dl>
 

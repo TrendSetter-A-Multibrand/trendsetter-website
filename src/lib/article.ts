@@ -92,6 +92,8 @@ export type ArticleMeta = {
   author: string;
   publishedAt: string;
   views: number;
+  /** The editor can hide the counter while the figure is small. */
+  showViews: boolean;
   readingMinutes: number;
   heroImage: string;
   /** The tags shown as chips over the title - the card's own, not a fixed list. */
@@ -119,6 +121,7 @@ export const PLACEHOLDER_ARTICLE: { meta: ArticleMeta; blocks: ArticleBlock[] } 
     author: "Имя Фамилия (доп. поле)",
     publishedAt: "22 сентября 2026",
     views: 715,
+    showViews: true,
     readingMinutes: 5,
     heroImage: "/images/home/journal/1.jpg",
     tags: ["Мода", "Тренды"],

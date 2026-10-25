@@ -19,6 +19,7 @@ export type ArticleFields = {
   published_at?: string;
   reading_minutes?: string;
   views?: string;
+  hide_views?: boolean;
   event?: string;
   placements?: Block[];
   body?: Block[];
@@ -243,6 +244,7 @@ export function pageMeta(
     author: content.author ?? "",
     publishedAt: written(content.published_at ?? ""),
     views: Number(content.views) || 0,
+    showViews: !content.hide_views,
     readingMinutes: Number(content.reading_minutes) || 0,
     heroImage: content.hero?.filename ?? "",
     tags: content.tags ?? [],
