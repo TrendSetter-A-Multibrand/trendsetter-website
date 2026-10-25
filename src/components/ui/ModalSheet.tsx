@@ -1,33 +1,74 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { CardImage } from "@/components/ui/CardImage";
+import { CloseIcon } from "@/components/ui/Icons";
+import { iconButtonClass } from "@/components/ui/iconButton";
+
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /**
- * The library's Modal shell: a 1280 sheet over the dimmed page, 40 of air at
- * the head and foot and 40 between blocks (24 at 375), a header with the title
- * and the cross. Esc and a click on the dimmed page close it, and the page
- * behind stops scrolling. What goes inside is the caller's; blocks keep 40 off
- * the sheet's edges (`px-6 lg:px-10`) except the photo, which runs full width.
+ * The file's Sheet. On a desktop it stands in the middle of the screen over the
+ * page dimmed to the overlay colour - 720 wide, or 880 for a brand, a space or
+ * a shop - with a 1px Sage frame; the head holds a "[метка]" in Caption over the
+ * title in H2 and a close button. On a phone it is the whole screen with no
+ * dimming and a top row with the cross that stays put while the rest scrolls.
+ * It comes up 24 from below and fades in over 250 ms.
+ *
+ * Esc and a click on the dimmed page close it, the page behind stops scrolling,
+ * focus goes in and stays in, and goes back to where it was on closing. What
+ * goes inside is the caller's; blocks keep their own air off the sheet's edges
+ * (`px-6 lg:px-10`) except the photo, which runs the full width.
  */
 export function ModalSheet({
   title,
+  label,
+  size = "lg",
   onClose,
   children,
 }: {
   title: string;
+  /** The line over the title, brackets added here: "Запись на событие". */
+  label?: string;
+  /** 720 for a form, 880 for a brand, space or shop. */
+  size?: "sm" | "lg";
   onClose: () => void;
   children: React.ReactNode;
 }) {
+  const panel = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
+    const before = document.activeElement as HTMLElement | null;
     const { overflow } = document.body.style;
     document.body.style.overflow = "hidden";
+    panel.current?.querySelector<HTMLElement>("[data-close]")?.focus();
+
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab" || !panel.current) return;
+      const nodes = Array.from(panel.current.querySelectorAll<HTMLElement>(FOCUSABLE));
+      if (!nodes.length) return;
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    window.addEventListener("keydown", onKey);
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = overflow;
+      before?.focus?.();
     };
   }, [onClose]);
 
@@ -38,52 +79,62 @@ export function ModalSheet({
       role="dialog"
       aria-modal="true"
       aria-label={title}
-      className="fixed inset-0 z-50 flex items-end justify-center pt-16 lg:items-center lg:p-4"
+      className="fixed inset-0 z-[70] md:flex md:items-center md:justify-center md:p-4"
     >
+      {/* Only a desktop dims the page; a phone's sheet covers it */}
       <button
         type="button"
         aria-label="Закрыть"
+        tabIndex={-1}
         onClick={onClose}
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 hidden bg-overlay md:block"
       />
 
-      <div className="relative flex max-h-full w-full max-w-[1280px] flex-col gap-6 overflow-y-auto bg-white py-6 text-ink lg:gap-10 lg:py-10">
-        <div className="flex items-center justify-between gap-6 px-6 lg:px-10">
-          <p className="text-2xl/none font-medium tracking-[1px]">{title}</p>
-
+      <div
+        ref={panel}
+        className={`relative flex h-full w-full animate-sheet-in flex-col overflow-y-auto bg-white text-ink md:h-auto md:max-h-full md:border md:border-ink ${
+          size === "sm" ? "md:max-w-[720px]" : "md:max-w-[880px]"
+        }`}
+      >
+        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 bg-white p-4 md:static md:p-8 md:pb-6">
+          <div className="flex min-w-0 flex-1 flex-col gap-2">
+            {label && <p className="type-caption">[{label}]</p>}
+            <p className="type-h2">{title}</p>
+          </div>
           <button
             type="button"
+            data-close
             aria-label="Закрыть"
             onClick={onClose}
-            className="shrink-0 transition-colors hover:text-brand"
+            className={`${iconButtonClass()} md:-mr-2 md:-mt-2`}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="m3 3 18 18M21 3 3 21" stroke="currentColor" strokeWidth="2" />
-            </svg>
+            <CloseIcon />
           </button>
         </div>
 
-        {children}
+        <div className="flex flex-col gap-6 pb-6 md:gap-8 md:pb-8">{children}</div>
       </div>
     </div>,
     document.body
   );
 }
 
-/** The sheet's photo: the full width, 400 tall (240 at 375 unless `fixed`). */
+/** The sheet's photo: the full width, 21:9 on a desktop, 240 tall on a phone unless `fixed`. */
 export function ModalPhoto({
   src,
   fixed = false,
 }: {
   src?: string;
-  /** Keep 400 at every width - what the sheet drew before the 375 frame. */
+  /** Keep a fixed 400 at every width - what the sheet drew before. */
   fixed?: boolean;
 }) {
   return (
     <div
-      className={`relative w-full shrink-0 ${fixed ? "h-[400px]" : "h-60 lg:h-[400px]"}`}
+      className={`relative w-full shrink-0 bg-surface ${
+        fixed ? "h-[400px]" : "h-60 md:aspect-[21/9] md:h-auto"
+      }`}
     >
-      <CardImage src={src} sizes="1280px" />
+      <CardImage src={src} sizes="880px" />
     </div>
   );
 }

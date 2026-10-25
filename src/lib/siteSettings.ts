@@ -6,7 +6,7 @@ import {
   type SiteSettings,
 } from "@/lib/siteDefaults";
 import type { SocialLink } from "@/lib/navigation";
-import { columns, nav, visibleColumns, visibleNav } from "@/lib/menuSettings";
+import { columns, nav, visibleColumns, visibleNav, withEvents } from "@/lib/menuSettings";
 import type { TickerTone } from "@/components/blocks/PromoTicker";
 
 export { DEFAULT_SETTINGS };
@@ -136,7 +136,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     },
     cookieText: str(content.cookie_text) || d.cookieText,
     homeDescription: str(content.home_meta_description) || d.homeDescription,
-    nav: nav(content),
+    nav: withEvents(nav(content)),
     footer: {
       columns: columns(content),
       cooperationTitle:

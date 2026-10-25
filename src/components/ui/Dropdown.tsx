@@ -41,12 +41,15 @@ export function Dropdown({
   options,
   invalid,
   surface = "red",
+  onChange,
 }: {
   name: string;
   placeholder: string;
   options: DropdownOption[];
   invalid?: boolean;
   surface?: "light" | "red";
+  /** Told the new choice - its value, as the option names it. */
+  onChange?: (value: string) => void;
 }) {
   const red = surface === "red";
   const [open, setOpen] = useState(false);
@@ -127,6 +130,7 @@ export function Dropdown({
                 type="button"
                 onClick={() => {
                   setValue(valueOf(option));
+                  onChange?.(valueOf(option));
                   setOpen(false);
                 }}
                 className="type-body px-4 py-2 text-left text-ink transition-colors duration-150 hover:text-brand"

@@ -25,6 +25,8 @@ export type Event = {
   description?: string;
   ctaLabel: string;
   image?: string;
+  /** The article's own tags; the first one reads as the kind of event on its page. */
+  tags?: string[];
 };
 
 const STATIC_EVENTS: Pick<
@@ -87,7 +89,7 @@ const STATIC_DATES: Record<string, string> = {
 export const EVENTS: Event[] = STATIC_EVENTS.map((event) => ({
   ...event,
   uuid: event.slug,
-  href: `/ru/journal/${event.slug}`,
+  href: `/ru/events/${event.slug}`,
   date: STATIC_DATES[event.slug] ?? "",
   signupEnabled: true,
   spaceSections: [],
@@ -184,14 +186,14 @@ export type EventPlacement = {
 /** The event an article is, in the shape the cards and the page want. */
 export function eventFromPlacement(
   article: { uuid: string; slug: string },
-  placement: EventPlacement & { spaceSections?: string[] },
+  placement: EventPlacement & { spaceSections?: string[]; tags?: string[] },
   locale: string,
 ): Event {
   const { day, month, time } = eventDate(placement.date);
   return {
     uuid: article.uuid,
     slug: article.slug,
-    href: `/${locale}/journal/${article.slug}`,
+    href: `/${locale}/events/${article.slug}`,
     date: placement.date,
     seats: placement.seats,
     signupEnabled: placement.signupEnabled,
@@ -204,5 +206,6 @@ export function eventFromPlacement(
     description: placement.cardDescription,
     ctaLabel: placement.ctaLabel,
     image: placement.cardImage,
+    tags: placement.tags,
   };
 }

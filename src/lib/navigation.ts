@@ -19,6 +19,7 @@ export const NAV_ITEMS: NavItem[] = [
     ],
   },
   { label: "Новости", slug: "news" },
+  { label: "События", slug: "events" },
   // One entry, and no children: the shops live on the one page rather than on
   // pages of their own, and /stores/1 was never a route.
   { label: "Магазины", slug: "stores" },

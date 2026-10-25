@@ -565,14 +565,17 @@ const COLUMN = {
 export function ArticleBody({
   blocks,
   locale = "ru_ru",
+  flow = false,
 }: {
   blocks: ArticleBlock[];
   locale?: string;
+  /** Every block fills the column it is put in - an event page's 898 - instead of the article's 770 and 1000. */
+  flow?: boolean;
 }) {
   return (
     <div className="flex flex-col gap-4 md:gap-6">
       {blocks.map((block, i) => (
-        <div key={i} className={COLUMN[widthOf(block)]}>
+        <div key={i} className={flow ? "w-full" : COLUMN[widthOf(block)]}>
           <Block block={block} locale={locale} />
         </div>
       ))}

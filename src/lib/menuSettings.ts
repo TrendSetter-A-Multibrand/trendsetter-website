@@ -91,6 +91,19 @@ export function nav(content: Blok): NavItem[] {
   return visibleNav(items.length ? items : DEFAULT_SETTINGS.nav);
 }
 
+/**
+ * The events page came after the editor wrote the menu: it goes in after the
+ * news unless the editor has already placed it (hidden counts as placed). Done on
+ * the visible menu, so an empty or all-hidden one stays empty.
+ */
+export function withEvents(items: NavItem[]): NavItem[] {
+  if (!items.length || items.some((item) => item.slug === "events")) return items;
+  const at = items.findIndex((item) => item.slug === "news");
+  const next = [...items];
+  next.splice(at >= 0 ? at + 1 : next.length, 0, { label: "События", slug: "events" });
+  return next;
+}
+
 export function columns(content: Blok): FooterColumn[] {
   const found = list(content.footer_columns)
     .map((column) => ({

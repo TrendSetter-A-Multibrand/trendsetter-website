@@ -22,7 +22,7 @@ describe("eventFromStory", () => {
     expect(event).toMatchObject({
       uuid: "u1",
       slug: "workshop",
-      href: "/ru_ru/journal/workshop",
+      href: "/ru_ru/events/workshop",
       date: "2026-11-01 18:00",
       title: "Заголовок",
       image: "/hero.jpg",

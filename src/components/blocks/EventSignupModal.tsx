@@ -3,10 +3,12 @@
 import { type FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/Button";
-import { Divider } from "@/components/ui/Divider";
-import { ModalPhoto, ModalSheet } from "@/components/ui/ModalSheet";
+import { fieldClass, fieldErrorClass } from "@/components/ui/fieldClass";
+import { Facts } from "@/components/cards/Facts";
+import { whenLong } from "@/lib/eventsView";
+import { ModalSheet } from "@/components/ui/ModalSheet";
 import { useSiteSettings } from "@/components/layout/SettingsContext";
-import { eventDate, type Event } from "@/lib/events";
+import type { Event } from "@/lib/events";
 import {
   checkSignup,
   fillSeats,
@@ -56,8 +58,6 @@ export function EventSignupModal({
 
   const phase = seats?.phase ?? "open";
   const shut = phase !== "open";
-  const { day, monthFull, time } = eventDate(event.date);
-  const when = [`${day} ${monthFull}`, time, event.location].filter(Boolean).join(" · ");
   const consentText = splitBraces(t.consent);
 
   async function submit(e: FormEvent) {
@@ -91,41 +91,35 @@ export function EventSignupModal({
   }
 
   return (
-    <ModalSheet title={event.title} onClose={onClose}>
-      <div className="flex flex-col gap-6">
-        <ModalPhoto src={event.image} />
-        <div className="flex flex-col gap-4 px-6 lg:px-10">
-          {event.description && (
-            <p className="whitespace-pre-line text-base/5">{event.description}</p>
-          )}
-          <p className="text-sm/[19px] uppercase tracking-[1px]">{when}</p>
-        </div>
-        <div className="px-6 lg:px-10">
-          <Divider />
-        </div>
-      </div>
+    <ModalSheet title={event.title} label="Запись на событие" size="sm" onClose={onClose}>
+      <div className="flex flex-col gap-6 px-4 md:px-8">
+        <Facts
+          items={[
+            { label: "Когда", value: whenLong(event) },
+            ...(event.location ? [{ label: "Где", value: event.location }] : []),
+          ]}
+        />
 
-      <div className="flex flex-col gap-6 px-6 lg:px-10">
         {event.seats !== undefined && (
-          <p className="min-h-5 font-mono text-base/5 font-medium">
+          <p className="type-caption min-h-4">
             {seats === null ? (
-              <span aria-hidden="true" className="block h-5 w-40 bg-surface" />
+              <span aria-hidden="true" className="block h-4 w-40 bg-surface" />
             ) : phase === "full" ? null : (
               seats.left !== null && fillSeats(t.seatsLeft, seats.left)
             )}
           </p>
         )}
 
-        {phase === "full" && <p role="status" className="text-base/5">{t.seatsNone}</p>}
-        {phase === "closed" && <p role="status" className="text-base/5">{t.closed}</p>}
+        {phase === "full" && <p role="status" className="type-body">{t.seatsNone}</p>}
+        {phase === "closed" && <p role="status" className="type-body">{t.closed}</p>}
         {result && (
-          <p role="status" className="text-base/5">
+          <p role="status" className="type-h3">
             {result === "done" ? t.done : t.already}
           </p>
         )}
 
         {!result && (
-          <form onSubmit={submit} noValidate className="flex max-w-[586px] flex-col gap-6">
+          <form onSubmit={submit} noValidate className="flex flex-col gap-4">
             <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
             <input
               type="email"
@@ -135,10 +129,11 @@ export function EventSignupModal({
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t.placeholder}
               aria-label={t.placeholder}
-              className="h-12 border border-ink bg-transparent px-4 text-sm/[18px] tracking-[1px] outline-none placeholder:text-muted disabled:border-surface-active disabled:text-muted"
+              aria-invalid={error === NEED_EMAIL ? true : undefined}
+              className={`${fieldClass("input", "light")} disabled:border-line disabled:text-muted`}
             />
 
-            <label className="flex cursor-pointer items-start gap-4 text-sm/[18px]">
+            <label className="type-body-s flex cursor-pointer items-start gap-3">
               <input
                 type="checkbox"
                 checked={consent}
@@ -146,9 +141,9 @@ export function EventSignupModal({
                 onChange={(e) => setConsent(e.target.checked)}
                 className="peer sr-only"
               />
-              <span className="mt-px flex size-6 shrink-0 items-center justify-center border border-ink peer-checked:[&>svg]:opacity-100 peer-disabled:border-surface-active">
-                <svg viewBox="0 0 24 24" fill="none" className="size-4 opacity-0">
-                  <path d="m5 13 4 4L19 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <span className="flex size-5 shrink-0 items-center justify-center border border-ink bg-white peer-checked:bg-ink peer-checked:text-white peer-disabled:border-line peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-checked:[&>svg]:opacity-100">
+                <svg viewBox="0 0 20 20" fill="none" className="size-5 opacity-0">
+                  <path d="m5 10.5 3.5 3.5L15 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
                 </svg>
               </span>
               <span>
@@ -171,12 +166,12 @@ export function EventSignupModal({
               </span>
             </label>
 
-            {error && <p role="alert" className="text-sm/[18px] text-brand">{error}</p>}
+            {error && <p role="alert" className={fieldErrorClass("light")}>{error}</p>}
 
             <button
               type="submit"
               disabled={busy || shut}
-              className={`${buttonClass("primary")} w-full lg:w-[180px]`}
+              className={`${buttonClass("primary", "L")} w-full`}
             >
               {t.submit}
             </button>

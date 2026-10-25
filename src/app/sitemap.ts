@@ -12,6 +12,7 @@ const OWN_ROUTES = [
   "",
   "/journal",
   "/news",
+  "/events",
   "/brands",
   "/stores",
   "/company/careers",

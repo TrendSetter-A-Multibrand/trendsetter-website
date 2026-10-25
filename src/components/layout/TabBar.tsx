@@ -18,13 +18,11 @@ import {
  * over the middle half; a press fills the item Paper. "Меню" opens the full
  * menu, and while the menu is open the bar is gone.
  *
- * The file draws Журнал · События · Магазины · Меню. The events page is not
- * built yet, so the second slot carries Новости for now - one line to swap when
- * /events exists.
+ * Журнал · События · Магазины · Меню, as the file draws them.
  */
 const TABS = [
   { slug: "journal", label: "Журнал", Icon: JournalIcon },
-  { slug: "news", label: "Новости", Icon: CalendarIcon },
+  { slug: "events", label: "События", Icon: CalendarIcon },
   { slug: "stores", label: "Магазины", Icon: PinIcon },
 ] as const;
 

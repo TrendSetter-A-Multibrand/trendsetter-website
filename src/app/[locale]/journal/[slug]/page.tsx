@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { isLocale } from "@/lib/i18n/locales";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { ArticleHeader } from "@/components/blocks/ArticleHeader";
 import { ArticleBody } from "@/components/blocks/ArticleBody";
 import { ArticleReactions } from "@/components/blocks/ArticleReactions";
@@ -44,6 +44,8 @@ export default async function ArticlePage({
     fetchArticles(locale),
   ]);
   if (!article) notFound();
+  // An event has its own page; the old address keeps working
+  if (article.meta.event) permanentRedirect(`/${locale}/events/${slug}`);
   const { meta, blocks } = article;
 
   // The piece that follows: the next one in the same section, if there is one

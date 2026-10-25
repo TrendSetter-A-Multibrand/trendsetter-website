@@ -90,6 +90,10 @@
   --animate-topbar-in: topbar-in 0.4s cubic-bezier(0, 0, 0.8, 1);
   --animate-season-left: season-left 80s linear infinite;
   --animate-season-right: season-right 70s linear infinite;
+  --animate-sheet-in: sheet-in 250ms ease-out;
+  --animate-digit-in: digit-in 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  --animate-fade-in: fade-in 250ms ease-out;
+  --animate-widget-bar: widget-bar 5s linear forwards;
   --animate-float: float 4s ease-in-out infinite alternate;
 }
 
@@ -127,6 +131,35 @@
   }
   to {
     transform: translateX(0);
+  }
+}
+
+/* The sheet comes up 24 from below while it fades in */
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+/* The events widget: a new date climbs into place, the text fades in, the bar fills */
+@keyframes digit-in {
+  from {
+    opacity: 0;
+    transform: translateY(40%);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes widget-bar {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
   }
 }
 

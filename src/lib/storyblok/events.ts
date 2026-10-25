@@ -41,7 +41,11 @@ export function eventFromStory(
   if (!placements?.event) return null;
   return eventFromPlacement(
     story,
-    { ...placements.event, spaceSections: placements.space?.spaceSections },
+    {
+      ...placements.event,
+      spaceSections: placements.space?.spaceSections,
+      tags: content.tags,
+    },
     locale,
   );
 }
@@ -76,7 +80,11 @@ export async function fetchEvents(locale: string): Promise<Event[]> {
     return [
       eventFromPlacement(
         story,
-        { ...placement.event, spaceSections: placement.space?.spaceSections },
+        {
+          ...placement.event,
+          spaceSections: placement.space?.spaceSections,
+          tags: content.tags,
+        },
         locale,
       ),
     ];

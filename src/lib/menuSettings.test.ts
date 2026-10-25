@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { columns, nav, visibleColumns, visibleNav } from "@/lib/menuSettings";
+import { columns, nav, visibleColumns, visibleNav, withEvents } from "@/lib/menuSettings";
 import { DEFAULT_SETTINGS } from "@/lib/siteDefaults";
 
 const link = (label: string, slug: string, hidden?: unknown) => ({
@@ -102,5 +102,22 @@ describe("запасные значения", () => {
     visibleNav(DEFAULT_SETTINGS.nav);
     visibleColumns(DEFAULT_SETTINGS.footer.columns);
     expect(JSON.stringify(DEFAULT_SETTINGS)).toBe(before);
+  });
+});
+
+describe("withEvents", () => {
+  it("ставит События после Новостей, если редактор их не ставил", () => {
+    const items = [
+      { label: "Журнал", slug: "journal" },
+      { label: "Новости", slug: "news" },
+      { label: "Магазины", slug: "stores" },
+    ];
+    expect(withEvents(items).map((i) => i.slug)).toEqual(["journal", "news", "events", "stores"]);
+  });
+
+  it("не трогает меню, где События уже есть, и пустое меню", () => {
+    const placed = [{ label: "События", slug: "events" }];
+    expect(withEvents(placed)).toBe(placed);
+    expect(withEvents([])).toEqual([]);
   });
 });
