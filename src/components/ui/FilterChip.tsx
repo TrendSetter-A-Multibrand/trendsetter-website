@@ -1,32 +1,32 @@
 import Link from "next/link";
 
 /**
- * 42 tall pill with a 2px outline and 14 of padding inside it - 16 from the edge
- * to the label, which is what the mockup measures - and a 14px mono label. The
- * file sets every one of these at weight 500, on the journal and on search alike.
+ * The file's Chip: 44 tall, square, a 1px Sage rule, 16 of air either side and a
+ * 12px mono caps label. Hover takes the Paper plate, selected fills Sage with a
+ * white label. On a phone they sit in one swipeable row, on desktop they wrap -
+ * that is the row's job, not the chip's.
  */
 const CHIP =
-  "flex h-[42px] items-center rounded-full border-2 px-[14px] font-mono text-sm/[18px] font-medium uppercase transition-colors";
+  "flex h-11 shrink-0 items-center border border-ink px-4 font-mono text-[12px]/[1.3] uppercase tracking-[0.04em] whitespace-nowrap transition-colors duration-150";
 
 const tone = (active: boolean) =>
-  active ? "border-brand bg-brand text-white" : "border-ink text-brand";
+  active ? "bg-ink text-white" : "bg-white text-ink hover:bg-surface";
 
 export function FilterChip({
   label,
   active = false,
   onClick,
   href,
-  tight,
 }: {
   label: string;
   active?: boolean;
   onClick?: () => void;
   /** A chip that changes the address rather than local state. */
   href?: string;
-  /** FAQ draws its chips without the 1px of tracking the article ones carry. */
+  /** Kept for the callers that still pass it; the new chip has one tracking. */
   tight?: boolean;
 }) {
-  const cls = `${CHIP} ${tight ? "" : "tracking-[1px]"} ${tone(active)}`;
+  const cls = `${CHIP} ${tone(active)}`;
 
   if (href) {
     return (

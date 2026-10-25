@@ -20,10 +20,12 @@ function pageWindow(page: number, pageCount: number): (number | "gap")[] {
   return out;
 }
 
-/* Arrow item of the Figma Pagination Item set: the same 52 plate as a number,
-   and at either end of the list it goes flat grey and stops answering. */
-const ARROW =
-  "flex size-[52px] items-center justify-center bg-surface-active text-ink transition-colors hover:bg-surface aria-disabled:pointer-events-none aria-disabled:bg-surface aria-disabled:text-muted";
+/* The file's Pager item: a 44 square with a 1px #d9d9d9 rule, a 12px mono number
+   and 12 of air either side. Hover takes a Sage rule, the current page fills Red
+   with a white number, and an arrow at either end of the list drops to 30%. */
+const CELL =
+  "flex h-11 min-w-11 items-center justify-center border px-3 font-mono text-[12px]/[1.3] uppercase tracking-[0.04em] transition-colors duration-150";
+const ARROW = `${CELL} border-line text-ink hover:border-ink aria-disabled:pointer-events-none aria-disabled:opacity-30`;
 
 export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
   if (pageCount < 2) return null;
@@ -31,7 +33,7 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
   return (
     <nav
       aria-label="Страницы"
-      className="flex items-center justify-center gap-2 py-10 font-mono text-base/5 font-medium"
+      className="flex items-center justify-center gap-2 py-10"
     >
       <Link
         href={hrefFor(Math.max(page - 1, 1))}
@@ -46,9 +48,9 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
         item === "gap" ? (
           <span
             key={`gap-${i}`}
-            className="flex h-[52px] w-6 items-center justify-center text-ink"
+            className="flex h-11 w-4 items-center justify-center font-mono text-[12px] text-ink"
           >
-            <Dots />
+            …
           </span>
         ) : (
           <Link
@@ -58,10 +60,10 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
             // Below lg only the ends and the current page show; the gaps stay
             // visible either side and end up sitting between whatever numbers
             // are left, so the row still reads as a window onto the whole count.
-            className={`flex size-[52px] items-center justify-center transition-colors ${
+            className={`${CELL} ${
               item === page
-                ? "bg-brand text-white"
-                : "bg-surface-active text-ink hover:bg-surface"
+                ? "border-brand bg-brand text-white"
+                : "border-line text-ink hover:border-ink"
             } ${
               item === 1 || item === pageCount || item === page
                 ? ""
@@ -85,26 +87,15 @@ export function Pagination({ page, pageCount, hrefFor }: PaginationProps) {
   );
 }
 
-/** 5 across and 10 tall inside a 24 icon box, drawn 2px - no shaft on it */
+/** The file's arrow, 20 across: a shaft with the head at one end, 1.5 line */
 function Chevron({ direction }: { direction: "left" | "right" }) {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
-        d={direction === "left" ? "M14 7 9 12l5 5" : "M10 7l5 5-5 5"}
+        d={direction === "left" ? "M20 12H4m6-6-6 6 6 6" : "M4 12h16m-6-6 6 6-6 6"}
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.5"
       />
-    </svg>
-  );
-}
-
-/** Three round 4px dots in a 24 box - the file draws the skipped pages, not an ellipsis */
-function Dots() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="4" cy="12" r="2" fill="currentColor" />
-      <circle cx="12" cy="12" r="2" fill="currentColor" />
-      <circle cx="20" cy="12" r="2" fill="currentColor" />
     </svg>
   );
 }

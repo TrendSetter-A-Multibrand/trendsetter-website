@@ -1,7 +1,8 @@
 /**
- * The search that sits on a page rather than in the header: 280 wide, 48 tall,
- * a 2px rule under the whole of it and the magnifier at the right end, inside
- * the rule. Sentence case and no tracking, unlike the chips beside it.
+ * The file's Search field: 44 tall, white, a 1px Sage rule that turns a 2px Red
+ * one on focus, the placeholder in Text-2 at Body size and the magnifier, 24, at
+ * the right end inside the rule. 280 wide on a desktop page, the full row on a
+ * phone.
  */
 export function SearchField({
   placeholder,
@@ -18,7 +19,7 @@ export function SearchField({
   onChange?: (value: string) => void;
 }) {
   return (
-    <label className="flex h-12 w-full items-center border-b-2 border-ink lg:w-[280px]">
+    <label className="flex h-11 w-full items-center gap-3 border border-ink bg-white pl-4 pr-3 focus-within:border-2 focus-within:border-brand focus-within:pl-[15px] focus-within:pr-[11px] lg:w-[280px]">
       <input
         type="search"
         name={name}
@@ -26,7 +27,7 @@ export function SearchField({
         placeholder={placeholder}
         value={value}
         onChange={onChange && ((e) => onChange(e.target.value))}
-        className="min-w-0 flex-1 bg-transparent text-sm tracking-[1px] text-ink outline-none placeholder:text-ink/40 [&::-webkit-search-cancel-button]:appearance-none"
+        className="type-body min-w-0 flex-1 bg-transparent text-ink outline-none placeholder:text-text-2 [&::-webkit-search-cancel-button]:appearance-none"
       />
       <SearchIcon />
     </label>
@@ -41,15 +42,10 @@ function SearchIcon() {
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"
-      className="size-4 shrink-0 lg:size-6"
+      className="size-6 shrink-0"
     >
-      <circle cx="10.8" cy="10.8" r="9" stroke="currentColor" strokeWidth="2" />
-      <path
-        d="m17.5 17.5 5 5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="square"
-      />
+      <circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" strokeWidth="1.5" />
+      <path d="m15.5 15.5 5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
     </svg>
   );
 }

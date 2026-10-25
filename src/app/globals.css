@@ -7,20 +7,51 @@
    on a colour already here - white/40, ink/40, ink/15 - so a token would only
    be a second way to write them. */
 :root {
+  /* Redesign 2.0: values from the Figma file TRENDSETTER WEB 2.0, page "00 Основы".
+     The old names stay so the existing blocks keep compiling; --surface is now
+     Paper (#f3f3f3), --muted the file's #7e7e7e. */
   --background: #ffffff;
   --foreground: #252120;
   --brand: #a22325;
   --brand-hover: #bd2729;
   --brand-pressed: #841b1d;
-  --deep-blue: #1f3f70;
   --ink: #252120;
   --ink-hover: #3b3837;
   --ink-pressed: #141110;
-  --muted: #888888;
-  --surface: #f7f7f7;
+  --muted: #7e7e7e;
+  --surface: #f3f3f3;
   --surface-active: #eeeeee;
+  --line: #d9d9d9;
+  --text-2: #4a4644;
+  --overlay: #2521208c;
   --accent-green: #71cc98;
-  --accent-yellow: #f3e73f;
+  /* The marker: one yellow plate per block, under the key phrase */
+  --accent-yellow: #f3d03e;
+  /* Mascot only: yellow body, blue features. Not the marker, not the ticker. */
+  --mascot-yellow: #f3e73f;
+  --deep-blue: #1f3f70;
+  /* The file's external palette, for ticker bands, maps and event colours */
+  --ext-orange: #fe5000;
+  --ext-pink: #e59bdc;
+  --ext-dark-blue: #1d428a;
+  --ext-blue: #c6dae7;
+  --ext-emerald: #7ce0d3;
+  --ext-mint: #71cc98;
+  --ext-forest: #005844;
+
+  /* Controls: S / M / L */
+  --control-s: 36px;
+  --control-m: 44px;
+  --control-l: 56px;
+  --header-h: 80px;
+  --tabbar-h: 60px;
+
+  /* Motion: TS · Motion */
+  --motion-hover: 150ms;
+  --motion-enter: 250ms;
+  --motion-bracket: 350ms;
+  --motion-ease: ease-out;
+  --motion-bracket-ease: ease-in-out;
 }
 
 @theme inline {
@@ -30,6 +61,20 @@
   --color-brand-hover: var(--brand-hover);
   --color-brand-pressed: var(--brand-pressed);
   --color-deep-blue: var(--deep-blue);
+  --color-mascot-yellow: var(--mascot-yellow);
+  --color-line: var(--line);
+  --color-text-2: var(--text-2);
+  --color-overlay: var(--overlay);
+  --color-ext-orange: var(--ext-orange);
+  --color-ext-pink: var(--ext-pink);
+  --color-ext-dark-blue: var(--ext-dark-blue);
+  --color-ext-blue: var(--ext-blue);
+  --color-ext-emerald: var(--ext-emerald);
+  --color-ext-forest: var(--ext-forest);
+  --color-paper: var(--surface);
+  --height-control-s: var(--control-s);
+  --height-control-m: var(--control-m);
+  --height-control-l: var(--control-l);
   --color-ink: var(--ink);
   --color-ink-hover: var(--ink-hover);
   --color-ink-pressed: var(--ink-pressed);
@@ -200,4 +245,150 @@ body {
 /* The plate is not a link, so it should not look grabbable either */
 .ts-pin {
   cursor: default;
+}
+
+/* The type scale from the file's "00 Основы" page. Display, headings and body are
+   Inter Tight; Label, Caption and the button label are Geist Mono in caps with 4%
+   tracking. Mobile (< 768, the file's 375 frames) has its own sizes. Used as
+   `type-h1` and the like, so a heading is one class rather than five. */
+@utility type-display {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 500;
+  font-size: 96px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  @media (max-width: 767px) {
+    font-size: 38px;
+  }
+}
+@utility type-h1 {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 500;
+  font-size: 64px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  @media (max-width: 767px) {
+    font-size: 30px;
+  }
+}
+@utility type-h2 {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  @media (max-width: 767px) {
+    font-size: 24px;
+  }
+}
+@utility type-h3 {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  @media (max-width: 767px) {
+    font-size: 19px;
+  }
+}
+@utility type-h4 {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.25;
+  @media (max-width: 767px) {
+    font-size: 17px;
+  }
+}
+@utility type-body-l {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.5;
+  @media (max-width: 767px) {
+    font-size: 17px;
+  }
+}
+@utility type-body {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+}
+@utility type-body-s {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.45;
+}
+@utility type-label {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  @media (max-width: 767px) {
+    font-size: 14px;
+  }
+}
+@utility type-caption {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  @media (max-width: 767px) {
+    font-size: 11px;
+  }
+}
+@utility type-mono-button {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+/* Article text */
+@utility type-prose {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 1.6;
+  @media (max-width: 767px) {
+    font-size: 17px;
+  }
+}
+@utility type-prose-lead {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 400;
+  font-size: 25px;
+  line-height: 1.6;
+  @media (max-width: 767px) {
+    font-size: 20px;
+  }
+}
+
+/* The marker: a yellow plate under the one key phrase of a block. No rounding,
+   padding about 0.12em either side. Inline, so it sits in a heading's own line. */
+.marker {
+  background: var(--accent-yellow);
+  color: var(--ink);
+  padding-inline: 0.12em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Everything that moves stands still for people who asked it to */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
