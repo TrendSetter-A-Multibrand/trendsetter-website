@@ -1,17 +1,18 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { ArticleBlock, PhotoRatio } from "@/lib/article";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
-import { QuoteMarks } from "@/components/ui/QuoteMarks";
+import { Divider } from "@/components/ui/Divider";
+import { ArrowIcon } from "@/components/ui/Icons";
 import { GalleryStrip } from "@/components/blocks/GalleryStrip";
 
-// The mobile h1 is 24px, so a 24px subtitle would tie with it; no subtitle is
-// in the file at this width, so 18px/24px here is an interpolation.
-const SUBTITLE = "text-lg/6 font-medium tracking-[1px] text-inherit lg:text-2xl/[29px]";
-// Designer's comment on the article (Figma, 12.10): the copy is Inter Tight 14/19, no tracking.
-const BODY = "text-sm/[19px] tracking-normal text-inherit";
-const QUOTE_LEAD = "text-xl/6 font-medium lg:text-[32px]/[38.72px] lg:tracking-[0.32px]";
-const QUOTE_BODY = "text-base/5 lg:text-2xl/[29px] lg:tracking-[0.24px]";
-const CAPTION = "mt-2 text-xs/4 text-muted";
+/* The file's article column. Text sits in 770, the wide blocks - photos, pairs,
+   galleries, the pull quote - step one column out either side to 1000, and a
+   full photo runs to the edges. Everything is 24 from the next block on a
+   desktop, 16 on a phone. Text is Prose (21 / 17 on a phone, 1.6 apart). */
+const SUBTITLE = "type-h3 text-ink";
+const BODY = "type-prose text-ink";
+const CAPTION = "type-caption mt-3 text-ink";
 
 /** The proportions each box is cut to; `auto` is worked out from the photo. */
 const RATIOS: Record<Exclude<PhotoRatio, "auto">, string> = {
@@ -81,12 +82,23 @@ function Figure({
   );
 }
 
-const Paragraphs = ({ body }: { body: string[] }) =>
-  body.map((p, i) => (
-    <p key={i} className={`mt-4 ${BODY}`}>
-      {p}
-    </p>
-  ));
+const Paragraphs = ({ body }: { body: string[] }) => (
+  <div className="flex flex-col gap-4 md:gap-6">
+    {body.map((p, i) => (
+      <p key={i} className={BODY}>
+        {p}
+      </p>
+    ))}
+  </div>
+);
+
+/** A subtitle over paragraphs, the way a text block of the file is set. */
+const TextPart = ({ subtitle, body }: { subtitle?: string; body: string[] }) => (
+  <div className="flex flex-col gap-4 md:gap-6">
+    {subtitle && <h2 className={SUBTITLE}>{subtitle}</h2>}
+    <Paragraphs body={body} />
+  </div>
+);
 
 /** How many photos stand in a row: up to four, then they wrap. Two across even on a phone. */
 const COLUMNS: Record<number, string> = {
@@ -96,7 +108,7 @@ const COLUMNS: Record<number, string> = {
   4: "grid-cols-2 lg:grid-cols-4",
 };
 
-const GAP = "gap-4 lg:gap-10";
+const GAP = "gap-3 md:gap-6";
 
 /** A video address as the player's own embed address, or null for any other. */
 function embedUrl(url: string) {
@@ -107,13 +119,20 @@ function embedUrl(url: string) {
   return null;
 }
 
-/** Renders one article block; the quote band goes full-bleed. */
-function BlockBody({ block }: { block: ArticleBlock }) {
+/** Where a link from the editor leads: a path without a locale gets the page's. */
+function hrefOf(href: string, locale: string) {
+  if (!href) return "#";
+  if (/^[a-z]+:/i.test(href) || href.startsWith("/")) return href;
+  return `/${locale}/${href}`;
+}
+
+/** Renders one article block. Width and air are the wrapper's, below. */
+function BlockBody({ block, locale }: { block: ArticleBlock; locale: string }) {
   switch (block.kind) {
     case "images": {
       const count = Math.min(block.images.length, 4);
       return (
-        <div className="px-4 lg:px-10">
+        <div>
           <div className={`grid ${GAP} ${COLUMNS[count] ?? COLUMNS[4]}`}>
             {block.images.map((src, i) => (
               <Photo
@@ -136,24 +155,15 @@ function BlockBody({ block }: { block: ArticleBlock }) {
       // whichever side it takes on a wide screen.
       const columns = third
         ? left
-          ? "lg:grid-cols-[1fr_2fr]"
-          : "lg:grid-cols-[2fr_1fr]"
-        : "lg:grid-cols-2";
+          ? "md:grid-cols-[1fr_2fr]"
+          : "md:grid-cols-[2fr_1fr]"
+        : "md:grid-cols-2";
       return (
-        <div className={`grid gap-4 px-4 lg:gap-10 lg:px-10 ${columns}`}>
-          <div>
-            {block.subtitle && <h2 className={SUBTITLE}>{block.subtitle}</h2>}
-            <Paragraphs body={block.body} />
-          </div>
-          <figure className={`m-0 ${left ? "lg:order-first" : ""}`}>
+        <div className={`grid gap-4 md:gap-6 ${columns}`}>
+          <TextPart subtitle={block.subtitle} body={block.body} />
+          <figure className={`m-0 ${left ? "md:order-first" : ""}`}>
             <Photo src={block.image} ratio={block.ratio ?? "square"} />
-            {block.caption && (
-              // No caption in the file at this width either; 14px here is the
-              // same kind of interpolation as the subtitle above.
-              <figcaption className="mt-4 text-sm text-ink lg:mt-6 lg:text-2xl">
-                {block.caption}
-              </figcaption>
-            )}
+            {block.caption && <figcaption className={CAPTION}>{block.caption}</figcaption>}
           </figure>
         </div>
       );
@@ -161,14 +171,9 @@ function BlockBody({ block }: { block: ArticleBlock }) {
 
     case "text-photos":
       return (
-        <div className="grid gap-4 px-4 lg:grid-cols-2 lg:gap-10 lg:px-10">
-          <div>
-            {block.subtitle && <h2 className={SUBTITLE}>{block.subtitle}</h2>}
-            <Paragraphs body={block.body} />
-          </div>
-          <div
-            className={`flex flex-col ${GAP} ${block.side === "left" ? "lg:order-first" : ""}`}
-          >
+        <div className="grid gap-4 md:grid-cols-2 md:gap-6">
+          <TextPart subtitle={block.subtitle} body={block.body} />
+          <div className={`flex flex-col ${GAP} ${block.side === "left" ? "md:order-first" : ""}`}>
             {block.images.map((src, i) => (
               <Photo key={i} src={src} ratio={block.ratio} />
             ))}
@@ -180,18 +185,14 @@ function BlockBody({ block }: { block: ArticleBlock }) {
       const place = { left: "justify-start", center: "justify-center", right: "justify-end" }[
         block.align
       ];
-      // Full runs to the edges of the screen; the others keep the page margin,
-      // and the small ones only take a part of the width.
       const width = {
         full: "w-full",
         wide: "w-full",
-        medium: "w-full lg:w-3/5",
-        small: "w-1/2 lg:w-[30%]",
+        medium: "w-full md:w-3/5",
+        small: "w-1/2 md:w-[30%]",
       }[block.size];
       return (
-        <div
-          className={`flex ${place} ${block.size === "full" ? "" : "px-4 lg:px-10"}`}
-        >
+        <div className={`flex ${place}`}>
           <div className={width}>
             <Figure
               src={block.image}
@@ -207,7 +208,7 @@ function BlockBody({ block }: { block: ArticleBlock }) {
     case "photo-row": {
       const count = Math.min(block.items.length, 4);
       return (
-        <div className={`grid px-4 lg:px-10 ${GAP} ${COLUMNS[count] ?? COLUMNS[4]}`}>
+        <div className={`grid ${GAP} ${COLUMNS[count] ?? COLUMNS[4]}`}>
           {block.items.map((item, i) => (
             <div key={i}>
               <Figure
@@ -219,12 +220,10 @@ function BlockBody({ block }: { block: ArticleBlock }) {
               {/* Words of its own under the photo: what makes a row of them
                   a row of little articles rather than a row of pictures */}
               {(item.title || item.body.length > 0) && (
-                <div className="mt-4 lg:mt-6">
-                  {item.title && (
-                    <h3 className="text-lg/6 font-medium lg:text-2xl/7">{item.title}</h3>
-                  )}
+                <div className="mt-4 flex flex-col gap-2 md:mt-6">
+                  {item.title && <h3 className="type-h4 text-ink">{item.title}</h3>}
                   {item.body.map((p, j) => (
-                    <p key={j} className="mt-2 text-sm/[16px] tracking-[1px] lg:text-base/6 lg:tracking-normal">
+                    <p key={j} className="type-body-s text-ink">
                       {p}
                     </p>
                   ))}
@@ -238,14 +237,14 @@ function BlockBody({ block }: { block: ArticleBlock }) {
 
     case "gallery-scroll": {
       const card = {
-        small: "w-[45%] lg:w-[22%]",
-        medium: "w-[75%] lg:w-[36%]",
-        large: "w-[88%] lg:w-[58%]",
+        small: "w-[45%] md:w-[22%]",
+        medium: "w-[75%] md:w-[36%]",
+        large: "w-[88%] md:w-[58%]",
       }[block.size];
       return (
         <div>
           <GalleryStrip
-            className={`flex overflow-x-auto px-4 [scrollbar-width:none] lg:px-10 [&::-webkit-scrollbar]:hidden scroll-px-4 lg:scroll-px-10 ${GAP}`}
+            className={`flex overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${GAP}`}
           >
             {block.images.map((src, i) => (
               <div key={i} className={`shrink-0 snap-start ${card}`}>
@@ -253,7 +252,7 @@ function BlockBody({ block }: { block: ArticleBlock }) {
               </div>
             ))}
           </GalleryStrip>
-          {block.caption && <p className={`px-4 lg:px-10 ${CAPTION}`}>{block.caption}</p>}
+          {block.caption && <p className={CAPTION}>{block.caption}</p>}
         </div>
       );
     }
@@ -265,7 +264,7 @@ function BlockBody({ block }: { block: ArticleBlock }) {
           ? { left: block.layout === "feature-left", rest }
           : null;
       return (
-        <div className="px-4 lg:px-10">
+        <div>
           {feature ? (
             <>
               <div className={`grid aspect-[3/2] grid-cols-3 grid-rows-2 ${GAP}`}>
@@ -284,7 +283,7 @@ function BlockBody({ block }: { block: ArticleBlock }) {
                 ))}
               </div>
               {feature.rest.length > 0 && (
-                <div className={`mt-4 grid grid-cols-2 lg:mt-10 lg:grid-cols-3 ${GAP}`}>
+                <div className={`mt-3 grid grid-cols-2 md:mt-6 md:grid-cols-3 ${GAP}`}>
                   {feature.rest.map((src, i) => (
                     <Photo key={i} src={src} sizes="(min-width: 1024px) 31vw, 47vw" />
                   ))}
@@ -292,7 +291,7 @@ function BlockBody({ block }: { block: ArticleBlock }) {
               )}
             </>
           ) : (
-            <div className={`grid grid-cols-2 lg:grid-cols-3 ${GAP}`}>
+            <div className={`grid grid-cols-2 md:grid-cols-3 ${GAP}`}>
               {block.images.map((src, i) => (
                 <Photo key={i} src={src} sizes="(min-width: 1024px) 31vw, 47vw" />
               ))}
@@ -306,7 +305,7 @@ function BlockBody({ block }: { block: ArticleBlock }) {
     case "video": {
       const embed = embedUrl(block.url);
       return (
-        <figure className="m-0 px-4 lg:px-10">
+        <figure className="m-0">
           {embed ? (
             <iframe
               src={embed}
@@ -326,79 +325,74 @@ function BlockBody({ block }: { block: ArticleBlock }) {
       );
     }
 
+    // The quote in the column: a 2px Red rule at the left, the words in H3 and
+    // the speaker in Caption underneath. The old red band is gone from the file;
+    // what the editor put in the subtitle is the speaker now.
     case "quote":
-      // 40 of padding all round, a mark at the head and another at the foot of
-      // the copy, and 40 between the marks and the text
       return (
-        <div className="on-dark flex gap-4 bg-brand p-4 text-white lg:gap-10 lg:p-10">
-          <QuoteMarks className="max-lg:h-[52px] max-lg:w-[73px]" />
-          <div className="flex flex-1 flex-col gap-4 lg:flex-row lg:gap-10">
-            <div className="flex flex-1 flex-col gap-4 lg:gap-10">
-              {block.subtitle && <h2 className={QUOTE_LEAD}>{block.subtitle}</h2>}
-              {block.body.map((p, i) => (
-                <p key={i} className={QUOTE_BODY}>
-                  {p}
-                </p>
-              ))}
-            </div>
-            <QuoteMarks className="self-end max-lg:h-[52px] max-lg:w-[73px]" />
-          </div>
-        </div>
+        <blockquote className="m-0 flex flex-col gap-3 border-l-2 border-brand pl-6">
+          {block.body.map((p, i) => (
+            <p key={i} className="type-h3 text-ink">
+              {p}
+            </p>
+          ))}
+          {block.subtitle && <footer className="type-caption text-ink">— {block.subtitle}</footer>}
+        </blockquote>
       );
 
+    // The pull quote: H2 with Red guillemets and a mono line under it, a column out
     case "pullquote":
       return (
-        <blockquote className="m-0 px-4 lg:px-10">
-          <div className="border-l-4 border-brand pl-4 lg:pl-10">
-            <p className="text-2xl/8 font-medium lg:text-[40px]/[48px]">{block.text}</p>
-            {block.author && (
-              <footer className="mt-4 font-mono text-sm uppercase tracking-[1px] text-muted lg:text-base">
-                {block.author}
-              </footer>
-            )}
-          </div>
+        <blockquote className="m-0 flex flex-col gap-4">
+          <p className="type-h2 text-ink">
+            <span className="text-brand">«</span>
+            {block.text}
+            <span className="text-brand">»</span>
+          </p>
+          {block.author && <footer className="type-label text-text-2">{block.author}</footer>}
         </blockquote>
       );
 
     case "lead":
       return (
-        <div className="px-4 lg:px-10">
+        <div className="flex flex-col gap-4 md:gap-6">
           {block.body.map((p, i) => (
-            <p
-              key={i}
-              className={`text-xl/7 font-medium lg:text-[40px]/[48px] ${i > 0 ? "mt-4 lg:mt-8" : ""}`}
-            >
+            <p key={i} className="type-prose-lead text-ink">
               {p}
             </p>
           ))}
         </div>
       );
 
-    case "list": {
-      const List = block.ordered ? "ol" : "ul";
+    // Dashes, or numbers in mono Red; 8 between items, 12 between numbered ones
+    case "list":
       return (
-        <div className="px-4 lg:px-10">
+        <div className="flex flex-col gap-4 md:gap-6">
           {block.subtitle && <h2 className={SUBTITLE}>{block.subtitle}</h2>}
-          <List
-            className={`mt-4 pl-6 lg:pl-10 ${block.ordered ? "list-decimal" : "list-disc"} marker:text-brand ${BODY}`}
-          >
+          <ul className={`flex flex-col ${block.ordered ? "gap-3" : "gap-2"}`}>
             {block.items.map((item, i) => (
-              <li key={i} className={i > 0 ? "mt-2" : ""}>
-                {item}
+              <li key={i} className={`flex items-start ${block.ordered ? "gap-4" : "gap-2"}`}>
+                {block.ordered ? (
+                  <span className="type-label w-7 shrink-0 text-brand">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                ) : (
+                  <span className="type-prose shrink-0 text-ink">—</span>
+                )}
+                <span className={`min-w-0 flex-1 ${BODY}`}>{item}</span>
               </li>
             ))}
-          </List>
+          </ul>
         </div>
       );
-    }
 
     case "text-columns":
       return (
-        <div className="px-4 lg:px-10">
+        <div className="flex flex-col gap-4 md:gap-6">
           {block.subtitle && <h2 className={SUBTITLE}>{block.subtitle}</h2>}
-          <div className="lg:columns-2 lg:gap-10">
+          <div className="md:columns-2 md:gap-6">
             {block.body.map((p, i) => (
-              <p key={i} className={`mt-4 break-inside-avoid-column ${BODY}`}>
+              <p key={i} className={`mb-4 break-inside-avoid-column md:mb-6 ${BODY}`}>
                 {p}
               </p>
             ))}
@@ -408,30 +402,113 @@ function BlockBody({ block }: { block: ArticleBlock }) {
 
     case "divider":
       return block.style === "dots" ? (
-        <div
-          aria-hidden="true"
-          className="text-center font-mono text-2xl tracking-[1em] text-brand"
-        >
-          •••
+        <div className="py-6 md:py-12">
+          <Divider type="dots" />
         </div>
       ) : (
-        <hr className="mx-4 border-0 border-t border-ink/15 lg:mx-10" />
+        <hr className="m-0 border-0 border-t border-line" />
       );
 
     case "spacer":
       return (
         <div
           aria-hidden="true"
-          className={{ s: "h-0", m: "h-6 lg:h-10", l: "h-12 lg:h-24" }[block.size]}
+          className={{ s: "h-0", m: "h-6 md:h-10", l: "h-12 md:h-24" }[block.size]}
         />
       );
 
     case "text":
+      return <TextPart subtitle={block.subtitle} body={block.body} />;
+
+    case "question":
+      return <p className="type-prose font-medium text-ink">{block.text}</p>;
+
+    case "answer":
       return (
-        <div className="px-4 lg:px-10">
-          {block.subtitle && <h2 className={SUBTITLE}>{block.subtitle}</h2>}
-          <Paragraphs body={block.body} />
+        <p className={BODY}>
+          {block.name && <span className="type-label mr-1 text-brand">{block.name}: </span>}
+          {block.text}
+        </p>
+      );
+
+    case "note":
+      return (
+        <aside className="flex flex-col gap-2 bg-surface p-6 text-ink">
+          <p className="type-label">[{block.label ?? "Справка"}]</p>
+          <p className="type-body">{block.text}</p>
+        </aside>
+      );
+
+    case "person":
+      return (
+        <div className="flex items-center gap-4 border-y border-line py-4">
+          <div className="relative size-24 shrink-0 overflow-hidden bg-surface md:size-[120px]">
+            <ImagePlaceholder />
+            {block.image && (
+              <Image src={block.image} alt="" fill sizes="120px" className="object-cover" />
+            )}
+          </div>
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <p className="type-label text-brand">[{block.label ?? "Интервью"}]</p>
+            <p className="type-h4 text-ink">{block.name}</p>
+            {block.role && <p className="type-caption text-ink">{block.role}</p>}
+          </div>
         </div>
+      );
+
+    case "brands":
+      return (
+        <div className="flex flex-col gap-3">
+          <p className="type-label text-ink">[{block.label ?? "Бренды в материале"}]</p>
+          <ul className="divide-y divide-line">
+            {block.names.map((name) => (
+              <li key={name}>
+                <Link
+                  href={`/${locale}/brands`}
+                  className="group flex items-center gap-4 py-4 text-ink"
+                >
+                  <span className="type-h4 min-w-0 flex-1 transition-colors duration-150 group-hover:text-brand">
+                    {name}
+                  </span>
+                  <ArrowIcon className="transition-transform duration-150 group-hover:translate-x-1" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+
+    case "readmore":
+      return (
+        <Link
+          href={hrefOf(block.href, locale)}
+          className="group flex items-center gap-4 bg-surface p-4 text-ink"
+        >
+          <div className="relative h-[72px] w-24 shrink-0 overflow-hidden bg-white md:h-[120px] md:w-40">
+            <ImagePlaceholder />
+            {block.image && (
+              <Image src={block.image} alt="" fill sizes="160px" className="object-cover" />
+            )}
+          </div>
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <p className="type-label">[{block.label ?? "Читайте также"}]</p>
+            <p className="type-h4 transition-colors duration-150 group-hover:text-brand">
+              {block.title}
+            </p>
+          </div>
+        </Link>
+      );
+
+    case "credits":
+      return (
+        <dl className="type-caption m-0 flex flex-wrap gap-x-8 gap-y-3 text-ink">
+          {block.items.map((item, i) => (
+            <div key={i} className="flex flex-col gap-1">
+              {item.role && <dt className="type-label">{item.role}</dt>}
+              <dd className="m-0">{item.name}</dd>
+            </div>
+          ))}
+        </dl>
       );
   }
 }
@@ -440,40 +517,63 @@ function BlockBody({ block }: { block: ArticleBlock }) {
  * A text the editor put over or under a group of photos, set like a text block
  * of its own so the groups can read as text-and-pictures, not pictures alone.
  */
-function Block({ block }: { block: ArticleBlock }) {
+function Block({ block, locale }: { block: ArticleBlock; locale: string }) {
   // The pull quote has a `text` too, but that one is a string, not a PhotoText
   const text = "text" in block && typeof block.text === "object" ? block.text : undefined;
-  if (!text) return <BlockBody block={block} />;
+  if (!text) return <BlockBody block={block} locale={locale} />;
 
-  const words = (
-    <div className="px-4 lg:px-10">
-      {text.subtitle && <h2 className={SUBTITLE}>{text.subtitle}</h2>}
-      <Paragraphs body={text.body} />
-    </div>
-  );
   return (
-    <div className="flex flex-col gap-4 lg:gap-10">
-      {text.position === "above" && words}
-      <BlockBody block={block} />
-      {text.position === "below" && words}
+    <div className="flex flex-col gap-4 md:gap-6">
+      {text.position === "above" && <TextPart subtitle={text.subtitle} body={text.body} />}
+      <BlockBody block={block} locale={locale} />
+      {text.position === "below" && <TextPart subtitle={text.subtitle} body={text.body} />}
     </div>
   );
 }
 
-export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
+/** How wide a block stands: text in 770, the wide ones a column out to 1000, a full photo edge to edge. */
+function widthOf(block: ArticleBlock): "text" | "wide" | "full" {
+  switch (block.kind) {
+    case "photo":
+      return block.size === "full" ? "full" : "wide";
+    case "images":
+    case "text-image":
+    case "text-photos":
+    case "photo-row":
+    case "gallery-scroll":
+    case "gallery-mosaic":
+    case "video":
+    case "pullquote":
+    case "text-columns":
+      return "wide";
+    default:
+      return "text";
+  }
+}
+
+const COLUMN = {
+  text: "mx-auto w-full max-w-[770px] px-4 md:px-0",
+  wide: "mx-auto w-full max-w-[1000px] px-4 md:px-0",
+  full: "w-full",
+} as const;
+
+/**
+ * The article's body: blocks one under another, 24 apart on a desktop and 16 on
+ * a phone, each in the column the file gives it - the text column is 770 and the
+ * wide blocks are 1000, centred on the 1000 column the head and the photo use.
+ */
+export function ArticleBody({
+  blocks,
+  locale = "ru_ru",
+}: {
+  blocks: ArticleBlock[];
+  locale?: string;
+}) {
   return (
-    <div className="flex flex-col gap-4 lg:gap-10">
+    <div className="flex flex-col gap-4 md:gap-6">
       {blocks.map((block, i) => (
-        // Plain paragraphs that follow each other read as one text: 16 apart, not the 40 between blocks
-        <div
-          key={i}
-          className={
-            block.kind === "text" && !block.subtitle && blocks[i - 1]?.kind === "text"
-              ? "lg:-mt-6"
-              : undefined
-          }
-        >
-          <Block block={block} />
+        <div key={i} className={COLUMN[widthOf(block)]}>
+          <Block block={block} locale={locale} />
         </div>
       ))}
     </div>

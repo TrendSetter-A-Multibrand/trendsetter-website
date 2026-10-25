@@ -170,6 +170,54 @@ export function articleBlock(blok: Block): ArticleBlock | null {
       };
     case "article_video":
       return { kind: "video", url: str(blok.url), caption };
+    case "article_question":
+      return { kind: "question", text: str(blok.text) };
+    case "article_answer":
+      return { kind: "answer", name: str(blok.name) || undefined, text: str(blok.text) };
+    case "article_note":
+      return { kind: "note", label: str(blok.label) || undefined, text: str(blok.text) };
+    case "article_person":
+      return {
+        kind: "person",
+        image: asset(blok.image) || undefined,
+        label: str(blok.label) || undefined,
+        name: str(blok.name),
+        role: str(blok.role) || undefined,
+      };
+    case "article_brands":
+      return {
+        kind: "brands",
+        label: str(blok.label) || undefined,
+        names: str(blok.names)
+          .split(/\r?\n/)
+          .map((name) => name.trim())
+          .filter(Boolean),
+      };
+    case "article_readmore": {
+      const link = blok.link as { cached_url?: string; url?: string } | undefined;
+      return {
+        kind: "readmore",
+        label: str(blok.label) || undefined,
+        title: str(blok.title),
+        href: link?.url || link?.cached_url || "",
+        image: asset(blok.image) || undefined,
+      };
+    }
+    case "article_credits":
+      // "Текст: Имя Фамилия", one to a line
+      return {
+        kind: "credits",
+        items: str(blok.lines)
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .map((line) => {
+            const at = line.indexOf(":");
+            return at > 0
+              ? { role: line.slice(0, at).trim(), name: line.slice(at + 1).trim() }
+              : { role: "", name: line };
+          }),
+      };
     default:
       return null;
   }

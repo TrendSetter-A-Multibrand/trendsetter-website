@@ -946,7 +946,14 @@
           "article_pullquote",
           "article_video",
           "article_divider",
-          "article_spacer"
+          "article_spacer",
+          "article_question",
+          "article_answer",
+          "article_note",
+          "article_person",
+          "article_brands",
+          "article_readmore",
+          "article_credits"
         ]
       },
       "excerpt": {
@@ -1096,7 +1103,14 @@
           "article_pullquote",
           "article_video",
           "article_divider",
-          "article_spacer"
+          "article_spacer",
+          "article_question",
+          "article_answer",
+          "article_note",
+          "article_person",
+          "article_brands",
+          "article_readmore",
+          "article_credits"
         ]
       },
       "excerpt": {
@@ -2800,6 +2814,156 @@
         "filetypes": [
           "images"
         ]
+      }
+    }
+  },
+  {
+    "name": "article_question",
+    "display_name": "Вопрос (интервью)",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "text": {
+        "type": "textarea",
+        "display_name": "Вопрос",
+        "description": "Выделяется в тексте, чтобы при беглом чтении была видна новая тема",
+        "pos": 0
+      }
+    }
+  },
+  {
+    "name": "article_answer",
+    "display_name": "Ответ (интервью)",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "name": {
+        "type": "text",
+        "display_name": "Кто отвечает",
+        "description": "Имя красным ставится только у первого ответа; в остальных оставьте пустым",
+        "pos": 0
+      },
+      "text": {
+        "type": "textarea",
+        "display_name": "Ответ",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "article_note",
+    "display_name": "Врезка",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "label": {
+        "type": "text",
+        "display_name": "Метка",
+        "description": "Скобки ставит сайт; по умолчанию «Справка»",
+        "pos": 0
+      },
+      "text": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "article_person",
+    "display_name": "Герой интервью",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Фото 1:1",
+        "pos": 0
+      },
+      "label": {
+        "type": "text",
+        "display_name": "Метка",
+        "description": "Например «Интервью»; скобки ставит сайт",
+        "pos": 1
+      },
+      "name": {
+        "type": "text",
+        "display_name": "Имя",
+        "pos": 2
+      },
+      "role": {
+        "type": "text",
+        "display_name": "Роль, город",
+        "pos": 3
+      }
+    }
+  },
+  {
+    "name": "article_brands",
+    "display_name": "Бренды в материале",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "label": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "description": "По умолчанию «Бренды в материале»",
+        "pos": 0
+      },
+      "names": {
+        "type": "textarea",
+        "display_name": "Бренды",
+        "description": "По одному в строке; каждый ведёт в указатель брендов",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "article_readmore",
+    "display_name": "Читайте также (ссылка)",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "label": {
+        "type": "text",
+        "display_name": "Метка",
+        "description": "По умолчанию «Читайте также»",
+        "pos": 0
+      },
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок материала",
+        "pos": 1
+      },
+      "link": {
+        "type": "multilink",
+        "display_name": "Куда ведёт",
+        "pos": 2
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Фото 4:3",
+        "pos": 3
+      }
+    }
+  },
+  {
+    "name": "article_credits",
+    "display_name": "Авторы материала",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "lines": {
+        "type": "textarea",
+        "display_name": "Кто что делал",
+        "description": "По одному в строке, в виде «Текст: Имя Фамилия»",
+        "pos": 0
       }
     }
   }

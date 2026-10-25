@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { ArticleHeader } from "@/components/blocks/ArticleHeader";
 import { ArticleBody } from "@/components/blocks/ArticleBody";
 import { ArticleReactions } from "@/components/blocks/ArticleReactions";
+import { NextMaterial } from "@/components/blocks/NextMaterial";
+import { ReadingProgress } from "@/components/blocks/ReadingProgress";
 import { RelatedArticles } from "@/components/blocks/RelatedArticles";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { fetchArticlePage, fetchArticles } from "@/lib/storyblok/articles";
@@ -44,36 +46,44 @@ export default async function ArticlePage({
   if (!article) notFound();
   const { meta, blocks } = article;
 
+  // The piece that follows: the next one in the same section, if there is one
+  const others = articles.filter((other) => other.title !== meta.title);
+  const next = others.find((other) => other.section === (meta.sectionHref === "journal" ? "journal" : "news")) ?? others[0];
+
   return (
     <>
-      <ArticleHeader locale={locale} meta={meta} />
+      <ReadingProgress targetId="article" />
+      <article id="article">
+        <ArticleHeader locale={locale} meta={meta} />
 
-      {/* 1920x940 in the file. Kept as a ratio rather than a fixed 940, which
-          would be two thirds of a phone screen and most of a laptop's. On
-          mobile it's a fixed 240 instead, with the header's own pb-5 already
-          giving it the gap above. */}
-      <div className="relative h-60 w-full overflow-hidden lg:mt-10 lg:aspect-[1920/940] lg:h-auto">
-        <ImagePlaceholder />
-        <Image
-          src={meta.heroImage}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-      </div>
+        {/* 1000 wide and 16:9 on a desktop, edge to edge and 4:3 on a phone */}
+        <div className="mx-auto w-full max-w-[1000px] md:px-0">
+          <div className="relative aspect-[4/3] w-full overflow-hidden bg-surface md:aspect-video">
+            <ImagePlaceholder />
+            <Image
+              src={meta.heroImage}
+              alt=""
+              fill
+              priority
+              sizes="(min-width: 1024px) 1000px, 100vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
 
-      {/* The file stacks the blocks 40 apart, and the hero at the same distance; 16 on mobile */}
-      <div className="mt-4 lg:mt-10">
-        <ArticleBody blocks={blocks} />
-      </div>
+        <div className="pt-6 md:pt-16">
+          <ArticleBody blocks={blocks} locale={locale} />
+        </div>
+
+        {next && (
+          <div className="mt-6 px-4 md:mt-12 md:px-0">
+            <NextMaterial href={next.href ?? "#"} title={next.title} image={next.image} />
+          </div>
+        )}
+      </article>
 
       <ArticleReactions articleId={slug} likes={12} dislikes={0} />
-      <RelatedArticles
-        articles={articles.filter((other) => other.title !== meta.title)}
-        locale={locale}
-      />
+      <RelatedArticles articles={others} locale={locale} />
     </>
   );
 }

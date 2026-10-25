@@ -83,7 +83,21 @@ export type ArticleBlock =
       caption?: string;
       text?: PhotoText;
     }
-  | { kind: "video"; url: string; caption?: string };
+  | { kind: "video"; url: string; caption?: string }
+  /** An interview's question - set in Medium so a new topic shows when skimming. */
+  | { kind: "question"; text: string }
+  /** The answer; the speaker's name in Red goes on the first one only. */
+  | { kind: "answer"; name?: string; text: string }
+  /** A box on Paper: a definition, a tip, a detail that can be skipped. */
+  | { kind: "note"; label?: string; text: string }
+  /** The hero of an interview: a square photo, a kind line, a name, a role. */
+  | { kind: "person"; image?: string; label?: string; name: string; role?: string }
+  /** The brands the piece mentions, each leading to the brand index. */
+  | { kind: "brands"; label?: string; names: string[] }
+  /** A link to another piece, on Paper with a small photo. */
+  | { kind: "readmore"; label?: string; title: string; href: string; image?: string }
+  /** Who made it: text, photo, styling - a line of role over name. */
+  | { kind: "credits"; items: { role: string; name: string }[] };
 
 export type ArticleMeta = {
   section: string;

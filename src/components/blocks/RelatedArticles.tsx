@@ -1,22 +1,15 @@
-"use client";
-
-import { useRef } from "react";
 import { ArticleCard } from "@/components/blocks/ArticleCard";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import type { Article } from "@/lib/articles";
-import { useCarousel } from "@/lib/useCarousel";
 
 /**
- * 430 cards closing an article, on the file's slider bar. There is no fixed
- * number of them - the section carries everything related to the piece - so the
- * row scrolls instead of showing the first four.
- *
- * Below `sm` the row snaps a card at a time; the bar lifts that snap for the
- * length of a drag, since writing the scroll position directly would
- * otherwise judder against it.
+ * "Читайте также" closing an article: the section head and Card S, four across on
+ * a desktop (two from 768) and one under another as rows on a phone, a thin rule
+ * between them. More than four are not drawn - this is a nudge to the next
+ * piece, not the section again.
  */
 export function RelatedArticles({
-  heading = "Похожие материалы",
+  heading = "Читайте также",
   articles,
   locale,
 }: {
@@ -24,37 +17,21 @@ export function RelatedArticles({
   articles: Article[];
   locale: string;
 }) {
-  const row = useRef<HTMLDivElement>(null);
-  useCarousel(row, { autoplay: true });
-
-  // No records, no row: a heading over a blank strip is worse than nothing.
-  // The shops section already answers this way.
+  // No records, no section: a heading over nothing is worse than nothing
   if (articles.length === 0) return null;
 
   return (
-    <section className="px-4 py-4 lg:px-10 lg:pb-10 lg:pt-0">
-      <SectionTitle
-        heading={heading}
-        trackRef={row}
-        controls="bar"
-        className="mb-4 lg:mb-8"
-      />
-
-      <div
-        ref={row}
-        className="-mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 sm:mx-0 sm:snap-none sm:gap-10 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {articles.map((article, i) => (
-          <div
+    <section className="px-4 pt-16 md:px-10 md:pt-32">
+      <SectionTitle heading={heading} className="mb-6 md:mb-8" />
+      <div className="grid gap-x-6 gap-y-0 max-md:divide-y max-md:divide-line md:grid-cols-2 md:gap-y-10 lg:grid-cols-4">
+        {articles.slice(0, 4).map((article, i) => (
+          <ArticleCard
             key={i}
-            className="w-full shrink-0 snap-center sm:w-[360px] sm:snap-align-none lg:w-[430px]"
-          >
-            <ArticleCard
-              article={article}
-              locale={locale}
-              sizes="(min-width: 1024px) 430px, (min-width: 640px) 360px, 320px"
-            />
-          </div>
+            article={article}
+            locale={locale}
+            layout="list"
+            sizes="(min-width: 1024px) 322px, (min-width: 768px) 47vw, 137px"
+          />
         ))}
       </div>
     </section>
