@@ -19,17 +19,27 @@ type Ymaps3 = {
     props: { coordinates: [number, number] },
     element: HTMLElement,
   ) => YMapMarkerInstance;
+  /** Hears the map move, so a zoom button knows where the zoom stands now. */
+  YMapListener: new (props: {
+    layer?: string;
+    onUpdate?: (event: { location: { zoom: number } }) => void;
+  }) => object;
 };
 
 export type YMapInstance = {
   addChild: (child: object) => void;
   destroy: () => void;
-  setLocation: (location: { center?: [number, number]; zoom?: number }) => void;
+  setLocation: (location: {
+    center?: [number, number];
+    zoom?: number;
+    duration?: number;
+  }) => void;
 };
 
 export type YMapMarkerInstance = {
   update: (props: { coordinates: [number, number] }) => void;
 };
+
 
 declare global {
   interface Window {

@@ -1,23 +1,22 @@
 "use client";
 
-import { useEffect } from "react";
-import { createPortal } from "react-dom";
 import { buttonClass } from "@/components/ui/Button";
-import { DetailRow } from "@/components/ui/DetailRow";
+import { ModalSheet } from "@/components/ui/ModalSheet";
 import { StoreMap } from "@/components/ui/StoreMap";
+import { Facts, type Fact } from "@/components/cards/Facts";
 import { routeHref } from "@/lib/ymaps";
 import type { Store } from "@/lib/stores";
 
 /**
- * The sheet a shop card opens, as the file draws it (2528:8142): the name with
- * its categories under it, a map across the full width of the card, the shop
- * written out beside «Как пройти», and the route handed to Яндекс Карты in one
- * of three modes.
+ * The sheet a shop opens, on the file's Sheet: the shop's name in H2 with its
+ * categories in Red brackets over it, a map across the full width, the shop
+ * written out as facts, how to walk in from the street, and the route handed to
+ * Яндекс Карты in one of three modes.
  *
  * Drawing the route here instead would need the paid routing licence, and would
  * still be worse - no traffic, no handover to the phone's navigation, and it
  * would have to ask for the reader's location first. So the sheet keeps the
- * brand and the information, and the last step goes where it works properly.
+ * shop and the information, and the last step goes where it works properly.
  */
 const MODES = [
   { id: "auto", label: "На машине" },
@@ -25,152 +24,50 @@ const MODES = [
   { id: "pd", label: "Пешком" },
 ] as const;
 
-/**
- * The card holds 40 of air, but the map runs edge to edge - so the padding sits
- * on the blocks either side of the map rather than on the card itself.
- */
-const GUTTER = "px-6 lg:px-10";
+export function StoreRouteModal({ store, onClose }: { store: Store; onClose: () => void }) {
+  const facts: Fact[] = [
+    { label: "Адрес", value: store.address },
+    { label: "Часы", value: store.hours },
+    { label: "Телефон", value: store.phone },
+    ...(store.brandCount ? [{ label: "Брендов", value: store.brandCount }] : []),
+    ...(store.assortment ? [{ label: "Ассортимент", value: store.assortment }] : []),
+    ...(store.directions.length
+      ? [
+          {
+            label: "Как пройти",
+            value: store.directions.map((line, i) => <p key={i}>{line}</p>),
+          },
+        ]
+      : []),
+  ].filter((fact) => fact.value);
 
-export function StoreRouteModal({
-  store,
-  onClose,
-}: {
-  store: Store;
-  onClose: () => void;
-}) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    // The page behind must not scroll while the sheet is open
-    const { overflow } = document.body.style;
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = overflow;
-    };
-  }, [onClose]);
+  return (
+    <ModalSheet title={store.name} labels={store.tags} onClose={onClose}>
+      {/* Edge to edge: the one block that ignores the sheet's own margins */}
+      <StoreMap center={store.coords} className="h-60 w-full overflow-hidden md:aspect-[21/9] md:h-auto" />
 
-  if (typeof document === "undefined") return null;
+      <div className="flex flex-col gap-6 px-4 md:gap-8 md:px-8">
+        <Facts items={facts} />
 
-  return createPortal(
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={`Как добраться: ${store.name}`}
-      className="fixed inset-0 z-50 flex items-end justify-center pt-16 lg:items-center lg:p-4"
-    >
-      <button
-        type="button"
-        aria-label="Закрыть"
-        onClick={onClose}
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-      />
-
-      <div className="relative flex max-h-full w-full max-w-[1280px] flex-col gap-6 overflow-y-auto bg-white py-6 text-ink lg:gap-10 lg:py-10">
-        <div className={`flex items-start justify-between gap-6 ${GUTTER}`}>
-          <div className="flex min-w-0 flex-col gap-2">
-            {/* The name is set plainly here. The brackets on this screen belong
-                to the categories under it, and two bracketed things one above
-                the other read as one list. */}
-            <p className="text-2xl/none font-medium tracking-[1px]">
-              {store.name}
-            </p>
-
-            {store.tags.length > 0 && (
-              <ul className="flex flex-wrap items-center gap-2">
-                {store.tags.map((tag) => (
-                  <li
-                    key={tag}
-                    className="font-mono text-xs/[16px] font-medium uppercase tracking-[1px] text-brand"
-                  >
-                    [{tag}]
-                  </li>
-                ))}
-              </ul>
-            )}
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2 md:flex-row">
+            {MODES.map((mode) => (
+              <a
+                key={mode.id}
+                href={routeHref(store.coords, mode.id)}
+                target="_blank"
+                rel="noreferrer"
+                className={`${buttonClass("outline", "M")} md:flex-1`}
+              >
+                {mode.label}
+              </a>
+            ))}
           </div>
-
-          <button
-            type="button"
-            aria-label="Закрыть"
-            onClick={onClose}
-            className="shrink-0 transition-colors hover:text-brand"
-          >
-            <CloseIcon />
-          </button>
-        </div>
-
-        {/* 400 tall in the file, and edge to edge - the only block here that
-            ignores the gutter. Shorter on a phone, where 400 is most of it. */}
-        <StoreMap
-          center={store.coords}
-          className="h-[260px] w-full overflow-hidden lg:h-[400px]"
-        />
-
-        <div className={`flex flex-col gap-6 lg:gap-10 ${GUTTER}`}>
-          {/* 588 of shop beside whatever is left for the walk in */}
-          <div className="flex flex-col gap-6 lg:flex-row">
-            <dl className="flex flex-col gap-2 text-base/5 lg:w-[588px] lg:shrink-0">
-              <DetailRow label="Адрес" value={store.address} />
-              <DetailRow label="Часы работы" value={store.hours} />
-              <DetailRow label="Телефон" value={store.phone} />
-              <DetailRow label="Кол-во брендов" value={store.brandCount} />
-              <DetailRow label="Ассортимент" value={store.assortment} />
-            </dl>
-
-            <div className="flex min-w-0 flex-1 flex-col gap-3 lg:gap-4">
-              <p className="text-2xl/none font-medium tracking-[1px]">
-                Как пройти:
-              </p>
-              <div className="text-base/5">
-                {store.directions.map((line, i) => (
-                  <p key={i}>{line}</p>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-6">
-            {/* Three of the same button in the file - none of them is the red
-                one this sheet used to lead with. Яндекс Карты know where the
-                reader is and what the traffic is doing, and on a phone they
-                hand the route straight to the navigator. */}
-            <div className="flex flex-col gap-4 lg:flex-row lg:gap-6">
-              {MODES.map((mode) => (
-                <a
-                  key={mode.id}
-                  href={routeHref(store.coords, mode.id)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={`${buttonClass("outline")} lg:min-w-[180px] lg:flex-1`}
-                >
-                  {mode.label}
-                </a>
-              ))}
-            </div>
-
-            <p className="text-base/5 text-muted">
-              Маршрут откроется в Яндекс Картах — там же будут пробки и переход в
-              навигатор.
-            </p>
-          </div>
+          <p className="type-body-s text-text-2">
+            Маршрут откроется в Яндекс Картах — там же будут пробки и переход в навигатор.
+          </p>
         </div>
       </div>
-    </div>,
-    document.body,
-  );
-}
-
-/** 24 in the file. The same cross the side menu and the notice sheet carry. */
-function CloseIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="m5 5 14 14M19 5 5 19"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
+    </ModalSheet>
   );
 }

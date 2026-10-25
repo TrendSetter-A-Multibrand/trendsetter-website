@@ -25,6 +25,7 @@ const FOCUSABLE =
 export function ModalSheet({
   title,
   label,
+  labels,
   size = "lg",
   onClose,
   children,
@@ -32,6 +33,8 @@ export function ModalSheet({
   title: string;
   /** The line over the title, brackets added here: "Запись на событие". */
   label?: string;
+  /** Several rubrics in a row, each in brackets and Red - a brand's categories. */
+  labels?: string[];
   /** 720 for a form, 880 for a brand, space or shop. */
   size?: "sm" | "lg";
   onClose: () => void;
@@ -99,6 +102,9 @@ export function ModalSheet({
         <div className="sticky top-0 z-10 flex items-start justify-between gap-4 bg-white p-4 md:static md:p-8 md:pb-6">
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             {label && <p className="type-caption">[{label}]</p>}
+            {labels && labels.length > 0 && (
+              <p className="type-caption text-brand">{labels.map((l) => `[${l}]`).join(" ")}</p>
+            )}
             <p className="type-h2">{title}</p>
           </div>
           <button

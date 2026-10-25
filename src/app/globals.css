@@ -456,3 +456,55 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* The shops map's plates (Map marker): a Red plate carrying the logo in white, 28
+   tall, with a 10 tip hanging off the bottom left; the chosen shop's is Sage. The
+   coordinate is the foot of the tip. "Me" is the one round thing in the system:
+   Dark blue in a 3px white ring. Built by hand and handed to the maps API, so
+   they are plain CSS here. The scheme underneath is muted to 45% saturation so
+   the plates are what the eye finds. */
+.ts-mk {
+  position: absolute;
+  transform: translate(0, -100%);
+  cursor: pointer;
+}
+.ts-mk__box {
+  display: block;
+  width: 124px;
+  height: 28px;
+  background: var(--brand);
+}
+.ts-mk__box::before {
+  content: "";
+  display: block;
+  height: 100%;
+  background: #fff;
+  -webkit-mask: url(/images/logo.svg) center / 108px 8px no-repeat;
+  mask: url(/images/logo.svg) center / 108px 8px no-repeat;
+}
+.ts-mk::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 10px solid var(--brand);
+  border-bottom: 10px solid transparent;
+}
+.ts-mk--active .ts-mk__box {
+  background: var(--ink);
+}
+.ts-mk--active::after {
+  border-left-color: var(--ink);
+}
+.ts-me {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border: 3px solid #fff;
+  border-radius: 9999px;
+  background: var(--ext-dark-blue);
+}
+.ts-map--muted canvas {
+  filter: saturate(0.45);
+}

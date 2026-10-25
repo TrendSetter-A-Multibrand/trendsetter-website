@@ -1,13 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { BrandIndexItem } from "@/components/cards/BrandIndexItem";
 import { FilterChip } from "@/components/ui/FilterChip";
 import { SearchField } from "@/components/ui/SearchField";
-import { BrandIndexItem } from "@/components/cards/BrandIndexItem";
 import { BrandModal } from "@/components/blocks/BrandModal";
 import { alphabetLetters, filterBrands, indexKey, type Brand } from "@/lib/brands";
 
-// The letter filter is gone from the design; brands stay grouped by first letter
+// Brands are grouped by the first letter of the Latin alphabet; the rest go under «#»
 const ALPHABET = "en";
 const LETTERS = alphabetLetters(ALPHABET);
 
@@ -17,9 +17,18 @@ function stockOf(brand: Brand) {
   if (!brand.stores.length) return {};
   return n > 0
     ? { stock: `Есть в ${n} ${n === 1 ? "магазине" : "магазинах"}`, inStock: true }
-    : { stock: "Нет в наличии", inStock: false };
+    : { stock: "Сейчас нет в магазинах", inStock: false };
 }
 
+/**
+ * The brands page: the search in a 437 field, then a bar that sticks under the
+ * header with the category chips and the A-Z keys - a key for every letter,
+ * the ones with no brand left in Line colour and dead, a press scrolling to the
+ * group - and then the groups. On a desktop a group is its letter in H1 at the
+ * left and its brands in a row to the right, as many across as it has up to
+ * four; on a phone the letter is over a list with a rule between rows. A click
+ * on a brand opens its sheet.
+ */
 export function BrandDirectory({
   brands,
   categories,
@@ -39,6 +48,8 @@ export function BrandDirectory({
     })).filter((group) => group.brands.length > 0);
   }, [brands, query, selected]);
 
+  const present = new Set(groups.map((g) => g.letter));
+
   function toggle(category: string) {
     setSelected((current) =>
       current.includes(category)
@@ -47,12 +58,22 @@ export function BrandDirectory({
     );
   }
 
+  function jump(letter: string) {
+    document
+      .getElementById(`brands-${letter}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
-    <div className="px-4 pb-10 pt-4 md:px-10">
-      {/* The filter bar: chips that swipe on a phone and wrap on a desktop, and
-          the search - above the chips on a phone, at the right of them from 768 */}
-      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between md:gap-6">
-        <div className="order-2 -mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:order-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden">
+    <div className="pb-10">
+      <div className="px-4 pt-6 md:px-10 md:pt-8">
+        <div className="md:w-[437px]">
+          <SearchField fluid placeholder="Найти бренд" value={query} onChange={setQuery} />
+        </div>
+      </div>
+
+      <div className="sticky top-[var(--header-h,116px)] z-20 mt-4 bg-white py-3 md:mt-6">
+        <div className="-mx-0 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:flex-wrap md:overflow-visible md:px-10 [&::-webkit-scrollbar]:hidden">
           {categories.map((category) => (
             <FilterChip
               key={category}
@@ -63,22 +84,43 @@ export function BrandDirectory({
           ))}
         </div>
 
-        <div className="order-1 w-full md:order-2 md:w-auto md:shrink-0">
-          <SearchField placeholder="Найти бренд" value={query} onChange={setQuery} />
+        <div
+          role="group"
+          aria-label="Алфавитный указатель"
+          className="mt-2 flex overflow-x-auto px-4 [scrollbar-width:none] md:px-10 [&::-webkit-scrollbar]:hidden"
+        >
+          {LETTERS.filter((l) => l !== "#" || present.has("#")).map((letter) => {
+            const on = present.has(letter);
+            return (
+              <button
+                key={letter}
+                type="button"
+                disabled={!on}
+                onClick={() => jump(letter)}
+                className="type-label flex size-11 shrink-0 items-center justify-center text-ink transition-colors duration-150 hover:bg-ink hover:text-white active:bg-ink active:text-white disabled:pointer-events-none disabled:text-line md:min-w-0 md:flex-1"
+              >
+                {letter}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Desktop: the group's letter in H1 at the left, sticking, the brands in
-          three columns beside it without rules. Phone: the letter over a list
-          with a thin rule between rows. */}
-      <div className="mt-8 flex flex-col gap-8 md:mt-12 md:gap-12">
-        {groups.length === 0 && <p className="type-label">Ничего не найдено</p>}
+      <div className="flex flex-col gap-8 px-4 pt-6 md:gap-12 md:px-10 md:pt-12">
+        {groups.length === 0 && <p className="type-body-l text-text-2">Ничего не найдено</p>}
         {groups.map((group) => (
-          <section key={group.letter} className="md:grid md:grid-cols-[repeat(12,minmax(0,1fr))] md:gap-6">
-            <h2 className="type-h1 md:sticky md:top-[calc(var(--header-h,80px)+16px)] md:col-span-2 md:self-start">
-              {group.letter}
-            </h2>
-            <div className="mt-2 divide-y divide-line md:col-span-10 md:mt-0 md:grid md:grid-cols-3 md:gap-x-6 md:divide-y-0">
+          <section
+            key={group.letter}
+            id={`brands-${group.letter}`}
+            className="scroll-mt-[calc(var(--header-h,116px)+130px)] md:grid md:grid-cols-[206px_1fr] md:gap-6"
+          >
+            <h2 className="type-h2 md:type-h1">{group.letter}</h2>
+            <div
+              style={
+                { "--cols": `repeat(${Math.min(group.brands.length, 4)}, minmax(0, 1fr))` } as React.CSSProperties
+              }
+              className="mt-2 divide-y divide-line md:mt-0 md:grid md:[grid-template-columns:var(--cols)] md:gap-x-6 md:divide-y-0"
+            >
               {group.brands.map((brand, i) => (
                 <BrandIndexItem
                   key={`${group.letter}-${i}`}

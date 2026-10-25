@@ -10,6 +10,7 @@ export function SearchField({
   onChange,
   name,
   defaultValue,
+  fluid = false,
 }: {
   placeholder: string;
   /** For a field inside a plain form: it is sent under this name. */
@@ -17,9 +18,11 @@ export function SearchField({
   defaultValue?: string;
   value?: string;
   onChange?: (value: string) => void;
+  /** Fill whatever width the parent gives, instead of the 280 of a desktop page. */
+  fluid?: boolean;
 }) {
   return (
-    <label className="flex h-11 w-full items-center gap-3 border border-ink bg-white pl-4 pr-3 focus-within:border-2 focus-within:border-brand focus-within:pl-[15px] focus-within:pr-[11px] lg:w-[280px]">
+    <label className={`flex h-11 w-full items-center gap-3 border border-ink bg-white pl-4 pr-3 focus-within:border-2 focus-within:border-brand focus-within:pl-[15px] focus-within:pr-[11px] ${fluid ? "" : "lg:w-[280px]"}`}>
       <input
         type="search"
         name={name}
