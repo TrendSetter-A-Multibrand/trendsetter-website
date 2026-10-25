@@ -27,6 +27,8 @@ export type Article = {
   title: string;
   /** Under the title on a journal card; not every piece carries one. */
   excerpt?: string;
+  /** Minutes of reading, from the editor; 0 or missing leaves the line out. */
+  readingMinutes?: number;
   href?: string;
   image?: string;
   /** Which of the two sections it belongs to - what the search chips filter on. */

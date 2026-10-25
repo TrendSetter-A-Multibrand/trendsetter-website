@@ -10,18 +10,36 @@ const article = {
   tags: ["Мода"],
   href: "/ru_ru/journal/material",
   section: "journal",
+  readingMinutes: 5,
 } as unknown as Article;
 
 describe("карточка статьи", () => {
-  it("в списках раздела держит фото высотой 430", () => {
-    const { container } = render(<ArticleCard article={article} locale="ru_ru" tall />);
+  it("фото 4:3, рубрика в скобках и время чтения", () => {
+    const { container, getByText } = render(
+      <ArticleCard article={article} locale="ru_ru" />,
+    );
 
-    expect(container.querySelector("a")!.className).toContain("lg:h-[430px]");
+    expect(container.querySelector("a")!.className).toContain("aspect-[4/3]");
+    expect(getByText("[Мода]")).toBeTruthy();
+    expect(getByText("5 мин чтения")).toBeTruthy();
   });
 
-  it("в каруселях и поиске остаётся квадратной", () => {
-    const { container } = render(<ArticleCard article={article} locale="ru_ru" />);
+  it("без минут строка времени не рисуется", () => {
+    const { queryByText } = render(
+      <ArticleCard
+        article={{ ...article, readingMinutes: undefined }}
+        locale="ru_ru"
+      />,
+    );
 
-    expect(container.querySelector("a")!.className).not.toContain("430px");
+    expect(queryByText(/мин чтения/)).toBeNull();
+  });
+
+  it("в списке на телефоне это строка, от 768 — стопка", () => {
+    const { container } = render(
+      <ArticleCard article={article} locale="ru_ru" layout="list" />,
+    );
+
+    expect(container.firstElementChild!.className).toContain("md:flex-col");
   });
 });

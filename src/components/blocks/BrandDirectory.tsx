@@ -3,12 +3,22 @@
 import { useMemo, useState } from "react";
 import { FilterChip } from "@/components/ui/FilterChip";
 import { SearchField } from "@/components/ui/SearchField";
+import { BrandIndexItem } from "@/components/cards/BrandIndexItem";
 import { BrandModal } from "@/components/blocks/BrandModal";
 import { alphabetLetters, filterBrands, indexKey, type Brand } from "@/lib/brands";
 
 // The letter filter is gone from the design; brands stay grouped by first letter
 const ALPHABET = "en";
 const LETTERS = alphabetLetters(ALPHABET);
+
+/** "Есть в 2 магазинах" from the shops the brand is listed in; nothing when it lists none. */
+function stockOf(brand: Brand) {
+  const n = brand.stores.filter((s) => s.available).length;
+  if (!brand.stores.length) return {};
+  return n > 0
+    ? { stock: `Есть в ${n} ${n === 1 ? "магазине" : "магазинах"}`, inStock: true }
+    : { stock: "Нет в наличии", inStock: false };
+}
 
 export function BrandDirectory({
   brands,
@@ -38,12 +48,11 @@ export function BrandDirectory({
   }
 
   return (
-    <div className="px-4 pt-4 lg:px-10 lg:pb-10 lg:pt-5">
-      {/* Mobile: chips, then the search, a hairline under both that bleeds to the screen edge.
-          Desktop: one 48px row, chips at the left and the search at the right. */}
-      <div className="-mx-4 flex flex-col gap-3 border-b border-ink/15 px-4 pb-4 lg:mx-0 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:border-b-0 lg:px-0 lg:pb-0">
-        {/* Scrolls sideways since chips can outrun the screen */}
-        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] [&>*]:shrink-0 [&::-webkit-scrollbar]:hidden lg:mx-0 lg:flex-wrap lg:overflow-visible lg:px-0">
+    <div className="px-4 pb-10 pt-4 md:px-10">
+      {/* The filter bar: chips that swipe on a phone and wrap on a desktop, and
+          the search - above the chips on a phone, at the right of them from 768 */}
+      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between md:gap-6">
+        <div className="order-2 -mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:order-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden">
           {categories.map((category) => (
             <FilterChip
               key={category}
@@ -54,37 +63,30 @@ export function BrandDirectory({
           ))}
         </div>
 
-        <div className="w-full lg:w-auto lg:shrink-0">
+        <div className="order-1 w-full md:order-2 md:w-auto md:shrink-0">
           <SearchField placeholder="Найти бренд" value={query} onChange={setQuery} />
         </div>
       </div>
 
-      {/* Mobile: 16 between a letter and its rows, 44 between groups. Desktop: the letter
-          carries its own 20 above and below, the rows sit in three columns 40 apart. */}
-      <div className="mt-4 flex flex-col gap-8 pb-4 lg:mt-5 lg:gap-0 lg:pb-0">
-        {groups.length === 0 && <p className="font-mono text-sm uppercase">Ничего не найдено</p>}
+      {/* Desktop: the group's letter in H1 at the left, sticking, the brands in
+          three columns beside it without rules. Phone: the letter over a list
+          with a thin rule between rows. */}
+      <div className="mt-8 flex flex-col gap-8 md:mt-12 md:gap-12">
+        {groups.length === 0 && <p className="type-label">Ничего не найдено</p>}
         {groups.map((group) => (
-          <section key={group.letter}>
-            <h2 className="mb-4 font-mono text-[32px]/[40px] font-bold tracking-[6px] lg:mb-0 lg:py-5 lg:text-[60px]/[80px] lg:font-normal lg:tracking-[3px]">
+          <section key={group.letter} className="md:grid md:grid-cols-[repeat(12,minmax(0,1fr))] md:gap-6">
+            <h2 className="type-h1 md:sticky md:top-[calc(var(--header-h,80px)+16px)] md:col-span-2 md:self-start">
               {group.letter}
             </h2>
-            <div className="grid gap-x-10 gap-y-4 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-3">
+            <div className="mt-2 divide-y divide-line md:col-span-10 md:mt-0 md:grid md:grid-cols-3 md:gap-x-6 md:divide-y-0">
               {group.brands.map((brand, i) => (
-                <button
+                <BrandIndexItem
                   key={`${group.letter}-${i}`}
-                  type="button"
-                  onClick={() => setOpen(brand)}
-                  className="group flex flex-col items-start gap-1.5 border-b border-ink/15 pb-3 text-left last:border-b-0 sm:border-b-0 sm:pb-0 lg:gap-2 lg:py-4"
-                >
-                  <p className="text-base/[20px] font-bold uppercase transition-colors group-hover:text-brand lg:text-2xl/[29px] lg:font-medium lg:tracking-[1px]">
-                    {brand.name}
-                  </p>
-                  <p className="flex flex-wrap gap-x-2 gap-y-1 font-mono text-xs/4 font-medium uppercase tracking-[1px] text-brand lg:text-sm/4">
-                    {brand.categories.map((c) => (
-                      <span key={c}>[{c}]</span>
-                    ))}
-                  </p>
-                </button>
+                  name={brand.name}
+                  categories={brand.categories}
+                  {...stockOf(brand)}
+                  onOpen={() => setOpen(brand)}
+                />
               ))}
             </div>
           </section>

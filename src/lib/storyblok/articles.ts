@@ -198,6 +198,7 @@ export async function fetchArticles(locale: string): Promise<Article[]> {
       tags: content.tags ?? [],
       title: content.title ?? "",
       excerpt: content.excerpt || undefined,
+      readingMinutes: Number(content.reading_minutes) || undefined,
       href: `/${locale}/${JOURNAL}/${slug}`,
       image: content.hero?.filename || undefined,
       section: content.section ?? "journal",

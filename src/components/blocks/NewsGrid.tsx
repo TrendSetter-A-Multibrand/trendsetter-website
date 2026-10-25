@@ -1,8 +1,7 @@
 "use client";
 
-import { Fragment, useRef } from "react";
-import Link from "next/link";
-import { CardImage } from "@/components/ui/CardImage";
+import { useRef } from "react";
+import { CardS } from "@/components/cards/CardS";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useCarousel } from "@/lib/useCarousel";
 import { tagHref } from "@/lib/articles";
@@ -13,6 +12,7 @@ type NewsItem = {
   title: string;
   href?: string;
   image?: string;
+  readingMinutes?: number;
 };
 
 type NewsGridProps = {
@@ -43,59 +43,38 @@ export function NewsGrid({
 
   return (
     <section
-      className={`px-4 lg:px-10 ${underHero ? "pt-0" : "pt-4 lg:pt-20"}`}
+      className={`px-4 md:px-10 ${underHero ? "pt-0" : "pt-8 md:pt-16"}`}
     >
       {/* The file leaves 40 from the heading to the row, and 120 above the block */}
       <SectionTitle
         heading={heading}
         trackRef={trackRef}
-        controls="bar"
-        className={`${underHero ? "mb-6" : "mb-4"} lg:mb-10`}
+        controls="arrows"
+        className={underHero ? "mb-6 md:mb-8" : "mb-6 md:mb-8"}
       />
 
       <div
         ref={trackRef}
-        className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 max-sm:scroll-pl-4 sm:mx-0 sm:snap-none sm:gap-10 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 max-sm:scroll-pl-4 sm:mx-0 sm:snap-none sm:gap-6 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
           // Photo and title lead to the piece, each tag to the news page cut
-          // down to that tag - so three links, not one wrapping the card
+          // down to that tag - the card draws all three
           <div
             key={i}
-            className="group flex w-[320px] shrink-0 snap-start flex-col sm:w-[calc(50%-20px)] sm:snap-align-none lg:w-[calc(25%-30px)]"
+            className="w-[280px] shrink-0 snap-start sm:w-[calc(50%-12px)] sm:snap-align-none lg:w-[calc((100%-48px)/3)]"
           >
-            {/* Square now, 430x430 four across */}
-            <Link
+            <CardS
               href={item.href ?? "#"}
-              tabIndex={-1}
-              aria-hidden="true"
-              className="relative aspect-square w-full overflow-hidden"
-            >
-              <CardImage
-                src={item.image}
-                sizes="(min-width: 1024px) 430px, (min-width: 640px) 50vw, 320px"
-                label="Читать"
-              />
-            </Link>
-            <p className="mt-6 font-mono text-xs/[16px] font-medium uppercase tracking-[1px] text-brand">
-              {item.tags.map((tag, t) => (
-                <Fragment key={tag}>
-                  {t > 0 && " "}
-                  <Link
-                    href={tagHref(locale, "news", tag)}
-                    className="hover:underline"
-                  >
-                    [{tag}]
-                  </Link>
-                </Fragment>
-              ))}
-            </p>
-            <Link
-              href={item.href ?? "#"}
-              className="mt-2 text-xl/[24px] font-medium lg:mt-4 lg:text-2xl/[29px]"
-            >
-              {item.title}
-            </Link>
+              title={item.title}
+              image={item.image}
+              tags={item.tags.map((tag) => ({
+                label: tag,
+                href: tagHref(locale, "news", tag),
+              }))}
+              minutes={item.readingMinutes}
+              sizes="(min-width: 1024px) 437px, (min-width: 640px) 50vw, 280px"
+            />
           </div>
         ))}
       </div>

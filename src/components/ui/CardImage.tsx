@@ -17,7 +17,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
  *
  * Expects a positioned, clipped parent, and a `group` for the hover plate.
  *
- * On a card that answers to the pointer the photo also draws 15% closer, under
+ * On a card that answers to the pointer the photo also draws 3% closer, under
  * whatever the card lays over it. Written as a `group-hover` rather than a prop
  * because it costs nothing where there is no group to hover - the sheet's own
  * 1280 photo, for one, is not a card and stands still.
@@ -45,7 +45,7 @@ export function CardImage({
           fill
           sizes={sizes}
           onError={() => setFailed(true)}
-          className="object-cover transition-transform duration-200 group-hover:scale-[1.15]"
+          className="object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.03] group-active:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
         />
       )}
 

@@ -2,32 +2,10 @@ import { ArticleCard } from "@/components/blocks/ArticleCard";
 import type { Article } from "@/lib/articles";
 
 /**
- * The mockup does not use one uniform grid: it alternates a row of three square
- * cards with a row of two larger ones, and drops one of the three-card rows onto
- * a full-bleed red band. This repeats down the page.
+ * A list of articles as Card S: one row each on a phone, two across from 768 and
+ * three from 1024, 24 between them. (The editorial grid with a lead and its side
+ * items is the page's own layout; this is the plain listing under it.)
  */
-const ROW_PATTERN = [3, 2, 3, 2] as const;
-const BRAND_ROW = 2;
-
-type Row = { cols: number; onBrand: boolean; items: Article[] };
-
-function toRows(articles: Article[]): Row[] {
-  const rows: Row[] = [];
-  let i = 0;
-  let r = 0;
-  while (i < articles.length) {
-    const cols = ROW_PATTERN[r % ROW_PATTERN.length];
-    rows.push({
-      cols,
-      onBrand: r % ROW_PATTERN.length === BRAND_ROW,
-      items: articles.slice(i, i + cols),
-    });
-    i += cols;
-    r += 1;
-  }
-  return rows;
-}
-
 export function ArticleGrid({
   articles,
   locale,
@@ -36,33 +14,19 @@ export function ArticleGrid({
   locale: string;
 }) {
   return (
-    <section className="flex flex-col gap-6 lg:gap-10">
-      {toRows(articles).map((row, i) => (
-        <div key={i} className={row.onBrand ? "lg:font-light lg:[&_.font-medium]:font-normal lg:bg-brand lg:py-10" : undefined}>
-          <div
-            className={`grid gap-6 px-4 lg:gap-10 lg:px-10 ${
-              row.cols === 3
-                ? "sm:grid-cols-2 lg:grid-cols-3"
-                : "sm:grid-cols-2"
-            }`}
-          >
-            {row.items.map((article, j) => (
-              <ArticleCard
-                key={`${i}-${j}`}
-                article={article}
-                locale={locale}
-                onBrand={row.onBrand}
-                tall
-                sizes={
-                  row.cols === 3
-                    ? "(min-width: 1024px) 31vw, (min-width: 640px) 47vw, 92vw"
-                    : "(min-width: 640px) 47vw, 92vw"
-                }
-              />
-            ))}
+    <section className="px-4 md:px-10">
+      <div className="grid gap-x-6 gap-y-0 md:grid-cols-2 md:gap-y-10 lg:grid-cols-3">
+        {articles.map((article, i) => (
+          <div key={i} className="max-md:border-b max-md:border-line max-md:last:border-b-0">
+            <ArticleCard
+              article={article}
+              locale={locale}
+              layout="list"
+              sizes="(min-width: 1024px) 437px, (min-width: 768px) 47vw, 137px"
+            />
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </section>
   );
 }

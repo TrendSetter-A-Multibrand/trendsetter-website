@@ -1,18 +1,13 @@
-import { Fragment } from "react";
-import Link from "next/link";
-import { CardImage } from "@/components/ui/CardImage";
-
+import { CardS } from "@/components/cards/CardS";
 import { tagHref, type Article } from "@/lib/articles";
 
 type ArticleCardProps = {
   article: Article;
   /** Needed for the tag links; every page that shows a card knows it. */
   locale: string;
-  /** Cards on the red band (lg only) carry white text instead of red tags on dark type. */
-  onBrand?: boolean;
   sizes?: string;
-  /** The section lists draw the photo 430 tall on lg whatever the card's width. */
-  tall?: boolean;
+  /** In a list it is a row on a phone; in a strip that swipes it stays a stack. */
+  layout?: "stack" | "list";
   /** Search results pick the matched words out of the title in red. */
   highlight?: string[];
 };
@@ -36,60 +31,28 @@ function mark(title: string, words: string[]) {
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 /**
- * The photo and the title lead to the article, each tag to its own section
- * filtered down to that tag. Three links rather than one wrapping the lot,
- * because a link inside a link is not a thing a browser will render. The photo
- * is hidden from the keyboard so the card is one stop and not two.
+ * An article as the file's Card S: the photo, the rubrics, the reading time and
+ * the title. Search results pick the matched words out of the title in red.
  */
 export function ArticleCard({
   article,
   locale,
-  onBrand,
   sizes,
-  tall,
+  layout = "stack",
   highlight,
 }: ArticleCardProps) {
-  const href = article.href ?? "#";
-
   return (
-    <div className="group flex flex-col">
-      <Link
-        href={href}
-        tabIndex={-1}
-        aria-hidden="true"
-        className={`relative aspect-square overflow-hidden ${
-          tall ? "lg:aspect-auto lg:h-[430px]" : ""
-        }`}
-      >
-        <CardImage src={article.image} sizes={sizes} label="Читать" />
-      </Link>
-
-      <p
-        className={`mt-6 font-mono text-xs/[16px] font-medium uppercase tracking-[1px] ${
-          onBrand ? "text-brand lg:text-white" : "text-brand"
-        }`}
-      >
-        {article.tags.map((tag, i) => (
-          <Fragment key={tag}>
-            {i > 0 && " "}
-            <Link
-              href={tagHref(locale, article.section, tag)}
-              className="hover:underline"
-            >
-              [{tag}]
-            </Link>
-          </Fragment>
-        ))}
-      </p>
-
-      <Link
-        href={href}
-        className={`mt-2 text-xl/[24px] font-medium lg:mt-4 lg:text-2xl/[29px] ${
-          onBrand ? "text-ink lg:text-white" : "text-ink"
-        }`}
-      >
-        {highlight?.length ? mark(article.title, highlight) : article.title}
-      </Link>
-    </div>
+    <CardS
+      href={article.href ?? "#"}
+      title={highlight?.length ? mark(article.title, highlight) : article.title}
+      image={article.image}
+      tags={article.tags.map((tag) => ({
+        label: tag,
+        href: tagHref(locale, article.section, tag),
+      }))}
+      minutes={article.readingMinutes}
+      layout={layout}
+      sizes={sizes}
+    />
   );
 }
