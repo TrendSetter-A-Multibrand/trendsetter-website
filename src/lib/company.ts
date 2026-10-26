@@ -33,7 +33,7 @@ export const ABOUT_CARDS = [
 
 export const ABOUT_BANNER = { title: "Наша миссия", body: HISTORY };
 
-export type TeamMember = { name: string; role: string };
+export type TeamMember = { name: string; role: string; image?: string };
 
 export const TEAM: TeamMember[] = Array.from({ length: 12 }, () => ({
   name: "Иван Иванов",

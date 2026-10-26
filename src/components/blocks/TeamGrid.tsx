@@ -1,37 +1,38 @@
+import Image from "next/image";
 import type { TeamMember } from "@/lib/company";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 
 /**
- * Six 251 portraits to a row, 62 apart, each with a name and a role under it.
- * The 24/29/16/18/40 stack below the circle is what puts the mockup's rows on a
- * 378px pitch.
+ * "[Команда]" on the file's Section head, then the Person cards: a round photo
+ * up to 200 - the one round thing the file allows - the name in H4 and the role
+ * in Caption Red in brackets. The row fills as wide as it can from 206 a card,
+ * 24 apart and 32 between rows; on a phone two across. 128 of air over it and
+ * 128 under it, where the form comes.
+ *
+ * A person with no photo yet is a grey circle; the file's "[Фото]" in it is a
+ * note to the designer, not copy.
  */
 export function TeamGrid({ members }: { members: TeamMember[] }) {
   return (
-    <section className="px-4 pt-10 pb-10 lg:px-10">
-      <h2 className="font-mono text-xl uppercase tracking-[5px] lg:text-[36px]/[44px] lg:tracking-[2px]">
-        [Команда]
-      </h2>
+    <section className="px-4 pb-32 pt-16 md:px-10 md:pt-32">
+      <SectionTitle heading="Команда" />
 
-      {/* Capped rather than stretched to the column: the mockup's portraits are
-          251 with 62 between them, which leaves air on the right rather than
-          growing the circles */}
-      <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 lg:mt-10 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-[62px] lg:gap-y-10 lg:max-w-[1818px]">
+      <div className="mt-6 grid grid-cols-2 gap-x-3 gap-y-8 md:mt-8 md:grid-cols-[repeat(auto-fill,minmax(206px,1fr))] md:gap-x-6">
         {members.map((member, i) => (
-          <div key={i} className="text-center">
-            <div className="relative aspect-square w-full">
-              <ImagePlaceholder className="overflow-hidden rounded-full" />
+          <div key={i} className="flex flex-col items-center gap-2 text-center">
+            <div className="relative aspect-square w-full max-w-[200px] overflow-hidden rounded-full bg-surface">
+              {member.image && (
+                <Image
+                  src={member.image}
+                  alt=""
+                  fill
+                  sizes="200px"
+                  className="object-cover"
+                />
+              )}
             </div>
-            <p className="mt-4 text-base font-medium lg:mt-6 lg:text-2xl/[29px]">
-              {member.name}
-            </p>
-            {/* One line, as in the mockup - but only where the mockup's room
-                exists. The role is 1px wider than the 252 portrait it sits
-                under, so at 1920 it just fits and anywhere narrower it was
-                hanging off the side of the page. */}
-            <p className="mt-2 font-mono text-xs/[16px] font-medium uppercase text-brand lg:mt-4 min-[1900px]:whitespace-nowrap">
-              [{member.role}]
-            </p>
+            <p className="type-h4 text-ink">{member.name}</p>
+            {member.role && <p className="type-caption uppercase text-brand">[{member.role}]</p>}
           </div>
         ))}
       </div>

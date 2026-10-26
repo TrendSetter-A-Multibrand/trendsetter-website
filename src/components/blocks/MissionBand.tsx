@@ -1,9 +1,17 @@
 import { Wordmark } from "@/components/ui/Wordmark";
 
+/** A statement longer than this is a paragraph, not a headline, and is set as one. */
+const HEADLINE_MAX = 160;
+
 /**
- * The red band on О нас that took the place of the running line: a heading in
- * brackets over one centred paragraph, 40 of padding all round, with the
- * wordmark laid across the whole width behind it.
+ * The file's Red band: the wordmark in White across the whole measure, then the
+ * label in brackets, an H2 of up to 900 and a Body L line, all centred, 48 of
+ * Red round it. Under it may run the strip of value cards on the same red, which
+ * is why it has no air of its own below.
+ *
+ * The block has one text field, so its first paragraph is the headline and the
+ * one after it the line under it; a lone paragraph too long for a headline is
+ * set as Body L instead of as forty-pixel type.
  */
 export function MissionBand({
   heading = "Наша миссия",
@@ -12,20 +20,25 @@ export function MissionBand({
   heading?: string;
   body: string;
 }) {
-  return (
-    <section className="on-dark relative overflow-hidden bg-brand px-4 py-8 text-white lg:px-10 lg:py-10">
-      {/* The file blends the wordmark onto the band under SCREEN. Over a flat
-          red that resolves to a lighter red and nothing else, so paint the
-          colour it arrives at rather than asking the browser to blend. */}
-      <Wordmark className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-[#dd4145]" />
+  const [first, ...rest] = body
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+  const headline = first && first.length <= HEADLINE_MAX ? first : undefined;
+  const lines = headline ? rest : first ? [first, ...rest] : [];
 
-      <div className="relative flex flex-col items-center gap-4">
-        <h2 className="font-mono text-xl uppercase tracking-[0.3px] lg:text-[30px]/[39px]">
-          [{heading}]
-        </h2>
-        <p className="text-center text-base/5 font-medium lg:text-xl/[24.2px]">
-          {body}
-        </p>
+  return (
+    <section className="on-dark bg-brand px-4 py-12 text-white md:px-10">
+      <Wordmark className="text-white" />
+
+      <div className="mx-auto mt-12 flex flex-col items-center gap-4 text-center">
+        <p className="type-label uppercase">[{heading}]</p>
+        {headline && <h2 className="type-h2 max-w-[900px]">{headline}</h2>}
+        {lines.map((line, i) => (
+          <p key={i} className="type-body-l max-w-[900px]">
+            {line}
+          </p>
+        ))}
       </div>
     </section>
   );

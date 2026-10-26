@@ -440,6 +440,12 @@
         "filetypes": [
           "images"
         ]
+      },
+      "label": {
+        "type": "text",
+        "display_name": "Метка",
+        "pos": 3,
+        "description": "Короткая подпись над заголовком, например «Кураторство». Скобки ставит сайт"
       }
     }
   },
@@ -482,6 +488,14 @@
         "type": "text",
         "display_name": "Должность",
         "pos": 1
+      },
+      "photo": {
+        "type": "asset",
+        "display_name": "Фото",
+        "pos": 2,
+        "filetypes": [
+          "images"
+        ]
       }
     }
   },

@@ -183,8 +183,11 @@ const DRAW: Record<
     />
   ),
 
+  // 128 of white over the red band, on a phone as on a desktop
   mission_band: (blok) => (
-    <MissionBand heading={text(blok.heading)} body={text(blok.body) ?? ""} />
+    <div className="mt-32">
+      <MissionBand heading={text(blok.heading)} body={text(blok.body) ?? ""} />
+    </div>
   ),
 
   // On the red when it follows the mission band, as on О нас; on its own, as on
@@ -196,6 +199,7 @@ const DRAW: Record<
         title: text(card.title) ?? "",
         body: text(card.body) ?? "",
         image: image(card.image),
+        label: text(card.label),
       }))}
     />
   ),
@@ -205,6 +209,7 @@ const DRAW: Record<
       members={nested(blok.members).map((member) => ({
         name: text(member.name) ?? "",
         role: text(member.role) ?? "",
+        image: image(member.photo),
       }))}
     />
   ),
