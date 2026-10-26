@@ -116,7 +116,7 @@ const DRAW: Record<
   // `flush` is off - the photo runs under the header only on the home page.
   page_cover: (blok, locale) => (
     <>
-      <div className="lg:py-5">
+      <div>
         <Breadcrumbs
           items={[
             { label: "Главная", href: `/${locale}` },
@@ -333,14 +333,23 @@ const DRAW: Record<
       }))}
     />
   ),
-  legal_article: (blok) => (
-    <LegalArticle
-      title={text(blok.title) ?? ""}
-      sections={nested(blok.sections).map((section) => ({
+  legal_article: (blok, locale) => (
+    <>
+      <Breadcrumbs
+        items={[
+          { label: "Главная", href: `/${locale}` },
+          { label: text(blok.title) ?? "" },
+        ]}
+      />
+      <LegalArticle
+        title={text(blok.title) ?? ""}
+        note={text(blok.note)}
+        sections={nested(blok.sections).map((section) => ({
         heading: text(section.heading),
         paragraphs: paragraphs(section.body),
       }))}
-    />
+      />
+    </>
   ),
   contact_form: (blok, locale) => (
     <ContactForm locale={locale} heading={text(blok.heading)} />
@@ -351,7 +360,7 @@ const DRAW: Record<
   // (the file draws it with no line under it), then the bar of chips and the groups.
   faq: (blok, locale) => (
     <>
-      <div className="lg:pt-5">
+      <div>
         <Breadcrumbs
           items={[
             { label: "Главная", href: `/${locale}` },

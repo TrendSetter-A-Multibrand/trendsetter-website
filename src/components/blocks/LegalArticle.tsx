@@ -1,59 +1,48 @@
 import type { LegalSection } from "@/lib/legal";
 
 /**
- * The long-form legal template, shared by the user agreement, the cookie policy,
- * the consent and the privacy policy - all four are drawn identically.
- *
- * Sizes off the file: the title is 60/80 mono with 3 of tracking, section
- * headings 24 caps with 3 of tracking, the body Inter Tight 16 on a 20 line.
- * Nothing folds: in the file every section is drawn open - heading, a hairline
- * at 15%, the text - and the one under the title opens the page. At 375 the
- * title and the section headings converge on one plain 24px, no caps, while the
- * body drops to 14 on a 16 line with a point of tracking.
+ * The file's legal page, one template for the user agreement, the cookie policy,
+ * the consent and the privacy policy: a column of 770 in the middle of the page,
+ * 24 between everything in it. The title in H1, the Legal note - a Marker plate
+ * with the date of the edition, only when the document has one - then each
+ * section as its heading in Label and brackets over its paragraphs in Body. The
+ * lead-in has no heading. Nothing folds and no mascot stands on these pages.
+ * 48 of air over the column (24 at 375) and the 128 of the section gap under it.
  */
 export function LegalArticle({
   title,
+  note,
   sections,
 }: {
   title: string;
+  /** "Редакция от …": the plate under the title. */
+  note?: string;
   sections: LegalSection[];
 }) {
   return (
-    <article className="px-4 pb-10 lg:px-10">
-      <h1 className="pt-4 font-mono text-2xl/[30px] tracking-[1px] lg:pt-10 lg:uppercase lg:tracking-[3px] lg:text-[60px]/[80px]">
-        {title}
-      </h1>
+    <article className="px-4 pb-32 pt-6 md:px-10 md:pt-12">
+      <div className="mx-auto flex max-w-[770px] flex-col gap-6">
+        <h1 className="type-h1 text-ink">{title}</h1>
 
-      <div className="mt-9 h-px bg-ink/15" />
-
-      {sections.map((section, i) =>
-        section.heading ? (
-          <section key={i} className="mt-6 lg:mt-10">
-            <h2 className="font-mono text-2xl/[30px] tracking-[1px] lg:uppercase lg:tracking-[3px]">
-              [{section.heading}]
-            </h2>
-            <div className="mt-4 h-px bg-ink/15 lg:mt-6" />
-            <div className="mt-4 lg:mt-6">
-              <Paragraphs section={section} />
-            </div>
-          </section>
-        ) : (
-          // The lead-in: no heading in the file, so nothing to open
-          <div key={i} className="mt-9">
-            <Paragraphs section={section} />
+        {note && (
+          <div className="bg-accent-yellow p-4">
+            <p className="type-body-s text-ink">{note}</p>
           </div>
-        )
-      )}
-    </article>
-  );
-}
+        )}
 
-function Paragraphs({ section }: { section: LegalSection }) {
-  return (
-    <div className="space-y-6 text-sm/[16px] tracking-[1px] lg:tracking-normal lg:text-base/5">
-      {section.paragraphs.map((paragraph, j) => (
-        <p key={j}>{paragraph}</p>
-      ))}
-    </div>
+        {sections.map((section, i) => (
+          <div key={i} className="contents">
+            {section.heading && (
+              <h2 className="type-label uppercase text-ink">[{section.heading}]</h2>
+            )}
+            {section.paragraphs.map((paragraph, j) => (
+              <p key={j} className="type-body text-ink">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        ))}
+      </div>
+    </article>
   );
 }
