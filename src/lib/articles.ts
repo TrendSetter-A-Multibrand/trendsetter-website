@@ -35,7 +35,35 @@ export type Article = {
   section?: "journal" | "news";
   /** An event is its own kind of story and is never listed as an article. */
   kind?: "event";
+  /** The editor's publication date as written in the story, "2026-10-06" - what orders a feed. */
+  date?: string;
+  /** The same date as a line of text, "6 октября 2026". */
+  publishedAt?: string;
 };
+
+/** How many articles a page of a listing carries: the editorial four and eight under them, or one magazine spread. */
+export const PAGE_SIZE = 12;
+
+/**
+ * One magazine spread cut out of a page of articles, in the order the file lays
+ * it down: the cover, four cards in two staggered columns, three plates, then
+ * two pairs of a wide card and a narrow one. A short page simply runs out.
+ */
+export function spreadOf(articles: Article[]) {
+  const [cover, ...rest] = articles;
+  return {
+    cover,
+    stagger: rest.slice(0, 4),
+    plates: rest.slice(4, 7),
+    duo: rest.slice(7, 9),
+    duoMirrored: rest.slice(9, 11),
+  };
+}
+
+/** Newest first; an article with no date goes last, in the order it came. */
+export function newestFirst(articles: Article[]) {
+  return [...articles].sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
+}
 
 /**
  * Tags arrive as free text and are written by hand, so compare them the way a

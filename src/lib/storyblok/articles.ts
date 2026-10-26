@@ -250,6 +250,8 @@ export async function fetchArticles(locale: string): Promise<Article[]> {
       href: `/${locale}/${JOURNAL}/${slug}`,
       image: content.hero?.filename || undefined,
       section: content.section ?? "journal",
+      date: content.published_at || undefined,
+      publishedAt: written(content.published_at ?? "") || undefined,
     }))
     // TRANSITION: remove after convert - an article with a placement_event is an event
     .filter((article) => !article.placements?.event);
