@@ -23,7 +23,7 @@ export default async function NotFound() {
       <NotFoundHero />
 
       {latest.length > 0 && (
-        <section className="px-4 pb-32 md:px-10">
+        <section className="px-4 pb-32 pt-6 md:px-10 md:pt-8">
           <SectionTitle heading="Последние новости" href={`/${locale}/news`} linkLabel="Все новости" />
           <div className="mt-6 grid gap-x-6 md:mt-8 md:grid-cols-2 md:gap-y-10 xl:grid-cols-4">
             {latest.map((article, i) => (

@@ -14,7 +14,7 @@ const groupId = (i: number) => `faq-group-${i}`;
  * 1-4 and its questions, the file's Accordion items, on the right, 576 in; below
  * 1280 the name is over them. A rule between questions and none under the last;
  * only one is open at a time. 48 over the first group and between groups (24 and
- * 32 at 375).
+ * 32 at 375), 128 under the last.
  */
 export function FaqAccordion({ groups }: { groups: FaqGroup[] }) {
   const [open, setOpen] = useState<string | null>(null);
@@ -53,7 +53,7 @@ export function FaqAccordion({ groups }: { groups: FaqGroup[] }) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-8 px-4 py-6 md:gap-12 md:px-10 md:py-12">
+      <div className="flex flex-col gap-8 px-4 pb-32 pt-6 md:gap-12 md:px-10 md:pt-12">
         {groups.map((group, i) => (
           <section
             key={group.title}

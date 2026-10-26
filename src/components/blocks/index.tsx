@@ -220,7 +220,10 @@ const DRAW: Record<
     />
   ),
 
-  space_cards: (blok, locale, path) => (
+  // The tiles end on 128 of air before whatever follows - the form - unless the
+  // store plan follows, which opens with that 128 itself
+  space_cards: (blok, locale, path, _previous, next) => (
+    <div className={next?.component === "store_plan" ? "" : "pb-32"}>
     <SpaceCardsSection
       locale={locale}
       linksOnly={isLinksOnlyPage(path)}
@@ -233,6 +236,7 @@ const DRAW: Record<
         availability: nested(card.availability) as SpaceCardInput["availability"],
       }))}
     />
+    </div>
   ),
 
   store_plan: (blok) => (

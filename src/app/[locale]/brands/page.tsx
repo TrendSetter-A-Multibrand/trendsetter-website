@@ -32,11 +32,9 @@ export default async function BrandsPage({
   return (
     <>
       {/* Crumbs, then the cover, then the letters and search (BrandsSection) */}
-      <div className="lg:py-5">
-        <Breadcrumbs
-          items={[{ label: "Главная", href: `/${locale}` }, { label: "Бренды" }]}
-        />
-      </div>
+      <Breadcrumbs
+        items={[{ label: "Главная", href: `/${locale}` }, { label: "Бренды" }]}
+      />
       <PageCover
         title={covers.brands.title}
         subtitle={covers.brands.subtitle}

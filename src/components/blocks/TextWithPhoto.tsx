@@ -3,7 +3,7 @@ import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
 /**
  * The file's Split ("О нас"): the text on columns 1-4 - 437 - and the photo
- * across the rest, as tall as the text and never under 360. Below 1280 the text
+ * across the rest, as tall as the text and never under 400. Below 1280 the text
  * takes two thirds and the photo goes under it at 21:9; on a phone the text and
  * then a 343x240 photo. The heading is H2, the first paragraph Body L and any
  * after it Body. 48 of air over it, none under: the next block keeps its own
@@ -36,7 +36,7 @@ export function TextWithPhoto({
           ))}
         </div>
 
-        <div className="relative aspect-[343/240] w-full overflow-hidden md:aspect-[21/9] xl:aspect-auto xl:min-h-[360px] xl:flex-1">
+        <div className="relative aspect-[343/240] w-full overflow-hidden md:aspect-[21/9] xl:aspect-auto xl:min-h-[400px] xl:flex-1">
           <ImagePlaceholder />
           {image && (
             <Image

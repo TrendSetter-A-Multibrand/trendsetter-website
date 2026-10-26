@@ -62,10 +62,10 @@ export default async function EventPage({
         ]}
       />
 
-      <div className="grid gap-x-6 gap-y-8 px-4 pb-16 pt-6 lg:grid-cols-12 lg:px-10 lg:pb-32 lg:pt-16">
-        <div className="flex flex-col gap-6 lg:col-span-8 lg:row-start-1 lg:gap-8">
-          <header className="flex flex-col gap-3 lg:gap-4">
-            <p className="type-label text-ink">[{meta.tags[0] ?? "Событие"}]</p>
+      <div className="grid gap-x-6 gap-y-8 px-4 pt-6 lg:grid-cols-12 lg:px-10 lg:pt-16">
+        <div className="flex flex-col gap-8 lg:col-span-8 lg:row-start-1 lg:gap-12">
+          <header className="flex flex-col gap-4">
+            <p className="type-caption uppercase text-ink">[{meta.tags[0] ?? "Событие"}]</p>
             <h1 className="type-h1 text-ink">{event.title}</h1>
             {meta.excerpt && <p className="type-body-l max-w-[560px] text-ink">{meta.excerpt}</p>}
           </header>
@@ -89,13 +89,14 @@ export default async function EventPage({
           <EventAside event={event} locale={locale} url={`${siteUrl}/${locale}/events/${slug}`} />
         </div>
 
-        <div className="flex flex-col gap-6 lg:col-span-8 lg:row-start-2 lg:gap-8">
+        <div className="flex flex-col gap-8 lg:col-span-8 lg:row-start-2 lg:gap-12">
           <ArticleBody blocks={blocks} locale={locale} flow />
           {event.location && <HowToGetThere place={event.location} />}
         </div>
       </div>
 
       <EventsList heading="События" events={others} limit={4} href={`/${locale}/events`} />
+      <div className="pb-32" />
     </>
   );
 }

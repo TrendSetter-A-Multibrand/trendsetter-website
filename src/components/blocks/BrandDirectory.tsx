@@ -65,14 +65,14 @@ export function BrandDirectory({
   }
 
   return (
-    <div className="pb-10">
+    <div className="pb-32">
       <div className="px-4 pt-6 md:px-10 md:pt-8">
         <div className="md:w-[437px]">
           <SearchField fluid placeholder="Найти бренд" value={query} onChange={setQuery} />
         </div>
       </div>
 
-      <div className="sticky top-[var(--header-h,116px)] z-20 mt-4 bg-white py-3 md:mt-6">
+      <div className="sticky top-[var(--header-h,116px)] z-20 border-b border-line bg-white pb-2 pt-3">
         <div className="-mx-0 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:flex-wrap md:overflow-visible md:px-10 [&::-webkit-scrollbar]:hidden">
           {categories.map((category) => (
             <FilterChip

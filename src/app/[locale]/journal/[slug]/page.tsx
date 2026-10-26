@@ -73,12 +73,12 @@ export default async function ArticlePage({
           </div>
         </div>
 
-        <div className="pt-6 md:pt-16">
+        <div className="pt-12 md:pt-22">
           <ArticleBody blocks={blocks} locale={locale} />
         </div>
 
         {next && (
-          <div className="mt-6 px-4 md:mt-12 md:px-0">
+          <div className="mt-4 px-4 md:mt-6 md:px-0">
             <NextMaterial href={next.href ?? "#"} title={next.title} image={next.image} />
           </div>
         )}
@@ -86,6 +86,7 @@ export default async function ArticlePage({
 
       <ArticleReactions articleId={slug} likes={12} dislikes={0} />
       <RelatedArticles articles={others} locale={locale} />
+      <div className="pb-32" />
     </>
   );
 }

@@ -41,7 +41,9 @@ export default async function EventsPage({
     <>
       <Breadcrumbs items={[{ label: "Главная", href: `/${locale}` }, { label: "События" }]} />
       <EventsWidget events={nearest} />
-      <EventsBoard events={events} />
+      <div className="pb-32">
+        <EventsBoard events={events} />
+      </div>
     </>
   );
 }

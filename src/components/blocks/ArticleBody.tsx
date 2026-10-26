@@ -573,7 +573,7 @@ export function ArticleBody({
   flow?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-4 md:gap-6">
+    <div className={`flex flex-col ${flow ? "gap-8 md:gap-12" : "gap-4 md:gap-6"}`}>
       {blocks.map((block, i) => (
         <div key={i} className={flow ? "w-full" : COLUMN[widthOf(block)]}>
           <Block block={block} locale={locale} />

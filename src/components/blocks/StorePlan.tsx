@@ -37,7 +37,7 @@ export function StorePlan({
   const zone = open === null ? undefined : zones[open];
 
   return (
-    <section className="px-4 pt-16 md:px-10 md:pt-32">
+    <section className="px-4 pb-32 pt-16 md:px-10 md:pt-32">
       <SectionTitle heading="План магазина" />
 
       <div

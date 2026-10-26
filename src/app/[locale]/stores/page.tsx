@@ -36,7 +36,9 @@ export default async function StoresPage({
         title="Магазины"
         subtitle="Одежда, дом, косметика и детское — в магазинах рядом с домом. Выберите ближайший и постройте маршрут."
       />
-      <StoresSection variant="map" />
+      <div className="pb-32">
+        <StoresSection variant="map" />
+      </div>
     </>
   );
 }
