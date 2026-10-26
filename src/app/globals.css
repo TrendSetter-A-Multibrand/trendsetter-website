@@ -423,6 +423,18 @@ body {
     font-size: 72px;
   }
 }
+/* The 404's "4": as large as the type goes (316), 72 at 375 like the season line */
+@utility type-nf-code {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 500;
+  font-size: 316px;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  @media (max-width: 767px) {
+    font-size: 72px;
+    line-height: 0.98;
+  }
+}
 /* Article text */
 @utility type-prose {
   font-family: var(--font-inter-tight), Arial, sans-serif;
