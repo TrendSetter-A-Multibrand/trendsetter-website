@@ -26,7 +26,7 @@ export function Footer({
   const { columns, cooperationTitle, email } = settings.footer;
 
   return (
-    <footer className="on-dark bg-ink pt-6 text-white max-md:pb-[calc(var(--tabbar-h)+env(safe-area-inset-bottom))]">
+    <footer className="on-dark bg-ink pt-6 text-white md:pb-6 max-md:pb-[calc(var(--tabbar-h)+env(safe-area-inset-bottom))]">
       <div className="px-4 md:px-10">
         <div className="grid pb-6 md:grid-cols-2 md:gap-x-6 md:gap-y-10 md:pb-16 min-[1000px]:grid-flow-col min-[1000px]:auto-cols-fr min-[1000px]:grid-cols-none">
           {columns.map((column) => (

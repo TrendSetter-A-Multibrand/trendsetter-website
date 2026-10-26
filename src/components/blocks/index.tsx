@@ -288,8 +288,12 @@ const DRAW: Record<
     />
   ),
 
+  // The old heading, "Последние новости", is what the file now calls "Новости"
   news_row: (blok, locale) => (
-    <NewsRow heading={text(blok.heading)} locale={locale} />
+    <NewsRow
+      heading={text(blok.heading) === "Последние новости" ? undefined : text(blok.heading)}
+      locale={locale}
+    />
   ),
   events_row: (blok, locale) => (
     <EventsSection heading={text(blok.heading)} locale={locale} />
@@ -326,6 +330,7 @@ const DRAW: Record<
   categories_row: (blok, locale) => (
     <CategoriesRow
       heading={text(blok.heading)}
+      href={`/${locale}/brands`}
       items={nested(blok.tiles).map((tile) => ({
         label: text(tile.label) ?? "",
         href: href(tile.link, locale) ?? "#",

@@ -10,6 +10,8 @@ type CardSProps = {
   tags?: CardTag[];
   /** Minutes of reading; the line is left out when there are none. */
   minutes?: number;
+  /** A date written out, "10 октября 2026"; the news rows show it where the others show the reading time. */
+  date?: string;
   /**
    * stack - the photo over its meta and title, in a three-across grid or a strip
    * that swipes; row - the photo 40% at the left, as the lists on a phone;
@@ -37,6 +39,7 @@ export function CardS({
   image,
   tags = [],
   minutes = 0,
+  date,
   layout = "stack",
   sizes,
   className = "",
@@ -77,7 +80,7 @@ export function CardS({
       </Link>
 
       <div className="flex min-w-0 flex-1 flex-col gap-2 md:gap-4">
-        {(tags.length > 0 || minutes > 0) && (
+        {(tags.length > 0 || minutes > 0 || date) && (
           <div className={`type-caption flex text-ink ${meta}`}>
             <p>
               {tags.map((tag, i) => (
@@ -89,7 +92,11 @@ export function CardS({
                 </span>
               ))}
             </p>
-            {minutes > 0 && <p className="shrink-0">{minutes} мин чтения</p>}
+            {date ? (
+              <p className="shrink-0">{date}</p>
+            ) : (
+              minutes > 0 && <p className="shrink-0">{minutes} мин чтения</p>
+            )}
           </div>
         )}
         <Link

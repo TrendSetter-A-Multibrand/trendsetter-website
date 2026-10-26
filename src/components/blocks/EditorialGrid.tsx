@@ -97,6 +97,7 @@ export function JournalSection({
       <SectionTitle
         heading={heading}
         href={`/${locale}/journal`}
+        linkLabel="Все материалы"
         className="mb-6 md:mb-8"
       />
       <EditorialGrid articles={articles} locale={locale} />

@@ -26,14 +26,19 @@ const TINTS = [
 export function CategoriesRow({
   heading = "Что есть в магазинах",
   items,
+  href,
+  linkLabel = "Все бренды",
 }: {
   heading?: string;
   items: CategoryItem[];
+  /** Where "Все бренды" leads; the link is left out without it. */
+  href?: string;
+  linkLabel?: string;
 }) {
   if (items.length === 0) return null;
   return (
     <section className="px-4 pt-16 md:px-10 md:pt-32">
-      <SectionTitle heading={heading} className="mb-6 md:mb-8" />
+      <SectionTitle heading={heading} href={href} linkLabel={linkLabel} className="mb-6 md:mb-8" />
       <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 [scrollbar-width:none] max-md:scroll-pl-4 md:mx-0 md:grid md:grid-cols-6 md:gap-6 md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden">
         {items.map((item, i) => (
           <div key={i} className="w-40 shrink-0 snap-start md:w-auto">

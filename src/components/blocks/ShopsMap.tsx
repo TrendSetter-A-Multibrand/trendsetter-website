@@ -9,7 +9,6 @@ import { SegmentedSwitch } from "@/components/ui/SegmentedSwitch";
 import { ShopsMapView } from "@/components/ui/ShopsMapView";
 import { StoreRouteModal } from "@/components/blocks/StoreRouteModal";
 import type { Store } from "@/lib/stores";
-import { routeHref } from "@/lib/ymaps";
 
 /** Great-circle distance in kilometres between two [lng, lat] points. */
 function kilometres([lng1, lat1]: [number, number], [lng2, lat2]: [number, number]) {
@@ -155,7 +154,6 @@ export function ShopsMap({ stores }: { stores: Store[] }) {
                 image={store.image}
                 phone={store.phone}
                 distance={km !== undefined ? label(km) : undefined}
-                route={routeHref(store.coords)}
                 active={i === active}
                 facts={[
                   { label: "Адрес", value: store.address },

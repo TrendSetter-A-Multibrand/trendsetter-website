@@ -4,7 +4,6 @@ import { useState } from "react";
 import type { Store } from "@/lib/stores";
 import { ShopCard } from "@/components/cards/ShopCard";
 import { SectionTitle } from "@/components/ui/SectionTitle";
-import { routeHref } from "@/lib/ymaps";
 import { StoreRouteModal } from "@/components/blocks/StoreRouteModal";
 
 /**
@@ -34,7 +33,6 @@ export function StoreCards({
               name={store.name}
               image={store.image}
               phone={store.phone}
-              route={routeHref(store.coords)}
               facts={[
                 { label: "Адрес", value: store.address },
                 { label: "Часы", value: store.hours },

@@ -12,7 +12,9 @@ import { PhoneIcon, RouteIcon } from "@/components/ui/Icons";
  * shop chosen on the map) wears a 1px Sage frame - Sage, not Red. Horizontal sits
  * the photo, 256 wide, beside the plate when the column is 520 or more.
  *
- * The photo and the plate open the shop's sheet; "Маршрут" goes to Yandex Maps when it is given the address, and opens the sheet otherwise.
+ * The photo, the plate and "Маршрут" all open the shop's sheet: the sheet is where
+ * the way of getting there is chosen - car, public transport, on foot - and only
+ * then does the reader go on to Yandex Maps.
  */
 export function ShopCard({
   name,
@@ -20,7 +22,6 @@ export function ShopCard({
   facts,
   image,
   phone,
-  route,
   active = false,
   layout = "vertical",
   onOpen,
@@ -32,8 +33,6 @@ export function ShopCard({
   image?: string;
   /** What "Позвонить" dials. */
   phone?: string;
-  /** Where "Маршрут" leads, in a new tab; without it the button opens the sheet. */
-  route?: string;
   active?: boolean;
   layout?: "vertical" | "horizontal";
   onOpen: () => void;
@@ -85,22 +84,10 @@ export function ShopCard({
               Позвонить
             </span>
           )}
-          {route ? (
-            <a
-              href={route}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${action} border-l border-ink`}
-            >
-              <RouteIcon />
-              Маршрут
-            </a>
-          ) : (
-            <button type="button" onClick={onOpen} className={`${action} border-l border-ink`}>
-              <RouteIcon />
-              Маршрут
-            </button>
-          )}
+          <button type="button" onClick={onOpen} className={`${action} border-l border-ink`}>
+            <RouteIcon />
+            Маршрут
+          </button>
         </div>
       </div>
     </article>

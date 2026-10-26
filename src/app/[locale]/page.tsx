@@ -5,6 +5,7 @@ import { isLocale } from "@/lib/i18n/locales";
 import { StoryblokBridge } from "@/components/layout/StoryblokBridge";
 import { Blocks } from "@/components/blocks";
 import { fetchStory, type Block } from "@/lib/storyblok/fetchStory";
+import { homeLayout } from "@/lib/homeLayout";
 import { seo } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/siteSettings";
 
@@ -30,8 +31,8 @@ export async function generateMetadata({
 
 /**
  * The page is whatever the home story says it is: the editor's own list of
- * sections, in the editor's own order. Nothing about the page is written here,
- * which is the point - the next section is added in Storyblok, not in this file.
+ * sections, in the editor's own order. The one exception is a story still
+ * written for the old design - see `homeLayout`.
  */
 export default async function HomePage({
   params,
@@ -50,7 +51,7 @@ export default async function HomePage({
 
   return (
     <>
-      <Blocks body={story.content.body ?? []} locale={locale} />
+      <Blocks body={homeLayout(story.content.body ?? [])} locale={locale} />
       {draft && <StoryblokBridge />}
     </>
   );

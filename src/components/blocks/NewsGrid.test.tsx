@@ -20,7 +20,7 @@ const items = (count: number) =>
  * two ends of that are what break: a section emptied down to nothing used to
  * draw a heading over a blank strip, and nobody had ever looked at a hundred.
  */
-describe("ряд «Последние новости»", () => {
+describe("ряд «Новости»", () => {
   it("при пустом списке не рисует ряд", () => {
     const { container } = render(<NewsGrid items={[]} />);
 
@@ -32,7 +32,7 @@ describe("ряд «Последние новости»", () => {
     render(<NewsGrid items={items(3)} />);
 
     expect(screen.getAllByText(/^Материал \d+$/)).toHaveLength(3);
-    expect(screen.getByText(/Последние новости/)).not.toBeNull();
+    expect(screen.getByText(/Новости/)).not.toBeNull();
   });
 
   it("на сотне записей рисует все сто", () => {

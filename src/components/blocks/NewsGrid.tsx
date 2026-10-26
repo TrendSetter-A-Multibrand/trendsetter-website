@@ -13,6 +13,7 @@ type NewsItem = {
   href?: string;
   image?: string;
   readingMinutes?: number;
+  publishedAt?: string;
 };
 
 type NewsGridProps = {
@@ -26,7 +27,7 @@ type NewsGridProps = {
 };
 
 export function NewsGrid({
-  heading = "Последние новости",
+  heading = "Новости",
   items,
   underHero,
 }: NewsGridProps) {
@@ -50,6 +51,8 @@ export function NewsGrid({
         heading={heading}
         trackRef={trackRef}
         controls="arrows"
+        href={`/${locale}/news`}
+        linkLabel="Все новости"
         className={underHero ? "mb-6 md:mb-8" : "mb-6 md:mb-8"}
       />
 
@@ -73,6 +76,7 @@ export function NewsGrid({
                 href: tagHref(locale, "news", tag),
               }))}
               minutes={item.readingMinutes}
+              date={item.publishedAt}
               sizes="(min-width: 1024px) 437px, (min-width: 640px) 50vw, 280px"
             />
           </div>

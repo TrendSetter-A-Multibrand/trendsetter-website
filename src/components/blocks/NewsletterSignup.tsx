@@ -106,7 +106,7 @@ export function NewsletterSignup({
       {/* The smiley: 12 degrees clockwise, 440 across, hanging off the right
           edge. Under 1200 there is no room beside the text, so it sits under the
           form at the right instead. On send it rolls out of the band. */}
-      <div className="pointer-events-none relative mt-6 flex justify-end min-[1200px]:absolute min-[1200px]:right-[-30px] min-[1200px]:top-1/2 min-[1200px]:mt-0 min-[1200px]:-translate-y-[45%]">
+      <div className="pointer-events-none relative mt-6 flex justify-end min-[1200px]:absolute min-[1200px]:right-[-30px] min-[1200px]:top-[calc(50%+41px)] min-[1200px]:mt-0 min-[1200px]:size-[522px] min-[1200px]:-translate-y-1/2 min-[1200px]:items-center min-[1200px]:justify-center">
         <div
           className={`relative size-[237px] transition-transform duration-700 ease-in min-[1200px]:size-[440px] ${
             submitted
