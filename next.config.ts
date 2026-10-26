@@ -15,6 +15,17 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  async redirects() {
+    // The file's cookie informer links to /cookie; the policy itself lives at
+    // /cookies, where the footer and the notice already point. The old address
+    // is kept as an alias rather than moving the page, which would mean
+    // renaming its story in Storyblok.
+    return [
+      { source: "/cookie", destination: "/cookies", permanent: true },
+      { source: "/:locale(ru_ru|ru_am)/cookie", destination: "/:locale/cookies", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;
