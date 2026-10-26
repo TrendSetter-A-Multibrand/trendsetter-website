@@ -1,17 +1,15 @@
 "use client";
 
-import { Divider } from "@/components/ui/Divider";
-import { Marker } from "@/components/ui/Marker";
 import { ModalPhoto, ModalSheet } from "@/components/ui/ModalSheet";
-import { SectionTitle } from "@/components/ui/SectionTitle";
+import { StockRow } from "@/components/ui/StockRow";
 import { ModalEventsRow } from "@/components/blocks/ModalEventsRow";
 import type { SpaceCardData } from "@/lib/space";
 
 /**
- * The sheet a Пространство card opens: the shell, a photo, the write-up and a
- * divider, then the shops the goods are in and the events coming up. A section
- * with nothing to show is not drawn, so a Collaboration card is just the first
- * half. (Unlike a brand's sheet there is no logo or tag line in the header.)
+ * The file's zone sheet, on the Sheet: the zone's rubric in Red brackets over
+ * its name in H2, a 21:9 photo and the write-up in Body. Shops with the goods and
+ * the events coming up follow only where the card has them - the file draws
+ * neither - and a section with nothing to show is not drawn at all.
  */
 export function SpaceModal({
   card,
@@ -23,33 +21,19 @@ export function SpaceModal({
   const stores = card.stores ?? [];
 
   return (
-    <ModalSheet title={card.title} onClose={onClose}>
-      <div className="flex flex-col gap-6">
-        <ModalPhoto src={card.image} />
+    <ModalSheet title={card.title} labels={card.label ? [card.label] : undefined} onClose={onClose}>
+      <ModalPhoto src={card.image} />
 
-        {card.body && (
-          <div className="whitespace-pre-line px-6 text-base/5 lg:px-10">
-            {card.body}
-          </div>
-        )}
-
-        <div className="px-6 lg:px-10">
-          <Divider />
-        </div>
-      </div>
+      {card.body && (
+        <div className="type-body whitespace-pre-line px-4 md:px-8">{card.body}</div>
+      )}
 
       {stores.length > 0 && (
-        <section className="flex flex-col gap-6">
-          <SectionTitle heading="Наличие в магазинах" className="px-6 lg:px-10" />
-          <ul className="flex flex-col gap-4 px-6 lg:px-10">
+        <section className="flex flex-col gap-3 px-4 md:px-8">
+          <h3 className="type-label">[Наличие в магазинах]</h3>
+          <ul>
             {stores.map((store) => (
-              <li
-                key={store.name}
-                className="flex items-center gap-4 text-sm/[19px] uppercase tracking-[1px]"
-              >
-                <Marker tone={store.available ? "green" : "red"} />
-                {store.name}
-              </li>
+              <StockRow key={store.name} shop={store.name} available={store.available} />
             ))}
           </ul>
         </section>

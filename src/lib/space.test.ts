@@ -27,13 +27,10 @@ describe("eventsForSection", () => {
 
 describe("buildSpaceCards", () => {
   const shops = [{ uuid: "a", name: "Атриум" }, { uuid: "b", name: "Дубровка" }];
-  it("a card with no rows says the goods are in every shop", () => {
+  it("a card with no rows and no section has no shops and no events", () => {
     const [card] = buildSpaceCards([{ title: "T", availability: [] }], shops, events);
-    expect(card.stores).toEqual([
-      { name: "Атриум", available: true },
-      { name: "Дубровка", available: true },
-    ]);
-    expect(card.events).toHaveLength(4);
+    expect(card.stores).toEqual([]);
+    expect(card.events).toEqual([]);
   });
   it("lists every shop where the card has rows", () => {
     const input = [

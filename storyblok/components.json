@@ -27,6 +27,7 @@
           "photo_cards",
           "team_grid",
           "space_cards",
+          "store_plan",
           "contact_details",
           "text_section",
           "help_cards",
@@ -493,6 +494,81 @@
         "type": "asset",
         "display_name": "Фото",
         "pos": 2,
+        "filetypes": [
+          "images"
+        ]
+      }
+    }
+  },
+  {
+    "name": "store_plan",
+    "display_name": "План магазина",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "label": {
+        "type": "text",
+        "display_name": "Метка",
+        "pos": 0,
+        "description": "Например «Скоро открытие». Скобки ставит сайт"
+      },
+      "title": {
+        "type": "text",
+        "display_name": "Название магазина",
+        "pos": 1
+      },
+      "text": {
+        "type": "textarea",
+        "display_name": "Адрес и подсказка",
+        "pos": 2
+      },
+      "image": {
+        "type": "asset",
+        "display_name": "План",
+        "pos": 3,
+        "filetypes": [
+          "images"
+        ],
+        "description": "Рисунок плана. Без него на странице только карточка и список зон"
+      },
+      "zones": {
+        "type": "bloks",
+        "display_name": "Зоны",
+        "pos": 4,
+        "restrict_components": true,
+        "component_whitelist": [
+          "store_plan_zone"
+        ]
+      }
+    }
+  },
+  {
+    "name": "store_plan_zone",
+    "display_name": "Зона плана",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "name": {
+        "type": "text",
+        "display_name": "Название",
+        "pos": 0
+      },
+      "kind": {
+        "type": "text",
+        "display_name": "Вид",
+        "pos": 1,
+        "description": "Например «зал» или «сервис»"
+      },
+      "body": {
+        "type": "textarea",
+        "display_name": "Описание",
+        "pos": 2,
+        "description": "Если пусто и нет фото, зона в списке не открывается"
+      },
+      "photo": {
+        "type": "asset",
+        "display_name": "Фото",
+        "pos": 3,
         "filetypes": [
           "images"
         ]

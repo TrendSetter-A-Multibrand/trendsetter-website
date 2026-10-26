@@ -19,6 +19,7 @@ import { PhotoCards } from "@/components/blocks/PhotoCards";
 import { TeamGrid } from "@/components/blocks/TeamGrid";
 import { SpaceCardsSection } from "@/components/blocks/SpaceCardsSection";
 import { isLinksOnlyPage, type SpaceCardInput } from "@/lib/space";
+import { StorePlan } from "@/components/blocks/StorePlan";
 import { ContactDetails } from "@/components/blocks/ContactDetails";
 import { HelpCards } from "@/components/blocks/HelpCards";
 import { resolveHref } from "@/lib/siteSettings";
@@ -128,10 +129,9 @@ const DRAW: Record<
     </>
   ),
 
-  // 24 mono across the whole measure, centred, with 40 of air over it on lg;
-  // at 375 that drops to 14 mono with 16 of air over it.
+  // The file's Intro: Body L, centred, 640 at most, 64 over it (32 at 375)
   intro_text: (blok) => (
-    <p className="px-4 pt-4 text-center font-mono text-sm lg:px-10 lg:pt-10 lg:text-2xl/[31.2px]">
+    <p className="type-body-l mx-auto max-w-[640px] px-4 pt-8 text-center md:px-10 md:pt-16">
       {text(blok.text)}
     </p>
   ),
@@ -225,6 +225,21 @@ const DRAW: Record<
         href: href(card.link, locale),
         sectionKey: text(card.section_key),
         availability: nested(card.availability) as SpaceCardInput["availability"],
+      }))}
+    />
+  ),
+
+  store_plan: (blok) => (
+    <StorePlan
+      label={text(blok.label)}
+      title={text(blok.title) ?? ""}
+      text={text(blok.text)}
+      image={image(blok.image)}
+      zones={nested(blok.zones).map((zone) => ({
+        name: text(zone.name) ?? "",
+        kind: text(zone.kind),
+        body: text(zone.body),
+        image: image(zone.photo),
       }))}
     />
   ),

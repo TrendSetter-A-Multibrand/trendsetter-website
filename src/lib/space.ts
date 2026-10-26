@@ -8,6 +8,8 @@ export type SpaceCardData = {
   title: string;
   body?: string;
   image?: string;
+  /** The rubric over the sheet's title, brackets left to the sheet: "Зона 03". */
+  label?: string;
   /** A card with an address is a link to an article page, not a sheet. */
   href?: string;
   stores?: SpaceStore[];
@@ -38,8 +40,9 @@ export function eventsForSection(events: Event[], sectionKey: string | undefined
 }
 
 /**
- * A card with no availability rows says the goods are in every shop, the way a
- * brand with no row does: the sheet is never left without its «Наличие» block.
+ * The shops and the events are only for a card whose editor asked for them: the
+ * file's zone sheet is a photo and a write-up, so a card with no availability
+ * rows has no shops and one with no section has no events.
  */
 export function buildSpaceCards(
   cards: SpaceCardInput[],
@@ -51,10 +54,8 @@ export function buildSpaceCards(
     body: card.body,
     image: card.image,
     href: card.href,
-    stores: card.availability.length
-      ? brandStores(shops, card.availability)
-      : shops.map((shop) => ({ name: shop.name, available: true })),
-    events: eventsForSection(events, card.sectionKey),
+    stores: card.availability.length ? brandStores(shops, card.availability) : [],
+    events: card.sectionKey ? eventsForSection(events, card.sectionKey) : [],
   }));
 }
 
