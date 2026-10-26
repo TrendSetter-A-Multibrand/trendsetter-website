@@ -79,7 +79,7 @@ export function Hero({
             >
               {primaryCta.label}
             </Link>
-            <LinkArrow href={secondaryCta.href} className="self-start">
+            <LinkArrow href={secondaryCta.href} className="max-md:self-start">
               {secondaryCta.label}
             </LinkArrow>
           </div>

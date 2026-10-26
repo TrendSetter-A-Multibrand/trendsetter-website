@@ -81,31 +81,24 @@ export type SiteSettings = {
 // Картинка обложки брендов по умолчанию; заменяется картинкой из Storyblok, если она задана
 export const BRANDS_COVER = "/images/covers/brands.jpg";
 
+/** The file's footer: four groups of links, Медиа / Покупателям / Компания / Документы. */
 const FOOTER_COLUMNS: FooterColumn[] = [
   {
-    title: "Меню",
+    title: "Медиа",
     links: [
       { label: "Журнал", path: "journal" },
-      { label: "Бренды", path: "brands" },
-      { label: "Магазины", path: "stores" },
-      { label: "Коллаборации", path: "company/collaborations" },
-      { label: "Компания", path: "company" },
+      { label: "Новости", path: "news" },
+      { label: "События", path: "events" },
     ],
   },
   {
     title: "Покупателям",
     links: [
-      { label: "Часто задаваемые вопросы", path: "faq" },
-      { label: "Пользовательское соглашение", path: "user-agreement" },
-      { label: "Политика обработки cookie", path: "cookies" },
-      {
-        label: "Согласие на обработку персональных данных",
-        path: "personal-data-consent",
-      },
-      {
-        label: "Политика обработки персональных данных",
-        path: "privacy-policy",
-      },
+      { label: "Магазины", path: "stores" },
+      { label: "Бренды", path: "brands" },
+      { label: "Система лояльности", path: "loyalty" },
+      { label: "Подарочные карты", path: "gift-cards" },
+      { label: "Частые вопросы", path: "faq" },
     ],
   },
   {
@@ -113,10 +106,18 @@ const FOOTER_COLUMNS: FooterColumn[] = [
     links: [
       { label: "О нас", path: "company/about" },
       { label: "Пространство", path: "company/space" },
-      { label: "Сотрудничество", path: "company/cooperation", hidden: true },
-      { label: "Вакансии", path: "company/careers", hidden: true },
+      { label: "Коллаборации", path: "company/collaborations" },
+      { label: "Вакансии", path: "company/careers" },
       { label: "Контакты", path: "company/contacts" },
-      { label: "Обратная связь", path: "company/feedback", hidden: true },
+    ],
+  },
+  {
+    title: "Документы",
+    links: [
+      { label: "Пользовательское соглашение", path: "user-agreement" },
+      { label: "Политика cookie", path: "cookies" },
+      { label: "Согласие на обработку данных", path: "personal-data-consent" },
+      { label: "Политика конфиденциальности", path: "privacy-policy" },
     ],
   },
 ];

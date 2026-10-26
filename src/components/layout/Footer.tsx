@@ -12,8 +12,7 @@ const LINK =
  * The file's Footer: Sage, the groups of links in a row (two by two under 1000,
  * accordions on a phone), a Text-2 rule, the social links on Sage and the ©
  * line, and the logo in white across the full width at the foot. The groups and
- * their links are the editor's, from the settings; the cooperation address the
- * settings keep sits in the row as one more group. On a phone the foot keeps the
+ * their links are the editor's, from the settings - the file draws four. On a phone the foot keeps the
  * tab bar's height in Sage rather than leaving a white strip under it.
  */
 export function Footer({
@@ -23,7 +22,7 @@ export function Footer({
   locale: Locale;
   settings: SiteSettings;
 }) {
-  const { columns, cooperationTitle, email } = settings.footer;
+  const { columns } = settings.footer;
 
   return (
     <footer className="on-dark bg-ink pt-6 text-white md:pb-6 max-md:pb-[calc(var(--tabbar-h)+env(safe-area-inset-bottom))]">
@@ -43,11 +42,6 @@ export function Footer({
             </FooterGroup>
           ))}
 
-          <FooterGroup title={cooperationTitle}>
-            <a href={`mailto:${email}`} className={LINK}>
-              {email}
-            </a>
-          </FooterGroup>
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-4 py-6 md:justify-start md:border-t md:border-text-2">

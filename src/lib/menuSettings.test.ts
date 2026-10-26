@@ -28,16 +28,23 @@ describe("меню из settings", () => {
     expect(item).toEqual({ label: "Журнал", slug: "journal" });
   });
 
-  it("оставляет видимые подпункты", () => {
+  it("оставляет видимые подпункты, а вакансии показывает, даже если они отмечены скрытыми", () => {
     const [item] = nav({
       nav: [
         {
           ...link("Компания", "company"),
-          children: [link("О нас", "about"), link("Вакансии", "careers", true)],
+          children: [
+            link("О нас", "about"),
+            link("Вакансии", "careers", true),
+            link("Обратная связь", "feedback", true),
+          ],
         },
       ],
     });
-    expect(item.children).toEqual([{ label: "О нас", slug: "about" }]);
+    expect(item.children).toEqual([
+      { label: "О нас", slug: "about" },
+      { label: "Вакансии", slug: "careers" },
+    ]);
   });
 
   it("не подставляет запасное меню, если все пункты скрыты", () => {
@@ -56,6 +63,7 @@ describe("меню из settings", () => {
       "about",
       "space",
       "collaborations",
+      "careers",
       "contacts",
     ]);
   });
@@ -69,7 +77,7 @@ describe("колонки футера из settings", () => {
           title: "Компания",
           links: [
             { label: "О нас", path: "company/about" },
-            { label: "Вакансии", path: "company/careers", hidden: true },
+            { label: "Обратная связь", path: "company/feedback", hidden: true },
           ],
         },
       ],
@@ -79,11 +87,36 @@ describe("колонки футера из settings", () => {
     ]);
   });
 
-  it("запасная колонка Компания без трёх скрытых ссылок", () => {
+  it("вакансии, лояльность и подарочные карты в подвале показываются, даже если отмечены скрытыми", () => {
+    const [column] = columns({
+      footer_columns: [
+        {
+          title: "Покупателям",
+          links: [
+            { label: "Система лояльности", path: "loyalty", hidden: true },
+            { label: "Подарочные карты", path: "gift-cards", hidden: true },
+            { label: "Вакансии", path: "company/careers", hidden: true },
+          ],
+        },
+      ],
+    });
+    expect(column.links.map((l) => l.path)).toEqual(["loyalty", "gift-cards", "company/careers"]);
+  });
+
+  it("подвал старого дизайна («Меню», «Сотрудничество») заменяется четырьмя группами макета", () => {
+    const found = columns({
+      footer_columns: [{ title: "Меню", links: [{ label: "Журнал", path: "journal" }] }],
+    });
+    expect(found.map((c) => c.title)).toEqual(["Медиа", "Покупателям", "Компания", "Документы"]);
+  });
+
+  it("запасная колонка Компания: пять ссылок, как в макете", () => {
     const company = columns({}).find((c) => c.title === "Компания");
     expect(company?.links.map((l) => l.path)).toEqual([
       "company/about",
       "company/space",
+      "company/collaborations",
+      "company/careers",
       "company/contacts",
     ]);
   });

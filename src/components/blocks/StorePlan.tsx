@@ -16,8 +16,8 @@ export type PlanZone = { name: string; kind?: string; body?: string; image?: str
  * line.
  *
  * The file's plan is a drawing the designer has yet to hand over, so the plan
- * is whatever picture the editor sets; without one the card and the list stand
- * on their own and the slot is not drawn.
+ * is whatever picture the editor sets; until then its slot is the Paper plate the
+ * file draws.
  */
 export function StorePlan({
   label,
@@ -40,9 +40,7 @@ export function StorePlan({
     <section className="px-4 pb-32 pt-16 md:px-10 md:pt-32">
       <SectionTitle heading="План магазина" />
 
-      <div
-        className={`mt-6 grid gap-6 md:mt-8 ${image ? "md:grid-cols-[437px_1fr]" : "md:grid-cols-[437px]"}`}
-      >
+      <div className="mt-6 grid gap-6 md:mt-8 md:grid-cols-[437px_1fr]">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3 bg-surface p-6">
             {label && <p className="type-caption uppercase text-brand">[{label}]</p>}
@@ -83,11 +81,11 @@ export function StorePlan({
           </ul>
         </div>
 
-        {image && (
-          <div className="relative aspect-[343/300] w-full overflow-hidden bg-surface max-md:order-first md:aspect-[899/560]">
+        <div className="relative aspect-[343/300] w-full overflow-hidden bg-surface max-md:order-first md:aspect-[899/560]">
+          {image && (
             <Image src={image} alt="План магазина" fill sizes="(min-width: 768px) 66vw, 92vw" className="object-contain" />
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {zone && open !== null && (

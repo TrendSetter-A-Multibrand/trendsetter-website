@@ -34,6 +34,16 @@ const OFF_LABELS = new Set([
   "сотрудничество",
   "вакансии",
 ]);
+/**
+ * Pages the redesign has drawn since the menu was written: they are on the site
+ * whatever the editor's `hidden` switch or the lists above still say. Careers
+ * belongs to the company's dropdown; the loyalty and gift-card pages to the
+ * footer's links (the header has no entry for them in the file).
+ */
+const READY_IN_MENU = new Set(["careers"]);
+const READY_IN_FOOTER = new Set(["careers", "loyalty", "gift-cards", "gift-card"]);
+const lastOf = (slug: string) => slug.trim().replace(/^\/+|\/+$/g, "").split("/").pop() ?? "";
+
 const labelOff = (label: string) => OFF_LABELS.has(label.trim().toLowerCase());
 const slugOff = (slug: string) => OFF_SLUGS.has(slug.trim().replace(/^\/+|\/+$/g, "").split("/").pop() ?? "");
 
@@ -51,7 +61,9 @@ export function visibleNav(items: NavItem[]): NavItem[] {
     .map((item) => {
       const { children, ...rest } = plain(item);
       const shown = (children ?? []).filter(
-        (child) => !child.hidden && !slugOff(child.slug) && !labelOff(child.label),
+        (child) =>
+          READY_IN_MENU.has(lastOf(child.slug)) ||
+          (!child.hidden && !slugOff(child.slug) && !labelOff(child.label)),
       ).map(plain);
       return shown.length ? { ...rest, children: shown } : rest;
     });
@@ -61,7 +73,9 @@ export function visibleColumns(columns: FooterColumn[]): FooterColumn[] {
   return columns.map((column) => ({
     ...column,
     links: column.links.filter(
-      (link) => !link.hidden && !slugOff(link.path) && !labelOff(link.label),
+      (link) =>
+        READY_IN_FOOTER.has(lastOf(link.path)) ||
+        (!link.hidden && !slugOff(link.path) && !labelOff(link.label)),
     ).map(plain),
   }));
 }
@@ -117,5 +131,8 @@ export function columns(content: Blok): FooterColumn[] {
         .filter((link) => link.label && link.path),
     }))
     .filter((column) => column.title);
-  return visibleColumns(found.length ? found : DEFAULT_SETTINGS.footer.columns);
+  // A footer written for the old design - a «Меню» group and one for cooperation
+  // - gives way to the file's four groups until the editor has written its own
+  const old = found.some((column) => ["меню", "сотрудничество"].includes(column.title.toLowerCase()));
+  return visibleColumns(found.length && !old ? found : DEFAULT_SETTINGS.footer.columns);
 }

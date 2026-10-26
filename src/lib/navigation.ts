@@ -32,7 +32,7 @@ export const NAV_ITEMS: NavItem[] = [
       { label: "Пространство", slug: "space" },
       { label: "Коллаборации", slug: "collaborations" },
       { label: "Сотрудничество", slug: "cooperation", hidden: true },
-      { label: "Вакансии", slug: "careers", hidden: true },
+      { label: "Вакансии", slug: "careers" },
       { label: "Контакты", slug: "contacts" },
       { label: "Обратная связь", slug: "feedback", hidden: true },
     ],

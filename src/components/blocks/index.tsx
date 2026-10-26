@@ -114,12 +114,15 @@ const DRAW: Record<
   // The crumbs and the cover are one thing on every page that has them: the
   // crumbs sit in a 59 band of their own, 20 either side, and the cover follows.
   // `flush` is off - the photo runs under the header only on the home page.
-  page_cover: (blok, locale) => (
+  // A page of the company is under «Компания», which is a level with no page of
+  // its own and so a word, not a link: Главная / Компания / О нас
+  page_cover: (blok, locale, path) => (
     <>
       <div>
         <Breadcrumbs
           items={[
             { label: "Главная", href: `/${locale}` },
+            ...(path?.startsWith("company/") ? [{ label: "Компания" }] : []),
             { label: text(blok.crumb) ?? text(blok.title) ?? "" },
           ]}
         />

@@ -6,6 +6,7 @@ import { Blocks } from "@/components/blocks";
 import { StoryblokBridge } from "@/components/layout/StoryblokBridge";
 import { storyblokFetchAll } from "@/lib/storyblok/client";
 import { fetchStory, type Block } from "@/lib/storyblok/fetchStory";
+import { fallbackPage, withFallbackBlocks } from "@/lib/fallbackPages";
 import { seo } from "@/lib/seo";
 
 /** The home story answers at the root, not at /home. */
@@ -29,7 +30,11 @@ export async function generateMetadata({
   const { locale, slug } = await params;
   const path = slug.join("/");
   const story = await fetchStory<Content>(path);
-  if (!story || story.content.component !== PAGE) return {};
+  if (!story) {
+    const own = fallbackPage(path);
+    return own ? seo({ title: own.name, path: `/${path}`, locale }) : {};
+  }
+  if (story.content.component !== PAGE) return {};
 
   // The story's own name where nothing was written for the search results: it is
   // what the editor called the page, which is usually what a reader wants to see.
@@ -79,15 +84,18 @@ export default async function StoryPage({
   if (path === HOME) notFound();
 
   const story = await fetchStory<Content>(path);
+  // A page the redesign draws that has no story yet stands in for itself
+  const own = story ? undefined : fallbackPage(path);
   // A shop or an article sits at a path of its own too, and is not a page: it is
   // drawn where it belongs, not here.
-  if (!story || story.content.component !== PAGE) notFound();
+  if (!own && (!story || story.content.component !== PAGE)) notFound();
 
   const { isEnabled: draft } = await draftMode();
+  const body = own ? own.body : withFallbackBlocks(path, story?.content.body ?? []);
 
   return (
     <>
-      <Blocks body={story.content.body ?? []} locale={locale} path={path} />
+      <Blocks body={body} locale={locale} path={path} />
       {draft && <StoryblokBridge />}
     </>
   );

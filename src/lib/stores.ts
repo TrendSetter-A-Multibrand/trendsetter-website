@@ -19,7 +19,7 @@ export type Store = {
 };
 
 const FILLER = {
-  hours: "12:00 – 21:00",
+  hours: "Ежедневно 10:00 – 22:00",
   phone: "8 926 794 97 42",
   brandCount: "50 шт.",
   assortment: "Мужской 30%   Женский 70%",
@@ -28,25 +28,25 @@ const FILLER = {
 
 export const STORES: Store[] = [
   {
-    name: "Avenue Sever",
-    address: "Коровинское шоссе, 2",
-    directions: ["2 этаж"],
+    name: "ТРЦ «Авеню Север»",
+    address: "Коровинское ш., д. 2, 2 этаж",
+    directions: [],
     image: "/images/home/stores/1.jpg",
     coords: [37.544638, 55.866713],
     ...FILLER,
   },
   {
-    name: "ТРЦ Мозаика",
-    address: "7-я Кожуховская улица, 9",
-    directions: ["1 этаж"],
+    name: "ТРЦ «Мозаика»",
+    address: "7-я Кожуховская ул., д. 9, 1 этаж",
+    directions: [],
     image: "/images/home/stores/2.jpg",
     coords: [37.675109, 55.710692],
     ...FILLER,
   },
   {
-    name: "ТРЦ Vegas",
-    address: "МКАД, 24-й километр, владение 1",
-    directions: ["1 этаж"],
+    name: "ТРК «Вегас» Каширское",
+    address: "Каширское ш., 24 км МКАД, 2 этаж",
+    directions: [],
     image: "/images/home/stores/3.jpg",
     coords: [37.723202, 55.585051],
     ...FILLER,
