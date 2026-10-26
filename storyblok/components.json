@@ -30,6 +30,7 @@
           "store_plan",
           "accordion_list",
           "informer",
+          "text_rows",
           "contact_details",
           "text_section",
           "help_cards",
@@ -570,6 +571,46 @@
         "display_name": "Ссылка кнопки",
         "pos": 3,
         "description": "Путь внутри сайта, например company/contacts, либо полный адрес https://…"
+      },
+      "icon": {
+        "type": "boolean",
+        "display_name": "Красная стрелка слева",
+        "pos": 4
+      }
+    }
+  },
+  {
+    "name": "text_rows",
+    "display_name": "Строки с текстом",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "rows": {
+        "type": "bloks",
+        "display_name": "Строки",
+        "pos": 0,
+        "restrict_components": true,
+        "component_whitelist": [
+          "text_row"
+        ]
+      }
+    }
+  },
+  {
+    "name": "text_row",
+    "display_name": "Строка с текстом",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 0
+      },
+      "body": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "pos": 1
       }
     }
   },

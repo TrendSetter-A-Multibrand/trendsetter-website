@@ -20,6 +20,7 @@ import { TeamGrid } from "@/components/blocks/TeamGrid";
 import { SpaceCardsSection } from "@/components/blocks/SpaceCardsSection";
 import { isLinksOnlyPage, type SpaceCardInput } from "@/lib/space";
 import { AccordionList } from "@/components/blocks/AccordionList";
+import { TextRows } from "@/components/blocks/TextRows";
 import { Informer } from "@/components/blocks/Informer";
 import { StorePlan } from "@/components/blocks/StorePlan";
 import { ContactDetails } from "@/components/blocks/ContactDetails";
@@ -265,6 +266,16 @@ const DRAW: Record<
       text={text(blok.text)}
       label={text(blok.button_label)}
       href={text(blok.link) ? resolveHref(locale, text(blok.link) ?? "#") : undefined}
+      icon={blok.icon === true || blok.icon === "true"}
+    />
+  ),
+
+  text_rows: (blok) => (
+    <TextRows
+      rows={nested(blok.rows).map((row) => ({
+        title: text(row.title) ?? "",
+        body: text(row.body) ?? "",
+      }))}
     />
   ),
 
