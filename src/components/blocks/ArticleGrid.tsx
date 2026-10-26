@@ -15,7 +15,7 @@ export function ArticleGrid({
 }) {
   return (
     <section className="px-4 md:px-10">
-      <div className="grid gap-x-6 gap-y-0 md:grid-cols-2 md:gap-y-10 lg:grid-cols-3">
+      <div className="grid gap-x-6 gap-y-0 md:grid-cols-2 md:gap-y-12 lg:grid-cols-3">
         {articles.map((article, i) => (
           <div key={i} className="max-md:border-b max-md:border-line max-md:last:border-b-0">
             <ArticleCard

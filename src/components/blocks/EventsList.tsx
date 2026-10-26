@@ -23,7 +23,7 @@ export function EventsList({
   if (events.length === 0) return null;
   return (
     <section className="px-4 pt-16 md:px-10 md:pt-32">
-      <SectionTitle heading={heading} href={href} className="mb-2" />
+      <SectionTitle heading={heading} href={href} />
       <div className="divide-y divide-line">
         {events.slice(0, limit).map((event) => (
           <EventRow

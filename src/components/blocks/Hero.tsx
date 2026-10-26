@@ -54,7 +54,7 @@ export function Hero({
 
   return (
     <section className="flex flex-col md:h-[min(920px,calc(100svh-var(--header-h,116px)))] md:min-h-[560px] md:flex-row">
-      <div className="flex flex-col md:w-1/2 md:justify-between md:py-12 md:pl-10 md:pr-[63px] min-[1200px]:w-[46.3%]">
+      <div className="flex flex-col md:justify-between md:py-12 md:pl-10 md:max-[1199px]:w-1/2 md:max-[1199px]:pr-[63px] min-[1200px]:w-[46.3%]">
         {/* Desktop: a row at the top of the column */}
         <p className="type-caption hidden gap-4 whitespace-nowrap text-ink md:flex">
           {tags.map((tag) => (
@@ -94,6 +94,9 @@ export function Hero({
           </p>
         </div>
       </div>
+
+      {/* The 63 between the text and the photo, from 1200 up where the text column has no padding of its own on that side */}
+      <div aria-hidden="true" className="hidden w-[63px] shrink-0 min-[1200px]:block" />
 
       {/* Desktop photo: fills the right half and runs to the edge */}
       <div className="relative hidden flex-1 md:block">

@@ -68,11 +68,11 @@ export async function SectionListing({
         <>
           {editorial ? (
             <>
-              <section className="px-4 md:px-10">
+              <section className="px-4 pt-6 md:px-10 md:pt-12">
                 <EditorialGrid articles={onPage} locale={locale} />
               </section>
               {onPage.length > 4 && (
-                <div className="mt-12 md:mt-16">
+                <div className="mt-12 md:mt-24">
                   <ArticleGrid articles={onPage.slice(4)} locale={locale} />
                 </div>
               )}
@@ -84,7 +84,14 @@ export async function SectionListing({
               locale={locale}
             />
           )}
-          <Pagination page={page} pageCount={pageCount} hrefFor={hrefFor} />
+          {/* 96 over the pager and 128 under it, the pager's own 40 either side counted */}
+          {pageCount > 1 ? (
+            <div className="mt-14 pb-22">
+              <Pagination page={page} pageCount={pageCount} hrefFor={hrefFor} />
+            </div>
+          ) : (
+            <div className="pb-32" />
+          )}
         </>
       ) : (
         <p className="type-body-l px-4 pb-16 md:px-10">{noTagMatches(tags)}</p>

@@ -131,7 +131,7 @@ export function MagazineSpread({
   );
 
   return (
-    <div className="flex flex-col gap-12 px-4 pb-6 md:gap-24 md:px-10">
+    <div className="flex flex-col gap-12 px-4 pt-6 md:gap-24 md:px-10 md:pt-12">
       {cover && <Cover article={cover} />}
 
       {stagger.length > 0 && (
