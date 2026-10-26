@@ -347,8 +347,8 @@ const DRAW: Record<
   ),
 
   // The crumbs belong to the block rather than to the page: the file drops them
-  // 20 lower here than the header leaves them, and the whole gap to the chips
-  // below is the block's own - 44 on lg, 16 at 375.
+  // 20 lower here than the header leaves them, then the band with the page's name
+  // (the file draws it with no line under it), then the bar of chips and the groups.
   faq: (blok, locale) => (
     <>
       <div className="lg:pt-5">
@@ -359,17 +359,16 @@ const DRAW: Record<
           ]}
         />
       </div>
-      <div className="pt-4 lg:pt-11">
-        <FaqAccordion
-          groups={nested(blok.groups).map((group) => ({
-            title: text(group.title) ?? "",
-            items: nested(group.items).map((item) => ({
-              question: text(item.question) ?? "",
-              answer: text(item.answer) ?? "",
-            })),
-          }))}
-        />
-      </div>
+      <PageCover title={text(blok.title) ?? "Частые вопросы"} />
+      <FaqAccordion
+        groups={nested(blok.groups).map((group) => ({
+          title: text(group.title) ?? "",
+          items: nested(group.items).map((item) => ({
+            question: text(item.question) ?? "",
+            answer: text(item.answer) ?? "",
+          })),
+        }))}
+      />
     </>
   ),
 
