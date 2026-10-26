@@ -72,12 +72,6 @@ const TOGETHER_BODY =
 const SELECT_BODY =
   "Бережно отобранная витрина готовых работ независимых авторов — от небольших производств до крупных брендов. Мы находим и привозим к себе на полки самобытные локальные проекты, от авторской посуды до полезных перекусов, чтобы познакомить вас с новыми именами.";
 
-/** Вакансии is still a draft in the file - every heading on it reads «Наша миссия». */
-const CAREERS_PLACEHOLDER =
-  "To make stylish, high-quality clothing accessible to everyone. Trendsetter is a flexible and ambitious brand, currently building a strong team and actively expanding across the region. We believe fashion should be simple, accessible, and inspiring — every single day.";
-export const CAREERS_INTRO = { title: "Наша миссия", body: CAREERS_PLACEHOLDER };
-export const CAREERS_CARDS = ABOUT_CARDS;
-
 /** The three programmes the client's doc names, not six placeholder slots. */
 export const COLLABORATIONS = [
   { slug: "playground", title: "TRENDSETTER PLAYGROUND", body: PLAYGROUND_BODY, image: "/images/home/journal/1.jpg" },

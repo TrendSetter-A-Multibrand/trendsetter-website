@@ -7,8 +7,9 @@ import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
  * in brackets and the title in H4, all White - three across on a desktop, 24
  * apart, and on a phone a row of 280s that swipes. The card's text is not drawn.
  *
- * Without `onBrand` they stay as they were, on white (Вакансии, which the file
- * has not drawn yet).
+ * Without `onBrand` they are the file's Value card (вакансии), on white: a 4:3
+ * photo, the title in H3 and the text in Body under it, 12 apart. The row is the
+ * same, 24 apart three across or swiping at 375.
  */
 export function PhotoCards({
   cards,
@@ -19,32 +20,30 @@ export function PhotoCards({
 }) {
   if (!onBrand) {
     return (
-      <section className="grid gap-10 px-6 py-10 lg:grid-cols-3 lg:px-10">
-        {cards.map((card, i) => (
-          <div key={i} className="flex flex-col gap-6">
-            <div className="relative aspect-square w-full overflow-hidden">
-              <ImagePlaceholder />
-              {card.image && (
-                <Image
-                  src={card.image}
-                  alt=""
-                  fill
-                  sizes="(min-width: 1024px) 31vw, 92vw"
-                  className="object-cover"
-                />
-              )}
+      <section className="pt-6 md:pt-8">
+        <div className="flex snap-x snap-mandatory scroll-pl-4 gap-3 overflow-x-auto px-4 [scrollbar-width:none] md:grid md:snap-none md:grid-cols-3 md:gap-6 md:overflow-visible md:px-10 [&::-webkit-scrollbar]:hidden">
+          {cards.map((card, i) => (
+            <div
+              key={i}
+              className="flex w-[280px] shrink-0 snap-start flex-col gap-3 md:w-auto"
+            >
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-surface">
+                <ImagePlaceholder />
+                {card.image && (
+                  <Image
+                    src={card.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 768px) 31vw, 280px"
+                    className="object-cover"
+                  />
+                )}
+              </div>
+              <h3 className="type-h3 text-ink">{card.title}</h3>
+              {card.body && <p className="type-body text-ink">{card.body}</p>}
             </div>
-
-            <div className="flex flex-col gap-4">
-              <h2 className="text-xl font-medium tracking-[0.24px] lg:text-2xl/[29px]">
-                {card.title}
-              </h2>
-              <p className="text-base font-medium lg:text-xl/[24.2px]">
-                {card.body}
-              </p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </section>
     );
   }

@@ -7,7 +7,7 @@ const HEADLINE_MAX = 160;
  * The file's Red band: the wordmark in White across the whole measure, then the
  * label in brackets, an H2 of up to 900 and a Body L line, all centred, 48 of
  * Red round it. Under it may run the strip of value cards on the same red, which
- * is why it has no air of its own below.
+ * is why it has no air of its own below. Without them it closes with 96.
  *
  * The block has one text field, so its first paragraph is the headline and the
  * one after it the line under it; a lone paragraph too long for a headline is
@@ -16,9 +16,12 @@ const HEADLINE_MAX = 160;
 export function MissionBand({
   heading = "Наша миссия",
   body,
+  closing = true,
 }: {
   heading?: string;
   body: string;
+  /** Nothing follows on the red, so the band gives 96 under it rather than 48. */
+  closing?: boolean;
 }) {
   const [first, ...rest] = body
     .split(/\n\s*\n/)
@@ -28,7 +31,9 @@ export function MissionBand({
   const lines = headline ? rest : first ? [first, ...rest] : [];
 
   return (
-    <section className="on-dark bg-brand px-4 py-12 text-white md:px-10">
+    <section
+      className={`on-dark bg-brand px-4 pt-12 text-white md:px-10 ${closing ? "pb-12 md:pb-24" : "pb-12"}`}
+    >
       <Wordmark className="text-white" />
 
       <div className="mx-auto mt-12 flex flex-col items-center gap-4 text-center">

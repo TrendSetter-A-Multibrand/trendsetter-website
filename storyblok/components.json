@@ -28,6 +28,8 @@
           "team_grid",
           "space_cards",
           "store_plan",
+          "accordion_list",
+          "informer",
           "contact_details",
           "text_section",
           "help_cards",
@@ -497,6 +499,77 @@
         "filetypes": [
           "images"
         ]
+      }
+    }
+  },
+  {
+    "name": "accordion_list",
+    "display_name": "Список с раскрытием",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "heading": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 0,
+        "description": "Например «Актуальные вакансии». Скобки ставит сайт"
+      },
+      "items": {
+        "type": "bloks",
+        "display_name": "Пункты",
+        "pos": 1,
+        "restrict_components": true,
+        "component_whitelist": [
+          "accordion_item"
+        ]
+      }
+    }
+  },
+  {
+    "name": "accordion_item",
+    "display_name": "Пункт списка",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "question": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 0,
+        "description": "Например «Менеджер PR-проектов · Москва, офис»"
+      },
+      "answer": {
+        "type": "textarea",
+        "display_name": "Описание",
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "informer",
+    "display_name": "Плашка с кнопкой",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 0
+      },
+      "text": {
+        "type": "textarea",
+        "display_name": "Текст",
+        "pos": 1
+      },
+      "button_label": {
+        "type": "text",
+        "display_name": "Подпись кнопки",
+        "pos": 2
+      },
+      "link": {
+        "type": "text",
+        "display_name": "Ссылка кнопки",
+        "pos": 3,
+        "description": "Путь внутри сайта, например company/contacts, либо полный адрес https://…"
       }
     }
   },

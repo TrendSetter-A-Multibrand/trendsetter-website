@@ -19,6 +19,8 @@ import { PhotoCards } from "@/components/blocks/PhotoCards";
 import { TeamGrid } from "@/components/blocks/TeamGrid";
 import { SpaceCardsSection } from "@/components/blocks/SpaceCardsSection";
 import { isLinksOnlyPage, type SpaceCardInput } from "@/lib/space";
+import { AccordionList } from "@/components/blocks/AccordionList";
+import { Informer } from "@/components/blocks/Informer";
 import { StorePlan } from "@/components/blocks/StorePlan";
 import { ContactDetails } from "@/components/blocks/ContactDetails";
 import { HelpCards } from "@/components/blocks/HelpCards";
@@ -92,6 +94,7 @@ const DRAW: Record<
     locale: Locale,
     path?: string,
     previous?: Block,
+    next?: Block,
   ) => React.ReactNode
 > = {
   // The red button is the first one, the underlined link beside it the second.
@@ -147,14 +150,12 @@ const DRAW: Record<
     return <div aria-hidden="true" className={SIZES[text(blok.size) ?? "40"] ?? "h-10"} />;
   },
 
-  // A heading and its paragraph across the whole measure - what Вакансии opens
-  // on. 40 over it and 40 under it, so what follows needs no air of its own.
+  // The head of a page's own section: an H2 and a Body L lead of up to 640,
+  // 48 over it on a desktop (24 at 375) and none under, for the cards that follow
   text_section: (blok) => (
-    <section className="px-6 py-10 lg:px-10">
-      <h2 className="text-2xl font-medium lg:text-[32px]/[38.72px]">
-        {text(blok.title)}
-      </h2>
-      <p className="mt-6 text-base lg:text-2xl/[29px]">{text(blok.body)}</p>
+    <section className="flex flex-col gap-6 px-4 pt-6 md:gap-8 md:px-10 md:pt-12">
+      <h2 className="type-h2 text-ink">{text(blok.title)}</h2>
+      <p className="type-body-l max-w-[640px] text-ink">{text(blok.body)}</p>
     </section>
   ),
 
@@ -184,9 +185,13 @@ const DRAW: Record<
   ),
 
   // 128 of white over the red band, on a phone as on a desktop
-  mission_band: (blok) => (
+  mission_band: (blok, _locale, _path, _previous, next) => (
     <div className="mt-32">
-      <MissionBand heading={text(blok.heading)} body={text(blok.body) ?? ""} />
+      <MissionBand
+        heading={text(blok.heading)}
+        body={text(blok.body) ?? ""}
+        closing={next?.component !== "photo_cards"}
+      />
     </div>
   ),
 
@@ -241,6 +246,25 @@ const DRAW: Record<
         body: text(zone.body),
         image: image(zone.photo),
       }))}
+    />
+  ),
+
+  accordion_list: (blok) => (
+    <AccordionList
+      heading={text(blok.heading)}
+      items={nested(blok.items).map((item) => ({
+        question: text(item.question) ?? "",
+        answer: text(item.answer) ?? "",
+      }))}
+    />
+  ),
+
+  informer: (blok, locale) => (
+    <Informer
+      title={text(blok.title) ?? ""}
+      text={text(blok.text)}
+      label={text(blok.button_label)}
+      href={text(blok.link) ? resolveHref(locale, text(blok.link) ?? "#") : undefined}
     />
   ),
 
@@ -369,6 +393,6 @@ export function Blocks({
     if (!draw) return null;
     // "Скрыть блок на сайте": the block stays in Storyblok, not on the page
     if (blok.hidden === true || blok.hidden === "true") return null;
-    return <Fragment key={blok._uid}>{draw(blok, locale, path, body[i - 1])}</Fragment>;
+    return <Fragment key={blok._uid}>{draw(blok, locale, path, body[i - 1], body[i + 1])}</Fragment>;
   });
 }
