@@ -58,14 +58,14 @@ export function NewsGrid({
 
       <div
         ref={trackRef}
-        className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 max-sm:scroll-pl-4 sm:mx-0 sm:snap-none sm:gap-6 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 max-sm:scroll-pl-4 sm:ml-0 sm:snap-none sm:gap-6 sm:pl-0 md:-mr-10 md:pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item, i) => (
           // Photo and title lead to the piece, each tag to the news page cut
           // down to that tag - the card draws all three
           <div
             key={i}
-            className="w-[280px] shrink-0 snap-start sm:w-[calc(50%-12px)] sm:snap-align-none lg:w-[calc((100%-48px)/3)]"
+            className="w-[264px] shrink-0 snap-start sm:w-[310px] sm:snap-align-none"
           >
             <CardS
               href={item.href ?? "#"}
@@ -77,7 +77,7 @@ export function NewsGrid({
               }))}
               minutes={item.readingMinutes}
               date={item.publishedAt}
-              sizes="(min-width: 1024px) 437px, (min-width: 640px) 50vw, 280px"
+              sizes="(min-width: 640px) 310px, 264px"
             />
           </div>
         ))}
