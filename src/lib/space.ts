@@ -49,10 +49,12 @@ export function buildSpaceCards(
   shops: { uuid: string; name: string }[],
   events: Event[],
 ): SpaceCardData[] {
-  return cards.map((card) => ({
+  return cards.map((card, i) => ({
     title: card.title,
     body: card.body,
     image: card.image,
+    // The file's sheet carries the zone's number over its title; a card that is a link has no sheet
+    label: card.href ? undefined : `Зона ${String(i + 1).padStart(2, "0")}`,
     href: card.href,
     stores: card.availability.length ? brandStores(shops, card.availability) : [],
     events: card.sectionKey ? eventsForSection(events, card.sectionKey) : [],

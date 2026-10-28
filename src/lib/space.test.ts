@@ -68,3 +68,18 @@ describe("isLinksOnlyPage", () => {
     expect(isLinksOnlyPage(undefined)).toBe(false);
   });
 });
+
+describe("номер зоны над заголовком листа", () => {
+  it("карточка с листом получает «Зона 01», «Зона 02» по порядку, ссылка-статья — нет", () => {
+    const cards = buildSpaceCards(
+      [
+        { title: "A", availability: [] },
+        { title: "B", availability: [] },
+        { title: "C", href: "/ru_ru/company/collaborations/collab-1", availability: [] },
+      ],
+      [],
+      [],
+    );
+    expect(cards.map((c) => c.label)).toEqual(["Зона 01", "Зона 02", undefined]);
+  });
+});
