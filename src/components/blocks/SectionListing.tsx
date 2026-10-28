@@ -4,25 +4,27 @@ import { ArticleFilters } from "@/components/blocks/ArticleFilters";
 import { EditorialGrid } from "@/components/blocks/EditorialGrid";
 import { ArticleGrid } from "@/components/blocks/ArticleGrid";
 import { MagazineSpread } from "@/components/blocks/MagazineSpread";
+import { NewsBoard } from "@/components/blocks/NewsBoard";
 import { Pagination } from "@/components/ui/Pagination";
 import {
-  PAGE_SIZE,
   byTags,
   inSection,
   newestFirst,
   noTagMatches,
+  pageSizeOf,
   tagsOf,
 } from "@/lib/articles";
 import { fetchArticles } from "@/lib/storyblok/articles";
 import { getSiteSettings } from "@/lib/siteSettings";
 
 /**
- * The body of the journal and of the news, which are one layout. The first page
- * of the whole section opens on the editorial grid - a lead and three side items
- * - with the rest of its twelve under it; every other page, and any page of a
- * rubric (a tag), is the magazine spread. The pager counts real pages of twelve.
- * A tag turns the editorial grid off - a narrowed list has no "main" piece - and
- * the pager keeps the tags when it turns the page.
+ * The body of the journal and of the news. The journal's first page opens on the
+ * editorial grid - a lead and three side items - with the rest of its twelve
+ * under it; every other page of it, and any page of a rubric (a tag), is the
+ * magazine spread. The news have their own board whatever the page - see
+ * `NewsBoard` - and carry eleven to a page. The pager counts real pages. A tag
+ * turns the editorial grid off - a narrowed list has no "main" piece - and the
+ * pager keeps the tags when it turns the page.
  */
 export async function SectionListing({
   section,
@@ -44,9 +46,10 @@ export async function SectionListing({
   const filters = tagsOf(all);
   const articles = byTags(all, tags);
 
-  const pageCount = Math.max(1, Math.ceil(articles.length / PAGE_SIZE));
+  const size = pageSizeOf(section);
+  const pageCount = Math.max(1, Math.ceil(articles.length / size));
   const page = Math.min(Math.max(Number(rawPage) || 1, 1), pageCount);
-  const onPage = articles.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const onPage = articles.slice((page - 1) * size, page * size);
 
   const hrefFor = (target: number) => {
     const query = [
@@ -66,7 +69,9 @@ export async function SectionListing({
 
       {onPage.length > 0 ? (
         <>
-          {editorial ? (
+          {section === "news" ? (
+            <NewsBoard articles={onPage} locale={locale} />
+          ) : editorial ? (
             <>
               <section className="px-4 pt-6 md:px-10 md:pt-12">
                 <EditorialGrid articles={onPage} locale={locale} />

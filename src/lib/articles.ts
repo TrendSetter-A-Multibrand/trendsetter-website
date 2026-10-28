@@ -60,6 +60,28 @@ export function spreadOf(articles: Article[]) {
   };
 }
 
+/** The news board takes eleven: a lead, two beside it, six in "Коротко" and a pair. */
+export const NEWS_PAGE_SIZE = 11;
+
+/** How many articles one page of a section carries. */
+export const pageSizeOf = (section: "journal" | "news") =>
+  section === "news" ? NEWS_PAGE_SIZE : PAGE_SIZE;
+
+/**
+ * One news board cut out of a page of articles, in the order the file lays it
+ * down: the lead, two mid items beside it, six brief ones in "Коротко", and a
+ * wide pair, the second mirrored. A short page simply runs out.
+ */
+export function boardOf(articles: Article[]) {
+  const [lead, ...rest] = articles;
+  return {
+    lead,
+    side: rest.slice(0, 2),
+    brief: rest.slice(2, 8),
+    pair: rest.slice(8, 10),
+  };
+}
+
 /** Newest first; an article with no date goes last, in the order it came. */
 export function newestFirst(articles: Article[]) {
   return [...articles].sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));

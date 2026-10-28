@@ -10,9 +10,41 @@
  *
  * `list` is a row on a phone and a stack from 768, like Card S in a listing;
  * `row` is always a row, the side item of the editorial grid; `lead` is the big
- * photo of the lead card with its lines under it.
+ * photo of the lead card with its lines under it; `note` is a news "Коротко" row,
+ * a square with lines; `wide` is the news board's pair, a 437x273 photo with its
+ * lines beside it (a row with a 40% photo on a phone).
  */
-export function SkeletonCard({ layout = "list" }: { layout?: "list" | "row" | "lead" }) {
+export function SkeletonCard({
+  layout = "list",
+}: {
+  layout?: "list" | "row" | "lead" | "note" | "wide";
+}) {
+  if (layout === "note") {
+    return (
+      <div aria-hidden="true" className="flex animate-skeleton-in gap-4 py-6 opacity-0">
+        <div className="size-[88px] shrink-0 bg-surface md:size-[112px]" />
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <div className="h-3 w-2/5 bg-surface" />
+          <div className="h-3 w-full bg-surface" />
+          <div className="h-3 w-3/4 bg-surface" />
+        </div>
+      </div>
+    );
+  }
+
+  if (layout === "wide") {
+    return (
+      <div aria-hidden="true" className="flex animate-skeleton-in gap-4 py-4 opacity-0 md:items-center md:gap-6 md:py-0">
+        <div className="aspect-[4/3] w-[40%] min-w-[120px] shrink-0 bg-surface md:aspect-auto md:h-[273px] md:w-[437px]" />
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <div className="h-3 w-1/5 bg-surface" />
+          <div className="h-3 w-full bg-surface" />
+          <div className="h-3 w-3/4 bg-surface" />
+        </div>
+      </div>
+    );
+  }
+
   if (layout === "lead") {
     return (
       <div aria-hidden="true" className="flex animate-skeleton-in flex-col gap-4 opacity-0">

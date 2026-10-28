@@ -11,8 +11,17 @@ describe("скелетон списка", () => {
 
     expect(screen.getByRole("heading", { name: "Журнал" })).not.toBeNull();
     expect(screen.getByRole("link", { name: "Все" }).getAttribute("href")).toBe("/ru_ru/journal");
-    // lead + three side items + three cards, all hidden from assistive tech
-    expect(container.querySelectorAll('[aria-hidden="true"].animate-skeleton-in')).toHaveLength(7);
+    // lead + three side items + six cards + the pager, all hidden from assistive tech
+    expect(container.querySelectorAll('[aria-hidden="true"].animate-skeleton-in')).toHaveLength(11);
+  });
+
+  it("у новостей своя доска: главная, две средние, шесть в «Коротко», пара и пагинатор", () => {
+    const { container } = render(<ListSkeleton section="news" locale="ru_ru" />);
+
+    expect(screen.getByRole("heading", { name: "Новости" })).not.toBeNull();
+    expect(screen.getByRole("heading", { name: "[Коротко]" })).not.toBeNull();
+    // lead + two mid + six brief + two wide + the pager
+    expect(container.querySelectorAll('[aria-hidden="true"].animate-skeleton-in')).toHaveLength(12);
   });
 
   it("показывается не сразу: нулевая прозрачность и задержка в анимации", () => {
