@@ -6,6 +6,8 @@
  * the request that wanted it instead of a crash while the server boots.
  */
 
+import { reachableAssets } from "@/lib/storyblok/assetHost";
+
 /** Every region but the first is the same name with its code in it. */
 const HOSTS: Record<string, string> = {
   eu: "api.storyblok.com",
@@ -104,7 +106,7 @@ export async function storyblokFetch<T>(
       throw new StoryblokError(response.status, path, await response.text());
     }
 
-    return response.json() as Promise<T>;
+    return reachableAssets((await response.json()) as T);
   }
 }
 

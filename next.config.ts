@@ -4,8 +4,17 @@ const nextConfig: NextConfig = {
   images: {
     // Photos the editor uploads to Storyblok are served from its asset host, and
     // next/image refuses any host it has not been told about. The space's own
-    // folder only, so another account's pictures cannot be run through us.
+    // folder only, so another account's pictures cannot be run through us. The
+    // bucket's Amazon address is the one the site reads (see assetHost.ts): the
+    // CDN host does not answer from every network.
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "s3.amazonaws.com",
+        pathname: process.env.STORYBLOK_SPACE_ID
+          ? `/a.storyblok.com/f/${process.env.STORYBLOK_SPACE_ID}/**`
+          : "/a.storyblok.com/f/**",
+      },
       {
         protocol: "https",
         hostname: "a.storyblok.com",
