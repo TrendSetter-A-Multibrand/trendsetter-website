@@ -91,8 +91,87 @@ const STORE_PLAN: Block = {
   ).map(([name, kind], i) => ({ _uid: `fallback-zone-${i}`, component: "store_plan_zone", name, kind })),
 };
 
-/** A story written before the plan existed gets it right after the tiles. */
+const nest = (component: string, items: Record<string, string>[], key: string): Block[] =>
+  items.map((item, i) => ({ _uid: `fallback-${key}-${i}`, component, ...item }));
+
+/**
+ * Вакансии as the file draws it: the cover with its line, "Кому понравится у нас"
+ * over three cards, the mission band, "[Актуальные вакансии]" as an accordion and
+ * the informer that leads to Контакты. The three vacancies are the file's demo
+ * lines - no one has opened a post - and their descriptions are the designer's
+ * "уточнить". Stands in for a page whose story is still the old site's: that one
+ * has no list to open, and a block the schema does not hold yet cannot be added to
+ * it by an editor.
+ */
+const CAREERS: Block[] = [
+  cover("Вакансии", "Ищем людей, которым нравится находить ценное"),
+  {
+    _uid: "fallback-careers-intro",
+    component: "text_section",
+    title: "Кому понравится у нас",
+    body: "Тем, кто любит хорошие вещи и людей вокруг них: в магазинах, в мастерской, в редакции и в офисе.",
+  },
+  {
+    _uid: "fallback-careers-cards",
+    component: "photo_cards",
+    cards: nest(
+      "photo_card",
+      [
+        {
+          title: "Кураторство",
+          body: "Отбираем вещи, которые стоит найти, и учимся делать это лучше с каждой поставкой.",
+        },
+        {
+          title: "Новое",
+          body: "Ассортимент, события и сервисы всё время обновляются — скучно не будет.",
+        },
+        {
+          title: "Рядом с районом",
+          body: "Магазины, мастерские и ателье — места, куда люди приходят не только за покупками.",
+        },
+      ],
+      "careers-card",
+    ),
+  },
+  {
+    _uid: "fallback-careers-mission",
+    component: "mission_band",
+    heading: "Наша миссия",
+    body: "Осознанный выбор, который всегда оставляет место для нового.",
+  },
+  {
+    _uid: "fallback-careers-list",
+    component: "accordion_list",
+    heading: "Актуальные вакансии",
+    items: nest(
+      "accordion_item",
+      [
+        { question: "Менеджер PR-проектов · Москва, офис", answer: "Описание вакансии — уточнить." },
+        { question: "Автор-журналист · Москва, гибрид", answer: "Описание вакансии — уточнить." },
+        { question: "Консультант в магазин · Москва, магазины", answer: "Описание вакансии — уточнить." },
+      ],
+      "careers-item",
+    ),
+  },
+  {
+    _uid: "fallback-careers-informer",
+    component: "informer",
+    title: "Не нашли подходящую вакансию?",
+    text: "Напишите нам — расскажем, чем хотите заниматься.",
+    button_label: "Написать",
+    link: "company/contacts",
+  },
+];
+
+/**
+ * A story written before the plan existed gets it right after the tiles; the
+ * careers story that has no list of vacancies is the old site's page and gives
+ * way to the file's.
+ */
 export function withFallbackBlocks(path: string, body: Block[]): Block[] {
+  if (path === "company/careers" && !body.some((block) => block.component === "accordion_list")) {
+    return CAREERS;
+  }
   if (path !== "company/space" || body.some((block) => block.component === "store_plan")) return body;
   const at = body.map((block) => block.component).lastIndexOf("space_cards");
   if (at === -1) return body;

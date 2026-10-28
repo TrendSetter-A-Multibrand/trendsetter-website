@@ -8,6 +8,7 @@ import { SeasonWall } from "@/components/blocks/SeasonWall";
 import { CategoriesRow } from "@/components/blocks/CategoriesRow";
 import { StoresSection } from "@/components/blocks/StoresSection";
 import { NewsletterSignup } from "@/components/blocks/NewsletterSignup";
+import { newsletterCopy } from "@/lib/newsletterCopy";
 import { LegalArticle } from "@/components/blocks/LegalArticle";
 import { ContactForm } from "@/components/blocks/ContactForm";
 import { FaqAccordion } from "@/components/blocks/FaqAccordion";
@@ -393,16 +394,19 @@ const DRAW: Record<
     </>
   ),
 
-  newsletter: (blok, locale) => (
-    <div className="mt-16 md:mt-32">
-      <NewsletterSignup
-        locale={locale}
-        heading={text(blok.heading)}
-        description={text(blok.description)}
-        imageSrc={image(blok.image)}
-      />
-    </div>
-  ),
+  newsletter: (blok, locale) => {
+    const words = newsletterCopy(text(blok.heading), text(blok.description));
+    return (
+      <div className="mt-16 md:mt-32">
+        <NewsletterSignup
+          locale={locale}
+          heading={words.heading}
+          description={words.description}
+          imageSrc={image(blok.image)}
+        />
+      </div>
+    );
+  },
 };
 
 /**
