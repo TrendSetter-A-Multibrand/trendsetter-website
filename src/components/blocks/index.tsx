@@ -26,6 +26,8 @@ import { Informer } from "@/components/blocks/Informer";
 import { StorePlan } from "@/components/blocks/StorePlan";
 import { ContactDetails } from "@/components/blocks/ContactDetails";
 import { HelpCards } from "@/components/blocks/HelpCards";
+import { LoyaltyDemoActions } from "@/components/blocks/LoyaltyDemoActions";
+import { GiftCardDemoActions } from "@/components/blocks/GiftCardDemoActions";
 import { resolveHref } from "@/lib/siteSettings";
 
 /** As much of a Storyblok link field as we read. */
@@ -267,6 +269,15 @@ const DRAW: Record<
       }))}
     />
   ),
+
+  // Not a Storyblok component: `fallbackPages.ts` puts it on the loyalty page
+  // alone, and only while BONUS_RARUS_REGISTRATION_TOKEN is set - the vendor's
+  // demo space wired up for показа, not a feature a visitor should otherwise see.
+  loyalty_demo_actions: () => (process.env.BONUS_RARUS_REGISTRATION_TOKEN ? <LoyaltyDemoActions /> : null),
+
+  // Same story on "Подарочные карты" - balance lookup only, no sale (no payment
+  // provider is wired up; see the project memory on Bonus-Rarus).
+  giftcard_demo_actions: () => (process.env.BONUS_RARUS_REGISTRATION_TOKEN ? <GiftCardDemoActions /> : null),
 
   informer: (blok, locale) => (
     <Informer

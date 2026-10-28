@@ -35,6 +35,7 @@ const PAGES: Record<string, { name: string; body: Block[] }> = {
     name: "Система лояльности",
     body: [
       cover("Система лояльности", "Как вступить, копить и тратить"),
+      { _uid: "fallback-loyalty-demo", component: "loyalty_demo_actions" },
       rows([
         ["Как вступить", "Карта оформляется на кассе любого магазина. Условия — уточнить."],
         ["Как копить", "Баллы начисляются за покупки в магазинах TRENDSETTER. Условия начисления — уточнить."],
@@ -48,6 +49,7 @@ const PAGES: Record<string, { name: string; body: Block[] }> = {
     name: "Подарочные карты",
     body: [
       cover("Подарочные карты", "Когда хочется подарить выбор"),
+      { _uid: "fallback-giftcard-demo", component: "giftcard_demo_actions" },
       rows([
         ["Где купить", "Подарочную карту можно купить на кассе любого магазина TRENDSETTER."],
         ["Номинал", "Номиналы — уточнить."],
