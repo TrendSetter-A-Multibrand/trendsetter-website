@@ -171,7 +171,7 @@ export function ShopsMap({ stores }: { stores: Store[] }) {
             the bar and the tab bar, edge to edge, with the chosen shop in a card
             at its foot. */}
         <div
-          className={`relative lg:sticky lg:top-[calc(var(--header-h,116px)+16px)] lg:col-span-8 lg:block lg:h-[820px] lg:self-start ${
+          className={`relative lg:sticky lg:top-[calc(var(--header-offset,var(--header-h,116px))+16px)] lg:transition-[top] lg:duration-[250ms] lg:col-span-8 lg:block lg:h-[820px] lg:self-start ${
             view === "map"
               ? "h-[calc(100svh-var(--header-h,100px)-var(--tabbar-h)-69px)] max-lg:-mx-4 max-lg:-my-4 md:max-lg:-mx-10"
               : "max-lg:hidden"

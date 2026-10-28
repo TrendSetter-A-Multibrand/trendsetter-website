@@ -38,13 +38,10 @@ export function LeadCard({
       <div className="flex flex-col gap-4">
         <div className="type-caption flex items-start justify-between gap-2 text-ink">
           <p>
-            {tags.map((tag, i) => (
-              <span key={tag.label}>
-                {i > 0 && " "}
-                <Link href={tag.href} className="hover:underline">
-                  [{tag.label}]
-                </Link>
-              </span>
+            {tags.slice(0, 1).map((tag) => (
+              <Link key={tag.label} href={tag.href} className="hover:underline">
+                [{tag.label}]
+              </Link>
             ))}
           </p>
           {minutes > 0 && <p className="shrink-0">{minutes} мин чтения</p>}

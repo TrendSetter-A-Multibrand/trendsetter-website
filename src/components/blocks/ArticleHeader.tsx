@@ -40,13 +40,10 @@ export function ArticleHeader({
       <header className="mx-auto flex w-full max-w-[1000px] flex-col gap-4 px-4 pb-6 pt-6 md:gap-6 md:px-0 md:pb-6 md:pt-16">
         {meta.tags.length > 0 && (
           <p className="type-caption text-ink">
-            {meta.tags.map((tag, i) => (
-              <span key={tag}>
-                {i > 0 && " "}
-                <Link href={tagHref(locale, section, tag)} className="hover:underline">
-                  [{tag}]
-                </Link>
-              </span>
+            {meta.tags.slice(0, 1).map((tag) => (
+              <Link key={tag} href={tagHref(locale, section, tag)} className="hover:underline">
+                [{tag}]
+              </Link>
             ))}
           </p>
         )}

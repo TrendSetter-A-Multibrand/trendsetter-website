@@ -5,10 +5,13 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 /** Ignored as trackpad jitter rather than a change of direction. */
 const JITTER = 4;
 
-/** How far down the page has to be before the bar goes (the file: 160). */
-const HIDE_AFTER = 160;
+/**
+ * How far down the page has to be before the bar goes: 160 on a phone, where the
+ * file draws it; 8 on a desktop, where the first version sent it away at once.
+ */
+const HIDE_AFTER_PHONE = 160;
+const HIDE_AFTER_DESKTOP = 8;
 
-/** Below this the file draws the phone layout, and only there the bar hides. */
 const PHONE = "(max-width: 767px)";
 
 /**
@@ -16,23 +19,25 @@ const PHONE = "(max-width: 767px)";
  * `--header-h` CSS variable, so a full-screen section below can size itself
  * with `calc(100svh - var(--header-h))` and still end exactly at the fold.
  *
- * On a phone the bar leaves when the page is scrolled down past 160 and comes
- * back on the first upward move, in 250 ms (the file's "Шапка: скрытие при
- * прокрутке"). On a desktop it is always there.
+ * The bar leaves when the page is scrolled down and comes back on the first
+ * upward move, in 250 ms, on every width. While it is away `--header-offset` -
+ * where a sticky bar of the page's own (the FAQ chips, the brand letters, the
+ * news rail) should stand - drops to 0, and is the bar's height otherwise.
  */
 export function TopBar({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [hidden, setHidden] = useState(false);
+  // The size observer reads this, so it need not be torn down on every change
+  const hiddenRef = useRef(false);
 
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
 
     function publishHeight() {
-      document.documentElement.style.setProperty(
-        "--header-h",
-        `${el!.offsetHeight}px`
-      );
+      const root = document.documentElement.style;
+      root.setProperty("--header-h", `${el!.offsetHeight}px`);
+      root.setProperty("--header-offset", hiddenRef.current ? "0px" : `${el!.offsetHeight}px`);
     }
 
     publishHeight();
@@ -40,6 +45,16 @@ export function TopBar({ children }: { children: React.ReactNode }) {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    hiddenRef.current = hidden;
+    const el = ref.current;
+    if (!el) return;
+    document.documentElement.style.setProperty(
+      "--header-offset",
+      hidden ? "0px" : `${el.offsetHeight}px`
+    );
+  }, [hidden]);
 
   useEffect(() => {
     const phone = window.matchMedia(PHONE);
@@ -50,20 +65,12 @@ export function TopBar({ children }: { children: React.ReactNode }) {
       const delta = y - last;
       if (Math.abs(delta) < JITTER) return;
       last = y;
-      setHidden(phone.matches && delta > 0 && y > HIDE_AFTER);
-    }
-
-    // Widening the window past the phone layout brings the bar back at once
-    function onChange() {
-      if (!phone.matches) setHidden(false);
+      const after = phone.matches ? HIDE_AFTER_PHONE : HIDE_AFTER_DESKTOP;
+      setHidden(delta > 0 && y > after);
     }
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    phone.addEventListener("change", onChange);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      phone.removeEventListener("change", onChange);
-    };
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   // Own stacking layer: the nav dropdown hangs below the header and would

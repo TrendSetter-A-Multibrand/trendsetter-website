@@ -42,13 +42,10 @@ export function SideItem({
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         {tags.length > 0 && (
           <p className="type-caption text-ink">
-            {tags.map((tag, i) => (
-              <span key={tag.label}>
-                {i > 0 && " "}
-                <Link href={tag.href} className="hover:underline">
-                  [{tag.label}]
-                </Link>
-              </span>
+            {tags.slice(0, 1).map((tag) => (
+              <Link key={tag.label} href={tag.href} className="hover:underline">
+                [{tag.label}]
+              </Link>
             ))}
           </p>
         )}

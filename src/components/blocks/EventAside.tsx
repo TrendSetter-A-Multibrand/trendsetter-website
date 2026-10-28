@@ -79,7 +79,7 @@ export function EventAside({
     : "Вход свободный";
 
   return (
-    <aside className="flex flex-col gap-6 lg:sticky lg:top-[calc(var(--header-h,116px)+24px)]">
+    <aside className="flex flex-col gap-6 lg:sticky lg:top-[calc(var(--header-offset,var(--header-h,116px))+24px)] lg:transition-[top] lg:duration-[250ms]">
       <Facts
         items={[
           { label: "Когда", value: whenLong(event) },

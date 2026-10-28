@@ -72,7 +72,7 @@ export function BrandDirectory({
         </div>
       </div>
 
-      <div className="sticky top-[var(--header-h,116px)] z-20 border-b border-line bg-white pb-2 pt-3">
+      <div className="sticky top-[var(--header-offset,var(--header-h,116px))] transition-[top] duration-[250ms] ease-out z-20 border-b border-line bg-white pb-2 pt-3">
         <div className="-mx-0 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:flex-wrap md:overflow-visible md:px-10 [&::-webkit-scrollbar]:hidden">
           {categories.map((category) => (
             <FilterChip

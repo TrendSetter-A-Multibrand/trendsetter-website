@@ -8,7 +8,7 @@ const PLATES = ["bg-ext-blue", "bg-ext-pink", "bg-ext-mint"];
 
 const metaOf = (article: Article) => (
   <>
-    <p>{article.tags.map((tag) => `[${tag}]`).join(" ")}</p>
+    <p>{article.tags.slice(0, 1).map((tag) => `[${tag}]`)}</p>
     {article.readingMinutes ? <p className="shrink-0">{article.readingMinutes} мин чтения</p> : null}
   </>
 );
@@ -57,7 +57,7 @@ function Cover({ article }: { article: Article }) {
 function Rail({ news, locale }: { news: Article[]; locale: string }) {
   if (news.length === 0) return null;
   return (
-    <aside className="flex flex-col gap-4 bg-surface p-6 md:p-8 lg:sticky lg:top-[calc(var(--header-h,116px)+24px)] lg:self-start">
+    <aside className="flex flex-col gap-4 bg-surface p-6 md:p-8 lg:sticky lg:top-[calc(var(--header-offset,var(--header-h,116px))+24px)] lg:transition-[top] lg:duration-[250ms] lg:self-start">
       <h2 className="type-label uppercase text-ink">[Новости]</h2>
       <ul>
         {news.map((item, i) => (

@@ -83,13 +83,10 @@ export function CardS({
         {(tags.length > 0 || minutes > 0 || date) && (
           <div className={`type-caption flex text-ink ${meta}`}>
             <p>
-              {tags.map((tag, i) => (
-                <span key={tag.label}>
-                  {i > 0 && " "}
-                  <Link href={tag.href} className="hover:underline">
-                    [{tag.label}]
-                  </Link>
-                </span>
+              {tags.slice(0, 1).map((tag) => (
+                <Link key={tag.label} href={tag.href} className="hover:underline">
+                  [{tag.label}]
+                </Link>
               ))}
             </p>
             {date ? (

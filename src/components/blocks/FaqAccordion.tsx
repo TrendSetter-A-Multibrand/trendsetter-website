@@ -36,7 +36,7 @@ export function FaqAccordion({ groups }: { groups: FaqGroup[] }) {
 
   return (
     <div>
-      <div className="sticky top-[var(--header-h,116px)] z-20 border-b border-line bg-white py-3">
+      <div className="sticky top-[var(--header-offset,var(--header-h,116px))] transition-[top] duration-[250ms] ease-out z-20 border-b border-line bg-white py-3">
         {/* One row that swipes on a phone, wraps on a desktop */}
         <div className="flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:flex-wrap md:overflow-visible md:px-10 [&::-webkit-scrollbar]:hidden">
           {groups.map((group, i) => (

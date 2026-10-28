@@ -53,7 +53,7 @@ export function Hero({
   const tags = descriptor.map((word, i) => `[${i + 1}] ${word}`);
 
   return (
-    <section className="flex flex-col md:h-[min(920px,calc(100svh-var(--header-h,116px)))] md:min-h-[560px] md:flex-row">
+    <section className="flex flex-col md:h-[calc(100svh-var(--header-h,116px))] md:min-h-[560px] md:flex-row">
       <div className="flex flex-col md:justify-between md:py-12 md:pl-10 md:max-[1199px]:w-1/2 md:max-[1199px]:pr-[63px] min-[1200px]:w-[46.3%]">
         {/* Desktop: a row at the top of the column */}
         <p className="type-caption hidden gap-4 whitespace-nowrap text-ink md:flex">
