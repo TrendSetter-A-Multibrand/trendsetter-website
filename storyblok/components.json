@@ -1237,6 +1237,7 @@
           "cta_label",
           "signup_enabled",
           "seats",
+          "age",
           "space_sections"
         ],
         "pos": 1
@@ -1387,6 +1388,12 @@
         "description": "Пусто — без ограничения и без счётчика",
         "pos": 7
       },
+      "age": {
+        "type": "text",
+        "display_name": "Возраст",
+        "description": "Например «16+». Пусто — строки «Возраст» на странице события нет",
+        "pos": 8
+      },
       "space_sections": {
         "type": "options",
         "display_name": "Разделы Пространства",
@@ -1495,6 +1502,12 @@
         "display_name": "Всего мест",
         "description": "Пусто — без ограничения и без счётчика",
         "pos": 7
+      },
+      "age": {
+        "type": "text",
+        "display_name": "Возраст",
+        "description": "Например «16+». Пусто — строки «Возраст» на странице события нет",
+        "pos": 8
       }
     }
   },

@@ -85,6 +85,7 @@ export function EventAside({
           { label: "Когда", value: whenLong(event) },
           ...(event.location ? [{ label: "Где", value: event.location }] : []),
           { label: "Участие", value: take },
+          ...(event.age ? [{ label: "Возраст", value: event.age }] : []),
         ]}
       />
 

@@ -59,6 +59,7 @@ export function parsePlacements(
       ctaLabel: str(event.cta_label) || "Подробнее",
       signupEnabled: isOn(event.signup_enabled),
       seats: count(event.seats),
+      age: str(event.age) || undefined,
     };
 
     const space = first("placement_space");

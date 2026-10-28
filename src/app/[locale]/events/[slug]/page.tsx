@@ -8,7 +8,8 @@ import { EventAside } from "@/components/blocks/EventAside";
 import { EventsList } from "@/components/blocks/EventsList";
 import { HowToGetThere } from "@/components/blocks/HowToGetThere";
 import { isLocale } from "@/lib/i18n/locales";
-import { isPast } from "@/lib/eventsView";
+import { eventDate } from "@/lib/events";
+import { isPast, weekdayOf } from "@/lib/eventsView";
 import { fetchArticlePage } from "@/lib/storyblok/articles";
 import { fetchEvents } from "@/lib/storyblok/events";
 import { seo } from "@/lib/seo";
@@ -32,7 +33,7 @@ export async function generateMetadata({
 }
 
 /**
- * An event's own page: the kind of event, the title and the lead over a 16:10
+ * An event's own page: the date and where it is held, the title and the lead over a 16:10
  * photo, the text under it and the place to get to, and beside them in the right
  * column the facts and the actions. Under it the other coming events as rows.
  */
@@ -58,6 +59,8 @@ export default async function EventPage({
         items={[
           { label: "Главная", href: `/${locale}` },
           { label: "События", href: `/${locale}/events` },
+          // The kind of event is a step of the way, text without a link, as in the file
+          ...(meta.tags[0] ? [{ label: meta.tags[0] }] : []),
           { label: event.title },
         ]}
       />
@@ -65,7 +68,10 @@ export default async function EventPage({
       <div className="grid gap-x-6 gap-y-8 px-4 pt-6 lg:grid-cols-12 lg:px-10 lg:pt-16">
         <div className="flex flex-col gap-8 lg:col-span-8 lg:row-start-1 lg:gap-12">
           <header className="flex flex-col gap-4">
-            <p className="type-caption uppercase text-ink">[{meta.tags[0] ?? "Событие"}]</p>
+            <p className="type-caption uppercase text-ink">
+              [{[`${eventDate(event.date).day} ${eventDate(event.date).monthFull}`, weekdayOf(event.date)].filter(Boolean).join(", ")}]
+              {event.location && " [Магазин]"}
+            </p>
             <h1 className="type-h1 text-ink">{event.title}</h1>
             {meta.excerpt && <p className="type-body-l max-w-[560px] text-ink">{meta.excerpt}</p>}
           </header>

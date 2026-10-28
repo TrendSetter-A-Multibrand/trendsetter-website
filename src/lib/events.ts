@@ -27,6 +27,8 @@ export type Event = {
   image?: string;
   /** The article's own tags; the first one reads as the kind of event on its page. */
   tags?: string[];
+  /** The age the event is for, as the editor writes it: "16+". Absent leaves the row out. */
+  age?: string;
 };
 
 const STATIC_EVENTS: Pick<
@@ -181,6 +183,7 @@ export type EventPlacement = {
   ctaLabel: string;
   signupEnabled: boolean;
   seats?: number;
+  age?: string;
 };
 
 /** The event an article is, in the shape the cards and the page want. */
@@ -207,5 +210,6 @@ export function eventFromPlacement(
     ctaLabel: placement.ctaLabel,
     image: placement.cardImage,
     tags: placement.tags,
+    age: placement.age,
   };
 }

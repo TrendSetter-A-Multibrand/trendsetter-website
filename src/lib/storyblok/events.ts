@@ -13,6 +13,7 @@ export type NewsEventFields = Omit<ArticleFields, "section" | "placements" | "ev
   cta_label?: string;
   signup_enabled?: boolean;
   seats?: number | string;
+  age?: string;
   space_sections?: string[];
 };
 

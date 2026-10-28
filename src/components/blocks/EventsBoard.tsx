@@ -31,7 +31,7 @@ function Row({ event }: { event: Event }) {
  * 2026]" over its rows, a thin rule between them - and, last, one line "Прошедшие
  * · N" that opens the ones already gone, drawn at 60%. The kinds are the tags the
  * events carry and the places are where they are held; neither is a list of its
- * own. A bar with nothing to choose between is not drawn.
+ * own. A bar with no kind and one place is not drawn.
  */
 export function EventsBoard({ events }: { events: Event[] }) {
   const [kind, setKind] = useState<string>("");
@@ -55,10 +55,10 @@ export function EventsBoard({ events }: { events: Event[] }) {
 
   return (
     <>
-      {(kinds.length > 1 || places.length > 1) && (
+      {(kinds.length > 0 || places.length > 1) && (
         <div className="flex flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-6 md:px-10">
           {places.length > 1 && (
-            <div className="flex items-center gap-3 md:order-2 md:w-[437px]">
+            <div className="flex items-center gap-3 md:order-2 md:ml-auto md:w-[437px]">
               <span className="type-caption shrink-0">Где</span>
               <div className="min-w-0 flex-1">
                 <Dropdown
@@ -71,7 +71,7 @@ export function EventsBoard({ events }: { events: Event[] }) {
               </div>
             </div>
           )}
-          {kinds.length > 1 && (
+          {kinds.length > 0 && (
             <div className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:order-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden">
               <FilterChip label="Все" active={kind === ""} onClick={() => setKind("")} />
               {kinds.map((k) => (
