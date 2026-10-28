@@ -186,12 +186,12 @@ export function ContactForm({
         </form>
       </div>
 
-      {/* The smiley, as on the subscribe plane: turned 12 degrees, 440 across,
+      {/* The smiley, as on the subscribe plane: turned 12 degrees, up to 440 across (it shrinks with the window so it never covers the fields),
           off the right edge from 1200 up, under the form at the right below it.
           It rolls out of the band when the message is sent. */}
-      <div className="pointer-events-none relative mt-6 flex justify-end min-[1200px]:absolute min-[1200px]:right-[-30px] min-[1200px]:top-[calc(50%+41px)] min-[1200px]:mt-0 min-[1200px]:size-[522px] min-[1200px]:-translate-y-1/2 min-[1200px]:items-center min-[1200px]:justify-center">
+      <div className="pointer-events-none relative mt-6 flex justify-end min-[1200px]:absolute min-[1200px]:right-[-30px] min-[1200px]:top-[calc(50%+41px)] min-[1200px]:mt-0 min-[1200px]:size-[calc(var(--ball)+82px)] min-[1200px]:[--ball:clamp(237px,calc(100vw_-_975px),440px)] min-[1200px]:-translate-y-1/2 min-[1200px]:items-center min-[1200px]:justify-center">
         <div
-          className={`relative size-[237px] transition-transform duration-700 ease-in min-[1200px]:size-[440px] ${
+          className={`relative size-[237px] transition-transform duration-700 ease-in min-[1200px]:size-[var(--ball)] ${
             sent
               ? "translate-x-[100vw] rotate-[890deg]"
               : "rotate-12 translate-x-0"
