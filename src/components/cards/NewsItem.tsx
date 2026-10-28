@@ -33,8 +33,8 @@ export function NewsItem({
   const tag = article.tags[0];
 
   const meta = (
-    <div className="type-caption flex items-baseline gap-3 text-ink">
-      {article.publishedAt && <span>{article.publishedAt}</span>}
+    <div className="type-caption flex flex-wrap items-baseline gap-x-3 gap-y-1 text-ink">
+      {article.publishedAt && <span className="whitespace-nowrap">{article.publishedAt}</span>}
       {tag && (
         <Link href={tagHref(locale, "news", tag)} className="hover:underline">
           [{tag}]
