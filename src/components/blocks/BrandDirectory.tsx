@@ -5,11 +5,15 @@ import { BrandIndexItem } from "@/components/cards/BrandIndexItem";
 import { FilterChip } from "@/components/ui/FilterChip";
 import { SearchField } from "@/components/ui/SearchField";
 import { BrandModal } from "@/components/blocks/BrandModal";
-import { alphabetLetters, filterBrands, indexKey, type Brand } from "@/lib/brands";
-
-// Brands are grouped by the first letter of the Latin alphabet; the rest go under «#»
-const ALPHABET = "en";
-const LETTERS = alphabetLetters(ALPHABET);
+import {
+  alphabetLetters,
+  filterBrands,
+  indexKey,
+  matchesLetter,
+  OTHER_KEY,
+  type Alphabet,
+  type Brand,
+} from "@/lib/brands";
 
 /** "Есть в 2 магазинах" from the shops the brand is listed in; nothing when it lists none. */
 function stockOf(brand: Brand) {
@@ -24,7 +28,9 @@ function stockOf(brand: Brand) {
  * The brands page: the search in a 437 field, then a bar that sticks under the
  * header with the category chips and the A-Z keys - a key for every letter,
  * the ones with no brand left in Line colour and dead, a press scrolling to the
- * group - and then the groups. On a desktop a group is its letter in H1 at the
+ * group - and two switches after them: "RU" turns the keys and the groups to the
+ * Russian alphabet, "0–9" keeps only the brands that begin with a digit. Then the
+ * groups. On a desktop a group is its letter in H1 at the
  * left and its brands in a row to the right, as many across as it has up to
  * four; on a phone the letter is over a list with a rule between rows. A click
  * on a brand opens its sheet.
@@ -39,14 +45,24 @@ export function BrandDirectory({
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [open, setOpen] = useState<Brand | null>(null);
+  // Brands are grouped by the first letter of the alphabet in use; the rest go under «#»
+  const [alphabet, setAlphabet] = useState<Alphabet>("en");
+  const [digits, setDigits] = useState(false);
+  const LETTERS = alphabetLetters(alphabet);
 
   const groups = useMemo(() => {
     const matching = filterBrands(brands, { query, categories: selected });
-    return LETTERS.map((key) => ({
-      letter: key,
-      brands: matching.filter((brand) => indexKey(brand.name, ALPHABET) === key),
-    })).filter((group) => group.brands.length > 0);
-  }, [brands, query, selected]);
+    if (digits) {
+      const withDigit = matching.filter((brand) => matchesLetter(brand.name, OTHER_KEY, alphabet));
+      return withDigit.length ? [{ letter: "0–9", brands: withDigit }] : [];
+    }
+    return alphabetLetters(alphabet)
+      .map((key) => ({
+        letter: key,
+        brands: matching.filter((brand) => indexKey(brand.name, alphabet) === key),
+      }))
+      .filter((group) => group.brands.length > 0);
+  }, [brands, query, selected, alphabet, digits]);
 
   const present = new Set(groups.map((g) => g.letter));
 
@@ -90,7 +106,7 @@ export function BrandDirectory({
           className="mt-2 flex overflow-x-auto px-4 [scrollbar-width:none] md:px-10 [&::-webkit-scrollbar]:hidden"
         >
           {LETTERS.filter((l) => l !== "#" || present.has("#")).map((letter) => {
-            const on = present.has(letter);
+            const on = !digits && present.has(letter);
             return (
               <button
                 key={letter}
@@ -103,6 +119,15 @@ export function BrandDirectory({
               </button>
             );
           })}
+          {/* The two switches: the alphabet and the digits. Pressed - Sage with a white caption. */}
+          <div className="ml-2 flex shrink-0 gap-2 md:ml-4">
+            <FilterChip
+              label="RU"
+              active={alphabet === "ru"}
+              onClick={() => setAlphabet(alphabet === "ru" ? "en" : "ru")}
+            />
+            <FilterChip label="0–9" active={digits} onClick={() => setDigits(!digits)} />
+          </div>
         </div>
       </div>
 
