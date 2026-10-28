@@ -20,7 +20,7 @@ export function NextMaterial({
   return (
     <Link
       href={href}
-      className="group mx-auto flex w-full max-w-[860px] items-center gap-4 bg-surface p-4 text-ink md:p-8"
+      className="group mx-auto flex w-full max-w-[770px] items-center gap-4 bg-surface p-4 text-ink md:p-8"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         <p className="type-caption">[Следующий материал]</p>
