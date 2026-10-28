@@ -1,4 +1,5 @@
 import { bonusRarus, BonusRarusError } from "@/lib/bonusRarus/client";
+import type { RegistrationBody } from "@/lib/bonusRarus/registrationForm";
 
 /**
  * The demo's own shop, read off a card in the cabinet ("ТехноМир Москва.",
@@ -15,11 +16,7 @@ export function normalizePhone(raw: string): string | null {
   return /^7\d{10}$/.test(digits) ? digits : null;
 }
 
-export type RegisterInput = {
-  name: string;
-  phone: string;
-  gender: "male" | "female";
-  email?: string;
+export type RegisterInput = RegistrationBody & {
   personalDataAccepted: boolean;
   newslettersAccepted: boolean;
 };
@@ -52,22 +49,22 @@ function fromClient(data: Client): RegisterResult {
  * `x-totp-expire`, for a different purpose. `X-Totp-Session` / `X-Totp-Code`
  * below are this site's best guess at the matching convention, sent back
  * exactly once with whatever the person actually typed - never guessed or
- * retried here. Confirming the real header names with the vendor is on the
- * question list this feature shipped with.
+ * retried here. The TOTP answer also carries a `secret` "для отправки при
+ * проверке введенного кода" - where it goes is just as undocumented, and the
+ * site flow's `POST /client` shows no 2FA step at all. Confirming both with the
+ * vendor is on the question list this feature shipped with.
  */
 export async function registerClient(
   input: RegisterInput,
   code?: { sessionId: string; value: string },
 ): Promise<RegisterResult> {
+  const { personalDataAccepted, newslettersAccepted, ...fields } = input;
   const body = {
-    name: input.name,
-    phone: input.phone,
-    gender: input.gender,
-    email: input.email || undefined,
+    ...fields,
     shop_id: SHOP_ID,
     channel: "webform",
-    personal_data_accepted: input.personalDataAccepted,
-    receive_newsletters_accepted: input.newslettersAccepted,
+    personal_data_accepted: personalDataAccepted,
+    receive_newsletters_accepted: newslettersAccepted,
   };
 
   const data = await bonusRarus<TOTPResponse | Client>("/client", {

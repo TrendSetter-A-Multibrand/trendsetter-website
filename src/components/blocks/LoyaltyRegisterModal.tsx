@@ -1,9 +1,12 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
+import Link from "next/link";
 import { ModalSheet } from "@/components/ui/ModalSheet";
 import { buttonClass } from "@/components/ui/Button";
 import { fieldClass, fieldErrorClass } from "@/components/ui/fieldClass";
+import { useLocale } from "@/lib/i18n/useLocale";
+import type { FormField } from "@/lib/bonusRarus/registrationForm";
 
 type Step =
   | { kind: "form" }
@@ -18,40 +21,145 @@ const CHANNEL_WORD: Record<string, string> = {
   flashcall: "звонком",
 };
 
+const ERROR = "Не удалось отправить, попробуйте позже";
+const YES_NO = [
+  { id: "true", name: "Да" },
+  { id: "false", name: "Нет" },
+];
+const INPUT_TYPE: Partial<Record<FormField["kind"], string>> = { phone: "tel", email: "email", number: "number" };
+const AUTOCOMPLETE: Record<string, string> = { name: "given-name", phone: "tel", email: "email", birthday: "bday" };
+
+/** The file's checkbox on a light ground, controlled. */
+function Tick({
+  checked,
+  onChange,
+  children,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="type-body-s flex cursor-pointer items-start gap-3">
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="peer sr-only" />
+      <span className="flex size-5 shrink-0 items-center justify-center border border-ink bg-white peer-checked:bg-ink peer-checked:text-white peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-checked:[&>svg]:opacity-100">
+        <svg viewBox="0 0 20 20" fill="none" className="size-5 opacity-0">
+          <path d="m5 10.5 3.5 3.5L15 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+        </svg>
+      </span>
+      <span>{children}</span>
+    </label>
+  );
+}
+
+const caption = (field: FormField) => (field.required ? field.name : `${field.name} (необязательно)`);
+
+/** One of the cabinet's fields: a text box, a date, or a row of choices. */
+function Field({ field, value, onChange }: { field: FormField; value: string; onChange: (value: string) => void }) {
+  if (field.kind === "bool" || field.kind === "choice") {
+    const options = field.kind === "bool" ? YES_NO : (field.options ?? []);
+    return (
+      <fieldset className="flex flex-col gap-2">
+        <legend className="type-caption mb-2 text-muted">{caption(field)}</legend>
+        <div className="flex flex-wrap gap-x-6 gap-y-2">
+          {options.map((o) => (
+            <label key={o.id} className="type-body flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name={field.id}
+                checked={value === o.id}
+                onChange={() => onChange(o.id)}
+                className="accent-ink"
+              />
+              {o.name}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    );
+  }
+
+  if (field.kind === "date") {
+    return (
+      <label className="flex flex-col gap-2">
+        <span className="type-caption text-muted">{caption(field)}</span>
+        <input
+          type="date"
+          value={value}
+          max={new Date().toISOString().slice(0, 10)}
+          onChange={(e) => onChange(e.target.value)}
+          autoComplete={AUTOCOMPLETE[field.id]}
+          className={fieldClass("input", "light")}
+        />
+      </label>
+    );
+  }
+
+  return (
+    <input
+      type={INPUT_TYPE[field.kind] ?? "text"}
+      inputMode={field.kind === "phone" ? "tel" : undefined}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={caption(field)}
+      aria-label={field.name}
+      autoComplete={AUTOCOMPLETE[field.id]}
+      className={fieldClass("input", "light")}
+    />
+  );
+}
+
 /**
  * DEMO: оформление карты через пробное пространство сервиса, не боевая
- * интеграция (см. BONUS_RARUS_REGISTRATION_TOKEN). Форма -> запрос на сервер ->
- * либо карта сразу, либо шаг "код из письма/SMS", который сервис отправляет сам.
+ * интеграция (см. BONUS_RARUS_REGISTRATION_TOKEN). Поля и их обязательность
+ * берутся из кабинета (`/api/loyalty/form`), а не из кода: что там отмечено
+ * обязательным, то форма и требует. Форма -> запрос на сервер -> либо карта
+ * сразу, либо шаг "код из письма/SMS", который сервис отправляет сам.
  */
 export function LoyaltyRegisterModal({ onClose }: { onClose: () => void }) {
+  const locale = useLocale();
+  const [fields, setFields] = useState<FormField[] | null>(null);
   const [step, setStep] = useState<Step>({ kind: "form" });
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [gender, setGender] = useState<"male" | "female">("female");
-  const [email, setEmail] = useState("");
-  const [consent, setConsent] = useState(false);
+  const [values, setValues] = useState<Record<string, string>>({});
+  const [personalData, setPersonalData] = useState(false);
+  const [newsletters, setNewsletters] = useState(false);
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  async function submitForm(e: FormEvent) {
-    e.preventDefault();
-    if (busy) return;
-    if (!name.trim() || !phone.trim() || !consent) {
-      setError("Заполните имя, телефон и согласие на обработку данных");
-      return;
-    }
+  useEffect(() => {
+    const ctrl = new AbortController();
+    fetch("/api/loyalty/form", { cache: "no-store", signal: ctrl.signal })
+      .then(async (res) => {
+        const out = await res.json();
+        if (!res.ok) throw new Error(out.error);
+        setFields(out.fields);
+      })
+      .catch((e) => {
+        if (e?.name === "AbortError") return;
+        setFields([]);
+        setError("Система лояльности временно недоступна");
+      });
+    return () => ctrl.abort();
+  }, []);
+
+  async function send(withCode?: { sessionId: string; value: string }) {
     setBusy(true);
     setError("");
     try {
       const res = await fetch("/api/loyalty/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, gender, email, personalDataAccepted: true, newslettersAccepted: consent }),
+        body: JSON.stringify({
+          values,
+          personalDataAccepted: personalData,
+          newslettersAccepted: newsletters,
+          code: withCode,
+        }),
       });
       const out = await res.json();
       if (!res.ok) {
-        setError(out.error ?? "Не удалось отправить, попробуйте позже");
+        setError(out.error ?? (withCode ? "Код не подошёл, проверьте и попробуйте ещё раз" : ERROR));
         return;
       }
       if (out.status === "code_required") {
@@ -60,42 +168,31 @@ export function LoyaltyRegisterModal({ onClose }: { onClose: () => void }) {
         setStep({ kind: "done", barcode: out.card.barcode, balance: out.card.balance, level: out.card.level });
       }
     } catch {
-      setError("Не удалось отправить, попробуйте позже");
+      setError(ERROR);
     } finally {
       setBusy(false);
     }
   }
 
-  async function submitCode(e: FormEvent) {
+  function submitForm(e: FormEvent) {
+    e.preventDefault();
+    if (busy || !fields?.length) return;
+    const missing = fields.filter((f) => f.required && !values[f.id]?.trim()).map((f) => f.name);
+    if (missing.length) {
+      setError(`Заполните: ${missing.join(", ")}`);
+      return;
+    }
+    if (!personalData) {
+      setError("Нужно согласие на обработку персональных данных");
+      return;
+    }
+    void send();
+  }
+
+  function submitCode(e: FormEvent) {
     e.preventDefault();
     if (busy || step.kind !== "code" || !code.trim()) return;
-    setBusy(true);
-    setError("");
-    try {
-      const res = await fetch("/api/loyalty/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          phone,
-          gender,
-          email,
-          personalDataAccepted: true,
-          newslettersAccepted: consent,
-          code: { sessionId: step.sessionId, value: code.trim() },
-        }),
-      });
-      const out = await res.json();
-      if (!res.ok || out.status !== "registered") {
-        setError(out.error ?? "Код не подошёл, проверьте и попробуйте ещё раз");
-        return;
-      }
-      setStep({ kind: "done", barcode: out.card.barcode, balance: out.card.balance, level: out.card.level });
-    } catch {
-      setError("Не удалось отправить, попробуйте позже");
-    } finally {
-      setBusy(false);
-    }
+    void send({ sessionId: step.sessionId, value: code.trim() });
   }
 
   return (
@@ -103,54 +200,44 @@ export function LoyaltyRegisterModal({ onClose }: { onClose: () => void }) {
       <div className="flex flex-col gap-6 px-4 md:px-8">
         {step.kind === "form" && (
           <form onSubmit={submitForm} noValidate className="flex flex-col gap-4">
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Имя"
-              aria-label="Имя"
-              className={fieldClass("input", "light")}
-            />
-            <input
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="Телефон"
-              aria-label="Телефон"
-              className={fieldClass("input", "light")}
-            />
-            <div className="flex gap-6">
-              <label className="type-body flex items-center gap-2">
-                <input type="radio" checked={gender === "female"} onChange={() => setGender("female")} /> Женский
-              </label>
-              <label className="type-body flex items-center gap-2">
-                <input type="radio" checked={gender === "male"} onChange={() => setGender("male")} /> Мужской
-              </label>
-            </div>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email (необязательно)"
-              aria-label="Email"
-              className={fieldClass("input", "light")}
-            />
-            <label className="type-body-s flex cursor-pointer items-start gap-3">
-              <input
-                type="checkbox"
-                checked={consent}
-                onChange={(e) => setConsent(e.target.checked)}
-                className="peer sr-only"
+            {fields === null &&
+              [0, 1, 2, 3].map((i) => <span key={i} aria-hidden="true" className="block h-12 bg-surface" />)}
+
+            {fields?.map((field) => (
+              <Field
+                key={field.id}
+                field={field}
+                value={values[field.id] ?? ""}
+                onChange={(value) => setValues((v) => ({ ...v, [field.id]: value }))}
               />
-              <span className="flex size-5 shrink-0 items-center justify-center border border-ink bg-white peer-checked:bg-ink peer-checked:text-white peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-checked:[&>svg]:opacity-100">
-                <svg viewBox="0 0 20 20" fill="none" className="size-5 opacity-0">
-                  <path d="m5 10.5 3.5 3.5L15 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-                </svg>
-              </span>
-              <span>Согласен(на) на обработку персональных данных и получение рассылок</span>
-            </label>
+            ))}
+
+            {!!fields?.length && (
+              <>
+                <Tick checked={personalData} onChange={setPersonalData}>
+                  Согласен(на) на{" "}
+                  <Link
+                    href={`/${locale}/personal-data-consent`}
+                    target="_blank"
+                    onClick={(e) => e.stopPropagation()}
+                    className="underline"
+                  >
+                    обработку персональных данных
+                  </Link>
+                </Tick>
+                <Tick checked={newsletters} onChange={setNewsletters}>
+                  Хочу получать новости и предложения (необязательно)
+                </Tick>
+              </>
+            )}
 
             {error && <p role="alert" className={fieldErrorClass("light")}>{error}</p>}
 
-            <button type="submit" disabled={busy} className={`${buttonClass("primary", "L")} w-full`}>
+            <button
+              type="submit"
+              disabled={busy || !fields?.length}
+              className={`${buttonClass("primary", "L")} w-full`}
+            >
               Оформить карту
             </button>
           </form>
@@ -166,6 +253,8 @@ export function LoyaltyRegisterModal({ onClose }: { onClose: () => void }) {
               onChange={(e) => setCode(e.target.value)}
               placeholder="Код из письма или SMS"
               aria-label="Код подтверждения"
+              autoComplete="one-time-code"
+              inputMode="numeric"
               className={fieldClass("input", "light")}
             />
             {error && <p role="alert" className={fieldErrorClass("light")}>{error}</p>}
