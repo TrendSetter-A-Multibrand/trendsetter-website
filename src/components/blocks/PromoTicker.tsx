@@ -18,7 +18,7 @@ type PromoTickerProps = {
 /**
  * The strip above the header: 36 tall, Sage, Caption in white, each announcement
  * followed by an arrow, 24 between them. It runs to the left without a break in
- * 40 seconds, stops under the pointer, and stands still for anyone who asked
+ * 80 seconds (40 read too fast in testing), stops under the pointer, and stands still for anyone who asked
  * the system for less motion. Links underline on hover.
  *
  * Each line of the editor's text is an announcement of its own, as the file

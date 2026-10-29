@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { TopBar } from "@/components/layout/TopBar";
 import { TabBar } from "@/components/layout/TabBar";
 import { MenuProvider } from "@/components/layout/MenuContext";
+import { ScrollReset } from "@/components/layout/ScrollReset";
 import { PromoTicker } from "@/components/blocks/PromoTicker";
 import { CookieNotice } from "@/components/blocks/CookieNotice";
 import { getSiteSettings, resolveHref } from "@/lib/siteSettings";
@@ -32,6 +33,7 @@ export default async function LocaleLayout({
   return (
     <SettingsProvider settings={settings}>
       <MenuProvider>
+        <ScrollReset />
         <TopBar>
           {ticker.enabled && (
             <PromoTicker

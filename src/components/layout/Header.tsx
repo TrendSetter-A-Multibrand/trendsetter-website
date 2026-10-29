@@ -58,6 +58,19 @@ function NavEntry({ locale, item }: { locale: Locale; item: NavItem }) {
   const href = `/${locale}/${item.slug}`;
   const current = pathname === href || pathname.startsWith(`${href}/`);
 
+  // The link that was followed is often gone from under the pointer - the panel
+  // closes, the page changes - and then no mouseleave comes, which left the
+  // entry dead to hover until the pointer happened to cross it again. Any move
+  // outside the entry clears the flag instead.
+  useEffect(() => {
+    if (!dismissed) return;
+    const moved = (e: PointerEvent) => {
+      if (!entry.current?.contains(e.target as Node)) setDismissed(false);
+    };
+    document.addEventListener("pointermove", moved);
+    return () => document.removeEventListener("pointermove", moved);
+  }, [dismissed]);
+
   useEffect(() => {
     if (!touchOpen) return;
     const away = (e: PointerEvent) => {

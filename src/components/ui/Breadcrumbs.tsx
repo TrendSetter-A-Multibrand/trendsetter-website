@@ -5,7 +5,8 @@ type Crumb = { label: string; href?: string };
 /**
  * The file's Crumbs: the first line of every inner page, above the title. Mono
  * Caption in caps, links underlined, a slash between, 8 of air round it. The
- * current page is Text-2 and not a link; a level with no page of its own
+ * current page is Text-2 and not a link (an article's trail ends one step up, at
+ * its rubric, and that one is a link); a level with no page of its own
  * ("Компания") is text. On a desktop there is 16 above and below and a long
  * current page is cut at 48 characters. On a phone it is one line that swipes
  * sideways, its links 44 tall - and past three levels it drops "Главная" and the
@@ -32,7 +33,8 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
                 /
               </span>
             )}
-            {item.href && !last ? (
+            {/* An article's trail ends at its rubric, which still leads somewhere */}
+            {item.href ? (
               <Link
                 href={item.href}
                 className="inline-flex h-11 items-center text-ink underline transition-colors duration-150 hover:text-brand md:h-auto"

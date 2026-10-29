@@ -6,8 +6,8 @@ import { tagHref } from "@/lib/articles";
 import { ArticleSignupButton } from "@/components/blocks/ArticleSignupButton";
 
 /**
- * The file's article head: the crumbs - the rubric is a step of the way, text
- * without a link - then a 1000 column centred on the page: the rubric in brackets,
+ * The file's article head: the crumbs, which end at the rubric and link it to
+ * the section filtered by it - then a 1000 column centred on the page: the rubric in brackets,
  * the title in H1, the lead in Body L (Text-2) held to 640, and under a Line rule
  * one line of meta in Caption: the date and the reading time - "22 сентября 2026
  * · 5 мин чтения" - with the author before them and the views after, when the
@@ -35,8 +35,9 @@ export function ArticleHeader({
         items={[
           { label: "Главная", href: `/${locale}` },
           { label: meta.section, href: `/${locale}/${meta.sectionHref}` },
-          ...(meta.tags[0] ? [{ label: meta.tags[0] }] : []),
-          { label: meta.title },
+          // The trail stops at the rubric, which leads to the section filtered by
+          // it; the title is right below in H1 and was cut off up here anyway
+          ...(meta.tags[0] ? [{ label: meta.tags[0], href: tagHref(locale, section, meta.tags[0]) }] : []),
         ]}
       />
 
