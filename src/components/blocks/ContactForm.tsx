@@ -153,6 +153,7 @@ export function ContactForm({
               options={subjects}
               invalid={!!bad("subject")}
               surface="red"
+              tall
             />
           </div>
 

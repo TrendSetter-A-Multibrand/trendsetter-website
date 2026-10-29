@@ -29,7 +29,8 @@ function stockOf(brand: Brand) {
  * header with the category chips and the A-Z keys - a key for every letter,
  * the ones with no brand left in Line colour and dead, a press scrolling to the
  * group - and two switches after them: "RU" turns the keys and the groups to the
- * Russian alphabet, "0–9" keeps only the brands that begin with a digit. Then the
+ * Russian alphabet and then reads "EN" for the way back, "0–9" keeps only the
+ * brands that begin with a digit. Then the
  * groups. On a desktop a group is its letter in H1 at the
  * left and its brands in a row to the right, as many across as it has up to
  * four; on a phone the letter is over a list with a rule between rows. A click
@@ -51,7 +52,10 @@ export function BrandDirectory({
   const LETTERS = alphabetLetters(alphabet);
 
   const groups = useMemo(() => {
-    const matching = filterBrands(brands, { query, categories: selected });
+    // A to Z inside a letter, as the file lists them, whatever order the space hands them in
+    const matching = [...filterBrands(brands, { query, categories: selected })].sort((a, b) =>
+      a.name.localeCompare(b.name, "ru", { sensitivity: "base" }),
+    );
     if (digits) {
       const withDigit = matching.filter((brand) => matchesLetter(brand.name, OTHER_KEY, alphabet));
       return withDigit.length ? [{ letter: "0–9", brands: withDigit }] : [];
@@ -121,9 +125,9 @@ export function BrandDirectory({
           })}
           {/* The two switches: the alphabet and the digits. Pressed - Sage with a white caption. */}
           <div className="ml-2 flex shrink-0 gap-2 md:ml-4">
+            {/* Names the alphabet a press goes to, so the way back reads as plainly as the way there */}
             <FilterChip
-              label="RU"
-              active={alphabet === "ru"}
+              label={alphabet === "ru" ? "EN" : "RU"}
               onClick={() => setAlphabet(alphabet === "ru" ? "en" : "ru")}
             />
             <FilterChip label="0–9" active={digits} onClick={() => setDigits(!digits)} />

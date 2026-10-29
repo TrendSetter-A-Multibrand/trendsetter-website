@@ -41,6 +41,7 @@ export function Dropdown({
   options,
   invalid,
   surface = "red",
+  tall = false,
   onChange,
 }: {
   name: string;
@@ -48,6 +49,8 @@ export function Dropdown({
   options: DropdownOption[];
   invalid?: boolean;
   surface?: "light" | "red";
+  /** 56 tall, level with the inputs beside it, instead of the select's own 44. */
+  tall?: boolean;
   /** Told the new choice - its value, as the option names it. */
   onChange?: (value: string) => void;
 }) {
@@ -104,7 +107,7 @@ export function Dropdown({
         aria-haspopup="true"
         aria-expanded={open}
         data-invalid={invalid || undefined}
-        className={`type-body flex h-11 w-full items-center justify-between gap-3 border pl-4 pr-3 text-left transition-[border-color] duration-150 ${
+        className={`type-body flex ${tall ? "h-14" : "h-11"} w-full items-center justify-between gap-3 border pl-4 pr-3 text-left transition-[border-color] duration-150 ${
           red
             ? `border-white bg-transparent ${chosen ? "text-white" : "text-white/75"}`
             : `border-ink bg-white ${chosen ? "text-ink" : "text-text-2"}`

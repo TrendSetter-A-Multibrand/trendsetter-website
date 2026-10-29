@@ -9,7 +9,7 @@ type ShareTarget = {
   href?: (url: string) => string;
 };
 
-const TARGETS: ShareTarget[] = [
+export const SHARE_TARGETS: ShareTarget[] = [
   { label: "Скопировать ссылку", icon: "/images/share/link.svg" },
   {
     label: "MAX",
@@ -34,7 +34,7 @@ const TARGETS: ShareTarget[] = [
 ];
 
 /** Drawn as a CSS mask so the glyph takes the colour of its row. */
-function Glyph({ src }: { src: string }) {
+export function ShareGlyph({ src }: { src: string }) {
   return (
     <span
       className="block h-6 w-6 shrink-0 bg-current"
@@ -52,7 +52,7 @@ function Glyph({ src }: { src: string }) {
   );
 }
 
-const ROW =
+export const SHARE_ROW =
   "flex h-[43px] w-full items-center gap-[17px] border-t border-ink/15 px-[17px] text-left text-sm tracking-[1.5px] text-ink";
 
 /** 264px panel, 43px rows, hanging above the share button. */
@@ -91,7 +91,7 @@ export function ShareMenu() {
               [Поделиться]
             </p>
 
-            {TARGETS.map((target) =>
+            {SHARE_TARGETS.map((target) =>
               target.href ? (
                 <a
                   key={target.label}
@@ -100,14 +100,14 @@ export function ShareMenu() {
                   )}
                   target="_blank"
                   rel="noreferrer"
-                  className={ROW}
+                  className={SHARE_ROW}
                 >
-                  <Glyph src={target.icon} />
+                  <ShareGlyph src={target.icon} />
                   {target.label}
                 </a>
               ) : (
-                <button key={target.label} type="button" onClick={copyLink} className={ROW}>
-                  <Glyph src={target.icon} />
+                <button key={target.label} type="button" onClick={copyLink} className={SHARE_ROW}>
+                  <ShareGlyph src={target.icon} />
                   {target.label}
                 </button>
               )

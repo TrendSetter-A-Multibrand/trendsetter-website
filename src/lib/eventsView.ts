@@ -89,12 +89,16 @@ export function daysUntil(event: Pick<Event, "date">, now?: Date) {
 }
 
 /**
- * The event as a calendar file. It carries only what the page knows: the start
- * as the Moscow wall clock, an hour's length (the editor does not give an end),
- * the title and the place.
+ * The event as a calendar file. It carries only what the page knows: the start,
+ * an hour's length (the editor does not give an end), the title and the place.
+ * The start goes in UTC - Moscow is +03:00 all year - because a zone named
+ * without its VTIMEZONE block is read differently from one calendar to another.
  */
 export function calendarFile(event: Event, url: string) {
-  const start = event.date.replace(/[-:]/g, "").replace(" ", "T").slice(0, 13) + "00";
+  const clock = wallClock(event);
+  const start = clock
+    ? `${new Date(Date.parse(isoMoscow(clock.start))).toISOString().replace(/[-:]/g, "").slice(0, 15)}Z`
+    : "";
   const escape = (text: string) => text.replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n");
   const lines = [
     "BEGIN:VCALENDAR",
@@ -103,7 +107,7 @@ export function calendarFile(event: Event, url: string) {
     "BEGIN:VEVENT",
     `UID:${event.uuid}@trendsetter`,
     `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").slice(0, 15)}Z`,
-    `DTSTART;TZID=${EVENT_TZ}:${start}`,
+    start ? `DTSTART:${start}` : `DTSTART;VALUE=DATE:${event.date.slice(0, 10).replace(/-/g, "")}`,
     "DURATION:PT1H",
     `SUMMARY:${escape(event.title)}`,
     event.location ? `LOCATION:${escape(event.location)}` : "",
@@ -112,6 +116,56 @@ export function calendarFile(event: Event, url: string) {
     "END:VCALENDAR",
   ].filter(Boolean);
   return lines.join("\r\n");
+}
+
+/** The start and an hour later as Moscow wall clocks, "20261029T160000"; null without a time. */
+function wallClock(event: Pick<Event, "date">) {
+  const match = event.date.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);
+  if (!match) return null;
+  const [, y, mo, d, h, mi] = match.map(Number);
+  const stamp = (ms: number) => new Date(ms).toISOString().replace(/[-:]/g, "").slice(0, 15);
+  const start = Date.UTC(y, mo - 1, d, h, mi);
+  return { start: stamp(start), end: stamp(start + 3_600_000) };
+}
+
+/** "2026-10-29T16:00:00+03:00" from "20261029T160000" - Moscow keeps +03:00 all year. */
+const isoMoscow = (clock: string) =>
+  `${clock.slice(0, 4)}-${clock.slice(4, 6)}-${clock.slice(6, 8)}T${clock.slice(9, 11)}:${clock.slice(11, 13)}:00+03:00`;
+
+/**
+ * Links that open the event, filled in, in the reader's own calendar: Google's and
+ * Outlook's web forms, and the calendar file served from the site, which an
+ * iPhone or a Mac offers to add straight away. Empty without a time.
+ */
+export function calendarLinks(
+  event: Pick<Event, "date" | "title" | "location">,
+  { url, file }: { url: string; file: string },
+) {
+  const clock = wallClock(event);
+  if (!clock) return [];
+  const google = new URLSearchParams({
+    action: "TEMPLATE",
+    text: event.title,
+    dates: `${clock.start}/${clock.end}`,
+    ctz: EVENT_TZ,
+    location: event.location ?? "",
+    details: url,
+  });
+  const outlook = new URLSearchParams({
+    path: "/calendar/action/compose",
+    rru: "addevent",
+    subject: event.title,
+    startdt: isoMoscow(clock.start),
+    enddt: isoMoscow(clock.end),
+    location: event.location ?? "",
+    body: url,
+  });
+  return [
+    { label: "Google Календарь", href: `https://calendar.google.com/calendar/render?${google}` },
+    { label: "Apple Календарь", href: file },
+    { label: "Outlook", href: `https://outlook.live.com/calendar/0/action/compose?${outlook}` },
+    { label: "Другой календарь (.ics)", href: file, download: true },
+  ];
 }
 
 /** A search on Yandex Maps for the place; the editor gives a name, not coordinates. */

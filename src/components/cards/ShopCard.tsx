@@ -44,8 +44,12 @@ export function ShopCard({
 
   return (
     <article
-      className={`group/shop flex bg-surface ${horizontal ? "flex-row" : "flex-col"} ${
-        active ? "outline outline-1 -outline-offset-1 outline-ink" : ""
+      // The frame is drawn above the card: an inset outline sat under the photo
+      // and showed only round the plate.
+      className={`group/shop relative flex bg-surface ${horizontal ? "flex-row" : "flex-col"} ${
+        active
+          ? "after:pointer-events-none after:absolute after:inset-0 after:z-10 after:border after:border-ink"
+          : ""
       }`}
     >
       <button

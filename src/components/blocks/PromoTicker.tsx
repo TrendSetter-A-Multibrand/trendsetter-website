@@ -21,6 +21,9 @@ type PromoTickerProps = {
  * 40 seconds, stops under the pointer, and stands still for anyone who asked
  * the system for less motion. Links underline on hover.
  *
+ * Each line of the editor's text is an announcement of its own, as the file
+ * runs three different ones in turn; a single line repeats.
+ *
  * Two identical halves, each wider than any screen, so the second takes over
  * exactly where the first leaves and the loop has no seam.
  */
@@ -29,6 +32,10 @@ export function PromoTicker({
   ctaLabel = "",
   href = "#",
 }: PromoTickerProps) {
+  const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  if (!lines.length) lines.push("");
+  // About ten announcements a half, in whole rounds of the lines
+  const half = Math.ceil(10 / lines.length) * lines.length;
   const item = (key: number) => (
     <Link
       key={key}
@@ -36,7 +43,7 @@ export function PromoTicker({
       className="flex shrink-0 items-center gap-6 pr-6 hover:underline"
     >
       <span>
-        {text}
+        {lines[key % lines.length]}
         {ctaLabel ? ` — ${ctaLabel}` : ""}
       </span>
       <span aria-hidden="true">→</span>
@@ -46,13 +53,13 @@ export function PromoTicker({
   return (
     <div className="type-caption group/ticker flex h-9 items-center overflow-hidden bg-ink text-white">
       <div className="flex shrink-0 animate-ticker group-hover/ticker:[animation-play-state:paused] motion-reduce:animate-none">
-        {Array.from({ length: 10 }, (_, i) => item(i))}
+        {Array.from({ length: half }, (_, i) => item(i))}
       </div>
       <div
         className="flex shrink-0 animate-ticker group-hover/ticker:[animation-play-state:paused] motion-reduce:hidden"
         aria-hidden="true"
       >
-        {Array.from({ length: 10 }, (_, i) => item(i + 10))}
+        {Array.from({ length: half }, (_, i) => item(i + half))}
       </div>
     </div>
   );

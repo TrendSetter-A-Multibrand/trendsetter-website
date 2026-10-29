@@ -186,7 +186,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   ticker: {
     enabled: true,
     text: "Скоро открытие нового магазина",
-    ctaLabel: "Узнать подробнее",
+    ctaLabel: "",
     href: "#",
     tone: "red",
   },
