@@ -18,7 +18,7 @@ import { calendarLinks, whenLong } from "@/lib/eventsView";
  * sheet, and two outlined buttons. "В календарь" opens a short list - Google,
  * Apple (the calendar file served from the site, which an iPhone adds straight
  * away), Outlook, or the file itself. "Поделиться" opens the device's own share
- * sheet where there is one (phones, Windows) and otherwise a list - copy the
+ * sheet where there is one (a phone or a tablet) and otherwise a list - copy the
  * link, MAX, VK, Telegram, OK - copying says so in a toast. On a desktop
  * it is the right column and stays put while the text scrolls; on a phone it
  * sits under the cover.
@@ -70,7 +70,9 @@ export function EventAside({
   }
 
   async function share() {
-    if (navigator.share) {
+    // Only on a touch screen: Windows' own share window often comes up empty
+    // ("Try that again"), so a desktop gets the site's list
+    if (navigator.share && window.matchMedia("(pointer: coarse)").matches) {
       try {
         await navigator.share({ title: event.title, url });
         return;
