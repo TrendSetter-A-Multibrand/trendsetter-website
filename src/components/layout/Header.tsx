@@ -193,12 +193,13 @@ export function Header({
         <Suspense fallback={<div className="size-11" />}>
           <HeaderSearch locale={locale} onField={setField} />
         </Suspense>
+        {/* A phone opens the menu from the tab bar at the foot, so the burger waits for a tablet */}
         <button
           type="button"
           aria-label="Меню"
           aria-expanded={open}
           onClick={() => setOpen(true)}
-          className={`${iconButtonClass()} xl:hidden`}
+          className={`${iconButtonClass()} max-md:hidden xl:hidden`}
         >
           <BurgerIcon />
         </button>
