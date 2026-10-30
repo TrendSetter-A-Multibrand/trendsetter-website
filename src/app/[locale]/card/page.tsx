@@ -18,9 +18,16 @@ export const metadata: Metadata = {
  * Signed out it is the phone-and-code form; signed in, the card, the year and
  * the history, read with the client's own token on every visit.
  */
-export default async function CardPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function CardPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ wallet?: string }>;
+}) {
   if (!accountEnabled()) notFound();
   const { locale } = await params;
+  const walletFailed = (await searchParams).wallet === "failed";
 
   const token = await readSession();
   let cabinet: Cabinet | null = null;
@@ -53,7 +60,15 @@ export default async function CardPage({ params }: { params: Promise<{ locale: s
             Не получилось загрузить данные карты. Обновите страницу чуть позже.
           </p>
         ) : cabinet ? (
-          <LoyaltyCabinet cabinet={cabinet} />
+          <>
+            {walletFailed && (
+              <p role="alert" className="type-body mb-6 border-l-2 border-brand pl-4">
+                Не получилось добавить карту в кошелёк. Попробуйте ещё раз чуть позже — карта со штрихкодом ниже
+                работает на кассе и без него.
+              </p>
+            )}
+            <LoyaltyCabinet cabinet={cabinet} />
+          </>
         ) : (
           <LoyaltyAuth locale={locale} />
         )}

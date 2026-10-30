@@ -300,23 +300,16 @@ export async function loadCabinet(token: string): Promise<Cabinet> {
 }
 
 /**
- * A file-sized answer (the barcode image, the Apple pass), fetched with up to
- * three tries of 15 s each. From Vercel's US servers the connection to the
- * service in Russia now and then hangs for a minute and drops mid-body
- * ("terminated"), while the same call from Russia answers in 0.2 s - so a
- * stalled try is cut short and made again rather than left to fail.
+ * A file-sized answer (the barcode image, the Apple pass), cut off after 10 s.
+ * From Vercel (iad1 and fra1 alike) answers of a few KB arrive, but the 33 KB
+ * Apple pass mostly stalls and drops mid-body ("terminated"), while the same
+ * call from Russia answers in 0.2 s, 10 tries out of 10. Retrying did not help -
+ * the path itself is the problem - so a stalled call fails fast instead of
+ * keeping a phone waiting. The fix is hosting the site in Russia.
  */
 export async function fetchFile(url: string, init: RequestInit): Promise<{ res: Response; body: ArrayBuffer }> {
-  let last: unknown;
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      const res = await fetch(url, { ...init, cache: "no-store", signal: AbortSignal.timeout(15_000) });
-      return { res, body: await res.arrayBuffer() };
-    } catch (e) {
-      last = e;
-    }
-  }
-  throw last;
+  const res = await fetch(url, { ...init, cache: "no-store", signal: AbortSignal.timeout(10_000) });
+  return { res, body: await res.arrayBuffer() };
 }
 
 /**

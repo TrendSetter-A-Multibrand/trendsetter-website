@@ -167,22 +167,20 @@ describe("toCabinet", () => {
 });
 
 describe("fetchFile", () => {
-  it("оборванное соединение повторяет, а не отдаёт ошибку", async () => {
-    const fetchMock = vi
-      .fn()
-      .mockRejectedValueOnce(new TypeError("terminated"))
-      .mockResolvedValueOnce(new Response(new Uint8Array([1, 2, 3]), { headers: { "Content-Type": "application/vnd.apple.pkpass" } }));
-    vi.stubGlobal("fetch", fetchMock);
+  it("отдаёт файл целиком", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValueOnce(new Response(new Uint8Array([1, 2, 3]), { headers: { "Content-Type": "application/vnd.apple.pkpass" } })),
+    );
     const { body } = await fetchFile("https://x/applepass", {});
     expect(body.byteLength).toBe(3);
-    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
-  it("после трёх неудач сдаётся", async () => {
+  it("оборванное соединение - сразу ошибка, без повторов", async () => {
     const fetchMock = vi.fn().mockRejectedValue(new TypeError("terminated"));
     vi.stubGlobal("fetch", fetchMock);
     await expect(fetchFile("https://x/applepass", {})).rejects.toThrow("terminated");
-    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });
 

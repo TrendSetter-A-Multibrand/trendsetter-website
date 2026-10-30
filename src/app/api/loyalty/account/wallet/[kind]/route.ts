@@ -37,9 +37,11 @@ export async function GET(
     if (e instanceof SessionExpired) return new Response("Unauthorized", { status: 401 });
     // The service's own reason, for the logs only - it names no client and no token
     console.error(`wallet ${kind}:`, e instanceof Error ? e.message : e);
-    return new Response("Карту не удалось выпустить. Попробуйте позже.", {
-      status: 502,
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
-    });
+    // A tap on a phone should land back on the cabinet with a word of explanation,
+    // not on a bare error page: back to the page it came from, if it is ours
+    const from = request.headers.get("referer");
+    const back = new URL(from && new URL(from).origin === new URL(request.url).origin ? from : "/ru_ru/card", request.url);
+    back.searchParams.set("wallet", "failed");
+    return Response.redirect(back, 303);
   }
 }
