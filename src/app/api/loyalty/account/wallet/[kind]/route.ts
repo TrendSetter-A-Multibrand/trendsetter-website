@@ -35,6 +35,8 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   } catch (e) {
     if (e instanceof SessionExpired) return new Response("Unauthorized", { status: 401 });
+    // The service's own reason, for the logs only - it names no client and no token
+    console.error(`wallet ${kind}:`, e instanceof Error ? e.message : e);
     return new Response("Карту не удалось выпустить. Попробуйте позже.", {
       status: 502,
       headers: { "Content-Type": "text/plain; charset=utf-8" },
