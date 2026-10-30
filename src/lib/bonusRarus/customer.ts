@@ -300,6 +300,26 @@ export async function loadCabinet(token: string): Promise<Cabinet> {
 }
 
 /**
+ * A file-sized answer (the barcode image, the Apple pass), fetched with up to
+ * three tries of 15 s each. From Vercel's US servers the connection to the
+ * service in Russia now and then hangs for a minute and drops mid-body
+ * ("terminated"), while the same call from Russia answers in 0.2 s - so a
+ * stalled try is cut short and made again rather than left to fail.
+ */
+export async function fetchFile(url: string, init: RequestInit): Promise<{ res: Response; body: ArrayBuffer }> {
+  let last: unknown;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const res = await fetch(url, { ...init, cache: "no-store", signal: AbortSignal.timeout(15_000) });
+      return { res, body: await res.arrayBuffer() };
+    } catch (e) {
+      last = e;
+    }
+  }
+  throw last;
+}
+
+/**
  * The card's barcode as the service draws it for its own cabinet and the
  * tills read it: the format is the card template's (Code128 in the demo).
  */
@@ -314,29 +334,30 @@ export async function barcodeImage(token: string, content: string): Promise<{ bo
   const template = await call<{ barcode_format?: string }>("/telegram/template", { token });
   const format = FORMATS[template.barcode_format ?? ""] ?? "code128";
   const square = format === "qr" || format === "aztec";
-  const res = await fetch(`${BASE}/qr`, {
+  const { res, body } = await fetchFile(`${BASE}/qr`, {
     method: "POST",
-    cache: "no-store",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
     body: JSON.stringify({ content, format, height: square ? 400 : 200, width: square ? 400 : 600 }),
   });
   const type = res.headers.get("content-type") ?? "";
   if (!res.ok || !type.startsWith("image/")) throw new BonusRarusError(502, FALLBACK, `qr -> ${res.status}`);
-  return { body: await res.arrayBuffer(), type };
+  return { body, type };
 }
 
 /** The Apple Wallet pass - a .pkpass file the service builds from the card as it is now. */
 export async function applePass(token: string, cardId: number): Promise<ArrayBuffer> {
-  const res = await fetch(`${BASE}/applepass/create-card/${cardId}`, {
-    cache: "no-store",
+  const { res, body } = await fetchFile(`${BASE}/applepass/create-card/${cardId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   const type = res.headers.get("content-type") ?? "";
   if (!res.ok || type.includes("json")) {
-    const body = (await res.json().catch(() => null)) as Envelope<unknown> | null;
-    throw new BonusRarusError(502, body?.customer_message || FALLBACK, body?.error?.reason || `applepass -> ${res.status}`);
+    let answer: Envelope<unknown> | null = null;
+    try {
+      answer = JSON.parse(new TextDecoder().decode(body));
+    } catch {}
+    throw new BonusRarusError(502, answer?.customer_message || FALLBACK, answer?.error?.reason || `applepass -> ${res.status}`);
   }
-  return res.arrayBuffer();
+  return body;
 }
 
 /**
