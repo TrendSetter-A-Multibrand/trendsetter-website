@@ -1,29 +1,36 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { buttonClass } from "@/components/ui/Button";
-import { LoyaltyRegisterModal } from "@/components/blocks/LoyaltyRegisterModal";
 import { LoyaltyCardCheckModal } from "@/components/blocks/LoyaltyCardCheckModal";
+import { useLocale } from "@/lib/i18n/useLocale";
 
 /**
- * The buttons that open the loyalty demo: oформить карту, проверить карту.
- * Only stood up for показа руководству, against the vendor's test space; see
- * the fallback page that draws it, `fallbackPages.ts`, for the caveat.
+ * The buttons that open the loyalty demo: "Моя карта" - оформить карту или
+ * войти по телефону (the cabinet at /card, on the vendor's customer flow) - and
+ * a balance check by card number (the till flow). Each shows only where its
+ * own demo is set up. Only stood up for показа руководству, against the
+ * vendor's test space; see `fallbackPages.ts` for the caveat.
  */
-export function LoyaltyDemoActions() {
-  const [open, setOpen] = useState<"register" | "check" | null>(null);
+export function LoyaltyDemoActions({ account, check }: { account: boolean; check: boolean }) {
+  const locale = useLocale();
+  const [open, setOpen] = useState(false);
 
   return (
     <section className="flex flex-col gap-4 px-4 pt-6 md:flex-row md:px-10">
-      <button type="button" onClick={() => setOpen("register")} className={buttonClass("primary", "L")}>
-        Оформить карту
-      </button>
-      <button type="button" onClick={() => setOpen("check")} className={buttonClass("outline", "L")}>
-        Проверить карту
-      </button>
+      {account && (
+        <Link href={`/${locale}/card`} className={buttonClass("primary", "L")}>
+          Оформить карту или войти
+        </Link>
+      )}
+      {check && (
+        <button type="button" onClick={() => setOpen(true)} className={buttonClass("outline", "L")}>
+          Проверить карту
+        </button>
+      )}
 
-      {open === "register" && <LoyaltyRegisterModal onClose={() => setOpen(null)} />}
-      {open === "check" && <LoyaltyCardCheckModal onClose={() => setOpen(null)} />}
+      {open && <LoyaltyCardCheckModal onClose={() => setOpen(false)} />}
     </section>
   );
 }

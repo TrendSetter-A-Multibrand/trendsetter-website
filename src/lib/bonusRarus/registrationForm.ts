@@ -1,4 +1,4 @@
-import { bonusRarus } from "@/lib/bonusRarus/client";
+import { cabinetSettings } from "@/lib/bonusRarus/customer";
 import { normalizePhone } from "@/lib/bonusRarus/loyalty";
 
 /**
@@ -67,21 +67,16 @@ export function toFormFields(raw: RegField[]): FormField[] {
 
 /**
  * The form, cached for a few minutes: it changes only when someone edits the
- * cabinet, and the register route checks every submission against it too.
- *
- * TRANSITION: `personal-account/settings` exists only in `default-flow`; the
- * site flow has no such call. Once a site token replaces the demo one, the
- * field list has to come from somewhere else - asking the vendor how is on the
- * question list.
+ * cabinet, and the routes check every submission against it too. It comes
+ * from the client cabinet's public settings (`customer-flow`), which carry the
+ * same `registration_fields` the till flow's settings do and need no token.
  */
 let cached: { fields: FormField[]; at: number } | null = null;
 
 export async function registrationForm(): Promise<FormField[]> {
   if (cached && Date.now() - cached.at < 5 * 60_000) return cached.fields;
-  const data = await bonusRarus<{ settings?: { registration_fields?: RegField[] | null } }>(
-    "/personal-account/settings",
-  );
-  const fields = toFormFields(data.settings?.registration_fields ?? []);
+  const data = await cabinetSettings<{ registration_fields?: RegField[] | null }>();
+  const fields = toFormFields(data.registration_fields ?? []);
   cached = { fields, at: Date.now() };
   return fields;
 }

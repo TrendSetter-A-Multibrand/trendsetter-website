@@ -27,6 +27,7 @@ import { StorePlan } from "@/components/blocks/StorePlan";
 import { ContactDetails } from "@/components/blocks/ContactDetails";
 import { HelpCards } from "@/components/blocks/HelpCards";
 import { LoyaltyDemoActions } from "@/components/blocks/LoyaltyDemoActions";
+import { accountEnabled } from "@/lib/bonusRarus/customer";
 import { GiftCardDemoActions } from "@/components/blocks/GiftCardDemoActions";
 import { resolveHref } from "@/lib/siteSettings";
 
@@ -271,9 +272,14 @@ const DRAW: Record<
   ),
 
   // Not a Storyblok component: `fallbackPages.ts` puts it on the loyalty page
-  // alone, and only while BONUS_RARUS_REGISTRATION_TOKEN is set - the vendor's
-  // demo space wired up for показа, not a feature a visitor should otherwise see.
-  loyalty_demo_actions: () => (process.env.BONUS_RARUS_REGISTRATION_TOKEN ? <LoyaltyDemoActions /> : null),
+  // alone, and only where the vendor's demo space is wired up for показа - the
+  // cabinet where its web token is set, the balance check where the till token
+  // is - not a feature a visitor should otherwise see.
+  loyalty_demo_actions: () => {
+    const account = accountEnabled();
+    const check = Boolean(process.env.BONUS_RARUS_REGISTRATION_TOKEN);
+    return account || check ? <LoyaltyDemoActions account={account} check={check} /> : null;
+  },
 
   // Same story on "Подарочные карты" - balance lookup only, no sale (no payment
   // provider is wired up; see the project memory on Bonus-Rarus).
