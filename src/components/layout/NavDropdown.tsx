@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
-import type { NavItem } from "@/lib/navigation";
+import { childHref, type NavItem } from "@/lib/navigation";
 
 /**
  * The file's Nav submenu, hung from the bottom edge of the header: a white panel
@@ -29,7 +29,7 @@ export function NavDropdown({
       {item.children?.map((child) => (
         <Link
           key={child.slug}
-          href={`/${locale}/${item.slug}/${child.slug}`}
+          href={childHref(locale, item.slug, child.slug)}
           onClick={onNavigate}
           className="type-body text-ink transition-colors duration-150 hover:text-brand"
         >

@@ -6,18 +6,20 @@ import { ChevronIcon } from "@/components/ui/Icons";
 /**
  * One group of the footer. On a desktop it is a Caption heading in square
  * brackets over its links, always open. On a phone the group is an accordion
- * row 56 tall with a Text-2 rule under it, closed to begin with; the chevron
+ * row 56 tall with a Text-2 rule under it, closed to begin with (the shoppers' group is drawn open); the chevron
  * turns over when it opens. The links are in the page either way, so a search
  * engine and a screen reader see all of them.
  */
 export function FooterGroup({
   title,
   children,
+  defaultOpen = false,
 }: {
   title: string;
   children: React.ReactNode;
+  defaultOpen?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="max-md:border-b max-md:border-text-2">
       <button

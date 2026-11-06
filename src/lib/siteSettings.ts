@@ -18,7 +18,7 @@ const str = (value: unknown) => (typeof value === "string" ? value.trim() : "");
 const list = (value: unknown): Blok[] => (Array.isArray(value) ? value : []);
 
 const TONES: TickerTone[] = ["red", "yellow", "green", "blue"];
-const ICONS = ["telegram", "vk", "max"];
+const ICONS = ["telegram", "vk", "max", "wildberries"];
 
 /** Storyblok keeps a checkbox as a boolean, but an old story may have a string. */
 const flag = (value: unknown, fallback: boolean) =>

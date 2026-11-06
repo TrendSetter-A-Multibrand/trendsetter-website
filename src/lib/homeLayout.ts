@@ -1,23 +1,23 @@
 import type { Block } from "@/lib/storyblok/fetchStory";
 
 /**
- * The home page's sections in the order the file draws them: the cover, the
- * journal, the news, the season wall, what is in the shops, the events, the
- * shops and the subscription.
+ * The home page's sections in the order the file draws them (R46): the slider,
+ * what is in the shops, the news, the nearest events, the season wall, the
+ * journal, the shops and the subscription.
  */
 const ORDER = [
   "hero",
-  "journal_row",
-  "news_row",
-  "season_wall",
   "categories_row",
+  "news_row",
   "events_row",
+  "season_wall",
+  "journal_row",
   "stores_row",
   "newsletter",
 ];
 
 /** Anything the file does not know sits among the middle sections, in its own order. */
-const UNKNOWN_RANK = ORDER.indexOf("events_row") + 0.5;
+const UNKNOWN_RANK = ORDER.indexOf("season_wall") + 0.5;
 
 const link = (url: string) => ({ id: "", url, linktype: "url", fieldtype: "multilink", cached_url: url });
 

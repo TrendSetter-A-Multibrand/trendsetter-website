@@ -1,5 +1,6 @@
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PageCover } from "@/components/blocks/PageCover";
+import { EventsWidget } from "@/components/blocks/EventsWidget";
 import { ArticleFilters } from "@/components/blocks/ArticleFilters";
 import { EditorialGrid } from "@/components/blocks/EditorialGrid";
 import { ArticleGrid } from "@/components/blocks/ArticleGrid";
@@ -16,6 +17,8 @@ import {
 } from "@/lib/articles";
 import { fetchArticles } from "@/lib/storyblok/articles";
 import { getSiteSettings } from "@/lib/siteSettings";
+import { fetchEvents } from "@/lib/storyblok/events";
+import { isPast } from "@/lib/eventsView";
 
 /**
  * The body of the journal and of the news. The journal's first page opens on the
@@ -24,7 +27,8 @@ import { getSiteSettings } from "@/lib/siteSettings";
  * magazine spread. The news have their own board whatever the page - see
  * `NewsBoard` - and carry eleven to a page. The pager counts real pages. A tag
  * turns the editorial grid off - a narrowed list has no "main" piece - and the
- * pager keeps the tags when it turns the page.
+ * pager keeps the tags when it turns the page. The news header holds the
+ * nearest events as a widget.
  */
 export async function SectionListing({
   section,
@@ -39,6 +43,10 @@ export async function SectionListing({
 }) {
   const { covers } = await getSiteSettings();
   const cover = covers[section];
+
+  // The news page carries the nearest events in its header (R-news widget)
+  const nearest =
+    section === "news" ? (await fetchEvents(locale)).filter((event) => !isPast(event)).slice(0, 5) : [];
 
   const everything = await fetchArticles(locale);
   const all = inSection(everything, section);
@@ -64,7 +72,13 @@ export async function SectionListing({
   return (
     <>
       <Breadcrumbs items={[{ label: "Главная", href: `/${locale}` }, { label: cover.title }]} />
-      <PageCover title={cover.title} subtitle={cover.subtitle} imageSrc={cover.image} flush={false} />
+      <PageCover
+        title={cover.title}
+        subtitle={cover.subtitle}
+        imageSrc={cover.image}
+        flush={false}
+        aside={nearest.length > 0 ? <EventsWidget events={nearest} /> : undefined}
+      />
       <ArticleFilters filters={filters} locale={locale} section={section} activeTags={tags} />
 
       {onPage.length > 0 ? (

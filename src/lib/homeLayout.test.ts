@@ -11,11 +11,11 @@ describe("порядок главной", () => {
 
     expect(names(homeLayout(old))).toEqual([
       "hero",
-      "journal_row",
-      "news_row",
-      "season_wall",
       "categories_row",
+      "news_row",
       "events_row",
+      "season_wall",
+      "journal_row",
       "stores_row",
       "newsletter",
     ]);

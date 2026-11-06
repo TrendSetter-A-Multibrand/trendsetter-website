@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { EventsWidget } from "@/components/blocks/EventsWidget";
+import { PageCover } from "@/components/blocks/PageCover";
 import { EventsBoard } from "@/components/blocks/EventsBoard";
 import { isLocale } from "@/lib/i18n/locales";
-import { isPast } from "@/lib/eventsView";
 import { fetchEvents } from "@/lib/storyblok/events";
 import { seo } from "@/lib/seo";
 
@@ -23,8 +22,8 @@ export async function generateMetadata({
 }
 
 /**
- * The events page: the crumbs, the widget with the nearest events, and the whole
- * list below it - coming ones by month, the ones already gone behind a line.
+ * The events page: the crumbs, the section header (the widget with the nearest
+ * events moved to the news page), and the whole list below it - coming ones by month, the ones already gone behind a line.
  */
 export default async function EventsPage({
   params,
@@ -35,12 +34,14 @@ export default async function EventsPage({
   if (!isLocale(locale)) notFound();
 
   const events = await fetchEvents(locale);
-  const nearest = events.filter((event) => !isPast(event)).slice(0, 5);
 
   return (
     <>
       <Breadcrumbs items={[{ label: "Главная", href: `/${locale}` }, { label: "События" }]} />
-      <EventsWidget events={nearest} />
+      <PageCover
+        title="События"
+        subtitle="Мастер-классы, встречи со стилистом, лекции и маркеты в магазинах и мастерской"
+      />
       <div className="pb-32">
         <EventsBoard events={events} />
       </div>
