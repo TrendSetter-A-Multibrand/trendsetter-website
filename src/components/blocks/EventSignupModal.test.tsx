@@ -86,4 +86,17 @@ describe("запись на событие", () => {
     await screen.findByText(/Вы записаны/);
     expect(fetchMock.mock.calls[1][0]).toContain("/register");
   });
+
+  it("с формой Яндекса показывает её во фрейме и не спрашивает места у сервера", () => {
+    const fetchMock = answer({ open: true, left: 4 });
+    const { container } = open(
+      event({ seats: 10, signupFormUrl: "https://forms.yandex.ru/cloud/abc123/?iframe=1" }),
+      fetchMock,
+    );
+    expect(container.ownerDocument.querySelector("iframe")?.getAttribute("src")).toBe(
+      "https://forms.yandex.ru/cloud/abc123/?iframe=1",
+    );
+    expect(screen.queryByLabelText("E-mail")).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
 });

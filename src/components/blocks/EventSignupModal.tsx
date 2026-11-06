@@ -46,7 +46,11 @@ export function EventSignupModal({
   const [error, setError] = useState("");
   const [result, setResult] = useState<"done" | "already" | null>(null);
 
+  // An event with a Яндекс Формы page shows that form; it keeps its own seats
+  const embed = event.signupFormUrl;
+
   useEffect(() => {
+    if (embed) return;
     const ctrl = new AbortController();
     fetch(`/api/events/${event.uuid}/seats`, { cache: "no-store", signal: ctrl.signal })
       .then((res) => res.json())
@@ -54,7 +58,7 @@ export function EventSignupModal({
       // The count is a courtesy; the register route still has the last word
       .catch((e) => e?.name !== "AbortError" && setSeats({ phase: "open", left: null }));
     return () => ctrl.abort();
-  }, [event.uuid]);
+  }, [event.uuid, embed]);
 
   const phase = seats?.phase ?? "open";
   const shut = phase !== "open";
@@ -100,7 +104,16 @@ export function EventSignupModal({
           ]}
         />
 
-        {event.seats !== undefined && (
+        {embed && (
+          <iframe
+            src={embed}
+            title="Запись на событие"
+            sandbox="allow-scripts allow-forms allow-same-origin allow-popups"
+            className="h-[440px] max-h-[70vh] w-full border-0 bg-white"
+          />
+        )}
+
+        {!embed && event.seats !== undefined && (
           <p className="type-caption min-h-4">
             {seats === null ? (
               <span aria-hidden="true" className="block h-4 w-40 bg-surface" />
@@ -118,7 +131,7 @@ export function EventSignupModal({
           </p>
         )}
 
-        {!result && (
+        {!embed && !result && (
           <form onSubmit={submit} noValidate className="flex flex-col gap-4">
             <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
             <input

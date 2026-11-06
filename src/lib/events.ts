@@ -14,6 +14,8 @@ export type Event = {
   date: string;
   /** The editor's «ВСЕГО мест»; absent means no limit and no counter. */
   seats?: number;
+  /** A Яндекс Формы page the sheet shows instead of its own form, ready for a frame. */
+  signupFormUrl?: string;
   signupEnabled: boolean;
   /** Keys of the Пространство sections the event is shown under. */
   spaceSections: string[];
@@ -183,6 +185,7 @@ export type EventPlacement = {
   ctaLabel: string;
   signupEnabled: boolean;
   seats?: number;
+  signupFormUrl?: string;
   age?: string;
 };
 
@@ -199,6 +202,7 @@ export function eventFromPlacement(
     href: `/${locale}/events/${article.slug}`,
     date: placement.date,
     seats: placement.seats,
+    signupFormUrl: placement.signupFormUrl,
     signupEnabled: placement.signupEnabled,
     spaceSections: placement.spaceSections ?? [],
     day,

@@ -44,6 +44,7 @@ export function buildNewsEventContent(content: Content): Content | null {
     cta_label: event.cta_label || "Подробнее",
     signup_enabled: event.signup_enabled !== false && event.signup_enabled !== "false",
     ...(hasValue(event.seats) ? { seats: String(event.seats) } : {}),
+    ...(hasValue(event.signup_form_url) ? { signup_form_url: event.signup_form_url } : {}),
     ...(space && Array.isArray(space.space_sections)
       ? { space_sections: space.space_sections }
       : {}),

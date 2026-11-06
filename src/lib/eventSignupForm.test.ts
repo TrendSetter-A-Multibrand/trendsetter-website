@@ -5,6 +5,7 @@ import {
   readSeats,
   readSignup,
   splitBraces,
+  yandexFormEmbed,
 } from "./eventSignupForm";
 
 describe("readSeats", () => {
@@ -58,5 +59,24 @@ describe("text helpers", () => {
   it("splits a braced phrase", () => {
     expect(splitBraces("a {b} c")).toEqual({ before: "a ", link: "b", after: " c" });
     expect(splitBraces("no braces")).toBeNull();
+  });
+});
+
+describe("yandexFormEmbed", () => {
+  it("адрес формы Яндекса получает режим фрейма", () => {
+    expect(yandexFormEmbed("https://forms.yandex.ru/cloud/6ae82340902902782eb40606/")).toBe(
+      "https://forms.yandex.ru/cloud/6ae82340902902782eb40606/?iframe=1",
+    );
+    expect(yandexFormEmbed(" https://forms.yandex.ru/u/abc123?x=1 ")).toBe(
+      "https://forms.yandex.ru/u/abc123?iframe=1",
+    );
+  });
+  it("чужие адреса, http и пустое поле не принимает", () => {
+    expect(yandexFormEmbed("https://evil.example/cloud/abc123/")).toBeNull();
+    expect(yandexFormEmbed("https://forms.yandex.ru.evil.example/cloud/abc123/")).toBeNull();
+    expect(yandexFormEmbed("http://forms.yandex.ru/cloud/abc123/")).toBeNull();
+    expect(yandexFormEmbed("https://forms.yandex.ru/admin")).toBeNull();
+    expect(yandexFormEmbed("")).toBeNull();
+    expect(yandexFormEmbed(undefined)).toBeNull();
   });
 });

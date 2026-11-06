@@ -52,6 +52,24 @@ export function checkSignup(email: string, consent: boolean) {
   return parsed.ok ? null : parsed.error;
 }
 
+/**
+ * The address the sheet may put in a frame: only a Яндекс Формы page on its own
+ * host, whatever else an editor pastes. Null for anything else, and for an empty
+ * field - then the sheet keeps its own form.
+ */
+export function yandexFormEmbed(raw: unknown): string | null {
+  if (typeof raw !== "string" || raw.trim() === "") return null;
+  let url: URL;
+  try {
+    url = new URL(raw.trim());
+  } catch {
+    return null;
+  }
+  if (url.protocol !== "https:" || url.hostname !== "forms.yandex.ru") return null;
+  if (!/^\/(cloud|u)\/[0-9a-z]+\/?$/i.test(url.pathname)) return null;
+  return `${url.origin}${url.pathname}?iframe=1`;
+}
+
 /** «Осталось мест: {n}» with the number put in. */
 export const fillSeats = (template: string, n: number) =>
   template.replace("{n}", String(n));
