@@ -53,10 +53,10 @@ export const childHref = (locale: string, parentSlug: string, childSlug: string)
   childSlug.startsWith("/") ? `/${locale}${childSlug}` : `/${locale}/${parentSlug}/${childSlug}`;
 
 export const SOCIAL_LINKS: SocialLink[] = [
-  { label: "Telegram", href: "#", icon: "/images/social/telegram.svg" },
+  { label: "Telegram", href: "https://t.me/trendsetter_russia", icon: "/images/social/telegram.svg" },
   { label: "VK", href: "#", icon: "/images/social/vk.svg" },
   // The national messenger, not a placeholder for one. No link yet.
   { label: "MAX", href: "#", icon: "/images/social/max.svg" },
   // Drawn in the file's footer and on the hero photo; the tile shows the name only
-  { label: "Wildberries", href: "#", icon: "/images/social/wildberries.svg" },
+  { label: "Wildberries", href: "https://www.wildberries.ru/seller/trendsetter", icon: "/images/social/wildberries.svg" },
 ];
