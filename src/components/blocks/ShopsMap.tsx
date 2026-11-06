@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ShopCard } from "@/components/cards/ShopCard";
 import { buttonClass } from "@/components/ui/Button";
 import { ArrowIcon, PinIcon } from "@/components/ui/Icons";
@@ -46,6 +46,14 @@ export function ShopsMap({ stores }: { stores: Store[] }) {
   const [refused, setRefused] = useState(false);
   const [sheet, setSheet] = useState<Store | null>(null);
   const cards = useRef<Record<number, HTMLElement | null>>({});
+
+  // The map takes the phone's screen: the page says so and the Telegram pop-up stays away
+  useEffect(() => {
+    if (view !== "map") return;
+    const root = document.documentElement;
+    root.setAttribute("data-map-view", "");
+    return () => root.removeAttribute("data-map-view");
+  }, [view]);
 
   // Nearest first once the reader's place is known, the editor's order before
   const ordered = useMemo(() => {

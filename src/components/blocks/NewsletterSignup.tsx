@@ -66,7 +66,7 @@ export function NewsletterSignup({
   }, [submitted]);
 
   return (
-    <section className="on-dark relative overflow-hidden bg-brand px-4 pb-6 pt-16 text-white md:px-10 md:py-32">
+    <section id="subscribe" className="on-dark relative overflow-hidden bg-brand px-4 pb-6 pt-16 text-white md:px-10 md:py-32">
       <div className="relative z-10 flex max-w-[898px] flex-col gap-6 md:gap-8">
         <h2 className="type-label">[Рассылка]</h2>
         <p className="type-h1">{heading}</p>

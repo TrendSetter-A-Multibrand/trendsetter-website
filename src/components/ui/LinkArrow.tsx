@@ -11,15 +11,18 @@ export function LinkArrow({
   children,
   context = "underline",
   className = "",
+  onClick,
 }: {
   href: string;
   children: React.ReactNode;
   context?: "underline" | "plain";
   className?: string;
+  onClick?: () => void;
 }) {
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={`type-label group inline-flex items-center gap-2 text-ink transition-colors duration-150 hover:text-brand ${
         context === "underline"
           ? "border-b border-ink pb-0.5 hover:border-brand"

@@ -528,3 +528,8 @@ body {
 .ts-map--muted canvas {
   filter: saturate(0.45);
 }
+
+/* The shops map has the phone's whole screen: nothing floats over it but the cookie bar */
+html[data-map-view] .tg-popup {
+  display: none;
+}
