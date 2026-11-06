@@ -40,8 +40,8 @@ function Row({
  * The file's Season wall: rows of giant lowercase type sliding towards each
  * other - Sage to the right over 70 seconds, Red to the left over 80 - with a
  * white guide card in a Sage frame set over the middle: a 1:1 photo, "[Сезон]",
- * the guide's name in H3, a line and a link. Four rows on a desktop, six on a
- * phone. Under a thin rule above and below. It stands still for anyone who has
+ * the guide's name in H3, a line and a link. Two rows from 1100 up (the block is 390 tall), three
+ * from a tablet, four on a phone. Under a thin rule above and below. It stands still for anyone who has
  * asked for less motion, and changes four times a year.
  */
 export function SeasonWall({
@@ -72,10 +72,9 @@ export function SeasonWall({
       <div className="flex flex-col">
         <Row text={dark} tone="ink" dir="right" seconds={70} />
         <Row text={red} tone="brand" dir="left" seconds={80} />
-        <Row text={dark} tone="ink" dir="right" seconds={70} />
-        <Row text={red} tone="brand" dir="left" seconds={80} />
-        {/* Two more on a phone only */}
-        <Row text={dark} tone="ink" dir="right" seconds={70} className="md:hidden" />
+        {/* The third row is for a narrower screen: the card has less wall to stand on there */}
+        <Row text={dark} tone="ink" dir="right" seconds={70} className="min-[1100px]:hidden" />
+        {/* The fourth, on a phone only */}
         <Row text={red} tone="brand" dir="left" seconds={80} className="md:hidden" />
       </div>
 
