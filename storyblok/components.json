@@ -2192,7 +2192,7 @@
       "label": {
         "type": "text",
         "display_name": "Название",
-        "description": "Telegram, VK, MAX",
+        "description": "Telegram, VK, MAX, Wildberries",
         "pos": 0
       },
       "href": {
@@ -2217,6 +2217,10 @@
           {
             "name": "MAX",
             "value": "max"
+          },
+          {
+            "name": "Wildberries",
+            "value": "wildberries"
           }
         ],
         "default_value": "telegram",
