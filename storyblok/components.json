@@ -105,6 +105,16 @@
         "display_name": "Категории над заголовком",
         "description": "По одной в строке, без скобок и номеров: их ставит сайт",
         "pos": 7
+      },
+      "slides": {
+        "type": "bloks",
+        "display_name": "Следующие слайды",
+        "description": "Слайды 2, 3, 4 главного экрана: открытие магазина, материал журнала, событие. Первый слайд — поля выше. Пусто — слайды из макета",
+        "restrict_components": true,
+        "component_whitelist": [
+          "hero_slide"
+        ],
+        "pos": 8
       }
     }
   },
@@ -3206,6 +3216,49 @@
         "display_name": "Кто что делал",
         "description": "По одному в строке, в виде «Текст: Имя Фамилия»",
         "pos": 0
+      }
+    }
+  },
+  {
+    "name": "hero_slide",
+    "display_name": "Слайд главного экрана",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "tag": {
+        "type": "text",
+        "display_name": "Метка",
+        "description": "Вместо «[1] Одежда» в строке категорий: Скоро открытие, Журнал, Ближайшее событие",
+        "pos": 0
+      },
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 1
+      },
+      "lead": {
+        "type": "textarea",
+        "display_name": "Лид под заголовком",
+        "pos": 2
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Фото",
+        "description": "Правая половина экрана, почти квадрат; важное держите в середине",
+        "pos": 3
+      },
+      "button_label": {
+        "type": "text",
+        "display_name": "Кнопка — надпись",
+        "pos": 4
+      },
+      "link": {
+        "type": "multilink",
+        "display_name": "Кнопка — куда ведёт",
+        "pos": 5
       }
     }
   }

@@ -112,6 +112,20 @@ const DRAW: Record<
       descriptor={lines(blok.descriptor).length ? lines(blok.descriptor) : undefined}
       primaryCta={cta(blok.primary_label, blok.primary_link, locale)}
       secondaryCta={cta(blok.secondary_label, blok.secondary_link, locale)}
+      slides={nested(blok.slides).flatMap((slide) => {
+        const title = text(slide.title);
+        const primary = cta(slide.button_label, slide.link, locale);
+        if (!title || !primary) return [];
+        return [
+          {
+            tag: text(slide.tag),
+            title,
+            lead: text(slide.lead) ?? "",
+            primary,
+            image: image(slide.image) ?? "/images/home/hero.jpg",
+          },
+        ];
+      })}
     />
   ),
 
