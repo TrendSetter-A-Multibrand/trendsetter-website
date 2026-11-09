@@ -34,9 +34,27 @@ export const storyTag = (slug: string) => `storyblok:${slug}`;
  * Storyblok counts requests per second and refuses the ones over the line. A
  * build renders every page at once across as many workers as the machine has
  * cores, so the line is crossed there rather than in front of a reader - and a
- * refused request would fail the whole build. Waited out and asked again, twice.
+ * refused request would fail the whole build. Waited out and asked again, a few times.
  */
-const RETRIES = 3;
+const RETRIES = 6;
+
+/**
+ * The same line, kept from the other side: during a build every request leaves
+ * through here and starts at least this far after the last, which is five a
+ * second - under the six Storyblok allows - so the build stays under the limit
+ * instead of leaning on retries. A reader's request is not queued: it is mostly
+ * served from the cache, and the limit is not what stands in its way.
+ */
+const SPACING = 200;
+let nextSlot = 0;
+
+async function takeSlot() {
+  if (process.env.NEXT_PHASE !== "phase-production-build") return;
+  const now = Date.now();
+  const start = Math.max(now, nextSlot);
+  nextSlot = start + SPACING;
+  if (start > now) await wait(start - now);
+}
 
 const wait = (ms: number) => new Promise((done) => setTimeout(done, ms));
 
@@ -95,10 +113,12 @@ export async function storyblokFetch<T>(
   };
 
   for (let attempt = 1; ; attempt++) {
+    await takeSlot();
     const response = await fetch(url, options);
 
     if (response.status === 429 && attempt < RETRIES) {
-      await wait(attempt * 1000);
+      // A little jitter, so the workers that were refused together do not come back together
+      await wait(attempt * 1000 + Math.random() * 500);
       continue;
     }
 
