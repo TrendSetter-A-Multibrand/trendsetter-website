@@ -73,22 +73,22 @@ describe("storyblokFetch", () => {
     vi.stubGlobal("fetch", fetcher);
 
     const pending = storyblokFetch<{ story: { id: number } }>("stories/home");
-    await vi.advanceTimersByTimeAsync(1000);
+    await vi.advanceTimersByTimeAsync(2000);
 
     expect(await pending).toEqual({ story: { id: 1 } });
     expect(fetcher).toHaveBeenCalledTimes(2);
   });
 
-  it("сдаётся после трёх попыток, а не бесконечно", async () => {
+  it("сдаётся после шести попыток, а не бесконечно", async () => {
     const fetcher = vi.fn().mockResolvedValue(answer({ error: "rate" }, 429));
     vi.stubGlobal("fetch", fetcher);
 
     const pending = storyblokFetch("stories/home");
     const caught = expect(pending).rejects.toBeInstanceOf(StoryblokError);
-    await vi.advanceTimersByTimeAsync(5000);
+    await vi.advanceTimersByTimeAsync(20000);
     await caught;
 
-    expect(fetcher).toHaveBeenCalledTimes(3);
+    expect(fetcher).toHaveBeenCalledTimes(6);
   });
 
   it("на 404 отдаёт ошибку с кодом, чтобы её можно было отличить", async () => {
