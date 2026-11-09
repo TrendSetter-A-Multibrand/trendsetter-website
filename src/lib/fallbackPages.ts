@@ -68,7 +68,7 @@ export const fallbackPage = (path: string) => PAGES[path];
  * to open, its thirteen zones and the plate the plan will stand on. Put in only
  * while the page's own story has no plan block.
  */
-const STORE_PLAN: Block = {
+const AVENUE: Block = {
   _uid: "fallback-store-plan",
   component: "store_plan",
   label: "Скоро открытие",
@@ -91,6 +91,18 @@ const STORE_PLAN: Block = {
       ["Одежда М/Ж", "зал"],
     ] as const
   ).map(([name, kind], i) => ({ _uid: `fallback-zone-${i}`, component: "store_plan_zone", name, kind })),
+};
+
+/** The two shops already open: their card and address now, the plan and zones when the editor draws them. */
+const OTHER_PLANS: Block[] = [
+  { _uid: "fallback-store-plan-mosaic", component: "store_plan", title: "ТРЦ «Мозаика»", text: "7-я Кожуховская ул., д. 9, 1 этаж" },
+  { _uid: "fallback-store-plan-vegas", component: "store_plan", title: "ТРК «Вегас» Каширское", text: "Каширское ш., 24 км МКАД, 2 этаж" },
+];
+
+export const STORE_PLAN: Block = {
+  _uid: "fallback-store-plans",
+  component: "store_plans",
+  plans: [AVENUE, ...OTHER_PLANS],
 };
 
 const nest = (component: string, items: Record<string, string>[], key: string): Block[] =>
@@ -174,7 +186,7 @@ export function withFallbackBlocks(path: string, body: Block[]): Block[] {
   if (path === "company/careers" && !body.some((block) => block.component === "accordion_list")) {
     return CAREERS;
   }
-  if (path !== "company/space" || body.some((block) => block.component === "store_plan")) return body;
+  if (path !== "company/space" || body.some((block) => block.component === "store_plan" || block.component === "store_plans")) return body;
   const at = body.map((block) => block.component).lastIndexOf("space_cards");
   if (at === -1) return body;
   return [...body.slice(0, at + 1), STORE_PLAN, ...body.slice(at + 1)];

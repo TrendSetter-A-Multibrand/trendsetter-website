@@ -28,6 +28,7 @@
           "team_grid",
           "space_cards",
           "store_plan",
+          "store_plans",
           "accordion_list",
           "informer",
           "text_rows",
@@ -681,6 +682,24 @@
         "component_whitelist": [
           "store_plan_zone"
         ]
+      }
+    }
+  },
+  {
+    "name": "store_plans",
+    "display_name": "Планы магазинов",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "plans": {
+        "type": "bloks",
+        "display_name": "Магазины",
+        "pos": 0,
+        "restrict_components": true,
+        "component_whitelist": [
+          "store_plan"
+        ],
+        "description": "Магазины по порядку: первый раскрыт, остальные раскрываются по нажатию. Каждому свой план и свой список зон"
       }
     }
   },

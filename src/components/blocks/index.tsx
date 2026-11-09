@@ -23,7 +23,7 @@ import { isLinksOnlyPage, type SpaceCardInput } from "@/lib/space";
 import { AccordionList } from "@/components/blocks/AccordionList";
 import { TextRows } from "@/components/blocks/TextRows";
 import { Informer } from "@/components/blocks/Informer";
-import { StorePlan } from "@/components/blocks/StorePlan";
+import { StorePlan, StorePlans, type StorePlanData } from "@/components/blocks/StorePlan";
 import { ContactDetails } from "@/components/blocks/ContactDetails";
 import { HelpCards } from "@/components/blocks/HelpCards";
 import { LoyaltyDemoActions } from "@/components/blocks/LoyaltyDemoActions";
@@ -92,6 +92,20 @@ const paragraphs = (body: unknown) =>
  * already exist with props of their own, and a wrapper each would only restate
  * these six lines.
  */
+/** One shop's plan as the editor wrote it. */
+const planOf = (blok: Block): StorePlanData => ({
+  label: text(blok.label),
+  title: text(blok.title) ?? "",
+  text: text(blok.text),
+  image: image(blok.image),
+  zones: nested(blok.zones).map((zone) => ({
+    name: text(zone.name) ?? "",
+    kind: text(zone.kind),
+    body: text(zone.body),
+    image: image(zone.photo),
+  })),
+});
+
 const DRAW: Record<
   string,
   (
@@ -245,7 +259,7 @@ const DRAW: Record<
   // The tiles end on 128 of air before whatever follows - the form - unless the
   // store plan follows, which opens with that 128 itself
   space_cards: (blok, locale, path, _previous, next) => (
-    <div className={next?.component === "store_plan" ? "" : "pb-32"}>
+    <div className={next?.component === "store_plan" || next?.component === "store_plans" ? "" : "pb-32"}>
     <SpaceCardsSection
       locale={locale}
       linksOnly={isLinksOnlyPage(path)}
@@ -261,20 +275,10 @@ const DRAW: Record<
     </div>
   ),
 
-  store_plan: (blok) => (
-    <StorePlan
-      label={text(blok.label)}
-      title={text(blok.title) ?? ""}
-      text={text(blok.text)}
-      image={image(blok.image)}
-      zones={nested(blok.zones).map((zone) => ({
-        name: text(zone.name) ?? "",
-        kind: text(zone.kind),
-        body: text(zone.body),
-        image: image(zone.photo),
-      }))}
-    />
-  ),
+  store_plan: (blok) => <StorePlan {...planOf(blok)} />,
+
+  // Several shops in one block: the cards stand like an accordion, the plan follows the open one
+  store_plans: (blok) => <StorePlans plans={nested(blok.plans).map(planOf)} />,
 
   accordion_list: (blok) => (
     <AccordionList

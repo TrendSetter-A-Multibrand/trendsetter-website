@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { StorePlan } from "@/components/blocks/StorePlan";
+import { StorePlan, StorePlans } from "@/components/blocks/StorePlan";
 
 afterEach(cleanup);
 
@@ -27,5 +27,39 @@ describe("план магазина", () => {
     expect(screen.getByRole("dialog")).not.toBeNull();
     expect(screen.getByText("[Зона 01]")).not.toBeNull();
     expect(screen.getByText("Подгонка по фигуре")).not.toBeNull();
+  });
+});
+
+describe("планы нескольких магазинов", () => {
+  const plans = [
+    { title: "Первый", text: "Адрес 1", zones },
+    { title: "Второй", text: "Адрес 2", zones: [{ name: "Касса", kind: "сервис" }] },
+    { title: "Третий", zones: [] },
+  ];
+
+  it("раскрыт первый: его зоны видны, у остальных зон нет", () => {
+    render(<StorePlans plans={plans} />);
+    expect(screen.getByText("Ателье")).not.toBeNull();
+    expect(screen.queryByText("Касса")).toBeNull();
+    expect(screen.getByRole("button", { name: /Первый/ }).getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("нажатие на другой магазин закрывает первый и открывает его", () => {
+    render(<StorePlans plans={plans} />);
+    fireEvent.click(screen.getByRole("button", { name: /Второй/ }));
+    expect(screen.getByText("Касса")).not.toBeNull();
+    expect(screen.queryByText("Ателье")).toBeNull();
+    expect(screen.getByRole("button", { name: /Второй/ }).getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("магазин без зон и плана раскрывается и не ломается", () => {
+    render(<StorePlans plans={plans} />);
+    fireEvent.click(screen.getByRole("button", { name: /Третий/ }));
+    expect(screen.getByRole("button", { name: /Третий/ }).getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("один магазин — карточка без кнопки", () => {
+    render(<StorePlans plans={[plans[0]]} />);
+    expect(screen.queryByRole("button", { name: /Первый/ })).toBeNull();
   });
 });
