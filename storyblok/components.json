@@ -2225,6 +2225,12 @@
         ],
         "default_value": "telegram",
         "exclude_empty_option": true
+      },
+      "hidden": {
+        "type": "boolean",
+        "display_name": "Скрыть временно",
+        "description": "Соцсеть остаётся здесь, но на сайте её нет: ни на главной, ни в подвале, ни в меню",
+        "pos": 3
       }
     }
   },

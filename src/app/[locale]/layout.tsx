@@ -6,6 +6,7 @@ import { TopBar } from "@/components/layout/TopBar";
 import { TabBar } from "@/components/layout/TabBar";
 import { MenuProvider } from "@/components/layout/MenuContext";
 import { ScrollReset } from "@/components/layout/ScrollReset";
+import { Typography } from "@/components/layout/Typography";
 import { PromoTicker } from "@/components/blocks/PromoTicker";
 import { CookieNotice } from "@/components/blocks/CookieNotice";
 import { TelegramPopup } from "@/components/blocks/TelegramPopup";
@@ -36,6 +37,7 @@ export default async function LocaleLayout({
     <SettingsProvider settings={settings}>
       <MenuProvider>
         <ScrollReset />
+        <Typography />
         <TopBar>
           {ticker.enabled && (
             <PromoTicker
