@@ -127,7 +127,15 @@ function hrefOf(href: string, locale: string) {
 }
 
 /** Renders one article block. Width and air are the wrapper's, below. */
-function BlockBody({ block, locale }: { block: ArticleBlock; locale: string }) {
+function BlockBody({
+  block,
+  locale,
+  brandStock,
+}: {
+  block: ArticleBlock;
+  locale: string;
+  brandStock: Record<string, string>;
+}) {
   switch (block.kind) {
     case "images": {
       const count = Math.min(block.images.length, 4);
@@ -470,6 +478,11 @@ function BlockBody({ block, locale }: { block: ArticleBlock; locale: string }) {
                   <span className="type-h4 min-w-0 flex-1 transition-colors duration-150 group-hover:text-brand">
                     {name}
                   </span>
+                  {brandStock[name.toLowerCase()] && (
+                    <span className="type-caption-12 shrink-0 text-ink">
+                      {brandStock[name.toLowerCase()]}
+                    </span>
+                  )}
                   <ArrowIcon className="transition-transform duration-150 group-hover:translate-x-1" />
                 </Link>
               </li>
@@ -517,15 +530,23 @@ function BlockBody({ block, locale }: { block: ArticleBlock; locale: string }) {
  * A text the editor put over or under a group of photos, set like a text block
  * of its own so the groups can read as text-and-pictures, not pictures alone.
  */
-function Block({ block, locale }: { block: ArticleBlock; locale: string }) {
+function Block({
+  block,
+  locale,
+  brandStock,
+}: {
+  block: ArticleBlock;
+  locale: string;
+  brandStock: Record<string, string>;
+}) {
   // The pull quote has a `text` too, but that one is a string, not a PhotoText
   const text = "text" in block && typeof block.text === "object" ? block.text : undefined;
-  if (!text) return <BlockBody block={block} locale={locale} />;
+  if (!text) return <BlockBody block={block} locale={locale} brandStock={brandStock} />;
 
   return (
     <div className="flex flex-col gap-4 md:gap-6">
       {text.position === "above" && <TextPart subtitle={text.subtitle} body={text.body} />}
-      <BlockBody block={block} locale={locale} />
+      <BlockBody block={block} locale={locale} brandStock={brandStock} />
       {text.position === "below" && <TextPart subtitle={text.subtitle} body={text.body} />}
     </div>
   );
@@ -566,9 +587,12 @@ export function ArticleBody({
   blocks,
   locale = "ru_ru",
   flow = false,
+  brandStock = {},
 }: {
   blocks: ArticleBlock[];
   locale?: string;
+  /** "есть в 2 магазинах" by brand name in lower case, for the brands block. */
+  brandStock?: Record<string, string>;
   /** Every block fills the column it is put in - an event page's 898 - instead of the article's 770 and 1000. */
   flow?: boolean;
 }) {
@@ -576,7 +600,7 @@ export function ArticleBody({
     <div className={`flex flex-col ${flow ? "gap-8 md:gap-12" : "gap-4 md:gap-6"}`}>
       {blocks.map((block, i) => (
         <div key={i} className={flow ? "w-full" : COLUMN[widthOf(block)]}>
-          <Block block={block} locale={locale} />
+          <Block block={block} locale={locale} brandStock={brandStock} />
         </div>
       ))}
     </div>

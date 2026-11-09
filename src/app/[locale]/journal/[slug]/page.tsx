@@ -4,12 +4,12 @@ import { isLocale } from "@/lib/i18n/locales";
 import { notFound, permanentRedirect } from "next/navigation";
 import { ArticleHeader } from "@/components/blocks/ArticleHeader";
 import { ArticleBody } from "@/components/blocks/ArticleBody";
-import { ArticleReactions } from "@/components/blocks/ArticleReactions";
 import { NextMaterial } from "@/components/blocks/NextMaterial";
 import { ReadingProgress } from "@/components/blocks/ReadingProgress";
 import { RelatedArticles } from "@/components/blocks/RelatedArticles";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { fetchArticlePage, fetchArticles } from "@/lib/storyblok/articles";
+import { fetchBrandStock } from "@/lib/storyblok/brandStock";
 import { seo } from "@/lib/seo";
 
 export async function generateMetadata({
@@ -43,6 +43,8 @@ export default async function ArticlePage({
     fetchArticlePage(slug, locale),
     fetchArticles(locale),
   ]);
+  // Only an article that lists brands needs to know where they are in stock
+  const brandStock = article?.blocks.some((b) => b.kind === "brands") ? await fetchBrandStock() : {};
   if (!article) notFound();
   // An event has its own page; the old address keeps working
   if (article.meta.event) permanentRedirect(`/${locale}/events/${slug}`);
@@ -74,7 +76,7 @@ export default async function ArticlePage({
         </div>
 
         <div className="pt-12 md:pt-22">
-          <ArticleBody blocks={blocks} locale={locale} />
+          <ArticleBody blocks={blocks} locale={locale} brandStock={brandStock} />
         </div>
 
         {next && (
@@ -84,7 +86,6 @@ export default async function ArticlePage({
         )}
       </article>
 
-      <ArticleReactions articleId={slug} likes={12} dislikes={0} />
       <RelatedArticles articles={others} locale={locale} />
       <div className="pb-32" />
     </>

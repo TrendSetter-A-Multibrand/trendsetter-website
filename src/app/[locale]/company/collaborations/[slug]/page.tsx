@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { isLocale } from "@/lib/i18n/locales";
 import { ArticleHeader } from "@/components/blocks/ArticleHeader";
 import { ArticleBody } from "@/components/blocks/ArticleBody";
-import { ArticleReactions } from "@/components/blocks/ArticleReactions";
 import { RelatedArticles } from "@/components/blocks/RelatedArticles";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { articleFor } from "@/lib/article";
@@ -56,7 +55,6 @@ export default async function CollaborationArticlePage({
         <ArticleBody blocks={blocks} />
       </div>
 
-      <ArticleReactions articleId={slug} likes={12} dislikes={0} />
       <RelatedArticles articles={articles} locale={locale} />
     </>
   );
