@@ -39,7 +39,7 @@ export function PhotoCards({
                   />
                 )}
               </div>
-              <h3 className="type-h3 text-ink">{card.title}</h3>
+              <h3 className="type-h3-28 text-ink">{card.title}</h3>
               {card.body && <p className="type-body text-ink">{card.body}</p>}
             </div>
           ))}
@@ -68,8 +68,8 @@ export function PhotoCards({
               )}
             </div>
 
-            {card.label && <p className="type-caption uppercase">[{card.label}]</p>}
-            <h3 className="type-h4">{card.title}</h3>
+            {card.label && <p className="type-caption-12 uppercase">[{card.label}]</p>}
+            <h3 className="type-h4-22">{card.title}</h3>
           </div>
         ))}
       </div>

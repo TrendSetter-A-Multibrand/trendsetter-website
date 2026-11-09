@@ -16,8 +16,8 @@ export function TextRows({ rows }: { rows: { title: string; body: string }[] }) 
               i === 0 ? "pb-6" : "border-t py-6"
             }`}
           >
-            <h2 className="type-h3 text-ink">{row.title}</h2>
-            <p className="type-body-l max-w-[640px] whitespace-pre-line text-ink">{row.body}</p>
+            <h2 className="type-h3-28 text-ink">{row.title}</h2>
+            <p className="type-body-l-20 max-w-[640px] whitespace-pre-line text-ink">{row.body}</p>
           </div>
         ))}
       </div>

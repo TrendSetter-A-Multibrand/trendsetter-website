@@ -29,7 +29,7 @@ export function Facts({
                 }`
           }`}
         >
-          <dt className={`type-caption shrink-0 ${compact ? "w-[72px]" : "w-24"}`}>
+          <dt className={`type-caption-12 shrink-0 ${compact ? "w-[72px]" : "w-24"}`}>
             {item.label}
           </dt>
           <dd className={`min-w-0 flex-1 ${compact ? "type-body-s" : "type-body"}`}>

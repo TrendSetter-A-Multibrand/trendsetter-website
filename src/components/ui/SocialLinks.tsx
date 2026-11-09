@@ -29,7 +29,7 @@ export function SocialLinks({
           key={social.label}
           href={social.href}
           aria-label={social.label}
-          className={`type-caption flex h-11 items-center justify-center border px-4 transition-colors duration-150 ${tone}`}
+          className={`type-caption-12 flex h-11 items-center justify-center border px-4 transition-colors duration-150 ${tone}`}
         >
           {social.label}
         </a>

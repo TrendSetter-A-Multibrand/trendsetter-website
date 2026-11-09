@@ -87,7 +87,7 @@ export function SeasonWall({
           <p className="type-h3">{title}</p>
           {text && <p className="type-body-s">{text}</p>}
           {href && (
-            <LinkArrow href={href} className="self-start">
+            <LinkArrow href={href} className="self-start max-md:text-[16px]!">
               {linkLabel}
             </LinkArrow>
           )}

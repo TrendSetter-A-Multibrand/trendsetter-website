@@ -16,9 +16,9 @@ export function ContactDetails({ groups }: { groups: Group[] }) {
             key={group.title}
             className={`flex flex-col gap-2 border-line py-4 first:pt-0 ${i > 0 ? "border-t" : ""}`}
           >
-            <h2 className="type-label uppercase text-ink">[{group.title}]</h2>
+            <h2 className="type-label-16 uppercase text-ink">[{group.title}]</h2>
             {group.lines.map((line) => (
-              <p key={line} className="type-body-l text-ink">
+              <p key={line} className="type-body-l-20 text-ink">
                 {line}
               </p>
             ))}

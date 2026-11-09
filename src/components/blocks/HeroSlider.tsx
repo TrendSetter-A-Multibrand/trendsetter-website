@@ -50,7 +50,7 @@ function SocialStrip({ socials }: { socials: { label: string; href: string }[] }
           className={
             "type-caption flex h-11 flex-1 items-center justify-center px-2 text-ink transition-colors duration-150 hover:text-brand " +
             "@min-[420px]:flex-none @min-[420px]:px-4 " +
-            "@min-[600px]:type-mono-button @min-[600px]:h-14 @min-[600px]:px-8 " +
+            "@min-[600px]:type-label-16 @min-[600px]:h-14 @min-[600px]:px-8 " +
             (i > 0 ? "border-l border-line" : "")
           }
         >
@@ -144,7 +144,7 @@ export function HeroSlider({
                 {slide.primary.label}
               </Link>
               {slide.secondary && (
-                <LinkArrow href={slide.secondary.href} className="max-md:self-start">
+                <LinkArrow href={slide.secondary.href} className="max-md:self-start max-md:text-[16px]!">
                   {slide.secondary.label}
                 </LinkArrow>
               )}
