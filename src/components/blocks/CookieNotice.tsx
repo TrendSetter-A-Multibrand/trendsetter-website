@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useSyncExternalStore } from "react";
+import { Fragment, useEffect, useRef, useSyncExternalStore } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/locales";
 import { buttonClass } from "@/components/ui/Button";
@@ -55,10 +55,28 @@ export function CookieNotice({
   text: string;
 }) {
   const dismissed = useSyncExternalStore(subscribe, isDismissed, () => true);
+  const bar = useRef<HTMLDivElement>(null);
+
+  // Publishes how tall the bar is, so a card standing at the foot of the screen
+  // (the shops map on a phone) can rise above it instead of hiding behind it
+  useEffect(() => {
+    const el = bar.current;
+    if (dismissed || !el) return;
+    const root = document.documentElement;
+    const publish = () => root.style.setProperty("--cookie-h", `${el.offsetHeight}px`);
+    publish();
+    const observer = new ResizeObserver(publish);
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty("--cookie-h");
+    };
+  }, [dismissed]);
+
   if (dismissed) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-[calc(var(--tabbar-h)+env(safe-area-inset-bottom))] z-40 mx-auto w-full max-w-[1920px] md:bottom-0">
+    <div ref={bar} className="fixed inset-x-0 bottom-[calc(var(--tabbar-h)+env(safe-area-inset-bottom))] z-40 mx-auto w-full max-w-[1920px] md:bottom-0">
       <div className="flex flex-col gap-4 bg-ink px-4 py-4 md:flex-row md:items-center md:gap-6 md:px-10">
         <p className="type-body-s flex-1 text-white">
           {text.split("\n").map((line, i) => (

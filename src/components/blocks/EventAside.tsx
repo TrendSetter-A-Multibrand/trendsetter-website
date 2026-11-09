@@ -86,11 +86,7 @@ export function EventAside({
 
   const calendar = calendarLinks(event, { url, file: `/${locale}/events/${event.slug}/calendar.ics` });
 
-  const take = event.signupEnabled
-    ? event.seats !== undefined
-      ? `По записи · ${event.seats} мест`
-      : "По записи"
-    : "Вход свободный";
+  const take = event.signupEnabled ? "По записи" : "Вход свободный";
 
   return (
     <aside className="flex flex-col gap-6 lg:sticky lg:top-[calc(var(--header-offset,var(--header-h,116px))+24px)] lg:transition-[top] lg:duration-[250ms]">
@@ -98,6 +94,8 @@ export function EventAside({
         items={[
           { label: "Когда", value: whenLong(event) },
           ...(event.location ? [{ label: "Где", value: event.location }] : []),
+          // The number of seats is a fact of its own, as the file draws it
+          ...(event.seats !== undefined ? [{ label: "Кол-во мест", value: String(event.seats) }] : []),
           { label: "Участие", value: take },
           ...(event.age ? [{ label: "Возраст", value: event.age }] : []),
         ]}

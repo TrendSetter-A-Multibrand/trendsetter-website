@@ -64,8 +64,10 @@ describe("меню из settings", () => {
       "space",
       "collaborations",
       "careers",
-      "contacts",
+      "/faq",
     ]);
+    // Контакты is an entry of its own, the last one but the hidden ones
+    expect(slugs.slice(0, 7)).toEqual(["brands", "news", "journal", "events", "company", "stores", "company/contacts"]);
   });
 });
 
@@ -107,7 +109,7 @@ describe("колонки футера из settings", () => {
     const found = columns({
       footer_columns: [{ title: "Меню", links: [{ label: "Журнал", path: "journal" }] }],
     });
-    expect(found.map((c) => c.title)).toEqual(["Медиа", "Покупателям", "Компания", "Документы"]);
+    expect(found.map((c) => c.title)).toEqual(["Медиа", "Покупателям", "Компания", "Правовая информация"]);
   });
 
   it("запасная колонка Компания: пять ссылок, как в макете", () => {

@@ -403,6 +403,44 @@ body {
     font-size: 11px;
   }
 }
+/* Where the file's mobile frames keep the desktop size instead of the phone scale
+   (brand and person names, card titles, the labels of facts and shops, the
+   contact lines): the same style, the same size at every width. */
+@utility type-caption-12 {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+@utility type-label-16 {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+@utility type-h4-22 {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.25;
+}
+@utility type-h3-28 {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+@utility type-body-l-20 {
+  font-family: var(--font-inter-tight), Arial, sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.5;
+}
 @utility type-mono-button {
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-weight: 400;
@@ -527,4 +565,9 @@ body {
 }
 .ts-map--muted canvas {
   filter: saturate(0.45);
+}
+
+/* The shops map has the phone's whole screen: nothing floats over it but the cookie bar */
+html[data-map-view] .tg-popup {
+  display: none;
 }

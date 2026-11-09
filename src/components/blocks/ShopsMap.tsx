@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ShopCard } from "@/components/cards/ShopCard";
 import { buttonClass } from "@/components/ui/Button";
 import { ArrowIcon, PinIcon } from "@/components/ui/Icons";
@@ -33,7 +33,10 @@ const label = (km: number) =>
  *
  * On a phone one view at a time: a "Список / Карта" switch and the locate button
  * in the toolbar, the cards stacked, or the map taking the screen between the
- * header and the tab bar with the chosen shop in a card at the foot.
+ * header and the tab bar with the chosen shop in a card at the foot. The map
+ * is its own stacking context (`isolate`), so nothing inside it - the tiles, the
+ * plates - climbs over the header, the menu, the tab bar or a popup; the card
+ * stands above the cookie bar when that is showing.
  */
 export function ShopsMap({ stores }: { stores: Store[] }) {
   const [active, setActive] = useState(0);
@@ -43,6 +46,14 @@ export function ShopsMap({ stores }: { stores: Store[] }) {
   const [refused, setRefused] = useState(false);
   const [sheet, setSheet] = useState<Store | null>(null);
   const cards = useRef<Record<number, HTMLElement | null>>({});
+
+  // The map takes the phone's screen: the page says so and the Telegram pop-up stays away
+  useEffect(() => {
+    if (view !== "map") return;
+    const root = document.documentElement;
+    root.setAttribute("data-map-view", "");
+    return () => root.removeAttribute("data-map-view");
+  }, [view]);
 
   // Nearest first once the reader's place is known, the editor's order before
   const ordered = useMemo(() => {
@@ -148,6 +159,8 @@ export function ShopsMap({ stores }: { stores: Store[] }) {
                 cards.current[i] = el;
               }}
               onMouseEnter={() => setActive(i)}
+              // A card scrolled to stops under the header and the toolbar, 16 clear of them
+              className="scroll-mt-[calc(var(--header-offset,var(--header-h,116px))+69px+16px)]"
             >
               <ShopCard
                 name={store.name}
@@ -171,7 +184,7 @@ export function ShopsMap({ stores }: { stores: Store[] }) {
             the bar and the tab bar, edge to edge, with the chosen shop in a card
             at its foot. */}
         <div
-          className={`relative lg:sticky lg:top-[calc(var(--header-offset,var(--header-h,116px))+16px)] lg:transition-[top] lg:duration-[250ms] lg:col-span-8 lg:block lg:h-[820px] lg:self-start ${
+          className={`relative isolate lg:sticky lg:top-[calc(var(--header-offset,var(--header-h,116px))+16px)] lg:transition-[top] lg:duration-[250ms] lg:col-span-8 lg:block lg:h-[820px] lg:self-start ${
             view === "map"
               ? "h-[calc(100svh-var(--header-h,100px)-var(--tabbar-h)-69px)] max-lg:-mx-4 max-lg:-my-4 md:max-lg:-mx-10"
               : "max-lg:hidden"
@@ -179,7 +192,7 @@ export function ShopsMap({ stores }: { stores: Store[] }) {
         >
           {mapView}
           {current && (
-            <div className="absolute inset-x-4 bottom-4 flex items-center gap-4 border border-ink bg-white p-3 pl-4 lg:hidden">
+            <div className="absolute inset-x-4 bottom-[calc(1rem+var(--cookie-h,0px))] flex items-center gap-4 border border-ink bg-white p-3 pl-4 lg:hidden">
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <p className="type-h4 truncate">{current.name}</p>
                 <p className="type-body-s truncate">{current.address}</p>

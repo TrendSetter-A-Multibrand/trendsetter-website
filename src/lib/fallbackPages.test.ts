@@ -30,6 +30,6 @@ describe("заготовки страниц", () => {
 
   it("план магазина встаёт после плиток, если его нет", () => {
     const body = withFallbackBlocks("company/space", [block("page_cover"), block("space_cards"), block("x")]);
-    expect(body.map((b) => b.component)).toEqual(["page_cover", "space_cards", "store_plan", "x"]);
+    expect(body.map((b) => b.component)).toEqual(["page_cover", "space_cards", "store_plans", "x"]);
   });
 });

@@ -1,5 +1,6 @@
 import type { Placements } from "@/lib/articles";
 import type { Block } from "@/lib/storyblok/fetchStory";
+import { yandexFormEmbed } from "@/lib/eventSignupForm";
 
 /** What an empty placement field takes from the article it belongs to. */
 export type PlacementFallback = {
@@ -59,6 +60,7 @@ export function parsePlacements(
       ctaLabel: str(event.cta_label) || "Подробнее",
       signupEnabled: isOn(event.signup_enabled),
       seats: count(event.seats),
+      signupFormUrl: yandexFormEmbed(event.signup_form_url) ?? undefined,
       age: str(event.age) || undefined,
     };
 

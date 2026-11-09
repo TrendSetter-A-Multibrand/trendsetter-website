@@ -26,18 +26,18 @@ export function BrandIndexItem({
       className="group flex w-full flex-col items-start gap-1 py-4 text-left"
     >
       <span
-        className={`type-h4 transition-colors duration-150 group-hover:text-brand ${
+        className={`type-h4-22 transition-colors duration-150 group-hover:text-brand ${
           inStock ? "text-ink" : "text-text-2"
         }`}
       >
         {name}
       </span>
       {categories.length > 0 && (
-        <span className="type-caption text-brand">
+        <span className="type-caption-12 text-brand">
           {categories.map((c) => `[${c}]`).join(" ")}
         </span>
       )}
-      {stock && <span className="type-caption text-text-2">{stock}</span>}
+      {stock && <span className="type-caption-12 text-text-2">{stock}</span>}
     </button>
   );
 }

@@ -43,12 +43,12 @@ export function Informer({
             </svg>
           )}
           <div className="flex flex-col gap-2">
-            <h2 className="type-h4 text-ink">{title}</h2>
+            <h2 className="type-h4-22 text-ink">{title}</h2>
             {text && <p className="type-body-s text-ink">{text}</p>}
           </div>
         </div>
         {label && href && (
-          <Link href={href} className={`${buttonClass("secondary", "M")} max-md:w-full`}>
+          <Link href={href} className={buttonClass("secondary", "M")}>
             {label}
           </Link>
         )}

@@ -11,7 +11,7 @@ import { routeUrl } from "@/lib/eventsView";
 export function HowToGetThere({ place, address }: { place: string; address?: string }) {
   return (
     <section className="flex flex-col items-start gap-4 bg-surface p-6 text-ink">
-      <p className="type-label">[Как добраться]</p>
+      <p className="type-label-16">[Как добраться]</p>
       <p className="type-h3">{place}</p>
       {address && <p className="type-body">{address}</p>}
       <a

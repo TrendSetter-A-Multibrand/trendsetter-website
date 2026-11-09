@@ -32,8 +32,9 @@ function stockOf(brand: Brand) {
  * Russian alphabet and then reads "EN" for the way back, "0–9" keeps only the
  * brands that begin with a digit. Then the
  * groups. On a desktop a group is its letter in H1 at the
- * left and its brands in a row to the right, as many across as it has up to
- * four; on a phone the letter is over a list with a rule between rows. A click
+ * left and its brands to the right in columns of one fixed width - four across
+ * from 1280, three and two below - so they stand side by side from the left
+ * however few a letter has, and wrap onto the next row; on a phone the letter is over a list with a rule between rows. A click
  * on a brand opens its sheet.
  */
 export function BrandDirectory({
@@ -144,12 +145,7 @@ export function BrandDirectory({
             className="scroll-mt-[calc(var(--header-h,116px)+130px)] md:grid md:grid-cols-[206px_1fr] md:gap-6"
           >
             <h2 className="type-h2 md:type-h1">{group.letter}</h2>
-            <div
-              style={
-                { "--cols": `repeat(${Math.min(group.brands.length, 4)}, minmax(0, 1fr))` } as React.CSSProperties
-              }
-              className="mt-2 divide-y divide-line md:mt-0 md:grid md:[grid-template-columns:var(--cols)] md:gap-x-6 md:divide-y-0"
-            >
+            <div className="mt-2 divide-y divide-line md:mt-0 md:grid md:grid-cols-2 md:gap-x-6 md:divide-y-0 lg:grid-cols-3 xl:grid-cols-4">
               {group.brands.map((brand, i) => (
                 <BrandIndexItem
                   key={`${group.letter}-${i}`}

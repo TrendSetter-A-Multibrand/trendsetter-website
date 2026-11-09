@@ -27,9 +27,9 @@ export function Footer({
   return (
     <footer className="on-dark bg-ink pt-6 text-white md:pb-6 max-md:pb-[calc(var(--tabbar-h)+env(safe-area-inset-bottom))]">
       <div className="px-4 md:px-10">
-        <div className="grid pb-6 md:grid-cols-2 md:gap-x-6 md:gap-y-10 md:pb-16 min-[1000px]:grid-flow-col min-[1000px]:auto-cols-fr min-[1000px]:grid-cols-none">
+        <div className="grid pb-6 md:grid-cols-2 md:max-[999px]:gap-x-6 md:gap-y-10 md:pb-16 min-[1000px]:grid-flow-col min-[1000px]:auto-cols-fr min-[1000px]:grid-cols-none">
           {columns.map((column) => (
-            <FooterGroup key={column.title} title={column.title}>
+            <FooterGroup key={column.title} title={column.title} defaultOpen={column.title === "Покупателям"}>
               <ul className="flex flex-col gap-1">
                 {column.links.map((link) => (
                   <li key={link.path}>

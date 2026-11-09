@@ -32,7 +32,7 @@ function TileFace({ card, live = true }: { card: SpaceCard; live?: boolean }) {
       />
 
       <div className="absolute inset-x-0 bottom-0 flex items-end gap-4 p-4 md:p-6">
-        <p className="type-h3 min-w-0 flex-1">{card.title}</p>
+        <p className="type-h3-28 min-w-0 flex-1">{card.title}</p>
         {live && <ArrowIcon size={24} />}
       </div>
     </>

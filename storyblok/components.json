@@ -28,6 +28,7 @@
           "team_grid",
           "space_cards",
           "store_plan",
+          "store_plans",
           "accordion_list",
           "informer",
           "text_rows",
@@ -105,6 +106,22 @@
         "display_name": "Категории над заголовком",
         "description": "По одной в строке, без скобок и номеров: их ставит сайт",
         "pos": 7
+      },
+      "slides": {
+        "type": "bloks",
+        "display_name": "Следующие слайды",
+        "description": "Слайды 2, 3, 4 главного экрана: открытие магазина, материал журнала, событие. Первый слайд — поля выше. Пусто — слайды из макета",
+        "restrict_components": true,
+        "component_whitelist": [
+          "hero_slide"
+        ],
+        "pos": 8
+      },
+      "only_first": {
+        "type": "boolean",
+        "display_name": "Только первый экран, без слайдов",
+        "description": "Включите, если слайдов пока нет: показывается один экран, без счётчика и стрелок. Выключено и слайды пусты — слайды-образцы из макета",
+        "pos": 9
       }
     }
   },
@@ -657,6 +674,12 @@
         ],
         "description": "Рисунок плана. Без него на странице только карточка и список зон"
       },
+      "hidden": {
+        "type": "boolean",
+        "display_name": "Скрыть, пока магазин не открылся",
+        "description": "Включите: магазина не будет на сайте, всё остальное сохранится. Выключите, когда откроется",
+        "pos": 5
+      },
       "zones": {
         "type": "bloks",
         "display_name": "Зоны",
@@ -665,6 +688,24 @@
         "component_whitelist": [
           "store_plan_zone"
         ]
+      }
+    }
+  },
+  {
+    "name": "store_plans",
+    "display_name": "Планы магазинов",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "plans": {
+        "type": "bloks",
+        "display_name": "Магазины",
+        "pos": 0,
+        "restrict_components": true,
+        "component_whitelist": [
+          "store_plan"
+        ],
+        "description": "Магазины по порядку: первый раскрыт, остальные раскрываются по нажатию. Каждому свой план и свой список зон"
       }
     }
   },
@@ -1237,6 +1278,7 @@
           "cta_label",
           "signup_enabled",
           "seats",
+          "signup_form_url",
           "age",
           "space_sections"
         ],
@@ -1388,6 +1430,12 @@
         "description": "Пусто — без ограничения и без счётчика",
         "pos": 7
       },
+      "signup_form_url": {
+        "type": "text",
+        "display_name": "Ссылка на форму записи",
+        "description": "Адрес формы Яндекс Форм, https://forms.yandex.ru/cloud/… Если заполнено, в окне записи показывается эта форма вместо нашей, а число мест ведёт сама форма (Настройки → Дополнительно → Ограничить общее количество ответов). Пусто — наша форма",
+        "pos": 7
+      },
       "age": {
         "type": "text",
         "display_name": "Возраст",
@@ -1501,6 +1549,12 @@
         "type": "number",
         "display_name": "Всего мест",
         "description": "Пусто — без ограничения и без счётчика",
+        "pos": 7
+      },
+      "signup_form_url": {
+        "type": "text",
+        "display_name": "Ссылка на форму записи",
+        "description": "Адрес формы Яндекс Форм, https://forms.yandex.ru/cloud/… Если заполнено, в окне записи показывается эта форма вместо нашей, а число мест ведёт сама форма (Настройки → Дополнительно → Ограничить общее количество ответов). Пусто — наша форма",
         "pos": 7
       },
       "age": {
@@ -2169,7 +2223,7 @@
       "label": {
         "type": "text",
         "display_name": "Название",
-        "description": "Telegram, VK, MAX",
+        "description": "Telegram, VK, MAX, Wildberries",
         "pos": 0
       },
       "href": {
@@ -2194,10 +2248,20 @@
           {
             "name": "MAX",
             "value": "max"
+          },
+          {
+            "name": "Wildberries",
+            "value": "wildberries"
           }
         ],
         "default_value": "telegram",
         "exclude_empty_option": true
+      },
+      "hidden": {
+        "type": "boolean",
+        "display_name": "Скрыть временно",
+        "description": "Соцсеть остаётся здесь, но на сайте её нет: ни на главной, ни в подвале, ни в меню",
+        "pos": 3
       }
     }
   },
@@ -3193,6 +3257,49 @@
         "display_name": "Кто что делал",
         "description": "По одному в строке, в виде «Текст: Имя Фамилия»",
         "pos": 0
+      }
+    }
+  },
+  {
+    "name": "hero_slide",
+    "display_name": "Слайд главного экрана",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "tag": {
+        "type": "text",
+        "display_name": "Метка",
+        "description": "Вместо «[1] Одежда» в строке категорий: Скоро открытие, Журнал, Ближайшее событие",
+        "pos": 0
+      },
+      "title": {
+        "type": "text",
+        "display_name": "Заголовок",
+        "pos": 1
+      },
+      "lead": {
+        "type": "textarea",
+        "display_name": "Лид под заголовком",
+        "pos": 2
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "display_name": "Фото",
+        "description": "Правая половина экрана, почти квадрат; важное держите в середине",
+        "pos": 3
+      },
+      "button_label": {
+        "type": "text",
+        "display_name": "Кнопка — надпись",
+        "pos": 4
+      },
+      "link": {
+        "type": "multilink",
+        "display_name": "Кнопка — куда ведёт",
+        "pos": 5
       }
     }
   }

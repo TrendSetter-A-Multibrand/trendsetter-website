@@ -5,14 +5,13 @@ import { SeasonWall } from "@/components/blocks/SeasonWall";
 afterEach(cleanup);
 
 describe("стена сезона", () => {
-  it("шесть строк, две из них только для телефона (на десктопе четыре)", () => {
+  it("четыре строки: на десктопе от 1100 две, на планшете три, на телефоне четыре", () => {
     const { container } = render(<SeasonWall title="Гид по осени" />);
-    const rows = container.querySelectorAll(".type-season");
+    const rows = [...container.querySelectorAll(".type-season")].map((row) => row.parentElement!.className);
 
-    expect(rows).toHaveLength(6);
-    expect(
-      [...rows].filter((row) => row.parentElement?.className.includes("md:hidden")),
-    ).toHaveLength(2);
+    expect(rows).toHaveLength(4);
+    expect(rows.filter((c) => c.includes("min-[1100px]:hidden"))).toHaveLength(1);
+    expect(rows.filter((c) => c.includes("md:hidden"))).toHaveLength(1);
   });
 
   it("строки едут навстречу: Sage вправо, Red влево, и стоят при reduced motion", () => {

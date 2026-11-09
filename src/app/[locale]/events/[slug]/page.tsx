@@ -58,10 +58,8 @@ export default async function EventPage({
       <Breadcrumbs
         items={[
           { label: "Главная", href: `/${locale}` },
+          // The section only, a link: no kind of event and no title (R45)
           { label: "События", href: `/${locale}/events` },
-          // The kind of event is a step of the way, text without a link, as in the file
-          ...(meta.tags[0] ? [{ label: meta.tags[0] }] : []),
-          { label: event.title },
         ]}
       />
 

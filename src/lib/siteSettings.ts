@@ -6,7 +6,7 @@ import {
   type SiteSettings,
 } from "@/lib/siteDefaults";
 import type { SocialLink } from "@/lib/navigation";
-import { columns, nav, visibleColumns, visibleNav, withEvents } from "@/lib/menuSettings";
+import { columns, isHidden, nav, visibleColumns, visibleNav, withEvents } from "@/lib/menuSettings";
 import type { TickerTone } from "@/components/blocks/PromoTicker";
 
 export { DEFAULT_SETTINGS };
@@ -18,23 +18,29 @@ const str = (value: unknown) => (typeof value === "string" ? value.trim() : "");
 const list = (value: unknown): Blok[] => (Array.isArray(value) ? value : []);
 
 const TONES: TickerTone[] = ["red", "yellow", "green", "blue"];
-const ICONS = ["telegram", "vk", "max"];
+const ICONS = ["telegram", "vk", "max", "wildberries"];
 
 /** Storyblok keeps a checkbox as a boolean, but an old story may have a string. */
 const flag = (value: unknown, fallback: boolean) =>
   value === undefined || value === "" ? fallback : value === true || value === "true";
 
-function socials(content: Blok): SocialLink[] {
-  const found = list(content.socials)
+/**
+ * The editor's social links, those she has not hidden. Hidden ones are still
+ * entries: a list with every link hidden stays empty rather than falling back to
+ * the defaults, which would bring them all back.
+ */
+export function socials(content: Blok): SocialLink[] {
+  const found = list(content.socials).filter((social) => str(social.label));
+  if (!found.length) return DEFAULT_SETTINGS.socials;
+  return found
+    .filter((social) => !isHidden(social.hidden))
     .map((social) => ({
       label: str(social.label),
       href: str(social.href) || "#",
       icon: `/images/social/${
         ICONS.includes(str(social.icon)) ? str(social.icon) : "telegram"
       }.svg`,
-    }))
-    .filter((social) => social.label);
-  return found.length ? found : DEFAULT_SETTINGS.socials;
+    }));
 }
 
 /** An asset field arrives as an object even when empty; the filename is the answer. */

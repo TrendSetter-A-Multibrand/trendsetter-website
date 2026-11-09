@@ -7,7 +7,7 @@ type PaginationProps = {
 };
 
 /** Ends, the current page and its neighbours; anything skipped becomes a gap. */
-function pageWindow(page: number, pageCount: number): (number | "gap")[] {
+export function pageWindow(page: number, pageCount: number): (number | "gap")[] {
   const shown = [1, 2, 3, 4, page, pageCount - 1, pageCount]
     .filter((p, i, all) => p >= 1 && p <= pageCount && all.indexOf(p) === i)
     .sort((a, b) => a - b);

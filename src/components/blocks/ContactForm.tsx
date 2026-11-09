@@ -31,6 +31,9 @@ type ContactFormProps = {
  * stacked before) and the white "Отправить" with its consent note beside it. The
  * subscribe plane's sibling: the same padding, the same smiley.
  */
+/** An equal third of the row, the two gaps of 12 taken off first: a flex-1 would leave out the fields' own padding and borders. */
+const THIRD = "min-[640px]:min-w-0 min-[640px]:flex-none min-[640px]:basis-[calc((100%-24px)/3)]";
+
 export function ContactForm({
   locale = "ru_ru",
   heading = "Свяжитесь с нами",
@@ -130,14 +133,14 @@ export function ContactForm({
             className="hidden"
           />
 
-          {/* Three in a row once the form is 640 wide, one under another before */}
-          <div className="flex flex-col gap-3 min-[640px]:flex-row [&>*]:min-[640px]:flex-1">
+          {/* Three in a row once the form is 640 wide, one under another before; equal thirds - a field's own width does not count (basis 0) */}
+          <div className="flex flex-col gap-3 min-[640px]:flex-row">
             <input
               name="name"
               placeholder={form.namePlaceholder}
               aria-label={form.namePlaceholder}
               aria-invalid={bad("name")}
-              className={fieldClass("input", "red")}
+              className={`${fieldClass("input", "red")} ${THIRD}`}
             />
             <input
               type="email"
@@ -145,16 +148,18 @@ export function ContactForm({
               placeholder={form.emailPlaceholder}
               aria-label={form.emailPlaceholder}
               aria-invalid={bad("email")}
-              className={fieldClass("input", "red")}
+              className={`${fieldClass("input", "red")} ${THIRD}`}
             />
-            <Dropdown
-              name="subject"
-              placeholder={form.subjectPlaceholder}
-              options={subjects}
-              invalid={!!bad("subject")}
-              surface="red"
-              tall
-            />
+            <div className={THIRD}>
+              <Dropdown
+                name="subject"
+                placeholder={form.subjectPlaceholder}
+                options={subjects}
+                invalid={!!bad("subject")}
+                surface="red"
+                tall
+              />
+            </div>
           </div>
 
           <div className="flex flex-col gap-6 md:flex-row md:items-center">

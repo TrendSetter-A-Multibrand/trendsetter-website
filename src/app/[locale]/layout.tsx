@@ -6,8 +6,11 @@ import { TopBar } from "@/components/layout/TopBar";
 import { TabBar } from "@/components/layout/TabBar";
 import { MenuProvider } from "@/components/layout/MenuContext";
 import { ScrollReset } from "@/components/layout/ScrollReset";
+import { Typography } from "@/components/layout/Typography";
 import { PromoTicker } from "@/components/blocks/PromoTicker";
 import { CookieNotice } from "@/components/blocks/CookieNotice";
+import { TelegramPopup } from "@/components/blocks/TelegramPopup";
+import { UnsubscribeModal } from "@/components/blocks/UnsubscribeModal";
 import { getSiteSettings, resolveHref } from "@/lib/siteSettings";
 import { SettingsProvider } from "@/components/layout/SettingsContext";
 
@@ -34,6 +37,7 @@ export default async function LocaleLayout({
     <SettingsProvider settings={settings}>
       <MenuProvider>
         <ScrollReset />
+        <Typography />
         <TopBar>
           {ticker.enabled && (
             <PromoTicker
@@ -57,6 +61,8 @@ export default async function LocaleLayout({
         </div>
         <TabBar locale={locale} />
         <CookieNotice locale={locale} text={settings.cookieText} />
+        <TelegramPopup href={settings.socials.find((social) => /telegram/i.test(social.label))?.href ?? "#"} />
+        <UnsubscribeModal locale={locale} />
       </MenuProvider>
     </SettingsProvider>
   );

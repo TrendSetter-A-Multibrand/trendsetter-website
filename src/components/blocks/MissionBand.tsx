@@ -5,7 +5,8 @@ const HEADLINE_MAX = 160;
 
 /**
  * The file's Red band: the wordmark in White across the whole measure, then the
- * label in brackets, an H2 of up to 900 and a Body L line, all centred, 48 of
+ * label in brackets, an H2 of up to 900 and a Body L line, all centred (on a phone
+ * the file sets them at the left), 48 of
  * Red round it. Under it may run the strip of value cards on the same red, which
  * is why it has no air of its own below. Without them it closes with 96.
  *
@@ -36,7 +37,7 @@ export function MissionBand({
     >
       <Wordmark className="text-white" />
 
-      <div className="mx-auto mt-12 flex flex-col items-center gap-4 text-center">
+      <div className="mx-auto mt-12 flex flex-col items-start gap-4 text-left md:items-center md:text-center">
         <p className="type-label uppercase">[{heading}]</p>
         {headline && <h2 className="type-h2 max-w-[900px]">{headline}</h2>}
         {lines.map((line, i) => (

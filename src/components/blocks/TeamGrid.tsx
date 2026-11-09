@@ -31,8 +31,8 @@ export function TeamGrid({ members }: { members: TeamMember[] }) {
                 />
               )}
             </div>
-            <p className="type-h4 text-ink">{member.name}</p>
-            {member.role && <p className="type-caption uppercase text-brand">[{member.role}]</p>}
+            <p className="type-h4-22 text-ink">{member.name}</p>
+            {member.role && <p className="type-caption-12 uppercase text-brand">[{member.role}]</p>}
           </div>
         ))}
       </div>

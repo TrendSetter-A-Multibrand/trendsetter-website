@@ -81,7 +81,7 @@ export type SiteSettings = {
 // Картинка обложки брендов по умолчанию; заменяется картинкой из Storyblok, если она задана
 export const BRANDS_COVER = "/images/covers/brands.jpg";
 
-/** The file's footer: four groups of links, Медиа / Покупателям / Компания / Документы. */
+/** The file's footer: four groups of links, Медиа / Покупателям / Компания / Правовая информация. */
 const FOOTER_COLUMNS: FooterColumn[] = [
   {
     title: "Медиа",
@@ -112,7 +112,7 @@ const FOOTER_COLUMNS: FooterColumn[] = [
     ],
   },
   {
-    title: "Документы",
+    title: "Правовая информация",
     links: [
       { label: "Пользовательское соглашение", path: "user-agreement" },
       { label: "Политика cookie", path: "cookies" },

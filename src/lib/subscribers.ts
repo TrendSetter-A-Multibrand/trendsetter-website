@@ -25,6 +25,17 @@ export function isSubscribed(email: string) {
   return stored().includes(plain(email));
 }
 
+/** Takes the address off the list - the seam an unsubscribe request will move through. */
+export function forget(email: string) {
+  if (typeof window === "undefined") return;
+  const next = stored().filter((item) => item !== plain(email));
+  try {
+    window.localStorage.setItem(KEY, JSON.stringify(next));
+  } catch {
+    // Nothing to do: the address was only ever remembered here
+  }
+}
+
 export function remember(email: string) {
   if (typeof window === "undefined") return;
   const next = [...new Set([...stored(), plain(email)])];

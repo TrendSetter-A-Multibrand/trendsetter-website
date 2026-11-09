@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import type { Locale } from "@/lib/i18n/locales";
 import type { Block } from "@/lib/storyblok/fetchStory";
+import { isHidden } from "@/lib/menuSettings";
 import { Hero } from "@/components/blocks/Hero";
 import { EventsSection } from "@/components/blocks/EventsSection";
 import { NewsRow, JournalRow } from "@/components/blocks/ArticlesRow";
@@ -23,7 +24,7 @@ import { isLinksOnlyPage, type SpaceCardInput } from "@/lib/space";
 import { AccordionList } from "@/components/blocks/AccordionList";
 import { TextRows } from "@/components/blocks/TextRows";
 import { Informer } from "@/components/blocks/Informer";
-import { StorePlan } from "@/components/blocks/StorePlan";
+import { StorePlan, StorePlans, type StorePlanData } from "@/components/blocks/StorePlan";
 import { ContactDetails } from "@/components/blocks/ContactDetails";
 import { HelpCards } from "@/components/blocks/HelpCards";
 import { LoyaltyDemoActions } from "@/components/blocks/LoyaltyDemoActions";
@@ -92,6 +93,26 @@ const paragraphs = (body: unknown) =>
  * already exist with props of their own, and a wrapper each would only restate
  * these six lines.
  */
+/** Whether a block that follows draws a store plan at all: one hidden, or all of them, leaves nothing behind. */
+const planShown = (blok?: Block) =>
+  blok?.component === "store_plan"
+    ? !isHidden(blok.hidden)
+    : blok?.component === "store_plans" && nested(blok.plans).some((plan) => !isHidden(plan.hidden));
+
+/** One shop's plan as the editor wrote it. */
+const planOf = (blok: Block): StorePlanData => ({
+  label: text(blok.label),
+  title: text(blok.title) ?? "",
+  text: text(blok.text),
+  image: image(blok.image),
+  zones: nested(blok.zones).map((zone) => ({
+    name: text(zone.name) ?? "",
+    kind: text(zone.kind),
+    body: text(zone.body),
+    image: image(zone.photo),
+  })),
+});
+
 const DRAW: Record<
   string,
   (
@@ -112,6 +133,21 @@ const DRAW: Record<
       descriptor={lines(blok.descriptor).length ? lines(blok.descriptor) : undefined}
       primaryCta={cta(blok.primary_label, blok.primary_link, locale)}
       secondaryCta={cta(blok.secondary_label, blok.secondary_link, locale)}
+      onlyFirst={blok.only_first === true || blok.only_first === "true"}
+      slides={nested(blok.slides).flatMap((slide) => {
+        const title = text(slide.title);
+        const primary = cta(slide.button_label, slide.link, locale);
+        if (!title || !primary) return [];
+        return [
+          {
+            tag: text(slide.tag),
+            title,
+            lead: text(slide.lead) ?? "",
+            primary,
+            image: image(slide.image) ?? "/images/home/hero.jpg",
+          },
+        ];
+      })}
     />
   ),
 
@@ -230,7 +266,7 @@ const DRAW: Record<
   // The tiles end on 128 of air before whatever follows - the form - unless the
   // store plan follows, which opens with that 128 itself
   space_cards: (blok, locale, path, _previous, next) => (
-    <div className={next?.component === "store_plan" ? "" : "pb-32"}>
+    <div className={planShown(next) ? "" : "pb-32"}>
     <SpaceCardsSection
       locale={locale}
       linksOnly={isLinksOnlyPage(path)}
@@ -246,19 +282,11 @@ const DRAW: Record<
     </div>
   ),
 
-  store_plan: (blok) => (
-    <StorePlan
-      label={text(blok.label)}
-      title={text(blok.title) ?? ""}
-      text={text(blok.text)}
-      image={image(blok.image)}
-      zones={nested(blok.zones).map((zone) => ({
-        name: text(zone.name) ?? "",
-        kind: text(zone.kind),
-        body: text(zone.body),
-        image: image(zone.photo),
-      }))}
-    />
+  store_plan: (blok) => (isHidden(blok.hidden) ? null : <StorePlan {...planOf(blok)} />),
+
+  // Several shops in one block: the cards stand like an accordion, the plan follows the open one
+  store_plans: (blok) => (
+    <StorePlans plans={nested(blok.plans).filter((plan) => !isHidden(plan.hidden)).map(planOf)} />
   ),
 
   accordion_list: (blok) => (

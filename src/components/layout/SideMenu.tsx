@@ -11,7 +11,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n/locales";
-import type { NavItem, SocialLink } from "@/lib/navigation";
+import { childHref, type NavItem, type SocialLink } from "@/lib/navigation";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { buttonClass } from "@/components/ui/Button";
@@ -137,7 +137,7 @@ export function SideMenu({
           <Link
             href={`/${locale}`}
             onClick={onClose}
-            className="w-[136px] text-brand"
+            className="w-[167px] text-brand"
           >
             <Wordmark />
           </Link>
@@ -199,7 +199,7 @@ export function SideMenu({
                         {children.map((child) => (
                           <Link
                             key={child.slug}
-                            href={`/${locale}/${item.slug}/${child.slug}`}
+                            href={childHref(locale, item.slug, child.slug)}
                             onClick={onClose}
                             className="type-body text-ink hover:text-brand"
                           >

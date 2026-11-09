@@ -49,14 +49,18 @@ const BRACKETS_STAY =
  * On a touch screen there is no hover: the first tap on an entry with a panel
  * opens it and the second goes to the page. A tap anywhere else closes it.
  */
-function NavEntry({ locale, item }: { locale: Locale; item: NavItem }) {
+function NavEntry({ locale, item, items }: { locale: Locale; item: NavItem; items: NavItem[] }) {
   const [dismissed, setDismissed] = useState(false);
   const [touchOpen, setTouchOpen] = useState(false);
   const pointer = useRef<string>("mouse");
   const entry = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const href = `/${locale}/${item.slug}`;
-  const current = pathname === href || pathname.startsWith(`${href}/`);
+  const at = (h: string) => pathname === h || pathname.startsWith(`${h}/`);
+  // Контакты lives under /company but is an entry of its own: the longer match wins
+  const current =
+    at(href) &&
+    !items.some((other) => other !== item && `/${locale}/${other.slug}`.length > href.length && at(`/${locale}/${other.slug}`));
 
   // The link that was followed is often gone from under the pointer - the panel
   // closes, the page changes - and then no mouseleave comes, which left the
@@ -163,9 +167,9 @@ function useLinksOutOfTheField(
 
 /**
  * The file's Header. Desktop: 80 tall, white, a Line rule underneath, the logo
- * in Red at 176, the menu centred with 48 between entries, the search at the
+ * in Red at 216, the menu centred with 48 between entries, the search at the
  * right. Where the menu does not fit in a row (under 1280) it folds into the
- * burger. On a phone the bar is 64 with a 136 logo; the sections are in the tab
+ * burger. On a phone the bar is 64 with a 167 logo; the sections are in the tab
  * bar, and the burger and the search stay beside the logo.
  */
 export function Header({
@@ -188,7 +192,7 @@ export function Header({
     <header className="flex h-16 items-center justify-between gap-6 border-b border-line bg-white px-4 md:h-[var(--nav-h)] md:px-10">
       <Link
         href={`/${locale}`}
-        className="w-[136px] shrink-0 text-brand md:w-[176px]"
+        className="w-[167px] shrink-0 text-brand md:w-[216px]"
       >
         <Wordmark />
       </Link>
@@ -198,7 +202,7 @@ export function Header({
         className="hidden h-full flex-1 items-center justify-center gap-12 whitespace-nowrap xl:flex"
       >
         {items.map((item) => (
-          <NavEntry key={item.slug} locale={locale} item={item} />
+          <NavEntry key={item.slug} locale={locale} item={item} items={items} />
         ))}
       </nav>
 

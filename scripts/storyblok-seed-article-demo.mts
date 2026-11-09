@@ -70,6 +70,14 @@ const body = [
   block("article_pullquote", { text: "Выноска без подписи автора." }),
   block("article_quote", { subtitle: "Цитата на красной полосе", body: "Она идёт на всю ширину экрана и подходит для самой главной мысли статьи." }),
   block("article_video", { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", caption: "Видео с YouTube или RuTube" }),
+  // Блоки макета «Статья · Desktop»: справка, герой интервью, вопрос и ответ, бренды, ссылка, авторы
+  block("article_note", { label: "Справка", text: "Врезка на сером фоне: определение, совет или полезная деталь, которую можно пропустить." }),
+  block("article_person", { image: P("news/2.jpg"), label: "Интервью", name: "Имя Фамилия", role: "Должность" }),
+  block("article_question", { text: "Вопрос редакции выделен, чтобы при беглом чтении была видна новая тема." }),
+  block("article_answer", { name: "Имя", text: "Ответ героя. Имя красным стоит только в первом ответе подряд." }),
+  block("article_brands", { label: "Бренды в материале", names: "Barbour\nCoach\nGuess" }),
+  block("article_readmore", { label: "Читайте также", title: "Тренч: вещь, которую не нужно обновлять каждый сезон", link: { cached_url: "journal", linktype: "story" }, image: P("journal/2.jpg") }),
+  block("article_credits", { lines: "Текст: Имя Фамилия\nФото: Имя Фамилия\nСтиль: Имя Фамилия" }),
   block("article_spacer", { size: "l" }),
   block("article_text", { subtitle: "Конец", body: "Это последний блок примера." }),
 ];
