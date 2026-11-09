@@ -51,7 +51,11 @@ export default async function ArticlePage({
   const { meta, blocks } = article;
 
   // The piece that follows: the next one in the same section, if there is one
-  const others = articles.filter((other) => other.title !== meta.title);
+  // The page itself is left out by its address first - a title can be edited or
+  // shared by two pieces, the slug cannot
+  const others = articles.filter(
+    (other) => !other.href?.endsWith(`/${slug}`) && other.title !== meta.title,
+  );
   const next = others.find((other) => other.section === (meta.sectionHref === "journal" ? "journal" : "news")) ?? others[0];
 
   return (

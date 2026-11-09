@@ -17,6 +17,8 @@ type HeroProps = {
   imageSrc?: string;
   /** The screens after the first; the file's own when the editor has written none. */
   slides?: HeroSlide[];
+  /** The editor has no further slides yet: one screen, nothing of the file's sample after it. */
+  onlyFirst?: boolean;
 };
 
 /**
@@ -46,6 +48,7 @@ export async function Hero({
   secondaryCta = { label: "О нас", href: `/${locale}/company/about` },
   imageSrc = "/images/home/hero.jpg",
   slides,
+  onlyFirst = false,
 }: HeroProps) {
   const { socials } = await getSiteSettings();
   const first: HeroSlide = {
@@ -55,7 +58,7 @@ export async function Hero({
     secondary: secondaryCta,
     image: imageSrc,
   };
-  const rest = slides?.length ? slides : defaultSlides(locale);
+  const rest = onlyFirst ? [] : slides?.length ? slides : defaultSlides(locale);
 
   return (
     <HeroSlider
