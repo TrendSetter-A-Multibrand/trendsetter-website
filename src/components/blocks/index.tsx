@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import type { Locale } from "@/lib/i18n/locales";
 import type { Block } from "@/lib/storyblok/fetchStory";
+import { isHidden } from "@/lib/menuSettings";
 import { Hero } from "@/components/blocks/Hero";
 import { EventsSection } from "@/components/blocks/EventsSection";
 import { NewsRow, JournalRow } from "@/components/blocks/ArticlesRow";
@@ -92,6 +93,12 @@ const paragraphs = (body: unknown) =>
  * already exist with props of their own, and a wrapper each would only restate
  * these six lines.
  */
+/** Whether a block that follows draws a store plan at all: one hidden, or all of them, leaves nothing behind. */
+const planShown = (blok?: Block) =>
+  blok?.component === "store_plan"
+    ? !isHidden(blok.hidden)
+    : blok?.component === "store_plans" && nested(blok.plans).some((plan) => !isHidden(plan.hidden));
+
 /** One shop's plan as the editor wrote it. */
 const planOf = (blok: Block): StorePlanData => ({
   label: text(blok.label),
@@ -259,7 +266,7 @@ const DRAW: Record<
   // The tiles end on 128 of air before whatever follows - the form - unless the
   // store plan follows, which opens with that 128 itself
   space_cards: (blok, locale, path, _previous, next) => (
-    <div className={next?.component === "store_plan" || next?.component === "store_plans" ? "" : "pb-32"}>
+    <div className={planShown(next) ? "" : "pb-32"}>
     <SpaceCardsSection
       locale={locale}
       linksOnly={isLinksOnlyPage(path)}
@@ -275,10 +282,12 @@ const DRAW: Record<
     </div>
   ),
 
-  store_plan: (blok) => <StorePlan {...planOf(blok)} />,
+  store_plan: (blok) => (isHidden(blok.hidden) ? null : <StorePlan {...planOf(blok)} />),
 
   // Several shops in one block: the cards stand like an accordion, the plan follows the open one
-  store_plans: (blok) => <StorePlans plans={nested(blok.plans).map(planOf)} />,
+  store_plans: (blok) => (
+    <StorePlans plans={nested(blok.plans).filter((plan) => !isHidden(plan.hidden)).map(planOf)} />
+  ),
 
   accordion_list: (blok) => (
     <AccordionList

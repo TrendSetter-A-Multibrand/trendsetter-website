@@ -68,35 +68,38 @@ export const fallbackPage = (path: string) => PAGES[path];
  * to open, its thirteen zones and the plate the plan will stand on. Put in only
  * while the page's own story has no plan block.
  */
+const ZONES = [
+  ["Товары для дома", "зал"],
+  ["3D-печать", "мастерская"],
+  ["Гончарная мастерская", "мастерская"],
+  ["Продукты", "зал"],
+  ["Косметика", "зал"],
+  ["Касса и упаковка", "сервис"],
+  ["Детское", "зал"],
+  ["Обувь", "зал"],
+  ["Зона ожидания", "сервис"],
+  ["Примерочные", "сервис"],
+  ["Ателье", "мастерская"],
+  ["Бренд-зона", "зал"],
+  ["Одежда М/Ж", "зал"],
+] as const;
+
+const zonesOf = (key: string): Block[] =>
+  ZONES.map(([name, kind], i) => ({ _uid: `fallback-zone-${key}-${i}`, component: "store_plan_zone", name, kind }));
+
 const AVENUE: Block = {
   _uid: "fallback-store-plan",
   component: "store_plan",
   label: "Скоро открытие",
   title: "ТРЦ «Авеню Север»",
   text: "Коровинское шоссе, 2. Нажмите на зону на плане или в списке — расскажем, что там.",
-  zones: (
-    [
-      ["Товары для дома", "зал"],
-      ["3D-печать", "мастерская"],
-      ["Гончарная мастерская", "мастерская"],
-      ["Продукты", "зал"],
-      ["Косметика", "зал"],
-      ["Касса и упаковка", "сервис"],
-      ["Детское", "зал"],
-      ["Обувь", "зал"],
-      ["Зона ожидания", "сервис"],
-      ["Примерочные", "сервис"],
-      ["Ателье", "мастерская"],
-      ["Бренд-зона", "зал"],
-      ["Одежда М/Ж", "зал"],
-    ] as const
-  ).map(([name, kind], i) => ({ _uid: `fallback-zone-${i}`, component: "store_plan_zone", name, kind })),
+  zones: zonesOf("avenue"),
 };
 
-/** The two shops already open: their card and address now, the plan and zones when the editor draws them. */
+/** The two open shops carry the same zones until the editor draws their own. */
 const OTHER_PLANS: Block[] = [
-  { _uid: "fallback-store-plan-mosaic", component: "store_plan", title: "ТРЦ «Мозаика»", text: "7-я Кожуховская ул., д. 9, 1 этаж" },
-  { _uid: "fallback-store-plan-vegas", component: "store_plan", title: "ТРК «Вегас» Каширское", text: "Каширское ш., 24 км МКАД, 2 этаж" },
+  { _uid: "fallback-store-plan-mosaic", component: "store_plan", title: "ТРЦ «Мозаика»", text: "7-я Кожуховская ул., д. 9, 1 этаж", zones: zonesOf("mosaic") },
+  { _uid: "fallback-store-plan-vegas", component: "store_plan", title: "ТРК «Вегас» Каширское", text: "Каширское ш., 24 км МКАД, 2 этаж", zones: zonesOf("vegas") },
 ];
 
 export const STORE_PLAN: Block = {

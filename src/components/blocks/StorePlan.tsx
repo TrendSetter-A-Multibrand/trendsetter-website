@@ -62,7 +62,6 @@ export function StorePlans({ plans }: { plans: StorePlanData[] }) {
                   <span className="type-h3 text-ink">{plan.title}</span>
                   {plan.text && <span className="type-body-s text-ink">{plan.text}</span>}
                 </span>
-                {many && <Chevron open={isOpen} />}
               </>
             );
             return (
@@ -72,7 +71,7 @@ export function StorePlans({ plans }: { plans: StorePlanData[] }) {
                     type="button"
                     aria-expanded={isOpen}
                     onClick={() => choose(p)}
-                    className="flex items-start gap-4 bg-surface p-6 text-left transition-colors duration-150 hover:bg-surface-active"
+                    className="flex cursor-pointer items-start gap-4 bg-surface p-6 text-left transition-colors duration-150 hover:bg-surface-active"
                   >
                     {card}
                   </button>
@@ -145,14 +144,4 @@ export function StorePlans({ plans }: { plans: StorePlanData[] }) {
 /** One shop: the block the editor puts in alone, drawn as before. */
 export function StorePlan(props: StorePlanData) {
   return <StorePlans plans={[props]} />;
-}
-
-/** A plus that turns into a minus, the 24 box and 1.5 line the icon set draws in. */
-function Chevron({ open }: { open: boolean }) {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0">
-      <path d="M4 12h16" stroke="currentColor" strokeWidth="1.5" />
-      {!open && <path d="M12 4v16" stroke="currentColor" strokeWidth="1.5" />}
-    </svg>
-  );
 }
