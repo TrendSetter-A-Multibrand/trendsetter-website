@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { siteName, siteUrl } from "@/lib/site";
+import { siteName, siteNoindex, siteUrl } from "@/lib/site";
 import { DEFAULT_DESCRIPTION } from "@/lib/seo";
 import "./globals.css";
 
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   title: { default: siteName, template: `%s — ${siteName}` },
   description: DEFAULT_DESCRIPTION,
   applicationName: siteName,
-  robots: { index: true, follow: true },
+  robots: { index: !siteNoindex, follow: !siteNoindex },
   openGraph: { siteName, type: "website" },
   formatDetection: { telephone: false, address: false, email: false },
 };

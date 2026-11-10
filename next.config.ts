@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // The self-hosted image (see Dockerfile) runs the traced `server.js`; on
+  // Vercel the option stays off.
+  output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
+
   images: {
     // Photos the editor uploads to Storyblok are served from its asset host, and
     // next/image refuses any host it has not been told about. The space's own

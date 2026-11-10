@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.claude
+.env*
+*.log
+coverage
+design
+docs
+tsconfig.tsbuildinfo
+Dockerfile
+.dockerignore
+*.txt
+*.docx

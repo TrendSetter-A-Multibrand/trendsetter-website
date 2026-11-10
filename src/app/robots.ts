@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { siteUrl } from "@/lib/site";
+import { siteNoindex, siteUrl } from "@/lib/site";
 
 /**
  * Everything is open except the two routes that are ours rather than a reader's:
@@ -7,6 +7,7 @@ import { siteUrl } from "@/lib/site";
  * has anything to index and both are behind a secret anyway.
  */
 export default function robots(): MetadataRoute.Robots {
+  if (siteNoindex) return { rules: { userAgent: "*", disallow: "/" } };
   return {
     rules: { userAgent: "*", allow: "/", disallow: ["/api/"] },
     sitemap: `${siteUrl}/sitemap.xml`,

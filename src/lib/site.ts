@@ -17,6 +17,13 @@ export const siteUrl = (
     : "http://localhost:3000")
 ).replace(/\/$/, "");
 
+/**
+ * A stand-in domain must not be indexed as the site's own: NEXT_PUBLIC_SITE_NOINDEX=1
+ * closes it to search engines (robots.txt and the meta tag) until the official
+ * domain is set. Build-time like the address above.
+ */
+export const siteNoindex = process.env.NEXT_PUBLIC_SITE_NOINDEX === "1";
+
 /** The name that closes every title, and stands alone on the home page. */
 export const siteName = "TRENDSETTER";
 
