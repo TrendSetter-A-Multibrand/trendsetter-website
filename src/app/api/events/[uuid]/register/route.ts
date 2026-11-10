@@ -8,6 +8,7 @@ import {
   parseSignup,
   seatsLeft,
   signupShut,
+  type Signup,
 } from "@/lib/eventSignup";
 import { sendMail } from "@/lib/mail";
 import { createLimiter } from "@/lib/rateLimit";
@@ -16,15 +17,20 @@ import { fetchEventCapacity } from "@/lib/storyblok/eventCapacity";
 const limited = createLimiter(10 * 60 * 1000, 5);
 
 /** Organiser's note; fire and forget - a mail failure never undoes a sign-up. */
-function notifyOrganiser(title: string, email: string, left: number | null) {
+function notifyOrganiser(title: string, guest: Signup, left: number | null) {
   const to = process.env.EVENTS_TO || recipientFor();
   if (!to) return;
   const rest = left === null ? "без ограничения" : String(left);
   sendMail({
     to,
-    replyTo: email,
+    replyTo: guest.email,
     subject: `[Сайт] Запись на событие: ${title}`,
-    text: `${email} записался(лась) на «${title}».\nОсталось мест: ${rest}`,
+    text: [
+      `${guest.name} записался(лась) на «${title}».`,
+      `Телефон: ${guest.phone}`,
+      `E-mail: ${guest.email}`,
+      `Осталось мест: ${rest}`,
+    ].join("\n"),
   }).catch(() => {});
 }
 
@@ -62,14 +68,13 @@ export async function POST(
   if (demo) return Response.json({ ok: true, left: event.seats });
 
   try {
-    const { email } = parsed.value;
-    const result = await register(uuid, email, event.seats);
+    const result = await register(uuid, parsed.value, event.seats);
     if (result === "full") return Response.json({ error: "full" }, { status: 409 });
     const left = seatsLeft(event.seats, await countRegistrations(uuid));
     if (result === "duplicate") {
       return Response.json({ ok: true, already: true, left });
     }
-    notifyOrganiser(event.title, email, left);
+    notifyOrganiser(event.title, parsed.value, left);
     return Response.json({ ok: true, left });
   } catch (e) {
     const status = e instanceof DbNotConfigured ? 503 : 500;

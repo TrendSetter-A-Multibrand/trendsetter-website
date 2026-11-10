@@ -46,9 +46,12 @@ describe("readSignup", () => {
 
 describe("checkSignup", () => {
   it("applies the server's rules", () => {
-    expect(checkSignup("nope", true)).toBe("email");
-    expect(checkSignup("a@b.co", false)).toBe("consent");
-    expect(checkSignup(" A@B.co ", true)).toBeNull();
+    const ok = { name: "Иван Петров", phone: "89991234567", email: "a@b.co" };
+    expect(checkSignup({ ...ok, email: "nope" }, true)).toBe("email");
+    expect(checkSignup({ ...ok, name: "И" }, true)).toBe("name");
+    expect(checkSignup({ ...ok, phone: "123" }, true)).toBe("phone");
+    expect(checkSignup(ok, false)).toBe("consent");
+    expect(checkSignup({ ...ok, email: " A@B.co " }, true)).toBeNull();
   });
 });
 

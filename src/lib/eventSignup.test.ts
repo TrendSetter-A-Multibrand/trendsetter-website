@@ -8,22 +8,66 @@ import {
   signupShut,
 } from "@/lib/eventSignup";
 
+const guest = { name: "Иван Петров", phone: "+7 999 123-45-67", email: "a@b.co" };
+
 describe("parseSignup", () => {
-  it("lower-cases and trims the e-mail", () => {
-    expect(parseSignup({ email: "  Ann@Mail.RU ", consent: true })).toEqual({
+  it("lower-cases and trims the e-mail, tidies the name, writes the phone as +digits", () => {
+    expect(
+      parseSignup({
+        name: "  Иван   Петров ",
+        phone: "8 (999) 123-45-67",
+        email: "  Ann@Mail.RU ",
+        consent: true,
+      }),
+    ).toEqual({
       ok: true,
-      value: { email: "ann@mail.ru" },
+      value: { email: "ann@mail.ru", name: "Иван Петров", phone: "+79991234567" },
     });
   });
   it("rejects a bad e-mail", () => {
-    expect(parseSignup({ email: "nope", consent: true })).toMatchObject({
+    expect(parseSignup({ ...guest, email: "nope", consent: true })).toMatchObject({
       ok: false,
       error: "email",
     });
   });
+  it("rejects a missing or odd name", () => {
+    for (const name of [undefined, "", "И", "12345", "Иван <b>", "a@b.co", "а".repeat(121)]) {
+      expect(parseSignup({ ...guest, name, consent: true })).toMatchObject({
+        ok: false,
+        error: "name",
+      });
+    }
+  });
+  it("accepts names with a hyphen, an apostrophe or Latin letters", () => {
+    for (const name of ["Анна-Мария Ли", "О'Нил Шон", "John Smith"]) {
+      expect(parseSignup({ ...guest, name, consent: true }).ok).toBe(true);
+    }
+  });
+  it("rejects a phone that is not one", () => {
+    for (const phone of [undefined, "", "123", "abc", "1234567890123456"]) {
+      expect(parseSignup({ ...guest, phone, consent: true })).toMatchObject({
+        ok: false,
+        error: "phone",
+      });
+    }
+  });
+  it("makes a Russian number +7 however it is written", () => {
+    for (const phone of ["9991234567", "89991234567", "79991234567", "+7 999 123 45 67"]) {
+      expect(parseSignup({ ...guest, phone, consent: true })).toMatchObject({
+        ok: true,
+        value: { phone: "+79991234567" },
+      });
+    }
+  });
+  it("keeps a foreign number with its country code", () => {
+    expect(parseSignup({ ...guest, phone: "+374 91 123456", consent: true })).toMatchObject({
+      ok: true,
+      value: { phone: "+37491123456" },
+    });
+  });
   it("needs consent to be exactly true", () => {
     for (const consent of [false, "true", 1, undefined]) {
-      expect(parseSignup({ email: "a@b.co", consent })).toMatchObject({
+      expect(parseSignup({ ...guest, consent })).toMatchObject({
         ok: false,
         error: "consent",
       });

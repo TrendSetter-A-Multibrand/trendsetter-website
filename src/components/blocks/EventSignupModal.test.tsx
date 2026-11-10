@@ -64,6 +64,8 @@ describe("запись на событие", () => {
     open(event(), fetchMock);
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
 
+    fireEvent.change(screen.getByLabelText("Фамилия и имя"), { target: { value: "Иван Петров" } });
+    fireEvent.change(screen.getByLabelText("Телефон"), { target: { value: "8 999 123-45-67" } });
     fireEvent.change(screen.getByLabelText("E-mail"), { target: { value: "a@b.co" } });
     fireEvent.click(screen.getByRole("button", { name: "Записаться" }));
 
@@ -79,12 +81,19 @@ describe("запись на событие", () => {
     open(event(), fetchMock);
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
 
+    fireEvent.change(screen.getByLabelText("Фамилия и имя"), { target: { value: "Иван Петров" } });
+    fireEvent.change(screen.getByLabelText("Телефон"), { target: { value: "8 999 123-45-67" } });
     fireEvent.change(screen.getByLabelText("E-mail"), { target: { value: "a@b.co" } });
     fireEvent.click(screen.getByRole("checkbox"));
     fireEvent.click(screen.getByRole("button", { name: "Записаться" }));
 
     await screen.findByText(/Вы записаны/);
     expect(fetchMock.mock.calls[1][0]).toContain("/register");
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toMatchObject({
+      name: "Иван Петров",
+      phone: "8 999 123-45-67",
+      email: "a@b.co",
+    });
   });
 
   it("с формой Яндекса показывает её во фрейме и не спрашивает места у сервера", () => {

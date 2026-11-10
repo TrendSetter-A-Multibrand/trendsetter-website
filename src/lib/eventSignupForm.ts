@@ -47,8 +47,11 @@ export function readSignup(status: number, raw: unknown): SignupOutcome {
 }
 
 /** The same rules the server applies, so nothing leaves the page that would bounce. */
-export function checkSignup(email: string, consent: boolean) {
-  const parsed = parseSignup({ email, consent });
+export function checkSignup(
+  fields: { email: string; name: string; phone: string },
+  consent: boolean,
+) {
+  const parsed = parseSignup({ ...fields, consent });
   return parsed.ok ? null : parsed.error;
 }
 

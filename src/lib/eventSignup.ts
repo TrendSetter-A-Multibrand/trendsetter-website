@@ -6,13 +6,37 @@ import { isUpcoming } from "@/lib/events";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export type Signup = { email: string };
+export type Signup = { email: string; name: string; phone: string };
+
+/** Longest a name is taken to be; a longer one is a paste, not a person. */
+const NAME_MAX = 120;
+
+/** Spaces tidied, and at least two letters: «Иван Петров», «Анна-Мария», «О'Нил». */
+export function cleanName(value: unknown): string | null {
+  const name = typeof value === "string" ? value.trim().replace(/\s+/g, " ") : "";
+  const letters = name.match(/\p{L}/gu)?.length ?? 0;
+  if (name.length > NAME_MAX || letters < 2 || /[<>@\d]/.test(name)) return null;
+  return name;
+}
+
+/**
+ * A phone as "+" and digits. A Russian number written 8 999 …, 7 999 … or 999 …
+ * becomes +7 999 …; any other must carry its country code, and 11 to 15 digits
+ * is what a real number has. Anything else is not a phone.
+ */
+export function cleanPhone(value: unknown): string | null {
+  const digits = typeof value === "string" ? value.replace(/\D/g, "") : "";
+  if (digits.length === 10) return `+7${digits}`;
+  if (digits.length === 11 && digits.startsWith("8")) return `+7${digits.slice(1)}`;
+  if (digits.length >= 11 && digits.length <= 15) return `+${digits}`;
+  return null;
+}
 
 export function parseSignup(
   raw: unknown,
 ):
   | { ok: true; value: Signup }
-  | { ok: false; error: "bad body" | "email" | "consent" } {
+  | { ok: false; error: "bad body" | "email" | "name" | "phone" | "consent" } {
   if (typeof raw !== "object" || raw === null) {
     return { ok: false, error: "bad body" };
   }
@@ -21,8 +45,12 @@ export function parseSignup(
   if (!EMAIL.test(email) || email.length > 254) {
     return { ok: false, error: "email" };
   }
+  const name = cleanName(r.name);
+  if (!name) return { ok: false, error: "name" };
+  const phone = cleanPhone(r.phone);
+  if (!phone) return { ok: false, error: "phone" };
   if (r.consent !== true) return { ok: false, error: "consent" };
-  return { ok: true, value: { email } };
+  return { ok: true, value: { email, name, phone } };
 }
 
 /** `total` null = the editor set no limit; the answer is then null too. */

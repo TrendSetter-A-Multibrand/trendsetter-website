@@ -19,6 +19,8 @@ import {
 } from "@/lib/eventSignupForm";
 
 const ERROR = "Не удалось отправить, попробуйте позже";
+const NEED_NAME = "Укажите фамилию и имя";
+const NEED_PHONE = "Укажите телефон, например +7 999 123-45-67";
 const NEED_EMAIL = "Укажите корректный e-mail";
 const NEED_CONSENT = "Нужно согласие на обработку персональных данных";
 
@@ -40,6 +42,8 @@ export function EventSignupModal({
   const { eventSignup: t } = useSiteSettings();
   // null = still asking
   const [seats, setSeats] = useState<SeatsState | null>(null);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -67,9 +71,17 @@ export function EventSignupModal({
   async function submit(e: FormEvent) {
     e.preventDefault();
     if (busy || shut) return;
-    const invalid = checkSignup(email, consent);
+    const invalid = checkSignup({ name, phone, email }, consent);
     if (invalid) {
-      setError(invalid === "consent" ? NEED_CONSENT : NEED_EMAIL);
+      setError(
+        invalid === "consent"
+          ? NEED_CONSENT
+          : invalid === "name"
+            ? NEED_NAME
+            : invalid === "phone"
+              ? NEED_PHONE
+              : NEED_EMAIL,
+      );
       return;
     }
     setBusy(true);
@@ -78,7 +90,7 @@ export function EventSignupModal({
       const res = await fetch(`/api/events/${event.uuid}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, consent: true, website: "" }),
+        body: JSON.stringify({ name, phone, email, consent: true, website: "" }),
       });
       const out = readSignup(res.status, await res.json().catch(() => ({})));
       if (out.kind === "done" || out.kind === "already") {
@@ -134,6 +146,29 @@ export function EventSignupModal({
         {!embed && !result && (
           <form onSubmit={submit} noValidate className="flex flex-col gap-4">
             <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+            <input
+              name="name"
+              value={name}
+              disabled={shut}
+              autoComplete="name"
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Фамилия и имя"
+              aria-label="Фамилия и имя"
+              aria-invalid={error === NEED_NAME ? true : undefined}
+              className={`${fieldClass("input", "light")} disabled:border-line disabled:text-muted`}
+            />
+            <input
+              type="tel"
+              name="phone"
+              value={phone}
+              disabled={shut}
+              autoComplete="tel"
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Телефон"
+              aria-label="Телефон"
+              aria-invalid={error === NEED_PHONE ? true : undefined}
+              className={`${fieldClass("input", "light")} disabled:border-line disabled:text-muted`}
+            />
             <input
               type="email"
               name="email"

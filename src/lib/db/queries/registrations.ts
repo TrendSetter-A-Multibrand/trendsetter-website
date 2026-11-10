@@ -1,8 +1,12 @@
 import { db, type Sql } from "@/lib/db/client";
+import type { Signup } from "@/lib/eventSignup";
 
 export type Registration = {
   id: number;
   email: string;
+  /** Empty for a sign-up made before the form asked for it. */
+  name: string;
+  phone: string;
   createdAt: Date;
   /** When the guest was let in; null until then. */
   attendedAt: Date | null;
@@ -21,11 +25,12 @@ export async function countRegistrations(
 /**
  * Signs one e-mail up. The advisory lock is per event, so two people racing for
  * the last seat are taken one after the other: duplicate, then count, then insert.
- * `capacity` null means no limit. `email` must already be lower-cased and trimmed.
+ * `capacity` null means no limit. The fields must already be cleaned (see
+ * `parseSignup`): the e-mail lower-cased, the phone as "+" and digits.
  */
 export async function register(
   uuid: string,
-  email: string,
+  { email, name, phone }: Signup,
   capacity: number | null,
   sql: Sql = db(),
 ): Promise<RegisterResult> {
@@ -41,8 +46,8 @@ export async function register(
       if (row.n >= capacity) return "full" as const;
     }
     await tx`
-      INSERT INTO event_registrations (event_uuid, email, consent_at)
-      VALUES (${uuid}, ${email}, now())`;
+      INSERT INTO event_registrations (event_uuid, email, full_name, phone, consent_at)
+      VALUES (${uuid}, ${email}, ${name}, ${phone}, now())`;
     return "ok" as const;
   });
 }
@@ -52,11 +57,13 @@ export async function listRegistrations(
   sql: Sql = db(),
 ): Promise<Registration[]> {
   const rows = await sql`
-    SELECT id, email, created_at, attended_at FROM event_registrations
+    SELECT id, email, full_name, phone, created_at, attended_at FROM event_registrations
     WHERE event_uuid = ${uuid} ORDER BY created_at, id`;
   return rows.map((r) => ({
     id: Number(r.id),
     email: r.email,
+    name: r.full_name ?? "",
+    phone: r.phone ?? "",
     createdAt: r.created_at,
     attendedAt: r.attended_at,
   }));

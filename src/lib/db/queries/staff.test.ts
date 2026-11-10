@@ -23,7 +23,11 @@ describe.skipIf(!url)("staff (needs TEST_DATABASE_URL)", () => {
     // time; the lock makes them take turns instead of colliding on CREATE TABLE.
     await sql.begin(async (tx) => {
       await tx`SELECT pg_advisory_xact_lock(7001)`;
-      for (const f of ["001_event_registrations.sql", "002_staff.sql"]) {
+      for (const f of [
+        "001_event_registrations.sql",
+        "002_staff.sql",
+        "003_registration_contacts.sql",
+      ]) {
         await tx.unsafe(readFileSync(`db/migrations/${f}`, "utf8"));
       }
     });
@@ -82,7 +86,7 @@ describe.skipIf(!url)("staff (needs TEST_DATABASE_URL)", () => {
   });
 
   it("marks a guest let in, and only within the right event", async () => {
-    await register(event, "guest@x.ru", null, sql);
+    await register(event, { email: "guest@x.ru", name: "Иван Петров", phone: "+79991234567" }, null, sql);
     const [row] = await listRegistrations(event, sql);
     expect(row.attendedAt).toBeNull();
 

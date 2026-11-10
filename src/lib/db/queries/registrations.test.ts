@@ -4,6 +4,7 @@ import { connect, type Sql } from "@/lib/db/client";
 import { countRegistrations, register } from "@/lib/db/queries/registrations";
 
 const url = process.env.TEST_DATABASE_URL;
+const person = (email: string) => ({ email, name: "Иван Петров", phone: "+79991234567" });
 
 describe.skipIf(!url)("register (needs TEST_DATABASE_URL)", () => {
   let sql: Sql;
@@ -13,9 +14,9 @@ describe.skipIf(!url)("register (needs TEST_DATABASE_URL)", () => {
     sql = connect(url!);
     await sql.begin(async (tx) => {
       await tx`SELECT pg_advisory_xact_lock(7001)`;
-      await tx.unsafe(
-        readFileSync("db/migrations/001_event_registrations.sql", "utf8"),
-      );
+      for (const f of ["001_event_registrations.sql", "003_registration_contacts.sql"]) {
+        await tx.unsafe(readFileSync(`db/migrations/${f}`, "utf8"));
+      }
     });
   });
   afterAll(async () => {
@@ -27,7 +28,7 @@ describe.skipIf(!url)("register (needs TEST_DATABASE_URL)", () => {
     const N = 8;
     const results = await Promise.all(
       Array.from({ length: N + 5 }, (_, i) =>
-        register(uuid, `u${i}@x.ru`, N, sql),
+        register(uuid, person(`u${i}@x.ru`), N, sql),
       ),
     );
     expect(results.filter((r) => r === "ok")).toHaveLength(N);
@@ -36,6 +37,6 @@ describe.skipIf(!url)("register (needs TEST_DATABASE_URL)", () => {
   });
 
   it("does not spend a seat on a duplicate", async () => {
-    expect(await register(uuid, "u0@x.ru", 8, sql)).toBe("duplicate");
+    expect(await register(uuid, person("u0@x.ru"), 8, sql)).toBe("duplicate");
   });
 });
