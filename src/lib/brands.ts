@@ -85,6 +85,24 @@ export function filterBrands(
   );
 }
 
+/** The brands page with one category already chosen: a tile on the home page leads here. */
+export const brandsCategoryHref = (locale: string, category: string) =>
+  `/${locale}/brands?category=${encodeURIComponent(category)}`;
+
+/**
+ * The categories a `?category=` asks for, spelled the way the list spells them.
+ * The match ignores case and stray spaces; a name the list does not have is
+ * dropped, and a repeated one counts once.
+ */
+export function categoriesFromParam(values: string[], known: string[]) {
+  const found: string[] = [];
+  for (const value of values) {
+    const hit = known.find((name) => name.trim().toLowerCase() === value.trim().toLowerCase());
+    if (hit && !found.includes(hit)) found.push(hit);
+  }
+  return found;
+}
+
 /** The letters that have at least one brand among these (for greying the rest). */
 export function filledLetters(brands: Brand[], alphabet: Alphabet) {
   const filled = new Set<string>();

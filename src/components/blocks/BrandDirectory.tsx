@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { BrandIndexItem } from "@/components/cards/BrandIndexItem";
 import { FilterChip } from "@/components/ui/FilterChip";
 import { SearchField } from "@/components/ui/SearchField";
+import { BrandCategoryFromUrl } from "@/components/blocks/BrandCategoryFromUrl";
 import { BrandModal } from "@/components/blocks/BrandModal";
 import {
   alphabetLetters,
@@ -87,6 +88,9 @@ export function BrandDirectory({
 
   return (
     <div className="pb-32">
+      <Suspense fallback={null}>
+        <BrandCategoryFromUrl known={categories} onChoose={setSelected} />
+      </Suspense>
       <div className="px-4 pt-6 md:px-10 md:pt-8">
         <div className="md:w-[437px]">
           <SearchField fluid placeholder="Найти бренд" value={query} onChange={setQuery} />
@@ -95,6 +99,8 @@ export function BrandDirectory({
 
       <div className="sticky top-[var(--header-offset,var(--header-h,116px))] transition-[top] duration-[250ms] ease-out z-20 border-b border-line bg-white pb-2 pt-3">
         <div className="-mx-0 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:flex-wrap md:overflow-visible md:px-10 [&::-webkit-scrollbar]:hidden">
+          {/* The way back to every brand, as «Все» is in the journal and the news */}
+          <FilterChip label="Все" active={selected.length === 0} onClick={() => setSelected([])} />
           {categories.map((category) => (
             <FilterChip
               key={category}

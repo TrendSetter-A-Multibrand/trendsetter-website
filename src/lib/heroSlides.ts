@@ -1,4 +1,5 @@
-import type { Locale } from "@/lib/i18n/locales";
+import type { Article } from "@/lib/articles";
+import type { Event } from "@/lib/events";
 
 /** One screen of the home slider. The first screen is the hero's own fields; the rest are these. */
 export type HeroSlide = {
@@ -11,36 +12,59 @@ export type HeroSlide = {
   image: string;
 };
 
-/**
- * The file's slides 2-4 (Hero slider, 05.11): the opening of «Авеню Север», the
- * journal's lead piece and the nearest event. The words and pictures are the
- * file's own sample, until the editor writes slides in the hero block.
- */
-export function defaultSlides(locale: Locale): HeroSlide[] {
-  return [
-    {
-      tag: "Скоро открытие",
-      title: "Скоро открытие в ТРЦ «Авеню Север»",
-      lead: "Новый магазин TRENDSETTER — Коровинское шоссе, 2. Дату открытия сообщим дополнительно.",
-      primary: { label: "Читать новость", href: `/${locale}/news` },
-      image: "/images/home/hero-2.jpg",
-    },
-    {
-      tag: "Журнал",
-      title: "Медленный дом: керамика, лён и вещи, которые хочется трогать",
-      lead: "Собрали предметы для дома, которые не устаревают за сезон, — и рассказали, как сочетать их без дизайнера.",
-      primary: { label: "Читать", href: `/${locale}/journal` },
-      image: "/images/home/hero-3.jpg",
-    },
-    {
-      tag: "Ближайшее событие",
-      title: "Мастер-класс по керамике",
-      lead: "24 октября, суббота · 18:00 · ТЦ «Атриум». Лепим пиалы вместе с керамистом. Материалы и обжиг — на месте.",
-      primary: { label: "Записаться", href: `/${locale}/events` },
-      image: "/images/home/hero-4.jpg",
-    },
-  ];
-}
-
 /** Long headlines (the journal's) are set smaller on a desktop: 64 in the file against 96. */
 export const isLongTitle = (title: string) => title.length > 40;
+
+const FALLBACK_IMAGES = ["/images/home/hero-2.jpg", "/images/home/hero-3.jpg", "/images/home/hero-4.jpg"];
+
+/**
+ * The screens after the first, made from what the site actually holds: the
+ * newest news item, the newest piece of the journal and the nearest event, each
+ * leading to its own page and not to the list it belongs to. A kind with nothing
+ * in it leaves its screen out, so a site with no events shows no empty one.
+ * Written slides in the hero block take the place of all this.
+ */
+export function slidesFromContent({
+  news,
+  journal,
+  event,
+}: {
+  /** Newest first. */
+  news?: Article;
+  journal?: Article;
+  event?: Event;
+}): HeroSlide[] {
+  const slides: HeroSlide[] = [];
+
+  if (news?.href) {
+    slides.push({
+      tag: "Новости",
+      title: news.title,
+      lead: news.excerpt ?? "",
+      primary: { label: "Читать новость", href: news.href },
+      image: news.image ?? FALLBACK_IMAGES[0],
+    });
+  }
+  if (journal?.href) {
+    slides.push({
+      tag: "Журнал",
+      title: journal.title,
+      lead: journal.excerpt ?? "",
+      primary: { label: "Читать статью", href: journal.href },
+      image: journal.image ?? FALLBACK_IMAGES[1],
+    });
+  }
+  if (event) {
+    const when = [`${event.day} ${event.month}`, event.time, event.location]
+      .filter(Boolean)
+      .join(" · ");
+    slides.push({
+      tag: "Ближайшее событие",
+      title: event.title,
+      lead: [when, event.description].filter(Boolean).join(". "),
+      primary: { label: event.ctaLabel || "Подробнее", href: event.href },
+      image: event.image ?? FALLBACK_IMAGES[2],
+    });
+  }
+  return slides;
+}

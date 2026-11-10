@@ -9,6 +9,7 @@ import { SeasonWall } from "@/components/blocks/SeasonWall";
 import { CategoriesRow } from "@/components/blocks/CategoriesRow";
 import { StoresSection } from "@/components/blocks/StoresSection";
 import { NewsletterSignup } from "@/components/blocks/NewsletterSignup";
+import { brandsCategoryHref } from "@/lib/brands";
 import { newsletterCopy } from "@/lib/newsletterCopy";
 import { LegalArticle } from "@/components/blocks/LegalArticle";
 import { ContactForm } from "@/components/blocks/ContactForm";
@@ -384,11 +385,17 @@ const DRAW: Record<
     <CategoriesRow
       heading={text(blok.heading)}
       href={`/${locale}/brands`}
-      items={nested(blok.tiles).map((tile) => ({
-        label: text(tile.label) ?? "",
-        href: href(tile.link, locale) ?? "#",
-        image: image(tile.image),
-      }))}
+      items={nested(blok.tiles).map((tile) => {
+        const label = text(tile.label) ?? "";
+        const target = href(tile.link, locale) ?? "#";
+        return {
+          label,
+          // A tile that leads to the brands page opens it on its own category;
+          // a link the editor pointed elsewhere, or with an address of its own, stays
+          href: label && target === `/${locale}/brands` ? brandsCategoryHref(locale, label) : target,
+          image: image(tile.image),
+        };
+      })}
     />
   ),
   legal_article: (blok, locale) => (

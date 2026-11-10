@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   alphabetLetters,
+  brandsCategoryHref,
   brandStores,
+  categoriesFromParam,
   filledLetters,
   filterBrands,
   indexKey,
@@ -128,5 +130,26 @@ describe("brandStores", () => {
       { store: "zzz", available: false },
     ]);
     expect(stores.map((s) => s.available)).toEqual([false, true, true]);
+  });
+});
+
+describe("brandsCategoryHref", () => {
+  it("points at the brands page with the category in the address", () => {
+    expect(brandsCategoryHref("ru_ru", "Одежда")).toBe(
+      "/ru_ru/brands?category=%D0%9E%D0%B4%D0%B5%D0%B6%D0%B4%D0%B0",
+    );
+  });
+});
+
+describe("categoriesFromParam", () => {
+  const known = ["Одежда", "Дом", "Косметика"];
+
+  it("gives the name as the list spells it, whatever the case", () => {
+    expect(categoriesFromParam(["одежда", " ДОМ "], known)).toEqual(["Одежда", "Дом"]);
+  });
+
+  it("drops names the list does not have and counts a repeat once", () => {
+    expect(categoriesFromParam(["Еда", "Дом", "дом"], known)).toEqual(["Дом"]);
+    expect(categoriesFromParam([], known)).toEqual([]);
   });
 });

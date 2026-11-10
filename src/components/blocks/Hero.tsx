@@ -1,6 +1,10 @@
 import type { Locale } from "@/lib/i18n/locales";
 import { getSiteSettings } from "@/lib/siteSettings";
-import { defaultSlides, type HeroSlide } from "@/lib/heroSlides";
+import { slidesFromContent, type HeroSlide } from "@/lib/heroSlides";
+import { isPast } from "@/lib/eventsView";
+import { newestFirst } from "@/lib/articles";
+import { fetchArticles } from "@/lib/storyblok/articles";
+import { fetchEvents } from "@/lib/storyblok/events";
 import { HeroSlider } from "@/components/blocks/HeroSlider";
 
 type HeroProps = {
@@ -22,6 +26,24 @@ type HeroProps = {
 };
 
 /**
+ * What the screens after the first show when the editor has written none: the
+ * newest news item, the newest journal piece and the nearest event, each leading
+ * to its own page.
+ */
+async function slidesFromSite(locale: Locale): Promise<HeroSlide[]> {
+  const [articles, events] = await Promise.all([fetchArticles(locale), fetchEvents(locale)]);
+  const newest = newestFirst(articles);
+  const nearest = events
+    .filter((event) => !isPast(event))
+    .sort((a, b) => a.date.localeCompare(b.date))[0];
+  return slidesFromContent({
+    news: newest.find((article) => article.section === "news"),
+    journal: newest.find((article) => article.section !== "news"),
+    event: nearest,
+  });
+}
+
+/**
  * The headline was written in capitals for the old design. The new one sets it in
  * sentence case, so a line typed wholly in capitals is brought down to one.
  */
@@ -36,8 +58,8 @@ const DESCRIPTOR = ["Одежда", "Дом", "Еда", "Мастерская", 
 /**
  * The file's Home hero, a slider of four screens (see `HeroSlider`). The first
  * is the block's own fields - the brand's line, «Найти магазин» and «О нас» -
- * the rest are `slides`, the opening of the new shop, the journal's lead piece
- * and the nearest event. The social links on the photo are the settings' own.
+ * the rest are `slides`, or - while the editor has written none - the newest
+ * news item, the newest journal piece and the nearest event. The social links on the photo are the settings' own.
  */
 export async function Hero({
   locale,
@@ -58,7 +80,7 @@ export async function Hero({
     secondary: secondaryCta,
     image: imageSrc,
   };
-  const rest = onlyFirst ? [] : slides?.length ? slides : defaultSlides(locale);
+  const rest = onlyFirst ? [] : slides?.length ? slides : await slidesFromSite(locale);
 
   return (
     <HeroSlider
