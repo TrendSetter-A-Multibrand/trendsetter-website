@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import { buttonClass } from "@/components/ui/Button";
 import { useSiteSettings } from "@/components/layout/SettingsContext";
 

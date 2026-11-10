@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 
 /**
  * The file's Chip: 44 tall, square, a 1px Sage rule, 16 of air either side and a

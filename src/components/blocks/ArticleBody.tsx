@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import type { ArticleBlock, PhotoRatio } from "@/lib/article";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { Divider } from "@/components/ui/Divider";

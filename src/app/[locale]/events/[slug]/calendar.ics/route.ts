@@ -1,7 +1,7 @@
 import { isLocale } from "@/lib/i18n/locales";
 import { calendarFile } from "@/lib/eventsView";
 import { fetchArticlePage } from "@/lib/storyblok/articles";
-import { siteUrl } from "@/lib/site";
+import { pageUrl } from "@/lib/site";
 
 /**
  * The event as a calendar file at an address of its own, not a file made in the
@@ -18,7 +18,7 @@ export async function GET(
   const event = (await fetchArticlePage(slug, locale))?.meta.event;
   if (!event) return new Response("Not found", { status: 404 });
 
-  return new Response(calendarFile(event, `${siteUrl}/${locale}/events/${slug}`), {
+  return new Response(calendarFile(event, pageUrl(locale, `/events/${slug}`)), {
     headers: {
       "Content-Type": "text/calendar; charset=utf-8",
       "Content-Disposition": `inline; filename="${slug}.ics"`,

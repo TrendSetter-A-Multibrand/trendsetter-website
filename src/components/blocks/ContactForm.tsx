@@ -2,7 +2,7 @@
 
 import { type FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import { buttonClass } from "@/components/ui/Button";
 import { fieldClass, fieldErrorClass } from "@/components/ui/fieldClass";
 import { Dropdown, type DropdownOption } from "@/components/ui/Dropdown";

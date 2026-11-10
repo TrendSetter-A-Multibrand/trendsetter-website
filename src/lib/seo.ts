@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { languages, siteName, siteUrl } from "@/lib/site";
+import { publicPath } from "@/lib/i18n/locales";
+import { languages, pageUrl, siteName } from "@/lib/site";
 
 /** Shown where a page has nothing of its own to say about itself. */
 export const DEFAULT_DESCRIPTION =
@@ -33,7 +34,7 @@ export function seo({
 }): Metadata {
   const written = description?.trim() || DEFAULT_DESCRIPTION;
   const picture = image || DEFAULT_IMAGE;
-  const url = `/${locale}${path}`;
+  const url = publicPath(`/${locale}${path}`);
 
   return {
     // Left out rather than set empty where a page has no title of its own: an
@@ -45,7 +46,7 @@ export function seo({
     openGraph: {
       title: title ? `${title} — ${siteName}` : siteName,
       description: written,
-      url: `${siteUrl}${url}`,
+      url: pageUrl(locale, path),
       siteName,
       type: "website",
       locale: locale === "ru_am" ? "ru_AM" : "ru_RU",

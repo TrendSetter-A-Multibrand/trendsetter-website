@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import { CardImage } from "@/components/ui/CardImage";
 
 export type CardTag = { label: string; href: string };

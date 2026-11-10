@@ -8,9 +8,9 @@ import {
   type FormEvent,
 } from "react";
 import { createPortal } from "react-dom";
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import { useRouter } from "next/navigation";
-import type { Locale } from "@/lib/i18n/locales";
+import { publicPath, type Locale } from "@/lib/i18n/locales";
 import { childHref, type NavItem, type SocialLink } from "@/lib/navigation";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { Wordmark } from "@/components/ui/Wordmark";
@@ -115,7 +115,7 @@ export function SideMenu({
     const q = query.trim();
     if (!q) return;
     onClose();
-    router.push(`/${locale}/search?q=${encodeURIComponent(q)}`);
+    router.push(publicPath(`/${locale}/search?q=${encodeURIComponent(q)}`));
   }
 
   // inert, not just pointer-events-none: while closed it must not take a tap or

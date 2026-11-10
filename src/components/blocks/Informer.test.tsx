@@ -10,7 +10,7 @@ describe("плашка с кнопкой", () => {
     render(<Informer title="Остались вопросы?" text="Ответы — в частых вопросах." label="Частые вопросы" href="/ru_ru/faq" />);
 
     expect(screen.getByRole("heading", { name: "Остались вопросы?" })).not.toBeNull();
-    expect(screen.getByRole("link", { name: "Частые вопросы" }).getAttribute("href")).toBe("/ru_ru/faq");
+    expect(screen.getByRole("link", { name: "Частые вопросы" }).getAttribute("href")).toBe("/faq");
   });
 
   it("без ссылки кнопки нет, а значок рисуется только по просьбе", () => {

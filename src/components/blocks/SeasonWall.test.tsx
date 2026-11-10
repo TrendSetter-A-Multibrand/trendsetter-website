@@ -34,7 +34,7 @@ describe("стена сезона", () => {
     expect(screen.getByText("Гид по осени")).not.toBeNull();
     expect(screen.getByText("Тренч и вязаное")).not.toBeNull();
     expect(screen.getByRole("link", { name: /Читать гид/ }).getAttribute("href")).toBe(
-      "/ru_ru/journal/guide",
+      "/journal/guide",
     );
   });
 });

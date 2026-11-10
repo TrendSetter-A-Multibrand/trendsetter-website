@@ -1,4 +1,4 @@
-import { locales, type Locale } from "@/lib/i18n/locales";
+import { locales, publicPath, type Locale } from "@/lib/i18n/locales";
 
 /**
  * Where the site answers. Search engines need absolute addresses - a canonical
@@ -43,13 +43,18 @@ export const HREFLANG: Record<Locale, string> = {
  */
 export function languages(path = "") {
   return Object.fromEntries(
-    locales.map((locale) => [HREFLANG[locale], `/${locale}${path}`])
+    locales.map((locale) => [HREFLANG[locale], publicPath(`/${locale}${path}`)])
   );
+}
+
+/** The absolute address of a page: the locale's prefix is left off for the default market. */
+export function pageUrl(locale: string, path = "") {
+  return `${siteUrl}${publicPath(`/${locale}${path}`).replace(/^\/$/, "")}`;
 }
 
 /** Both markets' addresses for one page, for the sitemap. */
 export function everyLocale(path = "") {
-  return locales.map((locale) => `${siteUrl}/${locale}${path}`);
+  return locales.map((locale) => pageUrl(locale, path));
 }
 
 /**
@@ -59,6 +64,6 @@ export function everyLocale(path = "") {
  */
 export function absoluteLanguages(path = "") {
   return Object.fromEntries(
-    locales.map((locale) => [HREFLANG[locale], `${siteUrl}/${locale}${path}`])
+    locales.map((locale) => [HREFLANG[locale], pageUrl(locale, path)])
   );
 }

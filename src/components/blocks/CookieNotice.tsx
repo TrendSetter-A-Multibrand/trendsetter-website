@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useRef, useSyncExternalStore } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import type { Locale } from "@/lib/i18n/locales";
 import { buttonClass } from "@/components/ui/Button";
 

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import { buttonClass } from "@/components/ui/Button";
 import type { Event } from "@/lib/events";
 

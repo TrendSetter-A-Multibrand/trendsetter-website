@@ -13,7 +13,7 @@ import { isPast, weekdayOf } from "@/lib/eventsView";
 import { fetchArticlePage } from "@/lib/storyblok/articles";
 import { fetchEvents } from "@/lib/storyblok/events";
 import { seo } from "@/lib/seo";
-import { siteUrl } from "@/lib/site";
+import { pageUrl } from "@/lib/site";
 
 export async function generateMetadata({
   params,
@@ -90,7 +90,7 @@ export default async function EventPage({
         </div>
 
         <div className="lg:col-span-4 lg:col-start-9 lg:row-span-2 lg:row-start-1 lg:pt-0">
-          <EventAside event={event} locale={locale} url={`${siteUrl}/${locale}/events/${slug}`} />
+          <EventAside event={event} locale={locale} url={pageUrl(locale, `/events/${slug}`)} />
         </div>
 
         <div className="flex flex-col gap-8 lg:col-span-8 lg:row-start-2 lg:gap-12">

@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { setAttended } from "@/lib/db/queries/registrations";
 import { findStaffForLogin } from "@/lib/db/queries/staff";
-import { isLocale } from "@/lib/i18n/locales";
+import { isLocale, publicPath } from "@/lib/i18n/locales";
 import { createLimiter } from "@/lib/rateLimit";
 import { isEventUuid } from "@/lib/eventSignup";
 import { canSeeEvent } from "@/lib/staff/access";
@@ -19,7 +19,7 @@ const text = (v: FormDataEntryValue | null) => (typeof v === "string" ? v : "");
 /** The page the form came from, taken only from the known locales. */
 function pageFor(form: FormData, query = "") {
   const locale = text(form.get("locale"));
-  return `/${isLocale(locale) ? locale : "ru_ru"}/admin/registrations${query}`;
+  return publicPath(`/${isLocale(locale) ? locale : "ru_ru"}/admin/registrations${query}`);
 }
 
 export async function login(form: FormData) {

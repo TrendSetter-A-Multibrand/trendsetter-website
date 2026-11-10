@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import { usePathname } from "next/navigation";
-import type { Locale } from "@/lib/i18n/locales";
+import { publicPath, type Locale } from "@/lib/i18n/locales";
 import { useMenu } from "@/components/layout/MenuContext";
 import {
   BurgerIcon,
@@ -41,7 +41,8 @@ export function TabBar({ locale }: { locale: Locale }) {
     >
       {TABS.map(({ slug, label, Icon }) => {
         const href = `/${locale}/${slug}`;
-        const current = pathname === href || pathname.startsWith(`${href}/`);
+        const shown = publicPath(href);
+        const current = pathname === shown || pathname.startsWith(`${shown}/`);
         return (
           <Link
             key={slug}

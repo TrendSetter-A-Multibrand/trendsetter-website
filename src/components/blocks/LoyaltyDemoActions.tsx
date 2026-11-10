@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import { buttonClass } from "@/components/ui/Button";
 import { LoyaltyCardCheckModal } from "@/components/blocks/LoyaltyCardCheckModal";
 import { useLocale } from "@/lib/i18n/useLocale";

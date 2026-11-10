@@ -26,21 +26,21 @@ describe("absoluteLanguages", () => {
     expect(Object.keys(languages)).not.toContain("ru_ru");
   });
 
-  it("адреса абсолютные и с рынком в пути", () => {
+  it("адреса абсолютные; у основного рынка без приставки, у остальных с ней", () => {
     const languages = absoluteLanguages("/cookies");
-    expect(languages["ru-RU"]).toBe(`${siteUrl}/ru_ru/cookies`);
+    expect(languages["ru-RU"]).toBe(`${siteUrl}/cookies`);
     expect(languages["ru-AM"]).toBe(`${siteUrl}/ru_am/cookies`);
   });
 
   it("на корне обходится без хвоста", () => {
-    expect(absoluteLanguages()["ru-RU"]).toBe(`${siteUrl}/ru_ru`);
+    expect(absoluteLanguages()["ru-RU"]).toBe(siteUrl);
   });
 });
 
 describe("everyLocale", () => {
   it("отдаёт по адресу на каждый рынок", () => {
     expect(everyLocale("/stores")).toEqual([
-      `${siteUrl}/ru_ru/stores`,
+      `${siteUrl}/stores`,
       `${siteUrl}/ru_am/stores`,
     ]);
   });

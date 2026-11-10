@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 
 /**
  * The file's Link arrow: a text link in mono caps (Label) with an arrow after it.

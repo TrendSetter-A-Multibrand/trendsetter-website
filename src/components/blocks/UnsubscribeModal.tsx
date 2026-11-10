@@ -1,7 +1,7 @@
 "use client";
 
 import { type FormEvent, useState, useSyncExternalStore } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import { buttonClass } from "@/components/ui/Button";
 import { fieldClass, fieldErrorClass } from "@/components/ui/fieldClass";
 import { LinkArrow } from "@/components/ui/LinkArrow";

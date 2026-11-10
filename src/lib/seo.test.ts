@@ -4,10 +4,10 @@ import { seo } from "@/lib/seo";
 describe("seo", () => {
   it("ставит канонический адрес и оба рынка", () => {
     const meta = seo({ title: "Журнал", path: "/journal", locale: "ru_ru" });
-    expect(meta.alternates?.canonical).toBe("/ru_ru/journal");
+    expect(meta.alternates?.canonical).toBe("/journal");
     expect(meta.alternates?.languages).toEqual({
       // Языковые метки, а не наши имена рынков: ru_ru поиску ничего не говорит
-      "ru-RU": "/ru_ru/journal",
+      "ru-RU": "/journal",
       "ru-AM": "/ru_am/journal",
     });
   });

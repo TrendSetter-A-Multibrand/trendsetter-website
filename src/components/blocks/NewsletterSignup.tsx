@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import { buttonClass } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { fieldClass } from "@/components/ui/fieldClass";

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import { ArticleCard } from "@/components/blocks/ArticleCard";
 import { LinkArrow } from "@/components/ui/LinkArrow";
 import { spreadOf, type Article } from "@/lib/articles";

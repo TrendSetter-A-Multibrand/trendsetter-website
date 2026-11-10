@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import { DateBadge } from "@/components/ui/DateBadge";
 import { ArrowIcon, ArrowLeftIcon } from "@/components/ui/Icons";
 import { iconButtonClass } from "@/components/ui/iconButton";

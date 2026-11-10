@@ -1,9 +1,9 @@
 "use client";
 
 import { Suspense, useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import { usePathname } from "next/navigation";
-import type { Locale } from "@/lib/i18n/locales";
+import { publicPath, type Locale } from "@/lib/i18n/locales";
 import type { NavItem, SocialLink } from "@/lib/navigation";
 import { HeaderSearch } from "@/components/layout/HeaderSearch";
 import { SideMenu } from "@/components/layout/SideMenu";
@@ -56,7 +56,10 @@ function NavEntry({ locale, item, items }: { locale: Locale; item: NavItem; item
   const entry = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const href = `/${locale}/${item.slug}`;
-  const at = (h: string) => pathname === h || pathname.startsWith(`${h}/`);
+  const at = (h: string) => {
+    const shown = publicPath(h);
+    return pathname === shown || pathname.startsWith(`${shown}/`);
+  };
   // Контакты lives under /company but is an entry of its own: the longer match wins
   const current =
     at(href) &&

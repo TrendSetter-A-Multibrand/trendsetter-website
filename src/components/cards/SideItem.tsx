@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import { CardImage } from "@/components/ui/CardImage";
 import type { CardTag } from "@/components/cards/CardS";
 

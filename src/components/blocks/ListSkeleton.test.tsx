@@ -10,7 +10,7 @@ describe("скелетон списка", () => {
     const { container } = render(<ListSkeleton section="journal" locale="ru_ru" />);
 
     expect(screen.getByRole("heading", { name: "Журнал" })).not.toBeNull();
-    expect(screen.getByRole("link", { name: "Все" }).getAttribute("href")).toBe("/ru_ru/journal");
+    expect(screen.getByRole("link", { name: "Все" }).getAttribute("href")).toBe("/journal");
     // lead + three side items + six cards + the pager, all hidden from assistive tech
     expect(container.querySelectorAll('[aria-hidden="true"].animate-skeleton-in')).toHaveLength(11);
   });

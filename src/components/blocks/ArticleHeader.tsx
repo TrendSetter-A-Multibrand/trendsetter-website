@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 import type { Locale } from "@/lib/i18n/locales";
 import type { ArticleMeta } from "@/lib/article";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";

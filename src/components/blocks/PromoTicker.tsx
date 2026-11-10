@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/Link";
 
 /**
  * The editor still picks a tone in the settings, and the field is kept so

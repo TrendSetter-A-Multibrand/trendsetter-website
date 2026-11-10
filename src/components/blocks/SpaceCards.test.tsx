@@ -9,7 +9,7 @@ describe("высокие карточки", () => {
     render(<SpaceCards cards={[{ title: "Коллаб", href: "/ru_ru/journal/x" }]} />);
 
     const link = screen.getByRole("link", { name: "Коллаб" });
-    expect(link.getAttribute("href")).toBe("/ru_ru/journal/x");
+    expect(link.getAttribute("href")).toBe("/journal/x");
     fireEvent.click(link);
     expect(screen.queryByRole("dialog")).toBeNull();
   });
@@ -34,7 +34,7 @@ describe("высокие карточки", () => {
     render(<SpaceCards linksOnly cards={[{ title: "Коллаб", href: "/ru_ru/journal/x" }]} />);
 
     expect(screen.getByRole("link", { name: "Коллаб" }).getAttribute("href")).toBe(
-      "/ru_ru/journal/x",
+      "/journal/x",
     );
   });
 });

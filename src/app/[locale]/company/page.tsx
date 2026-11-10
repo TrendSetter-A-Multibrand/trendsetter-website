@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { publicPath } from "@/lib/i18n/locales";
 
 /**
  * Temporary: О нас stands in for the section itself, so the header's Компания
@@ -11,5 +12,5 @@ export default async function CompanyPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  redirect(`/${locale}/company/about`);
+  redirect(publicPath(`/${locale}/company/about`));
 }

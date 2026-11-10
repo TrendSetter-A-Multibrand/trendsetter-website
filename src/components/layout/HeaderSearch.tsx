@@ -1,5 +1,6 @@
 "use client";
 
+import { publicPath } from "@/lib/i18n/locales";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { SearchIcon } from "@/components/ui/Icons";
@@ -67,7 +68,7 @@ export function HeaderSearch({
   function submit(e: FormEvent) {
     e.preventDefault();
     const q = value.trim();
-    if (q) router.push(`/${locale}/search?q=${encodeURIComponent(q)}`);
+    if (q) router.push(publicPath(`/${locale}/search?q=${encodeURIComponent(q)}`));
   }
 
   // The form itself is the 44 the icon takes and never anything else. The field
