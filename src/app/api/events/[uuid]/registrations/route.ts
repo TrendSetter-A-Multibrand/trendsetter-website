@@ -1,32 +1,27 @@
-import { cookies } from "next/headers";
 import { DbNotConfigured } from "@/lib/db/client";
 import { listRegistrations } from "@/lib/db/queries/registrations";
 import { isEventUuid } from "@/lib/eventSignup";
-import {
-  ADMIN_COOKIE,
-  adminSecret,
-  cookieMatches,
-  registrationsCsv,
-  secretMatches,
-} from "@/lib/registrationsAdmin";
+import { registrationsCsv } from "@/lib/registrationsAdmin";
+import { canSeeEvent } from "@/lib/staff/access";
+import { currentStaff } from "@/lib/staff/session";
+import { fetchEventCapacity } from "@/lib/storyblok/eventCapacity";
 
 export async function GET(
-  request: Request,
+  _request: Request,
   ctx: { params: Promise<{ uuid: string }> },
 ) {
-  const expected = adminSecret();
-  if (!expected) return Response.json({ error: "not found" }, { status: 404 });
-
-  const given = new URL(request.url).searchParams.get("secret");
-  const cookie = (await cookies()).get(ADMIN_COOKIE)?.value;
-  if (!secretMatches(given, expected) && !cookieMatches(cookie, expected)) {
-    return Response.json({ error: "unauthorized" }, { status: 401 });
-  }
-
   const { uuid } = await ctx.params;
   if (!isEventUuid(uuid)) return Response.json({ error: "not found" }, { status: 404 });
 
   try {
+    const staff = await currentStaff();
+    if (!staff) return Response.json({ error: "unauthorized" }, { status: 401 });
+
+    const event = await fetchEventCapacity(uuid);
+    if (!event || !canSeeEvent(staff, event.store)) {
+      return Response.json({ error: "not found" }, { status: 404 });
+    }
+
     const csv = registrationsCsv(await listRegistrations(uuid));
     return new Response(csv, {
       headers: {

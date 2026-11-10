@@ -38,6 +38,7 @@ describe("readCapacity", () => {
         date: "2026-11-01 18:00",
         seats: 8,
         signup_enabled: false,
+        store: "store-uuid-1",
       },
     });
     expect(c).toEqual({
@@ -45,7 +46,16 @@ describe("readCapacity", () => {
       signupEnabled: false,
       date: "2026-11-01 18:00",
       title: "Заголовок",
+      store: "store-uuid-1",
     });
+  });
+
+  it("магазин не выбран - пустая строка, событие видит только владелец", () => {
+    const c = readCapacity({
+      name: "Событие",
+      content: { component: "news_event", date: "2026-11-01 18:00" },
+    });
+    expect(c?.store).toBe("");
   });
 
   it("обычная статья без placement_event - null, запись даёт 404", () => {

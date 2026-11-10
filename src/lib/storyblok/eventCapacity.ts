@@ -7,6 +7,8 @@ export type EventCapacity = {
   /** As the editor wrote it (ISO-like string), "" when absent. */
   date: string;
   title: string;
+  /** Uuid of the store story the event is held at; "" when the editor chose none. */
+  store: string;
 };
 
 type Node = Record<string, unknown>;
@@ -60,6 +62,7 @@ export function readCapacity(story: {
       text(block.card_title) ||
       text(content.title) ||
       text(story.name),
+    store: text(block.store) || text(content.store),
   };
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { buttonClass } from "@/components/ui/Button";
 
 /** Puts `text` on the clipboard and says so for a moment. */
 export function CopyButton({ text, label }: { text: string; label: string }) {
@@ -8,7 +9,7 @@ export function CopyButton({ text, label }: { text: string; label: string }) {
   return (
     <button
       type="button"
-      className="border border-ink px-3 py-1 text-sm hover:bg-surface"
+      className={buttonClass("outline", "S")}
       onClick={async () => {
         await navigator.clipboard.writeText(text);
         setDone(true);

@@ -1461,6 +1461,18 @@
         "display_name": "Описание для поиска",
         "description": "Два-три предложения под ссылкой в выдаче. Если пусто — общее описание сайта",
         "pos": 91
+      },
+      "store": {
+        "type": "option",
+        "display_name": "Магазин",
+        "description": "Где проходит событие. Администратор этого магазина видит записавшихся в кабинете. Пусто — видит только владелец",
+        "source": "internal_stories",
+        "folder_slug": "stores",
+        "filter_content_type": [
+          "store"
+        ],
+        "use_uuid": true,
+        "pos": 92
       }
     }
   },
@@ -1562,6 +1574,18 @@
         "display_name": "Возраст",
         "description": "Например «16+». Пусто — строки «Возраст» на странице события нет",
         "pos": 8
+      },
+      "store": {
+        "type": "option",
+        "display_name": "Магазин",
+        "description": "Где проходит событие. Администратор этого магазина видит записавшихся в кабинете. Пусто — видит только владелец",
+        "source": "internal_stories",
+        "folder_slug": "stores",
+        "filter_content_type": [
+          "store"
+        ],
+        "use_uuid": true,
+        "pos": 9
       }
     }
   },

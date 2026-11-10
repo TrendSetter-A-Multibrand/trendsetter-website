@@ -1,6 +1,12 @@
 import { db, type Sql } from "@/lib/db/client";
 
-export type Registration = { email: string; createdAt: Date };
+export type Registration = {
+  id: number;
+  email: string;
+  createdAt: Date;
+  /** When the guest was let in; null until then. */
+  attendedAt: Date | null;
+};
 export type RegisterResult = "ok" | "full" | "duplicate";
 
 export async function countRegistrations(
@@ -46,9 +52,30 @@ export async function listRegistrations(
   sql: Sql = db(),
 ): Promise<Registration[]> {
   const rows = await sql`
-    SELECT email, created_at FROM event_registrations
+    SELECT id, email, created_at, attended_at FROM event_registrations
     WHERE event_uuid = ${uuid} ORDER BY created_at, id`;
-  return rows.map((r) => ({ email: r.email, createdAt: r.created_at }));
+  return rows.map((r) => ({
+    id: Number(r.id),
+    email: r.email,
+    createdAt: r.created_at,
+    attendedAt: r.attended_at,
+  }));
+}
+
+/**
+ * Marks a guest let in (or takes the mark back). The event is part of the match,
+ * so a registration of another event cannot be reached by guessing its id.
+ */
+export async function setAttended(
+  id: number,
+  uuid: string,
+  attended: boolean,
+  sql: Sql = db(),
+): Promise<void> {
+  await sql`
+    UPDATE event_registrations
+    SET attended_at = ${attended ? sql`now()` : null}
+    WHERE id = ${id} AND event_uuid = ${uuid}`;
 }
 
 /** Every event that has sign-ups, with how many - for the admin page. */

@@ -11,9 +11,12 @@ describe.skipIf(!url)("register (needs TEST_DATABASE_URL)", () => {
 
   beforeAll(async () => {
     sql = connect(url!);
-    await sql.unsafe(
-      readFileSync("db/migrations/001_event_registrations.sql", "utf8"),
-    );
+    await sql.begin(async (tx) => {
+      await tx`SELECT pg_advisory_xact_lock(7001)`;
+      await tx.unsafe(
+        readFileSync("db/migrations/001_event_registrations.sql", "utf8"),
+      );
+    });
   });
   afterAll(async () => {
     await sql`DELETE FROM event_registrations WHERE event_uuid = ${uuid}`;
