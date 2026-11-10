@@ -5,6 +5,8 @@ import { registrationsCsv } from "@/lib/registrationsAdmin";
 import { canSeeEvent } from "@/lib/staff/access";
 import { currentStaff } from "@/lib/staff/session";
 import { fetchEventCapacity } from "@/lib/storyblok/eventCapacity";
+import { fetchStoreRefs } from "@/lib/storyblok/storeRefs";
+import { storeOfEvent } from "@/lib/storeMatch";
 
 export async function GET(
   _request: Request,
@@ -18,7 +20,7 @@ export async function GET(
     if (!staff) return Response.json({ error: "unauthorized" }, { status: 401 });
 
     const event = await fetchEventCapacity(uuid);
-    if (!event || !canSeeEvent(staff, event.store)) {
+    if (!event || !canSeeEvent(staff, storeOfEvent(event, await fetchStoreRefs())?.uuid ?? "")) {
       return Response.json({ error: "not found" }, { status: 404 });
     }
 

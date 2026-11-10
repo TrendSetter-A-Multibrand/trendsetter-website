@@ -12,7 +12,8 @@ import {
 import { canSeeEvent } from "@/lib/staff/access";
 import { currentStaff } from "@/lib/staff/session";
 import { fetchEventCapacity } from "@/lib/storyblok/eventCapacity";
-import { fetchStories } from "@/lib/storyblok/fetchStory";
+import { fetchStoreRefs } from "@/lib/storyblok/storeRefs";
+import { storeOfEvent } from "@/lib/storeMatch";
 import { eventDate } from "@/lib/events";
 import {
   groupByStore,
@@ -116,24 +117,22 @@ export default async function RegistrationsPage({
     );
   }
 
-  const storeNames = new Map(
-    (await fetchStories<{ name?: string }>("store").catch(() => [])).map((store) => [
-      store.uuid,
-      store.content.name ?? store.name,
-    ]),
-  );
+  const stores = await fetchStoreRefs();
 
   const events: CabinetEvent[] = (
     await Promise.all(
       (await listEventCounts()).map(async ({ uuid }) => {
         const info = await fetchEventCapacity(uuid).catch(() => null);
-        if (!info || !canSeeEvent(staff, info.store)) return null;
+        if (!info) return null;
+        // The store the editor chose, or the one the «Место» line names
+        const store = storeOfEvent(info, stores);
+        if (!canSeeEvent(staff, store?.uuid ?? "")) return null;
         return {
           uuid,
           title: info.title || uuid,
           date: info.date,
-          storeUuid: info.store,
-          storeName: storeNames.get(info.store) ?? "",
+          storeUuid: store?.uuid ?? "",
+          storeName: store?.name ?? "",
           seats: info.seats,
           rows: await listRegistrations(uuid),
         };
@@ -224,10 +223,10 @@ export default async function RegistrationsPage({
           {groups.map((group) => (
             <section key={group.uuid || "none"}>
               <h2 className="type-label mb-6 border-b border-ink pb-2">[{group.name}]</h2>
-              <div className="flex flex-col gap-12">
+              <div className="flex flex-col gap-10 md:gap-12">
                 {group.events.map(({ uuid, title, date, rows }) => (
-                  <article key={uuid}>
-                    <div className="mb-4 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-4">
+                  <article key={uuid} className="border border-ink">
+                    <div className="flex flex-wrap items-end justify-between gap-4 border-b border-ink bg-surface p-4 md:p-6">
                       <div>
                         <h3 className="type-h3">{title}</h3>
                         <p className="type-body mt-1 text-text-2">
@@ -253,11 +252,11 @@ export default async function RegistrationsPage({
                       </div>
                     </div>
 
-                    <ul className="divide-y divide-line">
+                    <ul className="divide-y divide-line px-4 md:px-6">
                       {rows.map((r) => (
                         <li
                           key={r.id}
-                          className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-3"
+                          className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-4"
                         >
                           <div className="min-w-0">
                             <p className="type-body">{r.name || "Имя не указано"}</p>

@@ -39,6 +39,7 @@ describe("readCapacity", () => {
         seats: 8,
         signup_enabled: false,
         store: "store-uuid-1",
+        location: 'ТЦ "Мозаика"',
       },
     });
     expect(c).toEqual({
@@ -47,6 +48,7 @@ describe("readCapacity", () => {
       date: "2026-11-01 18:00",
       title: "Заголовок",
       store: "store-uuid-1",
+      location: 'ТЦ "Мозаика"',
     });
   });
 

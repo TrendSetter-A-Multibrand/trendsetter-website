@@ -7,8 +7,10 @@ export type EventCapacity = {
   /** As the editor wrote it (ISO-like string), "" when absent. */
   date: string;
   title: string;
-  /** Uuid of the store story the event is held at; "" when the editor chose none. */
+  /** Uuid of the store story the editor chose for the event; "" when none. */
   store: string;
+  /** The «Место» line as written, e.g. ТЦ "Мозаика"; "" when absent. */
+  location: string;
 };
 
 type Node = Record<string, unknown>;
@@ -63,6 +65,7 @@ export function readCapacity(story: {
       text(content.title) ||
       text(story.name),
     store: text(block.store) || text(content.store),
+    location: text(block.location) || text(content.location),
   };
 }
 

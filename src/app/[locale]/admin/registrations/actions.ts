@@ -11,6 +11,8 @@ import { canSeeEvent } from "@/lib/staff/access";
 import { verifyAgainstNobody, verifyPassword } from "@/lib/staff/password";
 import { currentStaff, endSession, startSession } from "@/lib/staff/session";
 import { fetchEventCapacity } from "@/lib/storyblok/eventCapacity";
+import { fetchStoreRefs } from "@/lib/storyblok/storeRefs";
+import { storeOfEvent } from "@/lib/storeMatch";
 
 const limited = createLimiter(10 * 60 * 1000, 8);
 
@@ -55,7 +57,7 @@ export async function toggleAttended(form: FormData) {
 
   if (staff && isEventUuid(uuid) && Number.isInteger(id)) {
     const event = await fetchEventCapacity(uuid);
-    if (event && canSeeEvent(staff, event.store)) {
+    if (event && canSeeEvent(staff, storeOfEvent(event, await fetchStoreRefs())?.uuid ?? "")) {
       await setAttended(id, uuid, text(form.get("attended")) === "1");
     }
   }
