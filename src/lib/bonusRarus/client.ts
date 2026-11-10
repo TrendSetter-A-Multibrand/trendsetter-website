@@ -1,18 +1,13 @@
 /**
  * Talks to "1С-Рарус: Система управления лояльностью" - server only, the
- * registration token never reaches the browser. It uses the `default-flow` API:
- * the token the demo gave us is of that kind ("Розница 3.0", a till/1С
- * integration), and the site's own flow, `web-flow`, refused it outright
- * ("некорректный токен доступа"). The two flows share most of their shape, so
- * this is enough to prove the site's side of the integration works - launching
- * for real needs a token of the site kind, which the vendor has to issue.
- *
- * TRANSITION: once a `web-flow` token exists, only BASE and the token need to
- * change; every call here already matches that flow's paths.
+ * registration token never reaches the browser. It uses the site's own API,
+ * `web-flow`, in our space `p131` (override with BONUS_RARUS_SPACE); the token
+ * is the "Сайт" (web) integration's, made in Настройки -> Интеграции.
  */
 
-const BASE = "https://backend-pro.bonus-rarus.ru/p84/default-flow";
-const AUTH_URL = "https://backend-pro.bonus-rarus.ru/p84/integration-module/auth";
+const SPACE = process.env.BONUS_RARUS_SPACE || "p131";
+const BASE = `https://backend-pro.bonus-rarus.ru/${SPACE}/web-flow`;
+const AUTH_URL = `https://backend-pro.bonus-rarus.ru/${SPACE}/integration-module/auth`;
 
 export class BonusRarusError extends Error {
   constructor(

@@ -13,7 +13,8 @@ import type { RegistrationBody } from "@/lib/bonusRarus/registrationForm";
  * everything after them runs on the client's own token, sent as "Bearer ...".
  */
 const BASE =
-  process.env.BONUS_RARUS_CUSTOMER_BASE || "https://backend-pro.bonus-rarus.ru/p84/customer-flow";
+  process.env.BONUS_RARUS_CUSTOMER_BASE ||
+  `https://backend-pro.bonus-rarus.ru/${process.env.BONUS_RARUS_SPACE || "p131"}/customer-flow`;
 
 /**
  * The client cabinet on the site is a demo against the vendor's test space.
