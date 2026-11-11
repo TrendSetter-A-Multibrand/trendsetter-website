@@ -41,7 +41,7 @@ describe("guestConfirmation", () => {
   it("leaves out what the event does not have", () => {
     const { text, html } = guestConfirmation({ ...base, when: "", address: "", place: "", mapUrl: "" });
     expect(text).not.toMatch(/Когда|Где|Карта/);
-    expect(html).not.toContain("Открыть на карте");
+    expect(html).not.toContain("ОТКРЫТЬ НА КАРТЕ");
   });
 
   it("does not let a name or title inject markup", () => {
