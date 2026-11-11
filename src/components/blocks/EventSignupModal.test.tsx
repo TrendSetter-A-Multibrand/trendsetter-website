@@ -108,4 +108,26 @@ describe("запись на событие", () => {
     expect(screen.queryByLabelText("E-mail")).toBeNull();
     expect(fetchMock).not.toHaveBeenCalled();
   });
+
+  it("опечатку в домене подсказывает, а со второго нажатия пропускает", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({ status: 200, json: async () => ({ open: true, left: null }) })
+      .mockResolvedValueOnce({ status: 200, json: async () => ({ ok: true, left: null }) });
+    open(event(), fetchMock);
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+
+    fireEvent.change(screen.getByLabelText("Фамилия и имя"), { target: { value: "Иван Петров" } });
+    fireEvent.change(screen.getByLabelText("Телефон"), { target: { value: "8 999 123-45-67" } });
+    fireEvent.change(screen.getByLabelText("E-mail"), { target: { value: "ivan@gmail.con" } });
+    fireEvent.click(screen.getByRole("checkbox"));
+    fireEvent.click(screen.getByRole("button", { name: "Записаться" }));
+
+    expect((await screen.findByRole("alert")).textContent).toContain("ivan@gmail.com");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(screen.getByRole("button", { name: "Записаться" }));
+    await screen.findByText(/Вы записаны/);
+    expect(screen.getByText(/отправлено на ivan@gmail\.con/)).toBeTruthy();
+  });
 });

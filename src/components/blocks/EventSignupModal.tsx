@@ -8,6 +8,7 @@ import { Facts } from "@/components/cards/Facts";
 import { whenLong } from "@/lib/eventsView";
 import { ModalSheet } from "@/components/ui/ModalSheet";
 import { useSiteSettings } from "@/components/layout/SettingsContext";
+import { suggestEmail } from "@/lib/emailTypo";
 import type { Event } from "@/lib/events";
 import {
   checkSignup,
@@ -22,6 +23,7 @@ const ERROR = "Не удалось отправить, попробуйте по
 const NEED_NAME = "Укажите фамилию и имя";
 const NEED_PHONE = "Укажите телефон, например +7 999 123-45-67";
 const NEED_EMAIL = "Укажите корректный e-mail";
+const TYPO = "Проверьте e-mail: возможно, ";
 const NEED_CONSENT = "Нужно согласие на обработку персональных данных";
 
 /**
@@ -48,6 +50,9 @@ export function EventSignupModal({
   const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  // The address we already pointed out as a likely slip: the second press lets it through
+  const [warned, setWarned] = useState("");
+  const [sentTo, setSentTo] = useState("");
   const [result, setResult] = useState<"done" | "already" | null>(null);
 
   // An event with a Яндекс Формы page shows that form; it keeps its own seats
@@ -84,6 +89,12 @@ export function EventSignupModal({
       );
       return;
     }
+    const typo = suggestEmail(email.trim().toLowerCase());
+    if (typo && warned !== email) {
+      setWarned(email);
+      setError(`${TYPO}${typo}? Если адрес верный, нажмите «Записаться» ещё раз`);
+      return;
+    }
     setBusy(true);
     setError("");
     try {
@@ -95,6 +106,7 @@ export function EventSignupModal({
       const out = readSignup(res.status, await res.json().catch(() => ({})));
       if (out.kind === "done" || out.kind === "already") {
         setSeats((s) => (s ? { ...s, left: out.left ?? s.left } : s));
+        setSentTo(email.trim().toLowerCase());
         setResult(out.kind);
       } else if (out.kind === "full") setSeats({ phase: "full", left: 0 });
       else if (out.kind === "closed") setSeats({ phase: "closed", left: null });
@@ -142,6 +154,9 @@ export function EventSignupModal({
             {result === "done" ? t.done : t.already}
           </p>
         )}
+        {result === "done" && sentTo && (
+          <p className="type-body">Письмо с подтверждением отправлено на {sentTo}</p>
+        )}
 
         {!embed && !result && (
           <form onSubmit={submit} noValidate className="flex flex-col gap-4">
@@ -177,7 +192,7 @@ export function EventSignupModal({
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t.placeholder}
               aria-label={t.placeholder}
-              aria-invalid={error === NEED_EMAIL ? true : undefined}
+              aria-invalid={error === NEED_EMAIL || error.startsWith(TYPO) ? true : undefined}
               className={`${fieldClass("input", "light")} disabled:border-line disabled:text-muted`}
             />
 
