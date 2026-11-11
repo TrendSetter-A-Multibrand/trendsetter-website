@@ -9,6 +9,8 @@ import {
   listEventCounts,
   listRegistrations,
 } from "@/lib/db/queries/registrations";
+import { guestByBarcode } from "@/lib/bonusRarus/loyalty";
+import { withGuests } from "@/lib/guestDirectory";
 import { canSeeEvent } from "@/lib/staff/access";
 import { currentStaff } from "@/lib/staff/session";
 import { fetchEventCapacity } from "@/lib/storyblok/eventCapacity";
@@ -134,7 +136,7 @@ export default async function RegistrationsPage({
           storeUuid: store?.uuid ?? "",
           storeName: store?.name ?? "",
           seats: info.seats,
-          rows: await listRegistrations(uuid),
+          rows: await withGuests(await listRegistrations(uuid), guestByBarcode),
         };
       }),
     )

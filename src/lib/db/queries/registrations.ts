@@ -4,7 +4,10 @@ import type { Signup } from "@/lib/eventSignup";
 
 export type Registration = {
   id: number;
+  /** Empty for a guest of the loyalty programme: their details are the service's. */
   email: string;
+  /** The loyalty card the sign-up was made with; empty for an older sign-up. */
+  cardBarcode: string;
   /** Empty for a sign-up made before the form asked for it. */
   name: string;
   phone: string;
@@ -55,16 +58,46 @@ export async function register(
   });
 }
 
+/**
+ * The same sign-up for a guest of the loyalty programme: only the card number
+ * is kept (see migration 005), and the guest is who has the card. Seats and the
+ * duplicate check work as in `register`.
+ */
+export async function registerCard(
+  uuid: string,
+  { cardBarcode, cancelHash }: { cardBarcode: string; cancelHash?: string },
+  capacity: number | null,
+  sql: Sql = db(),
+): Promise<RegisterResult> {
+  return sql.begin(async (tx) => {
+    await tx`SELECT pg_advisory_xact_lock(hashtext(${uuid}))`;
+    const dup = await tx`
+      SELECT 1 FROM event_registrations
+      WHERE event_uuid = ${uuid} AND card_barcode = ${cardBarcode}`;
+    if (dup.length > 0) return "duplicate" as const;
+    if (capacity !== null) {
+      const [row] = await tx`
+        SELECT count(*)::int AS n FROM event_registrations WHERE event_uuid = ${uuid}`;
+      if (row.n >= capacity) return "full" as const;
+    }
+    await tx`
+      INSERT INTO event_registrations (event_uuid, card_barcode, cancel_hash, consent_at)
+      VALUES (${uuid}, ${cardBarcode}, ${cancelHash ?? null}, now())`;
+    return "ok" as const;
+  });
+}
+
 export async function listRegistrations(
   uuid: string,
   sql: Sql = db(),
 ): Promise<Registration[]> {
   const rows = await sql`
-    SELECT id, email, full_name, phone, created_at, attended_at FROM event_registrations
+    SELECT id, email, card_barcode, full_name, phone, created_at, attended_at FROM event_registrations
     WHERE event_uuid = ${uuid} ORDER BY created_at, id`;
   return rows.map((r) => ({
     id: Number(r.id),
-    email: r.email,
+    email: r.email ?? "",
+    cardBarcode: r.card_barcode ?? "",
     name: r.full_name ?? "",
     phone: r.phone ?? "",
     createdAt: r.created_at,
@@ -89,6 +122,11 @@ export async function setAttended(
 }
 
 export type CancelTarget = { eventUuid: string; name: string; email: string };
+const target = (row: Record<string, string | null>): CancelTarget => ({
+  eventUuid: row.event_uuid ?? "",
+  name: row.full_name ?? "",
+  email: row.email ?? "",
+});
 
 /** Whose sign-up a cancel link belongs to; null when it is unknown or already used. */
 export async function findByCancelToken(
@@ -98,7 +136,7 @@ export async function findByCancelToken(
   const [row] = await sql`
     SELECT event_uuid, full_name, email FROM event_registrations
     WHERE cancel_hash = ${hashCancelToken(token)}`;
-  return row ? { eventUuid: row.event_uuid, name: row.full_name ?? "", email: row.email } : null;
+  return row ? target(row) : null;
 }
 
 /**
@@ -112,7 +150,7 @@ export async function cancelByToken(
   const [row] = await sql`
     DELETE FROM event_registrations WHERE cancel_hash = ${hashCancelToken(token)}
     RETURNING event_uuid, full_name, email`;
-  return row ? { eventUuid: row.event_uuid, name: row.full_name ?? "", email: row.email } : null;
+  return row ? target(row) : null;
 }
 
 /** Every event that has sign-ups, with how many - for the admin page. */

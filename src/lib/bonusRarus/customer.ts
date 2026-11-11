@@ -118,6 +118,8 @@ export async function confirmLogin(phone: string, pending: CodeSent, code: strin
 /** The registration the service expects; `channel` names where the client came from. */
 export type NewClient = RegistrationBody & {
   phone: string;
+  /** Only where the cabinet asks for one; the site makes one up for a guest who signs up for an event. */
+  password?: string;
   personal_data_accepted: true;
   receive_newsletters_accepted: boolean;
 };
@@ -127,11 +129,24 @@ function registrationPayload(client: NewClient) {
   return { ...client, channel: "webform", ...(shop ? { shop_id: shop } : {}) };
 }
 
-/** Sends the confirmation code for a new client; nothing is created until the code comes back. */
-export async function startRegistration(client: NewClient): Promise<CodeSent> {
-  return toCodeSent(
-    await call<TOTPKey>("/client/register", { method: "POST", body: registrationPayload(client) }),
-  );
+/**
+ * Sends the confirmation code for a new client; nothing is created until the
+ * code comes back. Where the cabinet does not ask for a code (the vendor's
+ * demo), the service registers the client on the spot and answers with the
+ * client's session instead - "registered" then tells the caller there is no
+ * code step.
+ */
+export async function startRegistration(
+  client: NewClient,
+): Promise<{ kind: "code"; sent: CodeSent } | { kind: "registered"; session: Session }> {
+  const data = await call<TOTPKey & Partial<AuthResult>>("/client/register", {
+    method: "POST",
+    body: registrationPayload(client),
+  });
+  if (data.access_token && data.expire_at) {
+    return { kind: "registered", session: { token: data.access_token, expireAt: data.expire_at } };
+  }
+  return { kind: "code", sent: toCodeSent(data as TOTPKey) };
 }
 
 /** The whole form goes again with the code: the service keeps nothing of it between the two steps. */
@@ -181,6 +196,32 @@ type RawSettings = { apple_wallet_configured?: boolean; google_wallet_configured
 /** The cabinet's public settings - the registration fields among them. No token, nothing about anyone. */
 export function cabinetSettings<T>(): Promise<T> {
   return call<T>("/settings");
+}
+
+/** The two documents the service asks a new client to accept; empty where the cabinet has none set. */
+export type Agreements = { userAgreement: string; offer: string };
+
+export async function agreements(): Promise<Agreements> {
+  const s = await cabinetSettings<{ user_agreement_link?: string; offer_agreement_link?: string }>();
+  const https = (v?: string) => (v && /^https:\/\//.test(v) ? v : "");
+  return { userAgreement: https(s.user_agreement_link), offer: https(s.offer_agreement_link) };
+}
+
+/**
+ * Whose sign-up this is, as the sign-up keeps it: the number of the client's
+ * card. A card number says nothing about the person; their details stay with
+ * the service and are read back by it (see `guestByBarcode`).
+ */
+export async function cardBarcodeOf(token: string): Promise<string | null> {
+  const [client, cards] = await Promise.all([
+    call<RawClient>("/client", { token }),
+    call<RawCard[]>("/cards", { token }),
+  ]);
+  const card =
+    cards.find((c) => c.id === client.default_card_id) ??
+    cards.find((c) => c.state === "active" && !c.blocked) ??
+    cards[0];
+  return card?.barcode ?? null;
 }
 
 export type HistoryRow = {

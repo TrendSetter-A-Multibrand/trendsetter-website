@@ -1,7 +1,7 @@
+import { accountEnabled } from "@/lib/bonusRarus/customer";
 import { newCancelToken } from "@/lib/cancelToken";
 import { DbNotConfigured } from "@/lib/db/client";
 import { countRegistrations, register } from "@/lib/db/queries/registrations";
-import { recipientFor } from "@/lib/contact";
 import {
   demoCapacity,
   isEventUuid,
@@ -9,56 +9,13 @@ import {
   parseSignup,
   seatsLeft,
   signupShut,
-  type Signup,
 } from "@/lib/eventSignup";
-import { defaultLocale } from "@/lib/i18n/locales";
-import { guestConfirmation, mapLink, whenText } from "@/lib/eventMail";
-import { sendMail } from "@/lib/mail";
 import { createLimiter } from "@/lib/rateLimit";
-import { pageUrl, siteName } from "@/lib/site";
-import { fetchEventCapacity, type EventCapacity } from "@/lib/storyblok/eventCapacity";
-import { fetchStoreRefs } from "@/lib/storyblok/storeRefs";
-import { storeOfEvent } from "@/lib/storeMatch";
+import { startEventSignup } from "@/lib/eventLoyalty";
+import { notifyGuest, notifyOrganiser } from "@/lib/eventNotify";
+import { fetchEventCapacity } from "@/lib/storyblok/eventCapacity";
 
 const limited = createLimiter(10 * 60 * 1000, 5);
-
-/** Organiser's note; fire and forget - a mail failure never undoes a sign-up. */
-function notifyOrganiser(title: string, guest: Signup, left: number | null) {
-  const to = process.env.EVENTS_TO || recipientFor();
-  if (!to) return;
-  const rest = left === null ? "без ограничения" : String(left);
-  sendMail({
-    to,
-    replyTo: guest.email,
-    subject: `[Сайт] Запись на событие: ${title}`,
-    text: [
-      `${guest.name} записался(лась) на «${title}».`,
-      `Телефон: ${guest.phone}`,
-      `E-mail: ${guest.email}`,
-      `Осталось мест: ${rest}`,
-    ].join("\n"),
-  }).catch(() => {});
-}
-
-/**
- * The guest's own confirmation, with the place, the map and a link to cancel.
- * The sender and the address of the links come from the settings (MAIL_FROM and
- * the site address), so a change of domain needs no change here.
- */
-async function notifyGuest(event: EventCapacity, guest: Signup, token: string) {
-  const store = storeOfEvent(event, await fetchStoreRefs());
-  const { subject, text, html } = guestConfirmation({
-    title: event.title,
-    when: whenText(event.date),
-    place: store?.name || event.location,
-    address: store?.address ?? "",
-    mapUrl: mapLink(store),
-    guestName: guest.name,
-    cancelUrl: `${pageUrl(defaultLocale, "/events/cancel")}?t=${token}`,
-    signature: process.env.MAIL_SIGNATURE || `Команда ${siteName}`,
-  });
-  await sendMail({ to: guest.email, subject, text, html });
-}
 
 export async function POST(
   request: Request,
@@ -92,6 +49,12 @@ export async function POST(
 
   // Demo: the form is checked as usual, but nothing is stored or mailed
   if (demo) return Response.json({ ok: true, left: event.seats });
+
+  // Through the loyalty programme the sign-up is a code away and keeps nothing of the person
+  if (accountEnabled()) {
+    const step = await startEventSignup(uuid, event, parsed.value, ip);
+    return Response.json(step.body, { status: step.status });
+  }
 
   try {
     const cancel = newCancelToken();

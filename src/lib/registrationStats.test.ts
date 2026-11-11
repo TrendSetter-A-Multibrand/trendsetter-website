@@ -13,6 +13,7 @@ import {
 const reg = (iso: string, attended = false): Registration => ({
   id: 1,
   email: "a@b.co",
+  cardBarcode: "",
   name: "Иван Петров",
   phone: "+79991234567",
   createdAt: new Date(iso),

@@ -1,3 +1,4 @@
+import { accountEnabled, agreements } from "@/lib/bonusRarus/customer";
 import { DbNotConfigured } from "@/lib/db/client";
 import { countRegistrations } from "@/lib/db/queries/registrations";
 import { demoCapacity, isEventUuid, isSignupDemo, seatsLeft, signupShut } from "@/lib/eventSignup";
@@ -26,7 +27,9 @@ export async function GET(
   try {
     const left = seatsLeft(event.seats, await countRegistrations(uuid));
     if (left === 0) return Response.json({ open: false, left, reason: "full" });
-    return Response.json({ open: true, left });
+    // Signing up is joining the loyalty programme: the form shows its documents
+    const loyalty = accountEnabled() ? await agreements().catch(() => ({ userAgreement: "", offer: "" })) : null;
+    return Response.json({ open: true, left, ...(loyalty ? { loyalty } : {}) });
   } catch (e) {
     const status = e instanceof DbNotConfigured ? 503 : 500;
     return Response.json({ error: "unavailable" }, { status });

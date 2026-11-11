@@ -1,7 +1,7 @@
 import { normalizePhone } from "@/lib/bonusRarus/loyalty";
 import { registrationForm, toRegistrationBody } from "@/lib/bonusRarus/registrationForm";
 import { startLogin, startRegistration } from "@/lib/bonusRarus/customer";
-import { clearSession, writePending } from "@/lib/bonusRarus/session";
+import { clearSession, writePending, writeSession } from "@/lib/bonusRarus/session";
 import { callerIp, disabled, failure } from "@/lib/bonusRarus/routeKit";
 import { createLimiter } from "@/lib/rateLimit";
 
@@ -50,15 +50,20 @@ export async function POST(request: Request) {
     const checked = toRegistrationBody(await registrationForm(), { ...body.values, phone });
     if (!checked.ok) return Response.json({ error: checked.error }, { status: 400 });
 
-    const sent = await startRegistration({
+    const started = await startRegistration({
       ...checked.body,
       phone,
       personal_data_accepted: true,
       receive_newsletters_accepted: Boolean(body.newslettersAccepted),
     });
     await clearSession();
-    await writePending({ ...sent, mode: "register", phone });
-    return Response.json({ status: "code", channel: sent.channel, codeLength: sent.codeLength });
+    // The cabinet may not ask for a code at all: then the client is in already
+    if (started.kind === "registered") {
+      await writeSession(started.session);
+      return Response.json({ status: "done" });
+    }
+    await writePending({ ...started.sent, mode: "register", phone });
+    return Response.json({ status: "code", channel: started.sent.channel, codeLength: started.sent.codeLength });
   } catch (e) {
     return failure(e);
   }

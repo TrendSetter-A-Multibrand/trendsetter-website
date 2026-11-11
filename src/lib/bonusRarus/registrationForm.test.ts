@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/bonusRarus/client", () => ({ bonusRarus: vi.fn(), BonusRarusError: class extends Error {} }));
 
-import { toFormFields, toRegistrationBody } from "@/lib/bonusRarus/registrationForm";
+import { throwawayPassword, toFormFields, toRegistrationBody } from "@/lib/bonusRarus/registrationForm";
 
 // The demo cabinet's list, as `personal-account/settings` returned it on 2026-10-28
 const DEMO = [
@@ -38,7 +38,13 @@ describe("toFormFields", () => {
   });
 
   it("не показывает поля, которые сайт не умеет отправить", () => {
-    expect(toFormFields([{ id: "password", name: "Пароль", required: true }])).toEqual([]);
+    expect(toFormFields([{ id: "passport", name: "Паспорт", required: true }])).toEqual([]);
+  });
+
+  it("пароль, если кабинет его требует, показывает как поле пароля", () => {
+    expect(toFormFields([{ id: "password", name: "Пароль", required: true }])).toEqual([
+      { id: "password", name: "Пароль", kind: "password", required: true },
+    ]);
   });
 });
 
@@ -81,5 +87,30 @@ describe("toRegistrationBody", () => {
   it("не пропускает свойства, которых нет в кабинете", () => {
     const out = toRegistrationBody(fields, { ...filled, "client-property-99": "true" });
     expect(out.ok && out.body.properties).toEqual([{ prop_id: 3, type: "bool", value: false }]);
+  });
+});
+
+describe("пароль при регистрации", () => {
+  const fields = toFormFields([
+    { id: "name", name: "Имя", required: true },
+    { id: "phone", name: "Номер телефона", type: "int64", required: true },
+    { id: "password", name: "Пароль", required: true },
+  ]);
+
+  it("уходит в тело запроса, если подходит по длине", () => {
+    expect(toRegistrationBody(fields, { name: "Анна", phone: "89990000001", password: "secret1" })).toMatchObject({
+      ok: true,
+      body: { password: "secret1" },
+    });
+    expect(toRegistrationBody(fields, { name: "Анна", phone: "89990000001", password: "123" })).toEqual({
+      ok: false,
+      error: "Пароль: от 6 до 64 символов",
+    });
+  });
+
+  it("для гостя события пароль придумывается и подходит под правило", () => {
+    const password = throwawayPassword();
+    expect(toRegistrationBody(fields, { name: "Анна", phone: "89990000001", password }).ok).toBe(true);
+    expect(throwawayPassword()).not.toBe(password);
   });
 });

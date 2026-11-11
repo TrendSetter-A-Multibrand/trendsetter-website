@@ -3,8 +3,11 @@ import { parseSignup } from "@/lib/eventSignup";
 /** What the seats endpoint says: how the sheet's form should stand. */
 export type SeatsPhase = "open" | "full" | "closed";
 
-/** `left` null = no limit, or not known; the counter is then not drawn. */
-export type SeatsState = { phase: SeatsPhase; left: number | null };
+/** The loyalty service's documents a guest accepts by signing up; "" where there is none. */
+export type Agreements = { userAgreement: string; offer: string };
+
+/** `left` null = no limit, or not known; the counter is then not drawn. `loyalty` set = signing up goes through the loyalty programme. */
+export type SeatsState = { phase: SeatsPhase; left: number | null; loyalty?: Agreements };
 
 /** The GET answer as the sheet reads it; anything odd leaves the form open. */
 export function readSeats(raw: unknown): SeatsState {
@@ -12,16 +15,25 @@ export function readSeats(raw: unknown): SeatsState {
     open?: unknown;
     left?: unknown;
     reason?: unknown;
+    loyalty?: { userAgreement?: unknown; offer?: unknown } | null;
   };
   const left = typeof r.left === "number" ? r.left : null;
   if (r.open === false) {
     if (r.reason === "full") return { phase: "full", left: 0 };
     return { phase: "closed", left };
   }
-  return { phase: "open", left };
+  const loyalty = r.loyalty
+    ? {
+        userAgreement: typeof r.loyalty.userAgreement === "string" ? r.loyalty.userAgreement : "",
+        offer: typeof r.loyalty.offer === "string" ? r.loyalty.offer : "",
+      }
+    : undefined;
+  return { phase: "open", left, ...(loyalty ? { loyalty } : {}) };
 }
 
 export type SignupOutcome =
+  | { kind: "code"; channel: string; codeLength: number }
+  | { kind: "expired" }
   | { kind: "done"; left: number | null }
   | { kind: "already"; left: number | null }
   | { kind: "full" }
@@ -35,8 +47,20 @@ export function readSignup(status: number, raw: unknown): SignupOutcome {
     ok?: unknown;
     already?: unknown;
     left?: unknown;
+    step?: unknown;
+    channel?: unknown;
+    codeLength?: unknown;
+    error?: unknown;
   };
   const left = typeof r.left === "number" ? r.left : null;
+  if (status === 200 && r.ok === true && r.step === "code") {
+    return {
+      kind: "code",
+      channel: typeof r.channel === "string" ? r.channel : "phone",
+      codeLength: typeof r.codeLength === "number" ? r.codeLength : 6,
+    };
+  }
+  if (status === 400 && r.error === "expired") return { kind: "expired" };
   if (status === 200 && r.ok === true) {
     return r.already === true ? { kind: "already", left } : { kind: "done", left };
   }

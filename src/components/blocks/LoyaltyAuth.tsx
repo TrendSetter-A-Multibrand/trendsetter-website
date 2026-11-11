@@ -25,8 +25,8 @@ const YES_NO = [
   { id: "true", name: "Да" },
   { id: "false", name: "Нет" },
 ];
-const INPUT_TYPE: Partial<Record<FormField["kind"], string>> = { email: "email", number: "number" };
-const AUTOCOMPLETE: Record<string, string> = { name: "given-name", email: "email", birthday: "bday" };
+const INPUT_TYPE: Partial<Record<FormField["kind"], string>> = { email: "email", number: "number", password: "password" };
+const AUTOCOMPLETE: Record<string, string> = { name: "given-name", email: "email", birthday: "bday", password: "new-password" };
 
 /** The file's checkbox on a light ground, controlled. */
 function Tick({
@@ -145,6 +145,7 @@ export function LoyaltyAuth({ locale }: { locale: string }) {
           : { phone },
       );
       if (!ok) return setError(out.error ?? ERROR);
+      if (out.status === "done") return router.refresh();
       if (out.status === "register") {
         setStep({ kind: "register", fields: (out.fields as FormField[]).filter((f) => f.id !== "phone") });
         return;

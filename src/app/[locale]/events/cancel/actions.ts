@@ -36,7 +36,7 @@ export async function cancelSignup(form: FormData) {
     sendMail({
       to,
       subject: `[Сайт] Отмена записи: ${event?.title ?? gone.eventUuid}`,
-      text: `${gone.name || "Гость"} (${gone.email}) отменил(а) запись на «${event?.title ?? gone.eventUuid}».`,
+      text: `${[gone.name || "Гость", gone.email && `(${gone.email})`].filter(Boolean).join(" ")} отменил(а) запись на «${event?.title ?? gone.eventUuid}».`,
     }).catch(() => {});
   }
   back("?done=1");

@@ -18,7 +18,12 @@ const base = {
   path: "/",
 };
 
-export type Pending = CodeSent & { mode: "login" | "register"; phone: string };
+export type Pending = CodeSent & {
+  mode: "login" | "register";
+  phone: string;
+  /** The event a sign-up through the code is for; unset for the cabinet's own sign-in. */
+  event?: string;
+};
 
 export async function readSession(): Promise<string | null> {
   return (await cookies()).get(SESSION)?.value || null;

@@ -20,6 +20,14 @@ import {
 } from "@/lib/eventSignupForm";
 
 const ERROR = "Не удалось отправить, попробуйте позже";
+const WRONG_CODE = "Код не подошёл, проверьте и попробуйте ещё раз";
+const CODE_WORD: Record<string, string> = {
+  mail: "на почту",
+  phone: "в SMS",
+  telegram: "в Telegram",
+  max: "в MAX",
+  flashcall: "звонком, это последние цифры номера",
+};
 const NEED_NAME = "Укажите фамилию и имя";
 const NEED_PHONE = "Укажите телефон, например +7 999 123-45-67";
 const NEED_EMAIL = "Укажите корректный e-mail";
@@ -54,6 +62,9 @@ export function EventSignupModal({
   const [warned, setWarned] = useState("");
   const [sentTo, setSentTo] = useState("");
   const [result, setResult] = useState<"done" | "already" | null>(null);
+  // Through the loyalty programme the sign-up is two steps: the form, then the code that came by SMS
+  const [codeStep, setCodeStep] = useState<{ channel: string; codeLength: number } | null>(null);
+  const [code, setCode] = useState("");
 
   // An event with a Яндекс Формы page shows that form; it keeps its own seats
   const embed = event.signupFormUrl;
@@ -76,6 +87,7 @@ export function EventSignupModal({
   async function submit(e: FormEvent) {
     e.preventDefault();
     if (busy || shut) return;
+    if (codeStep && !code.trim()) return;
     const invalid = checkSignup({ name, phone, email }, consent);
     if (invalid) {
       setError(
@@ -89,7 +101,7 @@ export function EventSignupModal({
       );
       return;
     }
-    const typo = suggestEmail(email.trim().toLowerCase());
+    const typo = codeStep ? null : suggestEmail(email.trim().toLowerCase());
     if (typo && warned !== email) {
       setWarned(email);
       setError(`${TYPO}${typo}? Если адрес верный, нажмите «Записаться» ещё раз`);
@@ -98,13 +110,28 @@ export function EventSignupModal({
     setBusy(true);
     setError("");
     try {
-      const res = await fetch(`/api/events/${event.uuid}/register`, {
+      const res = await fetch(`/api/events/${event.uuid}/${codeStep ? "confirm" : "register"}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, email, consent: true, website: "" }),
+        body: JSON.stringify({
+          name,
+          phone,
+          email,
+          consent: true,
+          website: "",
+          ...(codeStep ? { code: code.trim() } : {}),
+        }),
       });
       const out = readSignup(res.status, await res.json().catch(() => ({})));
-      if (out.kind === "done" || out.kind === "already") {
+      if (out.kind === "code") {
+        setCode("");
+        setCodeStep({ channel: out.channel, codeLength: out.codeLength });
+      } else if (out.kind === "expired") {
+        setCodeStep(null);
+        setError("Код устарел, запросите новый");
+      } else if (out.kind === "invalid" && codeStep) {
+        setError(WRONG_CODE);
+      } else if (out.kind === "done" || out.kind === "already") {
         setSeats((s) => (s ? { ...s, left: out.left ?? s.left } : s));
         setSentTo(email.trim().toLowerCase());
         setResult(out.kind);
@@ -157,10 +184,51 @@ export function EventSignupModal({
         {result === "done" && sentTo && (
           <p className="type-body">Письмо с подтверждением отправлено на {sentTo}</p>
         )}
+        {result && seats?.loyalty && (
+          <p className="type-body">
+            Ваша бонусная карта TRENDSETTER оформлена:{" "}
+            <Link href={`/${locale}/card`} className="underline">
+              открыть «Мою карту»
+            </Link>
+          </p>
+        )}
 
         {!embed && !result && (
           <form onSubmit={submit} noValidate className="flex flex-col gap-4">
             <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+            {seats?.loyalty && !codeStep && (
+              <p className="type-body-s text-text-2">
+                Запись оформляется вместе с бонусной картой TRENDSETTER: на указанный номер придёт код подтверждения.
+              </p>
+            )}
+            {codeStep && (
+              <>
+                <p className="type-body">
+                  Код отправили {CODE_WORD[codeStep.channel] ?? codeStep.channel} на номер {phone}.
+                </p>
+                <input
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, codeStep.codeLength))}
+                  placeholder={`Код из ${codeStep.codeLength} цифр`}
+                  aria-label="Код подтверждения"
+                  autoComplete="one-time-code"
+                  inputMode="numeric"
+                  autoFocus
+                  className={fieldClass("input", "light")}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCodeStep(null);
+                    setError("");
+                  }}
+                  className="type-body-s self-start underline transition-colors duration-150 hover:text-brand"
+                >
+                  Изменить данные
+                </button>
+              </>
+            )}
+            <div className={codeStep ? "hidden" : "contents"}>
             <input
               name="name"
               value={name}
@@ -226,8 +294,30 @@ export function EventSignupModal({
                 ) : (
                   t.consent
                 )}
+                {seats?.loyalty && (
+                  <>
+                    {" "}Принимаю условия программы лояльности TRENDSETTER:{" "}
+                    {seats.loyalty.userAgreement ? (
+                      <a href={seats.loyalty.userAgreement} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="underline">
+                        пользовательское соглашение
+                      </a>
+                    ) : (
+                      "пользовательское соглашение"
+                    )}
+                    {" и "}
+                    {seats.loyalty.offer ? (
+                      <a href={seats.loyalty.offer} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="underline">
+                        договор-оферту
+                      </a>
+                    ) : (
+                      "договор-оферту"
+                    )}
+                    .
+                  </>
+                )}
               </span>
             </label>
+            </div>
 
             {error && <p role="alert" className={fieldErrorClass("light")}>{error}</p>}
 
@@ -236,7 +326,7 @@ export function EventSignupModal({
               disabled={busy || shut}
               className={`${buttonClass("primary", "L")} w-full`}
             >
-              {t.submit}
+              {codeStep ? "Подтвердить и записаться" : seats?.loyalty ? "Получить код" : t.submit}
             </button>
           </form>
         )}

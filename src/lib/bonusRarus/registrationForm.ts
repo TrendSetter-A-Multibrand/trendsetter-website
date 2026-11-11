@@ -10,7 +10,7 @@ import { normalizePhone } from "@/lib/bonusRarus/loyalty";
 export type FormField = {
   id: string;
   name: string;
-  kind: "text" | "phone" | "email" | "date" | "number" | "bool" | "choice";
+  kind: "text" | "phone" | "email" | "date" | "number" | "bool" | "choice" | "password";
   required: boolean;
   options?: { id: string; name: string }[];
 };
@@ -29,6 +29,7 @@ function kindOf(field: RegField, options: FormField["options"]): FormField["kind
   if (field.id === "phone") return "phone";
   if (field.id === "email") return "email";
   if (field.id === "birthday") return "date";
+  if (field.id === "password") return "password";
   if (options?.length) return "choice";
   switch (field.type) {
     case "bool":
@@ -45,7 +46,7 @@ function kindOf(field: RegField, options: FormField["options"]): FormField["kind
 }
 
 // The order a person expects to fill them in, whatever order the cabinet lists them
-const RANK: Record<string, number> = { name: 0, phone: 1, email: 2, birthday: 3, gender: 4 };
+const RANK: Record<string, number> = { name: 0, phone: 1, email: 2, birthday: 3, gender: 4, password: 5 };
 
 /** The cabinet's `registration_fields` -> what the form draws. Fields the site cannot send are dropped. */
 export function toFormFields(raw: RegField[]): FormField[] {
@@ -91,6 +92,7 @@ function dayToMs(value: string): number | null {
 
 export type RegistrationBody = {
   name: string;
+  password?: string;
   phone?: string;
   email?: string;
   gender: string;
@@ -132,6 +134,10 @@ export function toRegistrationBody(
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text)) return { ok: false, error: "Проверьте e-mail" };
         value = text;
         break;
+      case "password":
+        if (text.length < 6 || text.length > 64) return { ok: false, error: "Пароль: от 6 до 64 символов" };
+        value = text;
+        break;
       case "date": {
         const ms = dayToMs(text);
         if (ms === null) return { ok: false, error: `Проверьте поле «${field.name}»` };
@@ -168,4 +174,9 @@ export function toRegistrationBody(
 
   if (missing.length) return { ok: false, error: `Заполните: ${missing.join(", ")}` };
   return { ok: true, body };
+}
+
+/** A password nobody will ever type: for a guest who signs up for an event, where the cabinet asks for one. */
+export function throwawayPassword(): string {
+  return `${crypto.randomUUID()}Aa1!`;
 }

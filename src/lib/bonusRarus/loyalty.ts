@@ -18,6 +18,23 @@ export async function cardByBarcode(barcode: string): Promise<CardLookup> {
   return { balance: data.balance ?? 0, level: data.card_level?.name ?? "", status: data.state ?? "" };
 }
 
+export type Guest = { name: string; phone: string; email: string };
+
+/**
+ * Who has a card, for the cabinet of the staff who let guests in: the service
+ * is where a guest's name, phone and e-mail live, so they are read from it
+ * whenever the list is opened and kept nowhere. Never shown to a visitor.
+ */
+export async function guestByBarcode(barcode: string): Promise<Guest | null> {
+  const data = await bonusRarus<{ client?: { name?: string; phone?: string; email?: string } | null }>(
+    `/card/by-barcode/${encodeURIComponent(barcode)}`,
+  );
+  const client = data.client;
+  if (!client) return null;
+  const digits = (client.phone ?? "").replace(/\D/g, "");
+  return { name: client.name ?? "", phone: digits ? `+${digits}` : "", email: client.email ?? "" };
+}
+
 export type CertificateLookup = { balance: number; holded: number; status: string };
 
 export async function certificateByCode(code: string): Promise<CertificateLookup> {

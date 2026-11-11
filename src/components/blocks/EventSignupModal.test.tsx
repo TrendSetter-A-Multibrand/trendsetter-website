@@ -130,4 +130,37 @@ describe("запись на событие", () => {
     await screen.findByText(/Вы записаны/);
     expect(screen.getByText(/отправлено на ivan@gmail\.con/)).toBeTruthy();
   });
+
+  it("через программу лояльности: сначала код из SMS, потом запись", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        status: 200,
+        json: async () => ({ open: true, left: null, loyalty: { userAgreement: "https://x.ru/u.pdf", offer: "" } }),
+      })
+      .mockResolvedValueOnce({ status: 200, json: async () => ({ ok: true, step: "code", channel: "phone", codeLength: 6 }) })
+      .mockResolvedValueOnce({ status: 200, json: async () => ({ ok: true, left: null }) });
+    open(event(), fetchMock);
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+
+    // The documents of the programme are named under the one consent
+    await screen.findByText(/условия программы лояльности/);
+    expect(screen.getByRole("link", { name: "пользовательское соглашение" }).getAttribute("href")).toBe("https://x.ru/u.pdf");
+
+    fireEvent.change(screen.getByLabelText("Фамилия и имя"), { target: { value: "Иван Петров" } });
+    fireEvent.change(screen.getByLabelText("Телефон"), { target: { value: "8 999 123-45-67" } });
+    fireEvent.change(screen.getByLabelText("E-mail"), { target: { value: "a@b.co" } });
+    fireEvent.click(screen.getByRole("checkbox"));
+    fireEvent.click(screen.getByRole("button", { name: "Получить код" }));
+
+    const codeBox = await screen.findByLabelText("Код подтверждения");
+    expect(fetchMock.mock.calls[1][0]).toContain("/register");
+    fireEvent.change(codeBox, { target: { value: "000000" } });
+    fireEvent.click(screen.getByRole("button", { name: "Подтвердить и записаться" }));
+
+    await screen.findByText(/Вы записаны/);
+    expect(fetchMock.mock.calls[2][0]).toContain("/confirm");
+    expect(JSON.parse(fetchMock.mock.calls[2][1].body)).toMatchObject({ code: "000000", email: "a@b.co" });
+    expect(screen.getByRole("link", { name: /Мою карту/ })).toBeTruthy();
+  });
 });

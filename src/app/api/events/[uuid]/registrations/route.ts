@@ -2,6 +2,8 @@ import { DbNotConfigured } from "@/lib/db/client";
 import { listRegistrations } from "@/lib/db/queries/registrations";
 import { isEventUuid } from "@/lib/eventSignup";
 import { registrationsCsv } from "@/lib/registrationsAdmin";
+import { guestByBarcode } from "@/lib/bonusRarus/loyalty";
+import { withGuests } from "@/lib/guestDirectory";
 import { canSeeEvent } from "@/lib/staff/access";
 import { currentStaff } from "@/lib/staff/session";
 import { fetchEventCapacity } from "@/lib/storyblok/eventCapacity";
@@ -24,7 +26,7 @@ export async function GET(
       return Response.json({ error: "not found" }, { status: 404 });
     }
 
-    const csv = registrationsCsv(await listRegistrations(uuid));
+    const csv = registrationsCsv(await withGuests(await listRegistrations(uuid), guestByBarcode));
     return new Response(csv, {
       headers: {
         "content-type": "text/csv; charset=utf-8",
