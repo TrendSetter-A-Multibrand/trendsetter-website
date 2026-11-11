@@ -17,13 +17,14 @@ const BASE =
   `https://backend-pro.bonus-rarus.ru/${process.env.BONUS_RARUS_SPACE || "p131"}/customer-flow`;
 
 /**
- * The client cabinet on the site is a demo against the vendor's test space.
- * The web integration token they issued for us is what marks an environment
- * that has been set up for it: `.env.local` has it, Vercel does not - so the
- * live site keeps the pages and the routes switched off.
+ * The client cabinet on the site ("Моя карта", registration, sign-in) is off
+ * until an environment is set up for it: BONUS_RARUS_ACCOUNT=1 switches it on
+ * (sign-up and sign-in are open calls, they need no token of ours), and the web
+ * integration token the vendor issued for the demo switches it on as before.
+ * Vercel has neither, so the old live site keeps the pages and routes off.
  */
 export function accountEnabled(): boolean {
-  return Boolean(process.env.BONUS_RARUS_REGISTRATION_TOKEN_WEB);
+  return process.env.BONUS_RARUS_ACCOUNT === "1" || Boolean(process.env.BONUS_RARUS_REGISTRATION_TOKEN_WEB);
 }
 
 type Envelope<T> = {

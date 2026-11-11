@@ -2,11 +2,14 @@
  * Talks to "1С-Рарус: Система управления лояльностью" - server only, the
  * registration token never reaches the browser. It uses the site's own API,
  * `web-flow`, in our space `p131` (override with BONUS_RARUS_SPACE); the token
- * is the "Сайт" (web) integration's, made in Настройки -> Интеграции.
+ * is the "Сайт" (web) integration's, made in Настройки -> Интеграции. A token of
+ * the "1С" kind belongs to the till flow: BONUS_RARUS_FLOW=default-flow points
+ * the same calls (card by barcode, client by phone) at it.
  */
 
 const SPACE = process.env.BONUS_RARUS_SPACE || "p131";
-const BASE = `https://backend-pro.bonus-rarus.ru/${SPACE}/web-flow`;
+const FLOW = process.env.BONUS_RARUS_FLOW === "default-flow" ? "default-flow" : "web-flow";
+const BASE = `https://backend-pro.bonus-rarus.ru/${SPACE}/${FLOW}`;
 const AUTH_URL = `https://backend-pro.bonus-rarus.ru/${SPACE}/integration-module/auth`;
 
 export class BonusRarusError extends Error {
