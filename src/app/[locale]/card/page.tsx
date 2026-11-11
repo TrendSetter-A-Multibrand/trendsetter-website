@@ -7,6 +7,10 @@ import { LoyaltyCabinet } from "@/components/blocks/LoyaltyCabinet";
 import { accountEnabled, type Cabinet, loadCabinet, SessionExpired } from "@/lib/bonusRarus/customer";
 import { readSession } from "@/lib/bonusRarus/session";
 
+// The switch is read when the page is asked for, not when the site is built:
+// a page built with it off would stay a 404 whatever the server is set to.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Моя карта",
   robots: { index: false, follow: false },
