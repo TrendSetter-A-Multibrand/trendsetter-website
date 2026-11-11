@@ -96,7 +96,11 @@ export function isSignupDemo(
  */
 export function demoCapacity<T extends { seats: number | null }>(
   capacity: T | null,
-): (T & { seats: number }) | { seats: number; signupEnabled: true; date: ""; title: "" } {
-  if (!capacity) return { seats: DEMO_SEATS, signupEnabled: true, date: "", title: "" };
+):
+  | (T & { seats: number })
+  | { seats: number; signupEnabled: true; date: ""; title: ""; store: ""; location: "" } {
+  if (!capacity) {
+    return { seats: DEMO_SEATS, signupEnabled: true, date: "", title: "", store: "", location: "" };
+  }
   return { ...capacity, seats: capacity.seats ?? DEMO_SEATS };
 }

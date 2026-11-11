@@ -1,3 +1,4 @@
+import { newCancelToken } from "@/lib/cancelToken";
 import { DbNotConfigured } from "@/lib/db/client";
 import { countRegistrations, register } from "@/lib/db/queries/registrations";
 import { recipientFor } from "@/lib/contact";
@@ -10,9 +11,14 @@ import {
   signupShut,
   type Signup,
 } from "@/lib/eventSignup";
+import { defaultLocale } from "@/lib/i18n/locales";
+import { guestConfirmation, mapLink, whenText } from "@/lib/eventMail";
 import { sendMail } from "@/lib/mail";
 import { createLimiter } from "@/lib/rateLimit";
-import { fetchEventCapacity } from "@/lib/storyblok/eventCapacity";
+import { pageUrl, siteName } from "@/lib/site";
+import { fetchEventCapacity, type EventCapacity } from "@/lib/storyblok/eventCapacity";
+import { fetchStoreRefs } from "@/lib/storyblok/storeRefs";
+import { storeOfEvent } from "@/lib/storeMatch";
 
 const limited = createLimiter(10 * 60 * 1000, 5);
 
@@ -32,6 +38,26 @@ function notifyOrganiser(title: string, guest: Signup, left: number | null) {
       `Осталось мест: ${rest}`,
     ].join("\n"),
   }).catch(() => {});
+}
+
+/**
+ * The guest's own confirmation, with the place, the map and a link to cancel.
+ * The sender and the address of the links come from the settings (MAIL_FROM and
+ * the site address), so a change of domain needs no change here.
+ */
+async function notifyGuest(event: EventCapacity, guest: Signup, token: string) {
+  const store = storeOfEvent(event, await fetchStoreRefs());
+  const { subject, text, html } = guestConfirmation({
+    title: event.title,
+    when: whenText(event.date),
+    place: store?.name || event.location,
+    address: store?.address ?? "",
+    mapUrl: mapLink(store),
+    guestName: guest.name,
+    cancelUrl: `${pageUrl(defaultLocale, "/events/cancel")}?t=${token}`,
+    signature: process.env.MAIL_SIGNATURE || `Команда ${siteName}`,
+  });
+  await sendMail({ to: guest.email, subject, text, html });
 }
 
 export async function POST(
@@ -68,13 +94,19 @@ export async function POST(
   if (demo) return Response.json({ ok: true, left: event.seats });
 
   try {
-    const result = await register(uuid, parsed.value, event.seats);
+    const cancel = newCancelToken();
+    const result = await register(
+      uuid,
+      { ...parsed.value, cancelHash: cancel.hash },
+      event.seats,
+    );
     if (result === "full") return Response.json({ error: "full" }, { status: 409 });
     const left = seatsLeft(event.seats, await countRegistrations(uuid));
     if (result === "duplicate") {
       return Response.json({ ok: true, already: true, left });
     }
     notifyOrganiser(event.title, parsed.value, left);
+    notifyGuest(event, parsed.value, cancel.token).catch(() => {});
     return Response.json({ ok: true, left });
   } catch (e) {
     const status = e instanceof DbNotConfigured ? 503 : 500;

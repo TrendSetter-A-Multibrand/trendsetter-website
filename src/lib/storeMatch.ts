@@ -1,7 +1,14 @@
 /** The kinds of building a place name starts with, which say nothing about which one it is. */
 const KINDS = new Set(["трц", "трк", "тц", "тк", "торговый", "центр", "комплекс"]);
 
-export type StoreRef ={ uuid: string; name: string };
+export type StoreRef = {
+  uuid: string;
+  name: string;
+  /** As the editor wrote it; for the guest's e-mail, not for matching. */
+  address?: string;
+  lat?: number;
+  lon?: number;
+};
 
 /**
  * What a place is called, boiled down for comparing: the word in the quotes when

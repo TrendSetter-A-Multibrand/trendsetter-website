@@ -16,9 +16,12 @@ import nodemailer, { type Transporter } from "nodemailer";
 
 export type Mail = {
   to: string;
-  replyTo: string;
+  /** Where an answer goes; left out, it goes to the sender. */
+  replyTo?: string;
   subject: string;
   text: string;
+  /** The same message with a face; mail clients that cannot show it use `text`. */
+  html?: string;
 };
 
 export class MailNotConfigured extends Error {}
@@ -59,5 +62,6 @@ export async function sendMail(mail: Mail, via?: Transporter): Promise<void> {
     replyTo: mail.replyTo,
     subject: mail.subject,
     text: mail.text,
+    html: mail.html,
   });
 }

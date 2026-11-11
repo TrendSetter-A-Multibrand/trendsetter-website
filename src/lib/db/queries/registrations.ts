@@ -1,4 +1,5 @@
 import { db, type Sql } from "@/lib/db/client";
+import { hashCancelToken } from "@/lib/cancelToken";
 import type { Signup } from "@/lib/eventSignup";
 
 export type Registration = {
@@ -27,10 +28,11 @@ export async function countRegistrations(
  * the last seat are taken one after the other: duplicate, then count, then insert.
  * `capacity` null means no limit. The fields must already be cleaned (see
  * `parseSignup`): the e-mail lower-cased, the phone as "+" and digits.
+ * `cancelHash` is the hash of the token in the guest's cancel link.
  */
 export async function register(
   uuid: string,
-  { email, name, phone }: Signup,
+  { email, name, phone, cancelHash }: Signup & { cancelHash?: string },
   capacity: number | null,
   sql: Sql = db(),
 ): Promise<RegisterResult> {
@@ -46,8 +48,9 @@ export async function register(
       if (row.n >= capacity) return "full" as const;
     }
     await tx`
-      INSERT INTO event_registrations (event_uuid, email, full_name, phone, consent_at)
-      VALUES (${uuid}, ${email}, ${name}, ${phone}, now())`;
+      INSERT INTO event_registrations
+        (event_uuid, email, full_name, phone, cancel_hash, consent_at)
+      VALUES (${uuid}, ${email}, ${name}, ${phone}, ${cancelHash ?? null}, now())`;
     return "ok" as const;
   });
 }
@@ -83,6 +86,33 @@ export async function setAttended(
     UPDATE event_registrations
     SET attended_at = ${attended ? sql`now()` : null}
     WHERE id = ${id} AND event_uuid = ${uuid}`;
+}
+
+export type CancelTarget = { eventUuid: string; name: string; email: string };
+
+/** Whose sign-up a cancel link belongs to; null when it is unknown or already used. */
+export async function findByCancelToken(
+  token: string,
+  sql: Sql = db(),
+): Promise<CancelTarget | null> {
+  const [row] = await sql`
+    SELECT event_uuid, full_name, email FROM event_registrations
+    WHERE cancel_hash = ${hashCancelToken(token)}`;
+  return row ? { eventUuid: row.event_uuid, name: row.full_name ?? "", email: row.email } : null;
+}
+
+/**
+ * Takes the guest off the list: the row goes, so the seat is free again and the
+ * guest's data is not kept past their asking. Null when the link was used up.
+ */
+export async function cancelByToken(
+  token: string,
+  sql: Sql = db(),
+): Promise<CancelTarget | null> {
+  const [row] = await sql`
+    DELETE FROM event_registrations WHERE cancel_hash = ${hashCancelToken(token)}
+    RETURNING event_uuid, full_name, email`;
+  return row ? { eventUuid: row.event_uuid, name: row.full_name ?? "", email: row.email } : null;
 }
 
 /** Every event that has sign-ups, with how many - for the admin page. */
