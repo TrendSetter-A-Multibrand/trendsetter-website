@@ -6,8 +6,7 @@ import Link from "@/components/ui/Link";
 import { buttonClass } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { fieldClass } from "@/components/ui/fieldClass";
-import { NoticeModal } from "@/components/ui/NoticeModal";
-import { isSubscribed, remember } from "@/lib/subscribers";
+import { suggestEmail } from "@/lib/emailTypo";
 
 type NewsletterSignupProps = {
   locale?: string;
@@ -38,24 +37,43 @@ export function NewsletterSignup({
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  /** The address someone tried to sign up twice, held for the notice */
-  const [duplicate, setDuplicate] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  // The address already pointed out as a likely slip: pressing the button again lets it through
+  const [warned, setWarned] = useState("");
   const isValid = EMAIL_PATTERN.test(email);
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!isValid) return;
+    if (!isValid || busy) return;
 
-    // Signing the same address up again would look like it worked and quietly
-    // do nothing, so say so instead
-    if (isSubscribed(email)) {
-      setDuplicate(email.trim());
+    const typo = suggestEmail(email.trim().toLowerCase());
+    if (typo && warned !== email) {
+      setWarned(email);
+      setError(`Проверьте e-mail: возможно, ${typo}? Если адрес верный, нажмите «Подписаться» ещё раз`);
       return;
     }
 
-    remember(email);
-    setSubmitted(true);
-    setEmail("");
+    setBusy(true);
+    setError("");
+    try {
+      // The list lives in the mailing service; the server hands the address over and keeps nothing
+      const res = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, consent: true, website: "" }),
+      });
+      if (!res.ok) {
+        setError(res.status === 400 ? "Проверьте адрес почты" : "Не удалось оформить подписку, попробуйте позже");
+        return;
+      }
+      setSubmitted(true);
+      setEmail("");
+    } catch {
+      setError("Не удалось оформить подписку, попробуйте позже");
+    } finally {
+      setBusy(false);
+    }
   }
 
   useEffect(() => {
@@ -88,6 +106,7 @@ export function NewsletterSignup({
             />
             <button
               type="submit"
+              disabled={busy}
               className={`${buttonClass("inverse", "L")} w-full shrink-0 md:w-auto`}
             >
               Подписаться
@@ -95,11 +114,23 @@ export function NewsletterSignup({
           </div>
 
           <Checkbox name="consent" surface="red" defaultChecked={false} required>
-            Согласен(на) на обработку персональных данных{" "}
+            Согласен(на) получать рассылку и на обработку персональных данных{" "}
             <Link href={`/${locale}/privacy-policy`} className="underline">
               политика
             </Link>
           </Checkbox>
+
+          {error && (
+            <p role="alert" className="type-body-s">
+              {error}
+            </p>
+          )}
+          {submitted && (
+            <p role="status" className="type-body-s">
+              Спасибо! Мы отправили письмо: подтвердите подписку по ссылке в нём. Не пришло? Загляните в «Промоакции» и
+              «Спам».
+            </p>
+          )}
         </form>
       </div>
 
@@ -118,18 +149,6 @@ export function NewsletterSignup({
         </div>
       </div>
 
-      {duplicate && (
-        <NoticeModal
-          title="Вы уже подписаны"
-          onClose={() => setDuplicate(null)}
-        >
-          <p>
-            На адрес <span className="font-medium">{duplicate}</span> подписка
-            уже оформлена. Если письма не приходят, загляните в папки
-            «Промоакции» и «Спам».
-          </p>
-        </NoticeModal>
-      )}
     </section>
   );
 }

@@ -6,7 +6,6 @@ import { buttonClass } from "@/components/ui/Button";
 import { fieldClass, fieldErrorClass } from "@/components/ui/fieldClass";
 import { LinkArrow } from "@/components/ui/LinkArrow";
 import { ModalSheet } from "@/components/ui/ModalSheet";
-import { forget } from "@/lib/subscribers";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NEED_EMAIL = "Проверьте адрес почты";
@@ -17,9 +16,8 @@ const NEED_EMAIL = "Проверьте адрес почты";
  * that is, the address already in its field. Three states as the file draws
  * them: the form, the same with an error under the field, and «Вы отписаны».
  *
- * There is no mailing service behind the site yet, so for now the answer is
- * given on the spot and the address is only forgotten in this browser; the
- * request goes where `forget` is when the service exists.
+ * The request goes to the server, which takes the address off the list in the
+ * mailing service; whether or not it was on the list, the answer is the same.
  */
 export function UnsubscribeModal({ locale }: { locale: string }) {
   // null = the link did not ask for the sheet (and always null on the server)
@@ -32,6 +30,7 @@ export function UnsubscribeModal({ locale }: { locale: string }) {
   const [closed, setClosed] = useState(false);
   const [error, setError] = useState(false);
   const [done, setDone] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   if (asked === null || closed) return null;
   const email = typed ?? asked.trim();
@@ -43,15 +42,27 @@ export function UnsubscribeModal({ locale }: { locale: string }) {
     window.history.replaceState(null, "", url);
   }
 
-  function submit(e: FormEvent) {
+  async function submit(e: FormEvent) {
     e.preventDefault();
+    if (busy) return;
     if (!EMAIL_PATTERN.test(email)) {
       setError(true);
       return;
     }
-    forget(email);
-    setError(false);
-    setDone(true);
+    setBusy(true);
+    try {
+      const res = await fetch("/api/newsletter/unsubscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      setError(!res.ok);
+      setDone(res.ok);
+    } catch {
+      setError(true);
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -100,7 +111,7 @@ export function UnsubscribeModal({ locale }: { locale: string }) {
                 </p>
               )}
             </div>
-            <button type="submit" className={`${buttonClass("primary", "L")} w-full`}>
+            <button type="submit" disabled={busy} className={`${buttonClass("primary", "L")} w-full`}>
               Отписаться
             </button>
           </form>

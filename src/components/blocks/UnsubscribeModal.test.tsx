@@ -1,7 +1,6 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { UnsubscribeModal } from "./UnsubscribeModal";
-import { isSubscribed, remember } from "@/lib/subscribers";
 
 function openWith(search: string) {
   window.history.replaceState(null, "", `/ru_ru${search}`);
@@ -9,8 +8,13 @@ function openWith(search: string) {
 }
 
 describe("отписка от рассылки", () => {
-  beforeEach(() => window.localStorage.clear());
+  const fetchMock = vi.fn(async () => new Response(JSON.stringify({ ok: true })));
+  beforeEach(() => {
+    fetchMock.mockClear();
+    vi.stubGlobal("fetch", fetchMock);
+  });
   afterEach(() => {
+    vi.unstubAllGlobals();
     cleanup();
     window.history.replaceState(null, "", "/");
   });
@@ -20,8 +24,7 @@ describe("отписка от рассылки", () => {
     expect(screen.queryByText("Отписаться от рассылки")).toBeNull();
   });
 
-  it("почта из ссылки стоит в поле; верный адрес — «Вы отписаны» и адрес забыт", async () => {
-    remember("anna@example.ru");
+  it("почта из ссылки стоит в поле; верный адрес — запрос на сервер и «Вы отписаны»", async () => {
     openWith("?unsubscribe=anna@example.ru");
     const field = (await screen.findByLabelText("E-mail")) as HTMLInputElement;
     expect(field.value).toBe("anna@example.ru");
@@ -29,7 +32,9 @@ describe("отписка от рассылки", () => {
     fireEvent.click(screen.getByRole("button", { name: "Отписаться" }));
     expect(await screen.findByText("Вы отписаны")).toBeTruthy();
     expect(screen.getByText("Подписаться снова")).toBeTruthy();
-    expect(isSubscribed("anna@example.ru")).toBe(false);
+    const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toBe("/api/newsletter/unsubscribe");
+    expect(JSON.parse(String(init.body))).toEqual({ email: "anna@example.ru" });
   });
 
   it("неверный адрес — подсказка под полем и форма остаётся", async () => {
