@@ -54,6 +54,11 @@ describe("unsubscribe", () => {
     await expect(unsubscribe("x@y.ru", { env, doFetch })).resolves.toBeUndefined();
   });
 
+  it("ответ «Invalid contact» для адреса вне списка тоже не ошибка", async () => {
+    const doFetch = answer({ error: "Error ID:1. [Invalid contact]", code: "invalid_arg" });
+    await expect(unsubscribe("x@y.ru", { env, doFetch })).resolves.toBeUndefined();
+  });
+
   it("другая ошибка остаётся ошибкой", async () => {
     await expect(unsubscribe("x@y.ru", { env, doFetch: answer({ error: "boom" }, 500) })).rejects.toBeInstanceOf(
       NewsletterFailed,

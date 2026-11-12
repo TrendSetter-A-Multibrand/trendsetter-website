@@ -82,7 +82,7 @@ export async function unsubscribe(
     await call("unsubscribe", { contact_type: "email", contact: email, list_ids: list }, key, opts.doFetch ?? fetch);
   } catch (e) {
     // An address that is not on the list is already as unsubscribed as it can be
-    if (e instanceof NewsletterFailed && /not found/i.test(e.message)) return;
+    if (e instanceof NewsletterFailed && /not found|invalid contact/i.test(e.message)) return;
     throw e;
   }
 }
