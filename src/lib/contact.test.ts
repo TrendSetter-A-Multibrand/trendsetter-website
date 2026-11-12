@@ -100,3 +100,11 @@ describe("mailSubject", () => {
     expect(mailSubject("Контакты")).toBe("[Сайт] Контакты");
   });
 });
+
+describe("parseContact: брань", () => {
+  it("просит убрать нецензурные слова из сообщения", () => {
+    const out = parseContact({ ...valid, message: "Это полный пиздец" });
+    expect(out.ok).toBe(false);
+    expect(!out.ok && out.errors.message).toBe("Пожалуйста, без нецензурных выражений");
+  });
+});

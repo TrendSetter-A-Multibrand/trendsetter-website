@@ -13,7 +13,9 @@ export type ContactMessage = {
   message: string;
 };
 
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { hasProfanity } from "@/lib/profanity";
+
+const EMAIL =/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const MESSAGE_MAX = 2000;
 
@@ -26,6 +28,8 @@ export const CONTACT_ERRORS: Record<ContactField, string> = {
   subject: "Выберите тему обращения",
   message: "Напишите сообщение",
 };
+
+const POLITE = "Пожалуйста, без нецензурных выражений";
 
 /** The order the fields are checked in, and so which error is "first". */
 const ORDER: ContactField[] = ["message", "name", "email", "subject"];
@@ -64,11 +68,12 @@ export function parseContact(
     message: value.message.length < 1 || value.message.length > MESSAGE_MAX,
   };
 
-  const failed = ORDER.filter((field) => bad[field]);
+  const rude = (field: ContactField) => !bad[field] && hasProfanity(value[field]);
+  const failed = ORDER.filter((field) => bad[field] || rude(field));
   if (failed.length === 0) return { ok: true, value };
 
   const errors: Partial<Record<ContactField, string>> = {};
-  for (const field of failed) errors[field] = CONTACT_ERRORS[field];
+  for (const field of failed) errors[field] = rude(field) ? POLITE : CONTACT_ERRORS[field];
   return { ok: false, error: failed[0], errors };
 }
 
