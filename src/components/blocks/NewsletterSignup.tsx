@@ -37,6 +37,8 @@ export function NewsletterSignup({
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  /** The thanks stays until the visitor starts on another address; the smiley's 10 seconds are only its own */
+  const [thanks, setThanks] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   // The address already pointed out as a likely slip: pressing the button again lets it through
@@ -46,6 +48,7 @@ export function NewsletterSignup({
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!isValid || busy) return;
+    const form = e.currentTarget;
 
     const typo = suggestEmail(email.trim().toLowerCase());
     if (typo && warned !== email) {
@@ -68,7 +71,10 @@ export function NewsletterSignup({
         return;
       }
       setSubmitted(true);
+      setThanks(true);
       setEmail("");
+      // The consent was for this address and this once: the box is cleared with the field
+      form.reset();
     } catch {
       setError("Не удалось оформить подписку, попробуйте позже");
     } finally {
@@ -99,7 +105,10 @@ export function NewsletterSignup({
               type="email"
               required
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setThanks(false);
+              }}
               placeholder="Электронная почта"
               aria-label="Электронная почта"
               className={`${fieldClass("input", "red")} md:flex-1`}
@@ -125,10 +134,10 @@ export function NewsletterSignup({
               {error}
             </p>
           )}
-          {submitted && (
+          {thanks && (
             <p role="status" className="type-body-s">
-              Спасибо! Мы отправили письмо: подтвердите подписку по ссылке в нём. Не пришло? Загляните в «Промоакции» и
-              «Спам».
+              Спасибо! Если этого адреса ещё нет в рассылке, мы отправили на него письмо: подтвердите подписку по
+              ссылке в нём. Не пришло? Загляните в «Промоакции» и «Спам».
             </p>
           )}
         </form>
