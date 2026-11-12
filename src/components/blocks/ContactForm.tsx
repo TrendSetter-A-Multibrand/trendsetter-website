@@ -7,6 +7,7 @@ import { buttonClass } from "@/components/ui/Button";
 import { fieldClass, fieldErrorClass } from "@/components/ui/fieldClass";
 import { Dropdown, type DropdownOption } from "@/components/ui/Dropdown";
 import { useSiteSettings } from "@/components/layout/SettingsContext";
+import { suggestEmail } from "@/lib/emailTypo";
 import {
   CONTACT_ERRORS,
   MESSAGE_MAX,
@@ -57,6 +58,8 @@ export function ContactForm({
   const [busy, setBusy] = useState(false);
   const [invalid, setInvalid] = useState<ContactField[]>([]);
   const bad = (field: ContactField) => invalid.includes(field) || undefined;
+  // The address already pointed out as a likely slip: pressing the button again lets it through
+  const [warned, setWarned] = useState("");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -69,7 +72,15 @@ export function ContactForm({
     const parsed = parseContact(data);
     if (!parsed.ok) {
       setInvalid(Object.keys(parsed.errors) as ContactField[]);
-      setError(Object.values(parsed.errors)[0] ?? "Не удалось отправить, попробуйте позже");
+      // Every field that failed, not just the first, so one press tells all
+      setError(Object.values(parsed.errors).join(". ") || "Не удалось отправить, попробуйте позже");
+      return;
+    }
+    const typo = suggestEmail(parsed.value.email.toLowerCase());
+    if (typo && warned !== parsed.value.email) {
+      setWarned(parsed.value.email);
+      setInvalid(["email"]);
+      setError(`Проверьте e-mail: возможно, ${typo}? Если адрес верный, нажмите кнопку ещё раз`);
       return;
     }
     setInvalid([]);
