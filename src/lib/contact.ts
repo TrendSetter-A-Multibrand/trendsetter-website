@@ -73,6 +73,16 @@ export function parseContact(
 }
 
 /**
+ * The subject line of the mail the team receives. A message for the director
+ * carries "[ГД]" as well, so a rule in the mailbox (label, folder) can pick it
+ * out by that one word whatever the editor later does to the topic's wording.
+ */
+export function mailSubject(subject: string): string {
+  const director = /генеральн|ген\.?\s*директор/i.test(subject);
+  return `[Сайт]${director ? "[ГД]" : ""} ${subject}`;
+}
+
+/**
  * Every message goes to the one mailbox, CONTACT_TO (an address from the mail
  * manager, so it lives in the environment). The subject line - "[Сайт] <тема>" -
  * is what tells the readers, and later the summary, what kind of message it is

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MESSAGE_MAX, parseContact } from "@/lib/contact";
+import { MESSAGE_MAX, mailSubject, parseContact } from "@/lib/contact";
 
 const valid = {
   name: " Анна ",
@@ -87,5 +87,16 @@ describe("parseContact", () => {
       error: "bad body",
       errors: {},
     });
+  });
+});
+
+describe("mailSubject", () => {
+  it("marks a message for the director so a mailbox rule can find it", () => {
+    expect(mailSubject("Связаться с генеральным директором")).toBe("[Сайт][ГД] Связаться с генеральным директором");
+    expect(mailSubject("Связаться с ген. директором")).toBe("[Сайт][ГД] Связаться с ген. директором");
+  });
+
+  it("leaves the other topics with the site tag only", () => {
+    expect(mailSubject("Контакты")).toBe("[Сайт] Контакты");
   });
 });

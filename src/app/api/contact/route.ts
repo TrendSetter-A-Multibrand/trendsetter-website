@@ -1,4 +1,4 @@
-import { parseContact, recipientFor } from "@/lib/contact";
+import { mailSubject, parseContact, recipientFor } from "@/lib/contact";
 import { MailNotConfigured, sendMail } from "@/lib/mail";
 
 // Per-instance memory: enough to stop a script hammering one server, not a
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     await sendMail({
       to,
       replyTo: email,
-      subject: `[Сайт] ${subject}`,
+      subject: mailSubject(subject),
       text: `От: ${name || "—"} <${email}>\nТема: ${subject}\n\n${message}`,
     });
   } catch (e) {
