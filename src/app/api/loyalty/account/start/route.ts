@@ -7,9 +7,9 @@ import { subscribe as subscribeToNewsletter } from "@/lib/unisender";
 import { createLimiter } from "@/lib/rateLimit";
 
 // Every call here makes the service send a code, and in a real space every
-// code is a paid SMS: few per address, fewer per phone.
-const perIp = createLimiter(10 * 60 * 1000, 10);
-const perPhone = createLimiter(10 * 60 * 1000, 3);
+// code is a paid SMS: a few per address (a shop or an office shares one), fewer per phone.
+const perIp = createLimiter(10 * 60 * 1000, 20);
+const perPhone = createLimiter(10 * 60 * 1000, 5);
 
 type Body = {
   phone?: string;

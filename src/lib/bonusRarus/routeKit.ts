@@ -13,8 +13,10 @@ export function callerIp(request: Request): string {
 }
 
 export function failure(e: unknown): Response {
-  // What the service said goes to the server log (never to the visitor, never a phone or a name)
-  console.error("bonus-rarus:", e instanceof Error ? e.message : String(e));
+  // What the service said goes to the server log, never to the visitor. It may quote the
+  // SMS provider's request, so keys, phones and codes are blanked first.
+  const said = e instanceof Error ? e.message : String(e);
+  console.error("bonus-rarus:", said.replace(/api_id=[^&\s"]+/g, "api_id=…").replace(/(?:%[0-9A-F]{2}|\d)+/gi, "#").slice(0, 300));
   if (e instanceof BonusRarusError) {
     return Response.json({ error: e.customerMessage }, { status: e.status >= 500 ? 502 : 400 });
   }
