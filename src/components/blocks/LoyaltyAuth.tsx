@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { buttonClass } from "@/components/ui/Button";
 import { fieldClass, fieldErrorClass } from "@/components/ui/fieldClass";
 import type { FormField } from "@/lib/bonusRarus/registrationForm";
+import { nextPhone } from "@/lib/phoneMask";
 
 type Step =
   | { kind: "phone" }
@@ -219,8 +220,11 @@ export function LoyaltyAuth({ locale }: { locale: string }) {
             type="tel"
             inputMode="tel"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+7 900 000-00-00"
+            onChange={(e) => {
+              const typed = e.target.value;
+              setPhone((previous) => nextPhone(previous, typed));
+            }}
+            placeholder="+7 (900) 000 00 00"
             aria-label="Номер телефона"
             autoComplete="tel"
             className={fieldClass("input", "light")}

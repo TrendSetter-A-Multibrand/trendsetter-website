@@ -91,7 +91,7 @@ describe("запись на событие", () => {
     expect(fetchMock.mock.calls[1][0]).toContain("/register");
     expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toMatchObject({
       name: "Иван Петров",
-      phone: "8 999 123-45-67",
+      phone: "+7 (999) 123 45 67",
       email: "a@b.co",
     });
   });

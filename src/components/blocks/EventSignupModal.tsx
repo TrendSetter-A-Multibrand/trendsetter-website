@@ -10,6 +10,7 @@ import { ModalSheet } from "@/components/ui/ModalSheet";
 import { useSiteSettings } from "@/components/layout/SettingsContext";
 import { suggestEmail } from "@/lib/emailTypo";
 import type { Event } from "@/lib/events";
+import { nextPhone } from "@/lib/phoneMask";
 import {
   checkSignup,
   fillSeats,
@@ -246,8 +247,11 @@ export function EventSignupModal({
               value={phone}
               disabled={shut}
               autoComplete="tel"
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="Телефон"
+              onChange={(e) => {
+              const typed = e.target.value;
+              setPhone((previous) => nextPhone(previous, typed));
+            }}
+              placeholder="+7 (900) 000 00 00"
               aria-label="Телефон"
               aria-invalid={error === NEED_PHONE ? true : undefined}
               className={`${fieldClass("input", "light")} disabled:border-line disabled:text-muted`}
