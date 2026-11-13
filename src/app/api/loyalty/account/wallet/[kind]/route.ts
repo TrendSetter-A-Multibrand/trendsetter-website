@@ -25,8 +25,9 @@ export async function GET(
     if (kind === "apple") {
       return new Response(await applePass(token, card), {
         headers: {
+          // The type alone is what makes Safari on an iPhone open Wallet's "Add" sheet; with
+          // "Content-Disposition: attachment" it only offers the file as a download
           "Content-Type": "application/vnd.apple.pkpass",
-          "Content-Disposition": 'attachment; filename="Card.pkpass"',
           "Cache-Control": "no-store",
         },
       });
