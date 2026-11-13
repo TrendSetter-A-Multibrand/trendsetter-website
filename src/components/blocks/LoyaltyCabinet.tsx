@@ -3,17 +3,11 @@ import { Wordmark } from "@/components/ui/Wordmark";
 import { buttonClass } from "@/components/ui/Button";
 import { LoyaltyLogout } from "@/components/blocks/LoyaltyLogout";
 import type { Cabinet } from "@/lib/bonusRarus/customer";
+import { points } from "@/lib/points";
 
 const number = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 });
 const day = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Moscow" });
 const short = new Intl.DateTimeFormat("ru-RU", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "Europe/Moscow" });
-
-/** "1 балл", "3 балла", "15 баллов" */
-function points(n: number) {
-  const abs = Math.abs(Math.trunc(n));
-  const tail = abs % 100 >= 11 && abs % 100 <= 14 ? "баллов" : ["баллов", "балл", "балла", "балла", "балла"][abs % 10] ?? "баллов";
-  return `${number.format(n)} ${tail}`;
-}
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (

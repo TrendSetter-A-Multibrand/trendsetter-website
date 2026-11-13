@@ -4,6 +4,8 @@ import { type FormEvent, useState } from "react";
 import { ModalSheet } from "@/components/ui/ModalSheet";
 import { buttonClass } from "@/components/ui/Button";
 import { fieldClass, fieldErrorClass } from "@/components/ui/fieldClass";
+import { Facts } from "@/components/cards/Facts";
+import { cardStatus, points } from "@/lib/points";
 
 type Result = { balance: number; level: string; status: string };
 
@@ -53,10 +55,17 @@ export function LoyaltyCardCheckModal({ onClose }: { onClose: () => void }) {
         </form>
 
         {result && (
-          <div className="flex flex-col gap-2 border-t border-line pt-6">
-            <p className="type-body">Баланс: {result.balance} баллов</p>
-            {result.level && <p className="type-body">Уровень: {result.level}</p>}
-            {result.status && <p className="type-body">Статус: {result.status}</p>}
+          <div className="flex flex-col gap-4 border-t border-line pt-6">
+            <div className="flex flex-col gap-2 bg-surface p-4 md:p-6">
+              <span className="type-caption text-text-2">Баланс</span>
+              <span className="type-h3">{points(result.balance)}</span>
+            </div>
+            <Facts
+              items={[
+                ...(result.level ? [{ label: "Уровень", value: result.level }] : []),
+                ...(result.status ? [{ label: "Статус", value: cardStatus(result.status) }] : []),
+              ]}
+            />
           </div>
         )}
       </div>
