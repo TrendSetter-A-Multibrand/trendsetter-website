@@ -3,6 +3,7 @@ import { registrationForm, toRegistrationBody } from "@/lib/bonusRarus/registrat
 import { startLogin, startRegistration } from "@/lib/bonusRarus/customer";
 import { clearSession, writePending, writeSession } from "@/lib/bonusRarus/session";
 import { callerIp, disabled, failure } from "@/lib/bonusRarus/routeKit";
+import { subscribe as subscribeToNewsletter } from "@/lib/unisender";
 import { createLimiter } from "@/lib/rateLimit";
 
 // Every call here makes the service send a code, and in a real space every
@@ -49,6 +50,12 @@ export async function POST(request: Request) {
     }
     const checked = toRegistrationBody(await registrationForm(), { ...body.values, phone });
     if (!checked.ok) return Response.json({ error: checked.error }, { status: 400 });
+
+    // The ticked box is the consent to our own mailing: the address goes to the mailing service (which keeps it), not to us
+    const email = typeof body.values.email === "string" ? body.values.email.trim() : "";
+    if (body.newslettersAccepted && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      subscribeToNewsletter(email).catch((e) => console.error("newsletter:", e instanceof Error ? e.message : e));
+    }
 
     const started = await startRegistration({
       ...checked.body,

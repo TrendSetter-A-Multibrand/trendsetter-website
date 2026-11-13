@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { isSubscribed, NewsletterFailed, NewsletterNotConfigured, subscribe, unsubscribe } from "@/lib/unisender";
+import { confirmsByLetter, isSubscribed, NewsletterFailed, NewsletterNotConfigured, subscribe, unsubscribe } from "@/lib/unisender";
 
 const env = { UNISENDER_API_KEY: "secret", UNISENDER_LIST_ID: "2" };
 
@@ -81,5 +81,13 @@ describe("isSubscribed", () => {
 
   it("сервис не ответил — «неизвестно», а не ошибка", async () => {
     await expect(isSubscribed("a@b.ru", { env, doFetch: answer({ error: "boom" }, 500) })).resolves.toBe(false);
+  });
+});
+
+describe("confirmsByLetter", () => {
+  it("по умолчанию письмо-подтверждение шлётся, при «3» нет", () => {
+    expect(confirmsByLetter({})).toBe(true);
+    expect(confirmsByLetter({ UNISENDER_DOUBLE_OPTIN: "0" })).toBe(true);
+    expect(confirmsByLetter({ UNISENDER_DOUBLE_OPTIN: "3" })).toBe(false);
   });
 });

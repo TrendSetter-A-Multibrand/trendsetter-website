@@ -1,5 +1,5 @@
 import { createLimiter } from "@/lib/rateLimit";
-import { isSubscribed, NewsletterNotConfigured, subscribe } from "@/lib/unisender";
+import { confirmsByLetter, isSubscribed, NewsletterNotConfigured, subscribe } from "@/lib/unisender";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const perIp = createLimiter(10 * 60 * 1000, 8);
@@ -24,5 +24,5 @@ export async function POST(request: Request) {
   } catch (e) {
     return Response.json({ error: "send failed" }, { status: e instanceof NewsletterNotConfigured ? 503 : 502 });
   }
-  return Response.json({ ok: true });
+  return Response.json({ ok: true, confirm: confirmsByLetter() });
 }

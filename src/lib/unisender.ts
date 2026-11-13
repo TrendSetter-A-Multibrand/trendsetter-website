@@ -24,6 +24,11 @@ function settings(env: Env) {
   return { key, list, doubleOptin: env.UNISENDER_DOUBLE_OPTIN === "3" ? "3" : "0" };
 }
 
+/** Whether a new subscriber is sent a letter to confirm (the default) or joins the list at once. */
+export function confirmsByLetter(env: Env = process.env): boolean {
+  return env.UNISENDER_DOUBLE_OPTIN !== "3";
+}
+
 export function newsletterConfigured(env: Env = process.env): boolean {
   return Boolean(env.UNISENDER_API_KEY && env.UNISENDER_LIST_ID);
 }

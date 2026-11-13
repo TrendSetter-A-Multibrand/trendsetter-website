@@ -39,7 +39,7 @@ export function NewsletterSignup({
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   /** The thanks stays until the visitor starts on another address; the smiley's 10 seconds are only its own */
-  const [thanks, setThanks] = useState(false);
+  const [thanks, setThanks] = useState<"" | "done" | "confirm">("");
   /** The address someone tried to sign up twice, held for the notice */
   const [duplicate, setDuplicate] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -73,12 +73,12 @@ export function NewsletterSignup({
         setError(res.status === 400 ? "Проверьте адрес почты" : "Не удалось оформить подписку, попробуйте позже");
         return;
       }
-      const answer = (await res.json().catch(() => null)) as { already?: boolean } | null;
+      const answer = (await res.json().catch(() => null)) as { already?: boolean; confirm?: boolean } | null;
       if (answer?.already) {
         setDuplicate(email.trim());
       } else {
         setSubmitted(true);
-        setThanks(true);
+        setThanks(answer?.confirm === false ? "done" : "confirm");
       }
       setEmail("");
       // The consent was for this address and this once: the box is cleared with the field
@@ -115,7 +115,7 @@ export function NewsletterSignup({
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                setThanks(false);
+                setThanks("");
               }}
               placeholder="Электронная почта"
               aria-label="Электронная почта"
@@ -144,7 +144,9 @@ export function NewsletterSignup({
           )}
           {thanks && (
             <p role="status" className="type-body-s">
-              Спасибо! Мы отправили письмо: подтвердите подписку по ссылке в нём. Не пришло? Загляните в «Промоакции» и «Спам».
+              {thanks === "confirm"
+                ? "Спасибо! Мы отправили письмо: подтвердите подписку по ссылке в нём. Не пришло? Загляните в «Промоакции» и «Спам»."
+                : "Спасибо, вы подписаны! Первое письмо придёт с адреса news@, загляните в «Промоакции» и «Спам», если не увидите его."}
             </p>
           )}
         </form>

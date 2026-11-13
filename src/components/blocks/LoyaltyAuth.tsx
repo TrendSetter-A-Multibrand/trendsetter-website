@@ -261,7 +261,7 @@ export function LoyaltyAuth({ locale }: { locale: string }) {
             </Link>
           </Tick>
           <Tick checked={newsletters} onChange={setNewsletters}>
-            Хочу получать новости и предложения (необязательно)
+            Хочу получать новости и предложения на почту (необязательно)
           </Tick>
           {error && <p role="alert" className={fieldErrorClass("light")}>{error}</p>}
           <button type="submit" disabled={busy} className={`${buttonClass("primary", "L")} w-full`}>
