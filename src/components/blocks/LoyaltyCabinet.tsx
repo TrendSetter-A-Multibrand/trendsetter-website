@@ -1,6 +1,6 @@
 import { Facts } from "@/components/cards/Facts";
 import { Wordmark } from "@/components/ui/Wordmark";
-import { buttonClass } from "@/components/ui/Button";
+import { WalletButton } from "@/components/blocks/WalletButton";
 import { LoyaltyLogout } from "@/components/blocks/LoyaltyLogout";
 import type { Cabinet } from "@/lib/bonusRarus/customer";
 import { points } from "@/lib/points";
@@ -64,14 +64,10 @@ export function LoyaltyCabinet({ cabinet }: { cabinet: Cabinet }) {
             {(cabinet.wallets.apple || cabinet.wallets.google) && (
               <div className="flex flex-col gap-3">
                 {cabinet.wallets.apple && (
-                  <a href={`/api/loyalty/account/wallet/apple?card=${card.id}`} className={`${buttonClass("primary", "L")} w-full`}>
-                    Добавить в Apple Wallet
-                  </a>
+                  <WalletButton href={`/api/loyalty/account/wallet/apple?card=${card.id}`}>Добавить в Apple Wallet</WalletButton>
                 )}
                 {cabinet.wallets.google && (
-                  <a href={`/api/loyalty/account/wallet/google?card=${card.id}`} className={`${buttonClass("primary", "L")} w-full`}>
-                    Добавить в Google Кошелёк
-                  </a>
+                  <WalletButton href={`/api/loyalty/account/wallet/google?card=${card.id}`}>Добавить в Google Кошелёк</WalletButton>
                 )}
               </div>
             )}
