@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { NewsletterFailed, NewsletterNotConfigured, subscribe, unsubscribe } from "@/lib/unisender";
+import { isSubscribed, NewsletterFailed, NewsletterNotConfigured, subscribe, unsubscribe } from "@/lib/unisender";
 
 const env = { UNISENDER_API_KEY: "secret", UNISENDER_LIST_ID: "2" };
 
@@ -63,5 +63,23 @@ describe("unsubscribe", () => {
     await expect(unsubscribe("x@y.ru", { env, doFetch: answer({ error: "boom" }, 500) })).rejects.toBeInstanceOf(
       NewsletterFailed,
     );
+  });
+});
+
+describe("isSubscribed", () => {
+  it("true, когда адрес уже в списке", async () => {
+    const doFetch = answer({ result: true });
+    await expect(isSubscribed("a@b.ru", { env, doFetch })).resolves.toBe(true);
+    const [url, init] = doFetch.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toContain("/isContactInLists");
+    expect(new URLSearchParams(String(init.body)).get("list_ids")).toBe("2");
+  });
+
+  it("false, когда адреса в списке нет", async () => {
+    await expect(isSubscribed("a@b.ru", { env, doFetch: answer({ result: false }) })).resolves.toBe(false);
+  });
+
+  it("сервис не ответил — «неизвестно», а не ошибка", async () => {
+    await expect(isSubscribed("a@b.ru", { env, doFetch: answer({ error: "boom" }, 500) })).resolves.toBe(false);
   });
 });

@@ -1,5 +1,5 @@
 import { createLimiter } from "@/lib/rateLimit";
-import { NewsletterNotConfigured, subscribe } from "@/lib/unisender";
+import { isSubscribed, NewsletterNotConfigured, subscribe } from "@/lib/unisender";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const perIp = createLimiter(10 * 60 * 1000, 8);
@@ -18,6 +18,8 @@ export async function POST(request: Request) {
   if (body?.consent !== true) return Response.json({ error: "consent" }, { status: 400 });
 
   try {
+    // Someone already on the list is told so, as the site's design has it, rather than sent a second letter
+    if (await isSubscribed(email)) return Response.json({ ok: true, already: true });
     await subscribe(email);
   } catch (e) {
     return Response.json({ error: "send failed" }, { status: e instanceof NewsletterNotConfigured ? 503 : 502 });

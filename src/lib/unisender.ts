@@ -34,13 +34,14 @@ async function call(
   params: Record<string, string>,
   key: string,
   doFetch: typeof fetch,
+  timeoutMs = 10_000,
 ): Promise<unknown> {
   const res = await doFetch(`${ENDPOINT}/${method}?format=json`, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({ api_key: key, ...params }),
     // A service that does not answer must not hold a visitor's request open
-    signal: AbortSignal.timeout(10_000),
+    signal: AbortSignal.timeout(timeoutMs),
   });
   const body = (await res.json().catch(() => null)) as { error?: string } | null;
   if (!res.ok || !body || body.error) {
@@ -70,6 +71,32 @@ export async function subscribe(
     key,
     opts.doFetch ?? fetch,
   );
+}
+
+/**
+ * Whether the address is already on the site's list (a confirmed subscriber).
+ * Unisender's read calls are slow at times, so the wait is short: when the
+ * service does not answer in time the answer is "not known" (false) and the
+ * visitor is simply signed up, which is harmless for someone already on it.
+ */
+export async function isSubscribed(
+  email: string,
+  opts: { env?: Env; doFetch?: typeof fetch; waitMs?: number } = {},
+): Promise<boolean> {
+  const { key, list } = settings(opts.env ?? process.env);
+  try {
+    const body = (await call(
+      "isContactInLists",
+      { email, list_ids: list, condition: "and" },
+      key,
+      opts.doFetch ?? fetch,
+      opts.waitMs ?? 4_000,
+    )) as { result?: unknown };
+    return body.result === true;
+  } catch (e) {
+    if (e instanceof NewsletterNotConfigured) throw e;
+    return false;
+  }
 }
 
 /** Marks the address unsubscribed (what a visitor asking to stop is owed). */

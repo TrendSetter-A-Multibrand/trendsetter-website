@@ -6,6 +6,7 @@ import Link from "@/components/ui/Link";
 import { buttonClass } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { fieldClass } from "@/components/ui/fieldClass";
+import { NoticeModal } from "@/components/ui/NoticeModal";
 import { suggestEmail } from "@/lib/emailTypo";
 
 type NewsletterSignupProps = {
@@ -39,6 +40,8 @@ export function NewsletterSignup({
   const [submitted, setSubmitted] = useState(false);
   /** The thanks stays until the visitor starts on another address; the smiley's 10 seconds are only its own */
   const [thanks, setThanks] = useState(false);
+  /** The address someone tried to sign up twice, held for the notice */
+  const [duplicate, setDuplicate] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   // The address already pointed out as a likely slip: pressing the button again lets it through
@@ -70,8 +73,13 @@ export function NewsletterSignup({
         setError(res.status === 400 ? "Проверьте адрес почты" : "Не удалось оформить подписку, попробуйте позже");
         return;
       }
-      setSubmitted(true);
-      setThanks(true);
+      const answer = (await res.json().catch(() => null)) as { already?: boolean } | null;
+      if (answer?.already) {
+        setDuplicate(email.trim());
+      } else {
+        setSubmitted(true);
+        setThanks(true);
+      }
       setEmail("");
       // The consent was for this address and this once: the box is cleared with the field
       form.reset();
@@ -136,8 +144,7 @@ export function NewsletterSignup({
           )}
           {thanks && (
             <p role="status" className="type-body-s">
-              Спасибо! Если этого адреса ещё нет в рассылке, мы отправили на него письмо: подтвердите подписку по
-              ссылке в нём. Не пришло? Загляните в «Промоакции» и «Спам».
+              Спасибо! Мы отправили письмо: подтвердите подписку по ссылке в нём. Не пришло? Загляните в «Промоакции» и «Спам».
             </p>
           )}
         </form>
@@ -158,6 +165,14 @@ export function NewsletterSignup({
         </div>
       </div>
 
+      {duplicate && (
+        <NoticeModal title="Вы уже подписаны" onClose={() => setDuplicate(null)}>
+          <p>
+            На адрес <span className="font-medium">{duplicate}</span> подписка уже оформлена. Если письма не
+            приходят, загляните в папки «Промоакции» и «Спам».
+          </p>
+        </NoticeModal>
+      )}
     </section>
   );
 }
