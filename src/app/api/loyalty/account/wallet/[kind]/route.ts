@@ -38,10 +38,13 @@ export async function GET(
     // The service's own reason, for the logs only - it names no client and no token
     console.error(`wallet ${kind}:`, e instanceof Error ? e.message : e);
     // A tap on a phone should land back on the cabinet with a word of explanation,
-    // not on a bare error page: back to the page it came from, if it is ours
+    // not on a bare error page. The address is relative on purpose: behind the proxy
+    // this request's own URL is the container's (0.0.0.0:3000), not the site's.
     const from = request.headers.get("referer");
-    const back = new URL(from && new URL(from).origin === new URL(request.url).origin ? from : "/ru_ru/card", request.url);
-    back.searchParams.set("wallet", "failed");
-    return Response.redirect(back, 303);
+    let path = "/ru_ru/card";
+    try {
+      if (from) path = new URL(from).pathname;
+    } catch {}
+    return new Response(null, { status: 303, headers: { Location: `${path}?wallet=failed` } });
   }
 }

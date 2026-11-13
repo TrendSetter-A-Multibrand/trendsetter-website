@@ -68,14 +68,14 @@ export function LoyaltyCabinet({ cabinet }: { cabinet: Cabinet }) {
             </div>
 
             {(cabinet.wallets.apple || cabinet.wallets.google) && (
-              <div className="flex flex-col gap-2 sm:flex-row">
+              <div className="flex flex-col gap-3">
                 {cabinet.wallets.apple && (
-                  <a href={`/api/loyalty/account/wallet/apple?card=${card.id}`} className={`${buttonClass("outline", "M")} flex-1`}>
+                  <a href={`/api/loyalty/account/wallet/apple?card=${card.id}`} className={`${buttonClass("primary", "L")} w-full`}>
                     Добавить в Apple Wallet
                   </a>
                 )}
                 {cabinet.wallets.google && (
-                  <a href={`/api/loyalty/account/wallet/google?card=${card.id}`} className={`${buttonClass("outline", "M")} flex-1`}>
+                  <a href={`/api/loyalty/account/wallet/google?card=${card.id}`} className={`${buttonClass("primary", "L")} w-full`}>
                     Добавить в Google Кошелёк
                   </a>
                 )}

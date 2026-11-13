@@ -18,7 +18,11 @@ export function failure(e: unknown): Response {
   const said = e instanceof Error ? e.message : String(e);
   console.error("bonus-rarus:", said.replace(/api_id=[^&\s"]+/g, "api_id=…").replace(/(?:%[0-9A-F]{2}|\d)+/gi, "#").slice(0, 300));
   if (e instanceof BonusRarusError) {
-    return Response.json({ error: e.customerMessage }, { status: e.status >= 500 ? 502 : 400 });
+    // "Обратитесь к сотруднику" is the till's wording; on the site the person can only try again
+    const error = /отправить код/i.test(e.customerMessage)
+      ? "Не удалось отправить код. Попробуйте ещё раз через минуту"
+      : e.customerMessage;
+    return Response.json({ error }, { status: e.status >= 500 ? 502 : 400 });
   }
   return Response.json({ error: "Не удалось выполнить операцию. Попробуйте ещё раз." }, { status: 502 });
 }
