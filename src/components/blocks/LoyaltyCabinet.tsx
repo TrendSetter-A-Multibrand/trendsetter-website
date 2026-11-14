@@ -64,7 +64,7 @@ export function LoyaltyCabinet({ cabinet }: { cabinet: Cabinet }) {
             {(cabinet.wallets.apple || cabinet.wallets.google) && (
               <div className="flex flex-col gap-3">
                 {cabinet.wallets.apple && (
-                  <WalletButton href={`/api/loyalty/account/wallet/apple?card=${card.id}`}>Добавить в Apple Wallet</WalletButton>
+                  <WalletButton warm href={`/api/loyalty/account/wallet/apple?card=${card.id}`}>Добавить в Apple Wallet</WalletButton>
                 )}
                 {cabinet.wallets.google && (
                   <WalletButton href={`/api/loyalty/account/wallet/google?card=${card.id}`}>Добавить в Google Кошелёк</WalletButton>

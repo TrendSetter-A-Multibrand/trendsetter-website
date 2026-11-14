@@ -2,6 +2,28 @@ import { applePass, googleWalletLink, SessionExpired } from "@/lib/bonusRarus/cu
 import { readSession } from "@/lib/bonusRarus/session";
 import { disabled } from "@/lib/bonusRarus/routeKit";
 
+// The service takes seconds to build a pass, and Safari on an iPhone leaves the page hung
+// while a navigation to a file waits that long. So the button first asks for the pass with
+// ?warm=1 (an ordinary request, with a spinner on the page), the pass is kept here for a
+// minute, and the navigation that follows is answered at once.
+const KEEP_MS = 60_000;
+const built = new Map<string, { at: number; pass: Promise<ArrayBuffer> }>();
+
+function passFor(token: string, card: number) {
+  const now = Date.now();
+  for (const [key, entry] of built) if (now - entry.at > KEEP_MS) built.delete(key);
+  const key = `${token}:${card}`;
+  let entry = built.get(key);
+  if (!entry) {
+    const pass = applePass(token, card);
+    entry = { at: now, pass };
+    built.set(key, entry);
+    // A failed build is not worth keeping: the next tap tries again
+    pass.catch(() => built.delete(key));
+  }
+  return entry.pass;
+}
+
 /**
  * "Добавить в Apple Wallet" hands over the .pkpass the service builds - Safari
  * opens that type straight into Wallet; "Добавить в Google Кошелёк" goes on to
@@ -23,8 +45,11 @@ export async function GET(
 
   try {
     if (kind === "apple") {
-      return new Response(await applePass(token, card), {
+      const pass = await passFor(token, card);
+      if (new URL(request.url).searchParams.has("warm")) return new Response(null, { status: 204 });
+      return new Response(pass, {
         headers: {
+          "Content-Length": String(pass.byteLength),
           // The type alone is what makes Safari on an iPhone open Wallet's "Add" sheet; with
           // "Content-Disposition: attachment" it only offers the file as a download
           "Content-Type": "application/vnd.apple.pkpass",

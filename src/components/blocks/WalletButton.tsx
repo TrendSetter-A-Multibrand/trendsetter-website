@@ -9,7 +9,7 @@ import { buttonClass } from "@/components/ui/Button";
  * says it is working. The tap is still an ordinary link - the phone itself takes
  * the file from there - and the button comes back when the page is shown again.
  */
-export function WalletButton({ href, children }: { href: string; children: React.ReactNode }) {
+export function WalletButton({ href, warm, children }: { href: string; warm?: boolean; children: React.ReactNode }) {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -33,6 +33,16 @@ export function WalletButton({ href, children }: { href: string; children: React
         setBusy(true);
         // A pass that never comes must not leave the button stuck
         setTimeout(() => setBusy(false), 20000);
+        if (!warm) return;
+        // Safari hangs on a navigation that waits for the file: have the service build it
+        // first, then go to the link, which the server now answers at once. If the build
+        // failed the link still goes, and the server sends the visitor back with a notice.
+        e.preventDefault();
+        fetch(`${href}&warm=1`, { credentials: "same-origin" })
+          .catch(() => {})
+          .finally(() => {
+            window.location.href = href;
+          });
       }}
       className={`${buttonClass("primary", "L")} flex w-full items-center justify-center gap-3 ${busy ? "opacity-80" : ""}`}
     >
