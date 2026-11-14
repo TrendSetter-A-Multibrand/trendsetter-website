@@ -172,11 +172,12 @@
 }
 
 @keyframes marquee {
+  /* translate3d keeps the strip on its own layer in Safari, which otherwise repaints the text every frame */
   from {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translateX(-100%);
+    transform: translate3d(-100%, 0, 0);
   }
 }
 

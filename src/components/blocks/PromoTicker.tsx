@@ -52,11 +52,11 @@ export function PromoTicker({
 
   return (
     <div className="type-caption group/ticker flex h-9 items-center overflow-hidden bg-ink text-white">
-      <div className="flex shrink-0 animate-ticker group-hover/ticker:[animation-play-state:paused] motion-reduce:animate-none">
+      <div className="flex shrink-0 animate-ticker will-change-transform group-hover/ticker:[animation-play-state:paused] motion-reduce:animate-none">
         {Array.from({ length: half }, (_, i) => item(i))}
       </div>
       <div
-        className="flex shrink-0 animate-ticker group-hover/ticker:[animation-play-state:paused] motion-reduce:hidden"
+        className="flex shrink-0 animate-ticker will-change-transform group-hover/ticker:[animation-play-state:paused] motion-reduce:hidden"
         aria-hidden="true"
       >
         {Array.from({ length: half }, (_, i) => item(i + half))}
